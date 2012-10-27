@@ -6,9 +6,7 @@ class Block implements Touchable {
   Block(this.x, this.y);
   
    bool containsTouch(TouchEvent event) {
-     if (event.tagId == 0x19) {
-       return true;
-     }  
+     return event.tagId == 0x19;
    }
     
     void touchDown(TouchEvent event) {
