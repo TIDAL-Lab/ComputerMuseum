@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/580/trunk/tests/generators
+END
+control.xml
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/572/trunk/tests/generators/control.xml
+END
+unittest_javascript.js
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/523/trunk/tests/generators/unittest_javascript.js
+END
+colour.xml
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/572/trunk/tests/generators/colour.xml
+END
+text.xml
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/573/trunk/tests/generators/text.xml
+END
+unittest_dart.js
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/569/trunk/tests/generators/unittest_dart.js
+END
+variables.xml
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/572/trunk/tests/generators/variables.xml
+END
+math.xml
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/572/trunk/tests/generators/math.xml
+END
+unittest.js
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/523/trunk/tests/generators/unittest.js
+END
+index.html
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/580/trunk/tests/generators/index.html
+END
+procedures.xml
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/572/trunk/tests/generators/procedures.xml
+END
+unittest_python.js
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/569/trunk/tests/generators/unittest_python.js
+END
+logic.xml
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/572/trunk/tests/generators/logic.xml
+END
+lists.xml
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/572/trunk/tests/generators/lists.xml
+END
