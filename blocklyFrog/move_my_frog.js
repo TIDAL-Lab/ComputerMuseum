@@ -23,10 +23,10 @@ Blockly.Language.frogs_wait = {
     this.appendDummyInput()
       .appendTitle("Wait");
     this.setPreviousStatement(true);
+    this.setNextStatement(true);
     this.setTooltip('');
   }
 };
-
     //Hop Block
 Blockly.Language.frogs_hop = {
   category: 'Actions',
