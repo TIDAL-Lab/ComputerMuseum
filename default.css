@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 * { 
-   -webkit-user-select: none; 
+   /* -webkit-user-select: none; */
    -webkit-tap-highlight-color: rgba(0,0,0,0);    
 }
 
@@ -16,8 +16,15 @@ body {
    background-color: #445368;
 }
 
-#turtles {
+#frog-patches {
    background-image: url('images/texture.png');
+   position: absolute;
+   left: 50px;
+   top: 50px;
+   z-index: 0;
+}
+
+#frog-turtles {
    position: absolute;
    left: 50px;
    top: 50px;
@@ -25,13 +32,28 @@ body {
    border: 1px solid black;
 }
 
-#toolbar {
-   z-index: 2;
-   background-color: rgb(22, 49, 79);
-   -moz-border-radius: 15px;
-   border-radius: 15px;
-   border: 2px solid white;
+#frog-code {
    position: absolute;
-   top: 640px;
-   left: 230px;
+   visibility: hidden;
+   left: 700px;
+   top: 50px;
+   width: 500px;
+   height: 600px;
+   background-color: #fff;
+   border: 1px solid black;
+   z-index: 5;
+}
+
+#frog-toolbar {
+   width: 160px;
+}
+
+#restart-button {
+   margin-right: 5px;
+}
+
+.toolbar {
+   left: 70px;
+   top: 600px;
+   bottom: auto;
 }
