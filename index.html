@@ -3,20 +3,77 @@
 <head> 
    <title>Computer History Museum</title>
    <meta name="apple-mobile-web-app-capable" content="yes" />
-   <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=no" />
+   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       
    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />   
+   <link rel="stylesheet" href="toolbar.css" />
    <link rel="stylesheet" href="default.css" />
+   
+   <script type="text/javascript" src="blockly/blockly_compressed.js"></script>
+   <script type="text/javascript" src="blockly/language/en/_messages.js"></script>
+   <script type="text/javascript" src="language.js"></script>
+   <script type="text/javascript" src="blockly/generators/javascript.js"></script>   
+   <script type="text/javascript" src="generator.js"></script>
+   <script type="text/javascript">
+      
+   //-----------------------------------------------------------------------
+   // Clean up the blockly code and send it to dart via a message. Use the
+   // @dart directive to disambiguate sender and receiver.
+   //-----------------------------------------------------------------------
+   function compile() {
+      var code = Blockly.Generator.workspaceToCode('JavaScript');
+      //code = code.replace(/\n/g, '').replace(/\]\[/g, '], [')
+      code = code.replace(/\]\[/g, '], [');
+      var origin = window.location.protocol + "//" + window.location.host;
+      window.postMessage("@dart " + code, origin);
+   }
+   
+   
+   function showHide() {
+      var el = document.getElementById("frog-code");
+      var button = document.getElementById("code-button");
+      var v = el.style.visibility == 'visible';
+      if (v) {
+         el.style.visibility = 'hidden';
+         button.style.backgroundImage = "url('images/fullscreen.png')";
+      } else {
+         el.style.visibility = 'visible';
+         button.style.backgroundImage = "url('images/partscreen.png')";
+      }
+   }
+   
+   window.onmessage = function(event) {
+      if (event.data.indexOf("@blockly compile") == 0) {
+         compile();
+      }
+   }
+   </script>
+
 </head> 
 <body>
-   <div id="content">
-      <canvas id="turtles" width="800" height="600"></canvas>
-      <canvas id="toolbar" width="440" height="70"></canvas>
-
-      <!-- script src="main.dart.js" type="text/javascript"></script -->
-      <script src="main.dart" type="application/dart"></script>
-      <script src="https://dart.googlecode.com/svn/branches/bleeding_edge/dart/client/dart.js"></script>
-      
+   
+   <!-- FROG POND -->
+   <canvas id="frog-patches" width="700" height="600"></canvas>
+   <canvas id="frog-turtles" width="700" height="600"></canvas>
+   
+   <!-- TOOLBAR -->
+   <div id="frog-toolbar" class="toolbar">
+      <div>
+         <button id="restart-button">
+         <button id="play-button" />
+         <button id="code-button" onclick="showHide();"/>
+      </div>
    </div>
+
+   <!-- BLOCKLY CODE WINDOW -->
+   <div id="frog-code"></div>
+      <script type="text/javascript">
+          Blockly.inject(document.getElementById('frog-code'),
+                         {path: './blockly/', toolbox: document.getElementById('toolbox')});
+      </script>
+   </div>   
+   
+   <script src="main.dart" type="application/dart"></script>
+   <script src="dart.js"></script>
 </body>
 </html>
