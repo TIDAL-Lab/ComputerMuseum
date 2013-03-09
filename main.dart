@@ -3,233 +3,392 @@ library ComputerHistory;
 import 'dart:html';
 import 'dart:math';
 import 'dart:json';
+import 'dart:async';
 import 'dart:web_audio';
+import '../NetTangoJS/core/ntango.dart';
 
-part 'color.dart';
-part 'turtle.dart';
 part 'tween.dart';
-part 'model.dart';
-part 'toolbar.dart';
-part 'button.dart';
-part 'JsonObject.dart';
-part 'nettango.dart';
 part 'sounds.dart';
-part 'touch.dart';
+
+
 
 void main() {
 
-  TouchManager.init();
-  
   Sounds.loadSound("hop");
   Sounds.loadSound("skip");
   Sounds.loadSound("jump");
   Sounds.loadSound("croak");
   Sounds.loadSound("sing");
   Sounds.loadSound("chirp");
+  Sounds.loadSound("splash");
   Sounds.loadSound("turn");
+
+  FrogPond model = new FrogPond();
+  model.restart();
   
-   FrogPond model = new FrogPond();
-   NetTango ntango = new NetTango(model);
-   ntango.showToolbar();
-   ntango.restart();
+  window.onMessage.listen((event) {
+    if (event.data.startsWith("@dart")) {
+      model.doCompile(event.data.substring(5));
+    }
+  });
 }
-   
 
-class FrogPond extends Model { 
-   
-   FrogPond() : super() {  }
-   
-   
-   void setup() {
-     clearTurtles();
-     addTurtle(new Frog(this));
-     //addTurtle(new GreenFrog(this));
-     addTurtle(new PurpleFrog(this));
+
+class FrogPond extends Model {
+  
+  bool autostart = false;
+  
+  FrogPond() : super("Frog Pond", "frog") {  
+    //patchSize = 22;
+    wrap = false;
+    resize(width, height);
   }
-}
 
-
-class GreenFrog extends Frog {
-   
-   GreenFrog(Model model) : super(model) {
-     x = -3;
-     y = 3;
-     img.src = "images/greenfrog.png";
-     // 5. commands = [ "hop", "wait-sound", "croak" ];
-     commands = [ "wait-sound", "turn-sound", "hop" ];
-   }
-}
-
-
-class PurpleFrog extends Frog {
-  PurpleFrog(Model model) : super(model) {
-    x = 2;
-    y = 1;
-    img.src = "images/purplefrog.png";
-    // 7. commands = [ "hop", "hop", "hop", "turn", "hatch", "chirp", "wait" ];
-    commands = [ "hop", "wait", "if-sound", "hatch", "turn" ];
+  
+  void setup() {
+    clearTurtles();
+    autostart = false;
+    String origin = "${window.location.protocol}//${window.location.host}"; 
+    window.postMessage("@blockly compile", origin);
   }
   
   
-  void reproduce() {
-    PurpleFrog copy = new PurpleFrog(model);
-    copy.x = x;
-    copy.y = y;
-    copy.right(rand.nextInt(360));
-    model.addTurtle(copy);
+  void play(num speedup) {
+    autostart = true;
+    String origin = "${window.location.protocol}//${window.location.host}"; 
+    window.postMessage("@blockly compile", origin);
+    // don't call super.play until blockly has compiled
+    //super.play(speedup);
+  }
+  
+  
+  void doCompile(String json) {
+    var behaviors = json.split('\n');
+    for (int i=0; i<behaviors.length && i<3; i++) {
+      String behavior = '[ ${behaviors[i]} ]';
+      String breed = 'breed$i';
+      bool loaded = false;
+      
+      for (Frog frog in turtles) {
+        if (frog.breed == breed) {
+          frog.loadBehavior(behavior);
+          loaded = true;
+        }
+      }
+      
+      // need to create a new breed?
+      if (!loaded) {
+        Frog frog = new Frog(this);
+        frog.breed = breed;
+        
+        switch (i % 3) {
+        case 0:
+          frog.img.src = 'images/bluefrog.png';
+          break;
+        case 1:
+          frog.img.src = 'images/purplefrog.png';
+          break;
+        case 2:
+          frog.img.src = 'images/greenfrog.png';
+          break;
+        }
+        frog.loadBehavior(behavior);
+        addTurtle(frog);
+      }
+    }
+    if (autostart) {
+      super.play(1);
+      autostart = false;
+    } else {
+      new Timer(const Duration(milliseconds: 10), draw);
+    }
+  }
+
+  
+  bool isRunning() {
+    for (Frog frog in turtles) {
+      if (frog.running) return true;
+    }
+    return false;
+  }
+  
+  
+  void tick() {
+    if (turtles.length > 100) {
+      restart();
+    }
+    else if (isRunning()) {
+      super.tick();
+    } else {
+      pause();
+    }
   }
 }
+
 
 class Frog extends Turtle {
-  
+
   ImageElement img;
   Tween tween;
-  //List commands = ["skip", "skip", "hatch" ];
-  // 1. List commands = [ "hop" ];
-  // 2. List commands = [ "jump", "croak"]; 
-  // 3. List commands = [ "turn", "hop" ];
-  // 4. List commands = ["if-edge", "turn", "jump" ];
-  // 5. List commands = [ "chirp", "wait" ];
-  // 6. List commands = [ "turn", "skip", "chirp" ];
-  List commands = [ "chirp", "wait" ];
-  
-  int cindex = 0;
   Random rand;
   num radius = -1;
   String label = null;
-  
+  bool running = false;
+
+
   Frog(Model model) : super(model) {
     img = new ImageElement();
     rand = new Random();
     right(rand.nextInt(360));
-    img.src = "images/bluefrog.png"; 
-    doCommand("wait");
+    img.src = "images/bluefrog.png";
+    tween = new Tween();
+    breed = "breed0";
+    
+    x = rand.nextDouble() * 16 - 8.0;
+    y = rand.nextDouble() * 16 - 8.0;
+
+    commands["hop"] = doMove;
+    commands["skip"] = doMove;
+    commands["jump"] = doMove;
+    commands["sing"] = doSound;
+    commands["chirp"] = doSound;
+    commands["croak"] = doSound;
+    commands["left"] = doLeft;
+    commands["right"] = doRight;
+    commands["turn-random"] = doTurnRandom;
+    commands["wait-sound"] = doWaitSound;
+    commands["rest"] = doRest;
+    commands["hatch"] = doHatch;
+    commands["near-edge"] = doNearEdge;
+    commands["hear-sound"] = doHearSound;
+    commands["turn-sound"] = doTurnSound;
   }
   
+
+  void reproduce() {
+    Frog copy = new Frog(model);
+    copy.x = x;
+    copy.y = y;
+    copy.heading = rand.nextInt(360);
+    copy.img.src = img.src;
+    copy.breed = breed;
+    copy.setBehavior(interp.program);
+    model.addTurtle(copy);
+  }
+  
+  
+  void tick() {
+    if (tween.isTweening()) {
+      tween.animate();
+    } else {
+      running = interp.step();
+    }
+    if (x < model.minWorldX || x > model.maxWorldX || y < model.minWorldY || y > model.maxWorldY) {
+      Sounds.playSound("splash");
+      die();
+    }
+  }
+
+
+  void loadBehavior(String code) {
+    interp.loadJSON(code);
+    running = true;
+  }
+  
+
+  void doMove(String cmd, List args) {
+    double length = 2.0;
+
+    if (cmd == "hop") {
+      length = 1.0; //0.5;
+    } else if (cmd == "skip") {
+      length = 1.0;
+    } else {
+      length = 2.0;
+    }
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.delay = 10;
+    tween.duration = (length * 10).toInt();
+    tween.onstart = (() => label = cmd);
+    tween.onend = (() { Sounds.playSound(cmd); label = null; radius = -1; });
+    tween.addControlPoint(0, 0);
+    tween.addControlPoint(length, 1);
+    tween.duration = 5;
+    tween.ondelta = ((value) => forward(value));
+    tween.play();
+  }
+
+
+  void doSound(String cmd, List args) {
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.onstart = (() { label = cmd; radius = 0.5; Sounds.playSound(cmd); });
+    tween.onend = (() { radius = -1; label = null; });
+    tween.addControlPoint(0, 0);
+    tween.addControlPoint(5, 1);
+    tween.duration = 50;
+    tween.delay = 20;
+    tween.ondelta = ((value) => radius += value);
+  }
+
+
+  void doLeft(String cmd, List args) {
+    num angle = rand.nextInt(100);
+    if (args.length > 0 && args[0] is num) {
+      angle = args[0];
+    }
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.delay = 20;
+    tween.duration = 20;
+    tween.onstart = (() => label = cmd);
+    tween.addControlPoint(0, 0);
+    tween.addControlPoint(angle, 1);
+    tween.ondelta = ((value) => left(value));
+    tween.onend = (() { label = null; radius = -1; });
+  }
+
+
+  void doRight(String cmd, List args) {
+    num angle = rand.nextInt(100);
+    if (args.length > 0 && args[0] is num) {
+      angle = args[0];
+    }
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.delay = 20;
+    tween.duration = 20;
+    tween.onstart = (() => label = cmd);
+    tween.addControlPoint(0, 0);
+    tween.addControlPoint(angle, 1);
+    tween.ondelta = ((value) => right(value));
+    tween.onend = (() { label = null; radius = -1; });
+  }
+
+  
+  void doTurnRandom(String cmd, List args) {
+    num angle = rand.nextInt(140) - 70;
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.delay = 20;
+    tween.duration = 20;
+    tween.onstart = (() => label = cmd);
+    tween.addControlPoint(0, 0);
+    tween.addControlPoint(angle, 1);
+    tween.ondelta = ((value) => left(value));
+    tween.onend = (() { label = null; radius = -1; });
+  }
+
+  
+  void doTurnSound(String cmd, List args) {
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.delay = 20;
+    tween.duration = 20;
+    tween.onstart = (() => label = cmd);
+    tween.onend = (() { label = null; radius = -1; });
+    
+    if (cmd == 'turn-sound') {
+      Frog target = hearFrog();
+      if (target != null) {
+        num angle = -1 * atan2(target.x - x, target.y - y) + PI;
+        if (angle < 0) angle += 2*PI;
+        num delta = angle - heading;
+
+        // turn in the shortest direction to the target
+        if (delta > PI) delta -= 2*PI;
+        if (delta < -PI) delta += 2*PI;
+
+        // turn at most 45 degrees in either direction
+        delta = min( max(delta, -PI/4), PI/4);
+        tween.addControlPoint(0, 0);
+        tween.addControlPoint(delta, 1);
+        tween.ondelta = ((value) => right(value / PI * 180));
+      }
+    }
+  }
+  
+
+  void doRest(String cmd, List args) {
+    int duration = rand.nextInt(50) + 30;
+    if (args.length > 0 && args[0] is num) {
+      duration = args[0].toInt();
+    }
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.delay = 10;
+    tween.duration = duration;
+    tween.onstart = (() => label = cmd);
+    tween.onend = (() { radius = -1; label = null; });
+  }
+  
+
+  void doWaitSound(String cmd, List args) {  
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.delay = 0;
+    tween.duration = 1;
+    tween.repeat = REPEAT_FOREVER;
+    tween.onstart = (() => label = cmd);
+    tween.ondelta = ((value) {
+      if (hearFrog() != null) {
+        tween.repeat = 1;
+        tween.stop();
+        radius = -1;
+        label = null;
+      }
+    });
+  }
+  
+  
+  bool doNearEdge(String cmd, List args) {
+    num px = (x - sin(heading) * 2.5);
+    num py = (y + cos(heading) * 2.5);
+    return (px > model.maxWorldX || px < model.minWorldX || py > model.maxWorldY || py < model.minWorldY);
+  }
+  
+  
+  bool doHearSound(String cmd, List args) {
+    return (hearFrog() != null);
+  }
+  
+  
+  Frog hearFrog() {
+    for (Frog frog in model.turtles) {
+      if (frog != this && frog.radius > 0) {
+        num d2 = (x - frog.x) * (x - frog.x) + (y - frog.y) * (y - frog.y);
+        if (frog.radius * frog.radius >= d2) {
+          return frog;
+        }
+      }
+    }
+    return null;    
+  }
+
+
+  void doHatch(String cmd, List args) {
+    int duration = rand.nextInt(50) + 30;
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.delay = 10;
+    tween.duration = duration;
+    tween.onstart = (() => label = null);
+    tween.onend = (() { radius = -1; label = null; reproduce(); });
+  }
+
+
   void doCommand(String cmd) {
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.delay = 8;
     tween.duration = 20;
     tween.onstart = (() => label = cmd);
-    tween.onend = (() { Sounds.playSound(cmd); label = null; radius = -1; transition(); });
-    
-    if (cmd == "jump") {
-      tween.addControlPoint(0, 0);
-      tween.addControlPoint(2, 1);
-      tween.ondelta = ((value) => forward(value));
-    }
-    else if (cmd == 'hop') {
-      tween.addControlPoint(0, 0);
-      tween.addControlPoint(1, 1);
-      tween.duration = 5;
-      tween.ondelta = ((value) => forward(value));
-    }
-    else if (cmd == 'skip') {
-      tween.addControlPoint(0, 0);
-      tween.addControlPoint(1.5, 1);
-      tween.duration = 10;
-      tween.ondelta = ((value) => forward(value));
-    }
-    else if (cmd == 'turn') {
-      tween.addControlPoint(0, 0);
-      tween.addControlPoint(180 * rand.nextDouble() - 90, 1);
-      tween.duration = 20;
-      tween.ondelta = ((value) => right(value));
-      tween.onend = (() { label = null; radius = -1; transition(); });
-    }
-    else if (cmd == 'turn-sound') {
-      Frog target = hearSound();
-      num angle = -1 * atan2(target.x - x, target.y - y);
-      if (angle < 0) angle += 2*PI;
-      num delta = angle - heading;
-      
-      // turn in the shortest direction to the target 
-      if (delta > PI) delta -= 2*PI;
-      if (delta < -PI) delta += 2*PI;
-      
-      // turn at most 45 degrees in either direction
-      delta = min( max(delta, -PI/4), PI/4);
-      tween.addControlPoint(0, 0);
-      tween.addControlPoint(delta, 1);
-      tween.duration = 20;
-      tween.ondelta = ((value) => right(value / PI * 180));
-    }
-    else if (cmd == 'sing') {
-      tween.addControlPoint(0, 0);
-      tween.addControlPoint(5, 1);
-      tween.duration = 50;
-      tween.delay = 0;
-      tween.ondelta = ((value) => radius += value);
-      tween.onstart = (() { label = cmd; radius = 0.5; Sounds.playSound(cmd); });
-      tween.onend = (() { radius = -1; label = null; transition(); });
-    }
-    else if (cmd == 'chirp') {
-      tween.addControlPoint(0, 0);
-      tween.addControlPoint(5, 1);
-      tween.duration = 50;
-      tween.delay = 0;
-      tween.ondelta = ((value) => radius += value);
-      tween.onstart = (() { label = cmd; radius = 0.5; Sounds.playSound(cmd); });
-      tween.onend = (() { radius = -1; label = null; transition(); });
-    }
-    else if (cmd == 'croak') {
-      tween.addControlPoint(0, 0);
-      tween.addControlPoint(5, 1);
-      tween.duration = 50;
-      tween.delay = 0;
-      tween.ondelta = ((value) => radius += value);
-      tween.onstart = (() { label = cmd; radius = 0.5; Sounds.playSound(cmd); });
-      tween.onend = (() { radius = -1; label = null; transition(); });
-    }
-    else if (cmd == 'if-edge') {
-      if (nearEdge()) {
-        doCommand(commands[cindex + 1]);
-      } else {
-        doCommand(commands[cindex + 2]);
-      }
-      cindex += 2;
-    }
-    else if (cmd == 'if-sound') {
-      if (hearSound() != null) {
-        doCommand(commands[cindex + 1]);
-      } else {
-        doCommand(commands[cindex + 2]);
-      }
-      cindex += 2;
-    }
-    else if (cmd == 'wait-sound') {
-      if (hearSound() != null) {
-        tween.duration = 1;
-        tween.delay = 0;
-        tween.onend = (() { radius = -1; label = null; transition(); });
-      } else {
-        tween.duration = 1;
-        tween.delay = 0;
-        tween.onstart = (() { label = 'wait for sound'; radius = -1; });
-        tween.onend = (() { cindex--; transition(); });
-      }
-    }
-    else if (cmd == 'hatch') {
-      reproduce();
-      tween.duration = 1;
-      tween.delay = 0;
-      tween.onend = transition;
-    }
-    else if (cmd == 'wait') {
-      tween.duration = rand.nextInt(100) + 30;
-      tween.onstart = null;
-      tween.onend = (() { radius = -1; label = null; transition(); });
-    }
+    tween.onend = (() { Sounds.playSound(cmd); label = null; radius = -1; });
     tween.play();
   }
-  
-  void transition() {
-    doCommand(commands[cindex]);
-    cindex = (cindex + 1) % commands.length;
-  }
-  
-   
+
+
   void draw(var ctx) {
     if (radius > 0) {
       num alpha = 1 - (radius / 5);
@@ -253,37 +412,5 @@ class Frog extends Turtle {
     num ih = img.height / 70;
     ctx.drawImage(img, -iw/2, -ih/2, iw, ih);
   }
-   
-  void tick() {
-    tween.animate();
-    if (x < model.minWorldX || x > model.maxWorldX || y < model.minWorldY || y > model.maxWorldY){
-      die();
-    }
-  }
-  
-  
-  bool nearEdge() {
-    num px = (x - sin(heading) * 2.5);
-    num py = (y + cos(heading) * 2.5);
-    return (px > model.maxWorldX || px < model.minWorldX || py > model.maxWorldY || py < model.minWorldY);
-  }
-  
-  
-  Frog hearSound() {
-    for (var frog in model.turtles) {
-      if (frog != this && frog.radius > 0) {
-        num d2 = (x - frog.x) * (x - frog.x) + (y - frog.y) * (y - frog.y);
-        if (frog.radius * frog.radius >= d2) return frog;
-      }
-    }
-    return null;
-  }
-   
-   void reproduce() {
-      Frog copy = new Frog(model);
-      copy.x = x;
-      copy.y = y;
-      copy.heading = rand.nextInt(360);
-      model.addTurtle(copy);
-   }
+
 }
