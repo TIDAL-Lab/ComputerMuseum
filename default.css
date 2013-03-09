@@ -48,12 +48,36 @@ body {
    width: 160px;
 }
 
-#restart-button {
-   margin-right: 5px;
+.toolbar {
+   background-color: rgb(22, 49, 79);
+   border-radius: 15px;
+   border: 2px solid white;
+   position: absolute;
+   top: 600px;
+   left: 70px;
+   text-align: center;
+   padding: 5px;
+   width: 450px;
+   z-index: 2;
 }
 
-.toolbar {
-   left: 70px;
-   top: 600px;
-   bottom: auto;
+button {
+   outline: none;
+   border: none;
+   width: 30px;
+   height: 30px;
+   border-radius: 2px;
+   margin-left: 5px;
+   margin-right: 5px;
+   display: inline-block;
 }
+
+#restart-button { background: url("images/restart.png") 0 0 no-repeat; }
+#restart-button:active { background-position: 3px 3px; }
+
+#play-button { background: url("images/play.png") 0 0 no-repeat; }
+#play-button:active { background-position: 3px 3px; }
+
+#code-button { background: url("images/fullscreen.png") 5px 5px no-repeat; }
+#code-button:active { background-position: 8px 8px; }
+
