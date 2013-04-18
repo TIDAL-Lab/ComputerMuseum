@@ -11,6 +11,8 @@ part 'tween.dart';
 part 'sounds.dart';
 
 
+WebSocket socket = null;
+
 
 void main() {
 
@@ -25,40 +27,61 @@ void main() {
 
   FrogPond model = new FrogPond();
   model.restart();
-  
+
+/*  
   window.onMessage.listen((event) {
     if (event.data.startsWith("@dart")) {
       model.doCompile(event.data.substring(5));
     }
   });
+*/
+
+  //--------------------------------------------------------------
+  // attempt to connect to the websocket server
+  //--------------------------------------------------------------
+  socket = new WebSocket('ws://127.0.0.1:8887');
+  socket.onOpen.listen((evt) { print ("Socket opened"); } );
+  socket.onError.listen((evt) { print ("Socket error"); } );
+  socket.onMessage.listen((evt) {
+    print(evt.data);
+    if (evt.data.startsWith("@dart RESTART")) {
+      model.restart();
+      sendMessage("RESTARTED");
+    }
+    else if (evt.data.startsWith("@dart PLAY")) {
+      if (model.ticks == 0) {
+        model.doCompile(evt.data.substring(11));
+        sendMessage("STARTED");
+      } else {
+        model.doCompile(evt.data.substring(11));
+        sendMessage("STARTED");
+      }
+    }
+    else if (evt.data.startsWith("@dart PAUSE")) {
+      model.pause();
+      sendMessage("PAUSED");
+    }
+  });
 }
+
+
+void sendMessage(String message) {
+  if (socket != null && socket.readyState == WebSocket.OPEN) {
+    socket.send("@blockly $message");
+  }
+}
+
 
 
 class FrogPond extends Model {
   
-  bool autostart = false;
-  
   FrogPond() : super("Frog Pond", "frog") {  
-    //patchSize = 22;
     wrap = false;
-    resize(width, height);
   }
 
   
   void setup() {
     clearTurtles();
-    autostart = false;
-    String origin = "${window.location.protocol}//${window.location.host}"; 
-    window.postMessage("@blockly compile", origin);
-  }
-  
-  
-  void play(num speedup) {
-    autostart = true;
-    String origin = "${window.location.protocol}//${window.location.host}"; 
-    window.postMessage("@blockly compile", origin);
-    // don't call super.play until blockly has compiled
-    //super.play(speedup);
   }
   
   
@@ -96,12 +119,7 @@ class FrogPond extends Model {
         addTurtle(frog);
       }
     }
-    if (autostart) {
-      super.play(1);
-      autostart = false;
-    } else {
-      new Timer(const Duration(milliseconds: 10), draw);
-    }
+    play(1);
   }
 
   
@@ -116,11 +134,14 @@ class FrogPond extends Model {
   void tick() {
     if (turtles.length > 100) {
       restart();
+      sendMessage("RESTARTED");
     }
     else if (isRunning()) {
       super.tick();
     } else {
       pause();
+      ticks = 0;
+      sendMessage("DONE");
     }
   }
 }
@@ -410,7 +431,7 @@ class Frog extends Turtle {
     }
     num iw = img.width / 70;
     num ih = img.height / 70;
-    ctx.drawImage(img, -iw/2, -ih/2, iw, ih);
+    ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
   }
 
 }

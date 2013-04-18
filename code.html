@@ -1,0 +1,113 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+   <title>Computer History Museum</title>
+   <meta name="apple-mobile-web-app-capable" content="yes" />
+   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      
+   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />   
+   <link rel="stylesheet" href="code.css" />
+   
+   <script type="text/javascript" src="blockly/blockly_compressed.js"></script>
+   <script type="text/javascript" src="blockly/language/en/_messages.js"></script>
+   <script type="text/javascript" src="language.js"></script>
+   <script type="text/javascript" src="blockly/generators/javascript.js"></script>   
+   <script type="text/javascript" src="generator.js"></script>
+   <script type="text/javascript">
+      
+   //---------------------------------------------------------------------------
+   // Attempt to open a web socket connection to communicate with the frog pond
+   //---------------------------------------------------------------------------
+   var socket = null;
+   if ("WebSocket" in window) {
+      socket = new WebSocket("ws://localhost:8887");
+      socket.onopen    = function(evt) { console.log("connected."); }
+      socket.onmessage = function(evt) { processEvent(evt.data); }
+      socket.onerror   = function(evt) { console.log("error in server connection"); }
+      socket.onclose   = function(evt) { console.log("server connection closed."); }
+   }
+   
+   // simulation is playing
+   var playing = false;
+   
+   Blockly.addChangeListener(function (d) {
+      alert("change");
+   });
+   
+   
+   //---------------------------------------------------------------------------
+   // Broadcast a message
+   //---------------------------------------------------------------------------
+   function sendMessage(message) {
+      if (socket != null && socket.readyState == 1) {
+         socket.send('@dart ' + message);
+      }
+   }
+
+   
+   //---------------------------------------------------------------------------
+   // Process dart event
+   //---------------------------------------------------------------------------
+   function processEvent(event) {
+      var button = document.getElementById("play-button");
+      if (event == "@blockly DONE" ||
+          event == "@blockly RESTARTED" ||
+          event == "@blockly PAUSED") {
+         button.style.backgroundImage = 'url("images/play.png")';
+         playing = false;
+      }
+      else if (event == "@blockly STARTED") {
+         button.style.backgroundImage = 'url("images/pause.png")';
+         playing = true;
+      }
+   }
+
+
+   //---------------------------------------------------------------------------
+   // Play / pause the simulation
+   //---------------------------------------------------------------------------
+   function playPause() {
+      if (playing) {
+         sendMessage("PAUSE");
+      } else {
+         var code = Blockly.Generator.workspaceToCode('JavaScript');
+         code = code.replace(/\]\[/g, '], [');
+         sendMessage("PLAY " + code);
+      }
+   }
+   
+   //---------------------------------------------------------------------------
+   // Clean up the blockly code and send it to dart via a message. Use the
+   // @dart directive to disambiguate sender and receiver.
+   //---------------------------------------------------------------------------
+   function compile() {
+      var code = Blockly.Generator.workspaceToCode('JavaScript');
+      //code = code.replace(/\n/g, '').replace(/\]\[/g, '], [')
+      code = code.replace(/\]\[/g, '], [');
+      //var origin = window.location.protocol + "//" + window.location.host;
+      //window.postMessage("@dart " + code, origin);
+      sendMessage(code);
+   }
+   </script>
+
+</head> 
+<body>
+   
+   <!-- BLOCKLY CODE WINDOW -->
+   <div id="frog-code"></div>
+      <script type="text/javascript">
+      Blockly.inject(document.getElementById('frog-code'), { path: './blockly/' } );
+      </script>
+   </div>
+   
+   
+   <!-- TOOLBAR -->
+   <div id="frog-toolbar">
+      <div>
+         <button id="restart-button" onclick="sendMessage('RESTART');">
+         <button id="play-button" onclick="playPause();"/>
+      </div>
+   </div>
+
+</body>
+</html>

@@ -33,46 +33,18 @@ Blockly.Language.frogs_chirp = {
 
 
 //--------------------------------------------------------------------------
-// TURN LEFT
+// TURN 
 //--------------------------------------------------------------------------
-Blockly.Language.frogs_left = {
+Blockly.Language.frogs_turn = {
   category: 'Frogs',
   init: function() {
     this.setColour(290);
-    this.appendDummyInput().appendTitle("turn left");
+    this.appendDummyInput()
+        .appendTitle("turn")
+        .appendTitle(new Blockly.FieldDropdown([["left", "left"], ["right", "right"], ["random", "random"]]), "DIR");
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setTooltip('Turn left');
-  }
-};
-
-
-//--------------------------------------------------------------------------
-// TURN RIGHT
-//--------------------------------------------------------------------------
-Blockly.Language.frogs_right = {
-  category: 'Frogs',
-  init: function() {
-    this.setColour(290);
-    this.appendDummyInput().appendTitle("turn right");
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.setTooltip('Turn right');
-  }
-};
-
-
-//--------------------------------------------------------------------------
-// TURN RANDOM
-//--------------------------------------------------------------------------
-Blockly.Language.frogs_turn_random = {
-  category: 'Frogs',
-  init: function() {
-    this.setColour(290);
-    this.appendDummyInput().appendTitle("turn random");
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.setTooltip('Turn in a random direction');
   }
 };
 
@@ -88,6 +60,21 @@ Blockly.Language.frogs_turn_sound = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setTooltip('Turn in the direction of a sound');
+  }
+};
+
+
+//--------------------------------------------------------------------------
+// REST
+//--------------------------------------------------------------------------
+Blockly.Language.frogs_rest = {
+  category: 'Frogs',
+  init: function() {
+    this.setColour(290);
+    this.appendDummyInput().appendTitle("rest")
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip('Rest for a moment');
   }
 };
 
@@ -137,21 +124,6 @@ Blockly.Language.controls_repeat = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setTooltip('Blocks inside this get run over and over again.');
-  }
-};
-
-
-//--------------------------------------------------------------------------
-// REST
-//--------------------------------------------------------------------------
-Blockly.Language.controls_rest = {
-  category: 'Control',
-  init: function() {
-    this.setColour(120);
-    this.appendDummyInput().appendTitle("rest")
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.setTooltip('Rest for a moment');
   }
 };
 

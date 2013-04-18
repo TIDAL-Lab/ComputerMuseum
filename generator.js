@@ -7,20 +7,23 @@ Blockly.JavaScript.frogs_chirp = function() {
   return '[ "chirp" ]';
 };
 
-Blockly.JavaScript.frogs_left = function() {
-  return '[ "left", [ "random", 100 ] ]';
-};
-
-Blockly.JavaScript.frogs_right = function() {
-  return '[ "right", [ "random", 100 ] ]';
-};
-
-Blockly.JavaScript.frogs_turn_random = function() {
-  return '[ "turn-random" ]';
+Blockly.JavaScript.frogs_turn = function() {
+  var dir = this.getTitleValue('DIR');
+  if (dir == 'left') {
+     return '[ "left", [ "random", 100 ] ]';
+  } else if (dir == 'right') {
+     return '[ "right", [ "random", 100 ] ]';
+  } else {
+    return '[ "turn-random" ]';
+  }
 };
 
 Blockly.JavaScript.frogs_turn_sound = function() {
   return '[ "turn-sound" ]';
+};
+
+Blockly.JavaScript.frogs_rest = function() {
+  return '[ "rest", [ "random", 50 ] ]';
 };
 
 Blockly.JavaScript.frogs_hatch = function() {
@@ -39,10 +42,6 @@ Blockly.JavaScript.controls_repeat = function() {
   } else {
      return '[ "repeat", ' + count + ', [ ' + branch + '] ]';
   }
-};
-
-Blockly.JavaScript.controls_rest = function() {
-  return '[ "rest", [ "random", 50 ] ]';
 };
 
 Blockly.JavaScript.controls_wait = function() {
