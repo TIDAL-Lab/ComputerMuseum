@@ -28,35 +28,35 @@ void main() {
   FrogPond model = new FrogPond();
   model.restart();
 
-/*  
-  window.onMessage.listen((event) {
-    if (event.data.startsWith("@dart")) {
-      model.doCompile(event.data.substring(5));
-    }
-  });
-*/
 
-  //--------------------------------------------------------------
+  //--------------------------------------------------------------------------
   // attempt to connect to the websocket server
-  //--------------------------------------------------------------
+  //--------------------------------------------------------------------------
   socket = new WebSocket('ws://127.0.0.1:8887');
   socket.onOpen.listen((evt) { print ("Socket opened"); } );
   socket.onError.listen((evt) { print ("Socket error"); } );
   socket.onMessage.listen((evt) {
     print(evt.data);
+    
+    //------------------------------------------
+    // RESTART event
+    //------------------------------------------
     if (evt.data.startsWith("@dart RESTART")) {
       model.restart();
       sendMessage("RESTARTED");
     }
-    else if (evt.data.startsWith("@dart PLAY")) {
-      if (model.ticks == 0) {
-        model.doCompile(evt.data.substring(11));
-        sendMessage("STARTED");
-      } else {
-        model.doCompile(evt.data.substring(11));
-        sendMessage("STARTED");
-      }
+    
+    //------------------------------------------
+    // PLAY event 
+    //------------------------------------------
+    else if (evt.data.startsWith("@dart PLAY (")) {
+      model.doCompile(evt.data.substring(12));
+      sendMessage("STARTED");
     }
+    
+    //------------------------------------------
+    // PAUSE event 
+    //------------------------------------------
     else if (evt.data.startsWith("@dart PAUSE")) {
       model.pause();
       sendMessage("PAUSED");
@@ -65,6 +65,9 @@ void main() {
 }
 
 
+//--------------------------------------------------------------------------
+// Send a message to the javascript blockly window
+//--------------------------------------------------------------------------
 void sendMessage(String message) {
   if (socket != null && socket.readyState == WebSocket.OPEN) {
     socket.send("@blockly $message");
@@ -86,15 +89,20 @@ class FrogPond extends Model {
   
   
   void doCompile(String json) {
+    int index = json.indexOf(")");
+    String fimg = json.substring(0, index);
+    json = json.substring(index + 1);
     var behaviors = json.split('\n');
     for (int i=0; i<behaviors.length && i<3; i++) {
       String behavior = '[ ${behaviors[i]} ]';
-      String breed = 'breed$i';
+      String breed = fimg;
       bool loaded = false;
-      
+
+      // update existing frogs      
       for (Frog frog in turtles) {
         if (frog.breed == breed) {
           frog.loadBehavior(behavior);
+          frog.img.src = fimg;
           loaded = true;
         }
       }
@@ -103,18 +111,7 @@ class FrogPond extends Model {
       if (!loaded) {
         Frog frog = new Frog(this);
         frog.breed = breed;
-        
-        switch (i % 3) {
-        case 0:
-          frog.img.src = 'images/bluefrog.png';
-          break;
-        case 1:
-          frog.img.src = 'images/purplefrog.png';
-          break;
-        case 2:
-          frog.img.src = 'images/greenfrog.png';
-          break;
-        }
+        frog.img.src = fimg;
         frog.loadBehavior(behavior);
         addTurtle(frog);
       }
@@ -161,7 +158,7 @@ class Frog extends Turtle {
     img = new ImageElement();
     rand = new Random();
     right(rand.nextInt(360));
-    img.src = "images/bluefrog.png";
+    img.src = "images/frog2.svg";
     tween = new Tween();
     breed = "breed0";
     
