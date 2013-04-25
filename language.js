@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------
 Blockly.Language.frogs_hop = {
   category: 'Frogs',
-  helpUrl: 'http://www.example.com/',
+  //helpUrl: 'http://www.example.com/',
   init: function() {
     this.setColour(290);
     this.appendDummyInput().appendTitle("hop")
@@ -21,7 +21,7 @@ Blockly.Language.frogs_hop = {
 //--------------------------------------------------------------------------
 Blockly.Language.frogs_chirp = {
   category: 'Frogs',
-  helpUrl: 'http://www.example.com/',
+  //helpUrl: 'http://www.example.com/',
   init: function() {
     this.setColour(290);
     this.appendDummyInput().appendTitle("chirp")
