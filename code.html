@@ -52,7 +52,8 @@
    //---------------------------------------------------------------------------
    var socket = null;
    if ("WebSocket" in window) {
-      socket = new WebSocket("ws://localhost:8887");
+      var host = window.location.hostname;
+      socket = new WebSocket("ws://" + host + ":8887");
       socket.onopen    = function(evt) { console.log("connected."); }
       socket.onmessage = function(evt) { processEvent(evt.data); }
       socket.onerror   = function(evt) { console.log("error in server connection"); }
