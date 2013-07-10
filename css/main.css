@@ -1,0 +1,145 @@
+@charset "utf-8";
+
+* { 
+   -webkit-user-select: none;
+   -webkit-tap-highlight-color: rgba(0,0,0,0);    
+}
+
+body {
+   margin: 0;
+   padding: 0;
+   color: #ccc;
+   font: 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
+   background-color: #333;
+}
+
+#pond {
+   position: absolute;
+   top: 0px;
+   left: 0px;
+   padding: 0;
+   margin: 0;
+   background-color: #445368;
+   background-image: url('../images/texture.png');
+   background-repeat: repeat;
+   background-position: 0 0;
+}
+
+#workspace {
+   position: absolute;
+   bottom: 0px;
+   left: 0px;
+   /* background-color: #789; */
+   /* border: 1px solid black; */
+   -webkit-user-select: none;
+   -webkit-user-drag: none;
+   -webkit-touch-callout: none;
+}
+
+/*
+#frog-picker {
+   border: 1px solid black;
+   position: absolute;
+   left: 550px;
+   top: 0px;
+   width: 200px;
+   height: 530px;
+   padding: 10px;
+   border: 1px solid black;
+   text-align: center;
+   border-top-right-radius: 20px;
+   background-color: rgba(0, 0, 0, 0.9);
+   z-index: 10;
+}
+*/
+
+#frog-drawer1 {
+   transition: top .5s ease-in-out;
+   -moz-transition: top .5s ease-in-out;
+   -webkit-transition: top .5s ease-in-out;
+   position: absolute;
+   top: 1080px;
+   left: 80px;
+   opacity: 0.95;
+   z-index: 10;
+}
+
+#frog-drawer2 {
+   transition: top .5s ease-in-out;
+   -moz-transition: top .5s ease-in-out;
+   -webkit-transition: top .5s ease-in-out;
+   -webkit-transform:rotate(180deg);
+   position: absolute;
+   top: 680px;
+   left: 880px;
+   opacity: 0.95;
+   z-index: 100;
+}
+
+#frog-dock1 {
+   background-color: rgb(22, 49, 79);
+   width: 748px;
+   height: 30px;
+   position: absolute;
+   left: 80px;
+   top: 1030px;
+   padding: 10px;
+   text-align: right;
+   z-index: 10;
+   border: 2px solid white;
+}
+
+#color-picker {
+   text-align: center;
+}
+
+.swatch {
+   background-color: red;
+   width: 30px;
+   height: 30px;
+   border-radius: 17px;
+   display: inline-block;
+   margin: 3px;
+}
+
+.pswatch {
+   background-color: #666;
+   width: 60px;
+   height: 60px;
+   display: inline-block;
+   margin: 3px;
+   border-radius: 30px;
+}
+
+#toolbar {
+   background-color: rgb(22, 49, 79);
+   border-radius: 15px;
+   border: 2px solid white;
+   position: absolute;
+   top: 40px;
+   left: 800px;
+   text-align: center;
+   padding: 5px;
+   width: 100px;
+   z-index: 3;
+}
+
+button {
+   outline: none;
+   border: none;
+   width: 30px;
+   height: 30px;
+   border-radius: 2px;
+   margin-left: 5px;
+   margin-right: 5px;
+   display: inline-block;
+}
+
+#restart-button { background: url("../images/restart.png") 0 0 no-repeat; }
+#restart-button:active { background-position: 3px 3px; }
+
+#play-button { background: url("../images/play.png") 0 0 no-repeat; }
+#play-button:active { background-position: 3px 3px; }
+
+#eject-button { background: url("../images/eject.png") 0 0 no-repeat; }
+#eject-button:active { background-position: 3px 3px; }
