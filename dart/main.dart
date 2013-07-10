@@ -36,7 +36,6 @@ part 'turtle.dart';
 part 'tween.dart';
 part 'utils.dart';
 part 'fblocks/block.dart';
-part 'fblocks/connector.dart';
 part 'fblocks/control.dart';
 part 'fblocks/if.dart';
 part 'fblocks/menu.dart';

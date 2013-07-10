@@ -24,12 +24,24 @@ part of ComputerHistory;
 
   
 class IfBlock extends BeginBlock {
-  
+
+  YesBlock yes;
 
   IfBlock(CodeWorkspace workspace) : super(workspace, 'if') {
     color = '#c92';
     param = new Parameter(this);
     param.values = [ 'see-fly?', 'near-water?', 'random?' ];
+  }
+  
+  
+  num get connectorX => targetX + BLOCK_WIDTH * 1.6;
+  
+  num get connectorY {
+    if (end != null && end.isInProgram) {
+      return end.getTopLine();
+    } else {
+      return targetY;
+    }
   }
   
   
@@ -42,45 +54,43 @@ class IfBlock extends BeginBlock {
   
   
   void drawLines(CanvasRenderingContext2D ctx) {
-    if (end != null) {
+    if (end != null && isInProgram && end.isInProgram) {
       ctx.save();
+      double y0 = end.getTopLine();
+      double y1 = end.getBottomLine();
       ctx.fillStyle = 'white';
       ctx.strokeStyle = 'white';
       ctx.lineWidth = LINE_WIDTH;
       ctx.lineCap = 'round';
-      double y0 = end.getTopLine();
+      drawLineArrow(ctx, x + BLOCK_WIDTH * 0.7, y0, x + BLOCK_WIDTH * 0.9, y0, LINE_WIDTH);
+      drawLineArrow(ctx, x + BLOCK_WIDTH * 0.7, y1, x + BLOCK_WIDTH * 0.9, y1, LINE_WIDTH);
+      
       ctx.beginPath();
-      ctx.moveTo(end.x, y0);
-      ctx.lineTo(x, y0);
+      //ctx.lineTo(x + BLOCK_WIDTH * 0.7, y0);
+      ctx.moveTo(x + BLOCK_WIDTH * 0.7, y0);
+      ctx.lineTo(x + BLOCK_WIDTH * 0.3, y);
+      
+      //ctx.moveTo(end.x - BLOCK_WIDTH * 0.2, end.y);
+      //ctx.lineTo(end.x - BLOCK_WIDTH * 0.6, y1);
+      //ctx.lineTo(x + BLOCK_WIDTH * 0.7, y1);
+      ctx.moveTo(x + BLOCK_WIDTH * 0.7, y1);
+      ctx.lineTo(x + BLOCK_WIDTH * 0.3, y);
       ctx.stroke();
+      
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText("YES?", x + BLOCK_WIDTH * 1.2, y0);
+      ctx.fillText("NO?", x + BLOCK_WIDTH * 1.2, y1);
       ctx.restore();
     }
+    super.drawLines(ctx);
   }
   
 
-  void draw(CanvasRenderingContext2D ctx) {
-    super.draw(ctx);
-      
-    if (end != null) {
-      ctx.save();
-      ctx.fillStyle = 'white';
-      ctx.strokeStyle = 'white';
-      double y0 = end.getTopLine();
-      double gap = height * 0.5;
-      if (y0 > y + height / 2) {
-        drawLineArrow(ctx, x, y0, x, y + gap, LINE_WIDTH);
-      } else if (y0 < y - height / 2) {
-        drawLineArrow(ctx, x, y0, x, y - gap, LINE_WIDTH);
-      }
-      ctx.restore();
-    }
-  }
-  
-  
   void touchUp(Contact c) {
     super.touchUp(c);
     if (end == null && isInProgram) {
-      end = new EndIf(workspace, x, y);
+      end = new EndIf(workspace, x + BLOCK_WIDTH * 1.3, y);
       end.begin = this;
       if (hasNext) {
         next.prev = end;
@@ -102,6 +112,36 @@ class IfBlock extends BeginBlock {
 }
 
 
+class YesBlock extends Block {
+  
+  IfBlock parent;
+  
+  YesBlock(CodeWorkspace workspace, IfBlock parent) : super(workspace, 'YES?') {
+    this.parent = parent;
+    prev = parent;
+    param = null;
+  }
+  
+  num get connectorX => targetX;
+  
+  num get targetY {
+    if (parent.end != null && parent.end.isInProgram) {
+      return parent.end.getTopLine();
+    } else {
+      return parent.connectorY;
+    }
+  }
+  
+  void drawSockets(CanvasRenderingContext2D ctx) { }
+  
+  void drawLines(CanvasRenderingContext2D ctx) { }
+
+  bool containsTouch(Contact c) {
+    return false;
+  }
+}
+
+
 class EndIf extends EndBlock {
   
   
@@ -111,24 +151,44 @@ class EndIf extends EndBlock {
     this.y = y;
   }
   
+  num get targetY {
+    if (begin.isInProgram) {
+      return begin.targetY;
+    } else {
+      return super.targetY;
+    }
+  }
   
-  void draw(CanvasRenderingContext2D ctx) {
-    double y1 = getTopLine();
-    ctx.save();
-    {
-      ctx.strokeStyle = 'white';
-      ctx.fillStyle = 'white';
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.lineWidth = LINE_WIDTH;
+  num get targetX {
+    if (prev == begin) {
+      return prev.connectorX + BLOCK_WIDTH;
+    } else {
+      return super.targetX;
+    }
+  }
+  
+  void drawLines(CanvasRenderingContext2D ctx) {
+    if (!begin.isInProgram) {
+      super.drawLines(ctx);
+    } else if (isInProgram) {
+      double y0 = getTopLine();
+      double y1 = getBottomLine();
+      double x0 = begin.x + BLOCK_WIDTH * 1.9;
+      if (begin != prev) x0 = prev.x;
       ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(x, y1);
-      //ctx.lineTo(begin.x, y1);
+      ctx.moveTo(x - BLOCK_WIDTH * 0.2, y);
+      ctx.lineTo(x - BLOCK_WIDTH * 0.6, y0);
+      ctx.lineTo(x0, y0);
+      
+      ctx.moveTo(x - BLOCK_WIDTH * 0.2, y);
+      ctx.lineTo(x - BLOCK_WIDTH * 0.6, y1);
+      ctx.lineTo(begin.x + BLOCK_WIDTH * 1.9, y1);
+      
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = LINE_WIDTH;
+      ctx.lineCap = 'round';
       ctx.stroke();
     }
-    ctx.restore();
-    super.draw(ctx);
   }
 
   

@@ -53,10 +53,10 @@ void drawLineArrow(CanvasRenderingContext2D ctx,
     double theta = atan2(x1 - x0, y1 - y0);
     num x2 = x1 + sin(theta) * width * 1.2;
     num y2 = y1 + cos(theta) * width * 1.2;
-    num x3 = x1 + sin(theta + PI * 0.6) * width;
-    num y3 = y1 + cos(theta + PI * 0.6) * width;
-    num x4 = x1 + sin(theta - PI * 0.6) * width;
-    num y4 = y1 + cos(theta - PI * 0.6) * width;
+    num x3 = x1 + sin(theta + PI * 0.6) * width * 1.2;
+    num y3 = y1 + cos(theta + PI * 0.6) * width * 1.2;
+    num x4 = x1 + sin(theta - PI * 0.6) * width * 1.2;
+    num y4 = y1 + cos(theta - PI * 0.6) * width * 1.2;
     ctx.beginPath();
     ctx.moveTo(x2, y2);
     ctx.lineTo(x3, y3);

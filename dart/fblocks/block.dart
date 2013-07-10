@@ -25,7 +25,7 @@ part of ComputerHistory;
 
 const BLOCK_WIDTH = 58;
 const BLOCK_HEIGHT = 38;
-const LINE_WIDTH = 7;
+const LINE_WIDTH = 6.5;
   
   
 /**
@@ -33,6 +33,7 @@ const LINE_WIDTH = 7;
  */
 class Block implements Touchable {
 
+  /* Link back to the main workspace */
   CodeWorkspace workspace;
   
   /* Center of the block */
@@ -53,9 +54,6 @@ class Block implements Touchable {
   /* Is the block being dragged */
   bool dragging = false;
   
-  /* Outgoing connector for this block */
-  Connector connector;
-  
   /* Highlight the outgoing connector */
   bool highlight = false;
   
@@ -71,9 +69,7 @@ class Block implements Touchable {
   bool wasInProgram = false;
   
   
-  Block(this.workspace, this.text) {
-    connector = new Connector(this);
-  }
+  Block(this.workspace, this.text);
   
   
   Block clone() {
@@ -81,11 +77,13 @@ class Block implements Touchable {
     b.x = x;
     b.y = y;
     b.color = color;
+    b.textColor = textColor;
     if (hasParam) {
       b.param = param.clone(b);
     }
     return b;
   }
+  
   
   bool get hasParam => param != null;
   
@@ -97,34 +95,17 @@ class Block implements Touchable {
   
   int get height => BLOCK_HEIGHT;
   
-  bool get isInProgram => startBlock != null;
+  bool get isInProgram => (isStartBlock || hasPrev);
   
   bool get isStartBlock => false;
   
-
-  void eval(Frog frog) {
-    frog.doCommand(text, param);
-  }
+  num get connectorX => targetX + BLOCK_WIDTH * 1.2;
   
+  num get connectorY => targetY;
   
-  Block step(Frog frog) {
-    return next;
-  }
-  
-  
-  Block get startBlock {
-    Block p = this;
-    while (p != null) {
-      if (p.isStartBlock) return p;
-      p = p.prev;
-    }
-    return null;
-  }
-  
-    
   num get targetX {
     if (hasPrev) {
-      num tx = prev.targetX + BLOCK_WIDTH * 1.2;
+      num tx = prev.connectorX;
       if (prev.highlight) tx += BLOCK_WIDTH * 1.2;
       return tx;
     } else {
@@ -132,28 +113,35 @@ class Block implements Touchable {
     }
   }
   
+  num get targetY => hasPrev ? prev.connectorY : y;
   
-  num get targetY {
-    Block start = startBlock;
-    if (start != null) {
-      return start.y;
-    } else {
-      return y;
-    }
+
+/**
+ * When the program is running, this evaluates this block for a specific frog
+ */
+  void eval(Frog frog) {
+    frog.doCommand(text, param);
   }
   
   
-  /**
-   * Is it syntactically ok to put this block after the 'before' block?
-   */
+/**
+ * Advances the program to the next statement
+ */
+  Block step(Frog frog) {
+    return next;
+  }
+  
+    
+/**
+ * Is it syntactically ok to put this block after the 'before' block?
+ */
   bool checkSyntax(Block before) {
     return true;
   }
   
   
   bool animate() {
-    Block start = startBlock;
-    if (start != null && prev != null) {
+    if (isInProgram) {
       double dx = targetX - x;
       double dy = targetY - y;
       if (dx.abs() > 1 || dy.abs() > 1) {
@@ -189,29 +177,31 @@ class Block implements Touchable {
   }
   
 
-/**
- * Find overlapping connection
- */
-  Connector findConnector(Block target) {
-    if (target != this && target.checkSyntax(this)) {
-      if (connector != null && connector.overlaps(target)) {
-        return connector;
-      }
-    }
-    return null;
+  bool overlapsConnector(Block target) {
+    double cx = connectorX - BLOCK_WIDTH / 2;
+    double cy = connectorY - BLOCK_HEIGHT / 2;
+    double tx = target.x - target.width / 2;
+    double ty = target.y - target.height / 2;
+    return (tx + target.width > cx && ty + target.height > cy &&
+            tx < cx + BLOCK_WIDTH && ty < cy + BLOCK_HEIGHT);
   }
-  
+
 
 /**
  * Add target into the chain of blocks after this block
  */
-  void snapTogether(Block target) {
-    if (hasNext) {
-      target.next = next;
-      next.prev = target;
+  bool snapTogether(Block target) {
+    if (overlapsConnector(target)) {
+      if (hasNext) {
+        target.next = next;
+        next.prev = target;
+      }
+      target.prev = this;
+      next = target;
+      return true;
+    } else {
+      return false;
     }
-    target.prev = this;
-    next = target;
   }
   
   
@@ -219,13 +209,14 @@ class Block implements Touchable {
  * Draw connecting lines
  */
   void drawLines(CanvasRenderingContext2D ctx) {
-    if (hasNext) {
+    if (hasPrev && !(prev is IfBlock)) {
       ctx.save();
       ctx.lineWidth = LINE_WIDTH;
+      ctx.lineCap = 'butt';
       ctx.strokeStyle = 'white';
       ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(next.x, y);
+      ctx.moveTo(prev.x, targetY);
+      ctx.lineTo(x, targetY);
       ctx.stroke();
       ctx.restore();
     }
@@ -300,9 +291,9 @@ class Block implements Touchable {
  * Draw sockets where other blocks can be snapped into place
  */
   void drawSockets(CanvasRenderingContext2D ctx) {
-    if (connector != null && highlight) {
-      double cx = x + BLOCK_WIDTH * 1.2;
-      double cy = y;
+    if (highlight) {
+      double cx = connectorX;
+      double cy = connectorY;
       num cw = width;
       num ch = height;
       ctx.save();

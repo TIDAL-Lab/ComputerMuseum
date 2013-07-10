@@ -47,13 +47,23 @@ class StartBlock extends Block {
   bool get isStartBlock => true;
 
   
-  Connector findConnector(Block target) {
+  bool overlapsConnector(Block target) {
     if (next == end) {
-      return connector;
+      return true;
     } else {
-      return super.findConnector(target);
+      return super.overlapsConnector(target);
     }
   }
+
+  
+  bool snapTogether(Block target) {
+    if (super.overlapsConnector(target)) {
+      return super.snapTogether(target);
+    } else {
+      return false;
+    }
+  }
+
   
   bool animate() {
     if (hasNext) {
@@ -86,6 +96,7 @@ class StartBlock extends Block {
     ctx.fill();
     ctx.lineWidth = 6;
     ctx.lineJoin = 'miter';
+    ctx.lineCap = 'butt';
     ctx.strokeStyle = 'white';
     ctx.stroke();
   }
@@ -138,12 +149,28 @@ class EndProgramBlock extends Block {
 
   
   EndProgramBlock(CodeWorkspace workspace, double x, double y) : super(workspace, 'end') {
-    connector = null;
     this.x = x;
     this.y = y;
     color = '#a00';
   }
+
   
+  bool overlapsConnector(Block target) {
+    return false;
+  }
+  
+  
+  void drawLines(CanvasRenderingContext2D ctx) {
+    /*
+    ctx.save();
+    {
+      ctx.strokeStyle = 'white';
+      ctx.fillStyle = 'white';
+      drawLineArrow(ctx, prev.x, y, x - BLOCK_WIDTH * 0.4, y, LINE_WIDTH);
+    }
+    ctx.restore();
+    */
+  }
   
   void draw(CanvasRenderingContext2D ctx) {
     super.draw(ctx);
@@ -151,7 +178,7 @@ class EndProgramBlock extends Block {
     {
       ctx.strokeStyle = 'white';
       ctx.fillStyle = 'white';
-      drawLineArrow(ctx, x - BLOCK_WIDTH * 0.6, y, x - BLOCK_WIDTH * 0.5, y, LINE_WIDTH);
+      drawLineArrow(ctx, prev.x + prev.width / 2, y, x - BLOCK_WIDTH * 0.4, y, LINE_WIDTH);
     }
     ctx.restore();
   }

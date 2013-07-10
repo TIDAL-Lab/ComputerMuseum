@@ -215,10 +215,8 @@ class CodeWorkspace extends TouchManager {
   bool snapTogether(Block target) {
     for (Block block in blocks) {
       if (block != target && !block.dragging) {
-        Connector con = block.findConnector(target);
-        if (con != null && con.overlaps(target)) {
-          block.snapTogether(target);
-          return true;
+        if (block.snapTogether(target)) {
+          return true;  
         }
       }
     }
@@ -237,8 +235,9 @@ class CodeWorkspace extends TouchManager {
   Block findInsertionPoint(Block target) {
     for (Block block in blocks) {
       if (block != target && !block.dragging) {
-        Connector c = block.findConnector(target);
-        if (c != null) return block;
+        if (block.overlapsConnector(target) && target.checkSyntax(block)) {
+          return block;
+        }
       }
     }
     return null;
@@ -321,7 +320,6 @@ class CodeWorkspace extends TouchManager {
     //------------------------------------------------
     // draw frogs
     //------------------------------------------------
-    /*
     for (Frog frog in frogs) {
       if (frog.saved != null) {
         ctx.globalAlpha = 0.3;
@@ -330,7 +328,6 @@ class CodeWorkspace extends TouchManager {
       }
       frog.draw(ctx);
     }
-    */
     
     //if (frog.label != "hatch") {
     //  ctx.globalAlpha = 0.3;

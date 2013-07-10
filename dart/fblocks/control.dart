@@ -63,12 +63,16 @@ class EndBlock extends Block {
     int nest = 0, max = 0;
     Block b = prev;
     while (b != begin && b != null) {
-      if (b is EndBlock) {
+      if (b is EndRepeat) {
         nest++;
-        if (nest > max) max = nest;
-      } else if (b is BeginBlock) {
+      } else if (b is EndIf) {
+        nest += 2;
+      } else if (b is RepeatBlock) {
         nest--;
+      } else if (b is IfBlock) {
+        nest -= 2;
       }
+      if (nest > max) max = nest;
       b = b.prev;
     }
     return y - BLOCK_HEIGHT - BLOCK_HEIGHT * 0.4 * max;
@@ -82,7 +86,7 @@ class EndBlock extends Block {
       if (b is EndIf) nest++;
       b = b.prev;
     }
-    return y - BLOCK_HEIGHT - BLOCK_HEIGHT * 0.4 * nest;
+    return y + BLOCK_HEIGHT + BLOCK_HEIGHT * 0.4 * nest;
   }
 
   
