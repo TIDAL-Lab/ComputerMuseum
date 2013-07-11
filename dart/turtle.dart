@@ -34,11 +34,17 @@ abstract class Turtle {
   /* heading in radians */
   double heading = 0.0;
   
+  /* visual alpha (opacity) of the turtle */
+  double opacity = 1.0;
+  
   /* bitmap image */
   ImageElement img = new ImageElement();
   
   /* random number generator */
   static Random rand = new Random();
+  
+  /* turtles-own variable storage */
+  Map<String, dynamic> variables = new Map<String, dynamic>();
 
   
   Turtle() {
@@ -54,6 +60,7 @@ abstract class Turtle {
     y = other.y;
     size = other.size;
     heading = other.heading;
+    opacity = other.opacity;
     img.src = other.img.src;
   }
 
@@ -80,14 +87,41 @@ abstract class Turtle {
   
   
   bool animate();
-    
+  
+  
+  dynamic operator[] (String key) {
+    return variables[key];
+  }
+  
+  
+  void operator[]=(String key, var value) {
+    variables[key] = value;
+  }
+  
+  
+  bool hasVariable(String name) {
+    return variables.containsKey(name);
+  }
+  
+  
+  void removeVariable(String name) {
+    variables.remove(name);
+  }
+  
+  
+  void clearVariables() {
+    variables.clear();
+  }
+  
   
   void draw(CanvasRenderingContext2D ctx) {
     ctx.save();
     {
+      if (opacity < 1.0) ctx.globalAlpha = opacity;
       ctx.translate(x, y);
       ctx.rotate(heading);
       _drawLocal(ctx);
+      ctx.globalAlpha = 1.0;
     }    
     ctx.restore();
   }

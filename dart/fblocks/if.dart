@@ -25,8 +25,6 @@ part of ComputerHistory;
   
 class IfBlock extends BeginBlock {
 
-  YesBlock yes;
-
   IfBlock(CodeWorkspace workspace) : super(workspace, 'if') {
     color = '#c92';
     param = new Parameter(this);

@@ -32,9 +32,15 @@ const LINE_WIDTH = 6.5;
  * Visual programming block
  */
 class Block implements Touchable {
+  
+  /* Used to generate unique block id numbers */
+  static int BLOCK_ID = 0;
 
   /* Link back to the main workspace */
   CodeWorkspace workspace;
+  
+  /* Unique block ID number */
+  int id;
   
   /* Center of the block */
   double x = 0.0, y = 0.0;
@@ -69,7 +75,9 @@ class Block implements Touchable {
   bool wasInProgram = false;
   
   
-  Block(this.workspace, this.text);
+  Block(this.workspace, this.text) {
+    id = Block.BLOCK_ID++;
+  }
   
   
   Block clone() {
@@ -119,8 +127,8 @@ class Block implements Touchable {
 /**
  * When the program is running, this evaluates this block for a specific frog
  */
-  void eval(Frog frog) {
-    frog.doCommand(text, param);
+  void eval(Frog frog, [bool preview = false]) {
+    frog.doCommand(text, param, preview);
   }
   
   
@@ -281,9 +289,9 @@ class Block implements Touchable {
   
   
   void _outline(CanvasRenderingContext2D ctx, num x, num y, num w, num h) {
-    //ctx.beginPath();
-    //ctx.arc(x, y, BLOCK_WIDTH ~/ 2, 0, PI * 2, true);
-    roundRect(ctx, x - w/2, y - h/2, w, h, h/3);
+    ctx.beginPath();
+    ctx.arc(x, y, w/2, 0, PI * 2, true);
+    //roundRect(ctx, x - w/2, y - h/2, w, h, h/3);
   }
 
   
@@ -371,7 +379,6 @@ class Block implements Touchable {
       next = null;
     }
     workspace.moveToTop(this);
-    workspace.resetPreview();
     workspace.preview(this);
     workspace.repaint();
     return true;

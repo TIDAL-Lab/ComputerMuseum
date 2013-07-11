@@ -24,6 +24,9 @@ part of ComputerHistory;
 
 
 class Frog extends Turtle implements Touchable {
+  
+  /* workspace that controls this frog */
+  CodeWorkspace workspace;
 
   /* used for animation effects */
   Tween tween = new Tween();
@@ -37,37 +40,15 @@ class Frog extends Turtle implements Touchable {
   /* length of the tongue coming out of the frog */
   double tongue = 0.0;
 
-  /* saved state of this frog (for previewing) TODO: stack? */
-  Frog saved = null;
+  /* saved state of this frog (for previewing) */
+  Frog ghost = null;
   
   /* this frogs control program */
   Program program;
   
   
-  Frog() : super() {
+  Frog(this.workspace) : super() {
     img.src = "images/bluefrog.png";
-  }
-  
-  
-/**
- * Save the state of this frog
- */
-  void save() {
-    saved = hatch();
-    saved.label = null;
-    saved.tongue = 0.0;
-    saved.radius = -1.0;
-  }
-  
-
-/**
- * Restore the state of this frog
- */
-  void restore() {
-    if (saved != null) {
-      copy(saved);
-      saved = null;
-    }
   }
   
   
@@ -86,7 +67,7 @@ class Frog extends Turtle implements Touchable {
 
   
   Frog hatch() {
-    Frog clone = new Frog();
+    Frog clone = new Frog(workspace);
     clone.copy(this);
     return clone;
   }
@@ -98,6 +79,9 @@ class Frog extends Turtle implements Touchable {
       return true;
     } else if (program != null && program.isRunning) {
       program.step();
+      return true;
+    } else if (ghost != null && ghost.tween.isTweening()) {
+      ghost.tween.animate();
       return true;
     } else {
       return false;
@@ -111,7 +95,7 @@ class Frog extends Turtle implements Touchable {
     // draw sound wave
     //---------------------------------------------
     if (radius > 0) {
-      num alpha = 1 - (radius / 150.0);
+      num alpha = 1 - (radius / 175.0);
       ctx.strokeStyle = "rgba(255, 255, 255, $alpha)";
       ctx.lineWidth = 4;
       ctx.beginPath();
@@ -124,6 +108,7 @@ class Frog extends Turtle implements Touchable {
     //---------------------------------------------
     if (label != null) {
       ctx.save();
+      ctx.globalAlpha = 1.0;
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.textBaseline = "top";
       ctx.textAlign = "center";
@@ -142,27 +127,26 @@ class Frog extends Turtle implements Touchable {
       ctx.lineWidth = 5;
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.lineTo(0, tongue * -90.0);
+      ctx.lineTo(0, tongue * size * -90.0);
       ctx.stroke();
     }
     
     //---------------------------------------------
     // draw frog image
     //---------------------------------------------
-    num iw = img.width * 0.4;
-    num ih = img.height * 0.4;
+    num iw = img.width * 0.5 * size;
+    num ih = img.height * 0.5 * size;
     
     ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
   }
   
   
-  void doCommand(String cmd, Parameter param) {
+  void doCommand(String cmd, Parameter param, [ bool preview = false ]) {
+    opacity = 1.0;
     if (cmd == "hop") {
-      doMove(cmd, param);
-    } else if (cmd == "left") {
-      doTurn(cmd, param);
-    } else if (cmd == "right") {
-      doTurn(cmd, param);
+      doMove(cmd, param, preview);
+    } else if (cmd == "left" || cmd == "right") {
+      doTurn(cmd, param, preview);
     } else if (cmd == "chirp") {
       doSound(cmd);
     } else if (cmd == "rest") {
@@ -170,23 +154,31 @@ class Frog extends Turtle implements Touchable {
     } else if (cmd == "eat") {
       doEat(cmd);
     } else if (cmd == "hatch") {
-      doHatch(cmd);
+      doHatch(cmd, preview);
     } else if (cmd == "end") {
       label = null;
+    } else if (cmd == "repeat") {
+      doRepeat(cmd, param);
     }
   }
-  
+
   
   void _pause() {
     tween = new Tween();
     tween.delay = 0;
     tween.duration = 20;
     tween.onstart = (() { });
-    tween.onend = (() { radius = -1.0; });
+    tween.onend = (() { label = null; opacity = 1.0; ghost = null; radius = -1.0; });
   }
   
 
-  void doMove(String cmd, Parameter param) {
+  void doMove(String cmd, Parameter param, [ bool preview = false ]) {
+    Frog target = this;
+    if (preview) {
+      ghost = hatch();
+      ghost.opacity = 0.3;
+      target = ghost;
+    }
     double length = 30.0;
     if (param.value is num) {
       length *= param.value;
@@ -195,23 +187,22 @@ class Frog extends Turtle implements Touchable {
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.delay = 0;
-    tween.duration = 10;
-    tween.onstart = (() { label = s; });
+    tween.duration = 12;
+    tween.onstart = (() { target.label = s; });
     tween.onend = (() { _pause(); });
     tween.addControlPoint(0, 0);
     tween.addControlPoint(length, 1);
-    //tween.duration = 5;
-    tween.ondelta = ((value) => forward(value));
+    tween.ondelta = ((value) => target.forward(value));
   }
-
+  
 
   void doSound(String cmd) {
     tween = new Tween();
     tween.function = TWEEN_SINE2;
-    tween.onstart = (() { label = cmd; radius = 0.5; });
+    tween.onstart = (() { Sounds.playSound(cmd); label = cmd; radius = 0.5; });
     tween.onend = (() { radius = -1.0; _pause(); });
     tween.addControlPoint(0, 0);
-    tween.addControlPoint(150, 1);
+    tween.addControlPoint(175, 1);
     tween.duration = 25;
     tween.delay = 0;
     tween.ondelta = ((value) => radius += value);
@@ -227,11 +218,14 @@ class Frog extends Turtle implements Touchable {
     tween.addControlPoint(1.0, 0.5);
     tween.addControlPoint(0.0, 1.0);
     tween.duration = 30;
-    tween.ondelta = ((value) => tongue += value);
+    tween.ondelta = ((value) {
+      tongue += value;
+      if (tongue == 1.0) Sounds.playSound("swoosh");
+    });
   }
 
 
-  void doTurn(String cmd, Parameter param) {
+  void doTurn(String cmd, Parameter param, [ bool preview = false ]) {
     num angle = 30;
     if (param.value is num) {
       angle = param.value;
@@ -241,15 +235,21 @@ class Frog extends Turtle implements Touchable {
     if (cmd == 'right') {
       angle *= -1;
     }
+    Frog target = this;
+    if (preview) {
+      ghost = hatch();
+      opacity = 0.3;
+      target = ghost;
+    }
     String s = "$cmd ${param.valueAsString}";
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.delay = 0;
     tween.duration = 20;
-    tween.onstart = (() => label = s);
+    tween.onstart = (() => target.label = s);
     tween.addControlPoint(0, 0);
     tween.addControlPoint(angle, 1);
-    tween.ondelta = ((value) => left(value));
+    tween.ondelta = ((value) => target.left(value));
     tween.onend = (() { _pause(); });
   }
 
@@ -264,17 +264,41 @@ class Frog extends Turtle implements Touchable {
     tween.onend = (() { _pause(); });
   }
   
-
-  void doHatch(String cmd) {
+  
+  void doRepeat(String cmd, Parameter param) {
     tween = new Tween();
-    tween.function = TWEEN_SINE2;
     tween.delay = 0;
     tween.duration = 10;
     tween.onstart = (() => label = cmd);
     tween.onend = (() { _pause(); });
-    tween.addControlPoint(0, 0);
-    tween.addControlPoint(100, 1.0);
-    tween.ondelta = ((value) => y += value);
+  }
+  
+
+  void doHatch(String cmd, [ bool preview = false ]) {
+    Frog baby = hatch();
+    if (preview) {
+      ghost = baby;
+    } else {
+      workspace.addFrog(baby);
+    }
+    baby.size = 0.05;
+    baby.left(Turtle.rand.nextInt(360).toDouble());
+    baby.forward(35.0);
+    tween = new Tween();
+    tween.function = TWEEN_DECAY;
+    tween.delay = 0;
+    tween.duration = 15;
+    tween.onstart = (() => label = cmd);
+    tween.onend = (() {
+      _pause();
+      if (program != null) {
+        baby.program = new Program.copy(baby, program);
+        //baby.program.skip();
+      }
+    });
+    tween.addControlPoint(0.05, 0);
+    tween.addControlPoint(1.0, 1.0);
+    tween.ondelta = ((value) => baby.size += value);
   }
   
   bool containsTouch(Contact c) { return false; }

@@ -32,12 +32,15 @@ class FrogPond {
   
   int width, height;
   
+  ImageElement lilypad = new ImageElement();
+  
   
   FrogPond(String id) {
     canvas = document.query("#${id}");
     ctx = canvas.getContext('2d');
     width = canvas.width;
     height = canvas.height;
+    lilypad.src = "images/lilypad.png";
     //registerEvents(canvas);
     
     workspace = new CodeWorkspace(canvas, this);
@@ -54,6 +57,7 @@ class FrogPond {
   
   void draw() {
     ctx.clearRect(0, 0, width, height);
+    ctx.drawImage(lilypad, 200, 20);
     workspace.draw(ctx);
   }
   

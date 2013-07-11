@@ -47,14 +47,9 @@ class CodeWorkspace extends TouchManager {
     registerEvents(document.documentElement);
     //canvas.onSelectStart.listen((e) { e.preventDefault(); });
     
-    Frog frog = new Frog();
+    Frog frog = new Frog(this);
     frog.x = canvas.width / 2;
-    frog.y = 200.0;
-    addFrog(frog);
-    
-    frog = new Frog();
-    frog.x = canvas.width - 100.0;
-    frog.y = 300.0;
+    frog.y = 250.0;
     addFrog(frog);
     
     
@@ -116,7 +111,7 @@ class CodeWorkspace extends TouchManager {
     menu.addBlock(block);
         
     // START block
-    start = new StartBlock(this, 55.0, canvas.height - 140.0);
+    start = new StartBlock(this, 75.0, canvas.height - 170.0);
     addBlock(start);
     
     addTouchable(menu);
@@ -161,7 +156,6 @@ class CodeWorkspace extends TouchManager {
   
   void playProgram() {
     for (Frog frog in frogs) {
-      frog.restore();
       frog.program = new Program(frog, start);
       frog.program.play();
     }
@@ -176,7 +170,6 @@ class CodeWorkspace extends TouchManager {
   
   void restartProgram() {
     for (Frog frog in frogs) {
-      frog.restore();
       if (frog.program != null) {
         frog.program.restart();
       }
@@ -186,15 +179,7 @@ class CodeWorkspace extends TouchManager {
   
   void preview(Block block) {
     for (Frog frog in frogs) {
-      frog.save();
-      block.eval(frog);
-    }
-  }
-  
-  
-  void resetPreview() {
-    for (Frog frog in frogs) {
-      frog.restore();
+      block.eval(frog, true);
     }
   }
   
@@ -253,7 +238,8 @@ class CodeWorkspace extends TouchManager {
       }
     }
     
-    for (Frog frog in frogs) {
+    for (int i=0; i<frogs.length; i++) {
+      Frog frog = frogs[i];  // use int loop to avoid concurrent modification exception
       if (frog.animate()) repaint = true;
     }
     
@@ -321,12 +307,10 @@ class CodeWorkspace extends TouchManager {
     // draw frogs
     //------------------------------------------------
     for (Frog frog in frogs) {
-      if (frog.saved != null) {
-        ctx.globalAlpha = 0.3;
-        frog.saved.draw(ctx);
-        ctx.globalAlpha = 1.0;
-      }
       frog.draw(ctx);
+      if (frog.ghost != null) {
+        frog.ghost.draw(ctx);
+      }
     }
     
     //if (frog.label != "hatch") {

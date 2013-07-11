@@ -43,6 +43,49 @@ class RepeatBlock extends BeginBlock {
   }
   
   
+  void eval(Frog frog, [bool preview = false]) {
+    String v = "repeat-counter-${id}";
+    if (!frog.hasVariable(v) || param.changed) {
+      frog.doRepeat("repeat ${param.value}", param);
+    } else {
+      frog.doRepeat("repeat ${frog[v]}", param);
+    }
+  }
+  
+  
+  Block step(Frog frog) {
+    String v = "repeat-counter-${id}";
+    
+    if (!frog.hasVariable(v) || param.changed) {
+      frog[v] = param.value;
+      param.changed = false;
+    }
+    
+    var p = frog[v];
+    
+    // counting loop
+    if (p is int) {
+      if (p <= 0) {
+        frog.removeVariable(v);
+        return end.next;
+      } else {
+        frog[v] = p - 1;
+        return next;
+      }
+    }
+    
+    // infinite loop
+    else if (p == "forever") {
+      return next;
+    }
+    
+    // conditional loop
+    else {
+      return next;
+    }
+  }
+  
+  
   void drawLines(CanvasRenderingContext2D ctx) {
     ctx.fillStyle = 'white';
     ctx.strokeStyle = 'white';
@@ -75,6 +118,7 @@ class RepeatBlock extends BeginBlock {
       ctx.restore();
     }
   }
+  
   
   void touchUp(Contact c) {
     super.touchUp(c);

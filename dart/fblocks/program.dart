@@ -41,8 +41,17 @@ class Program {
   Program(this.frog, this.start);
   
   
+  Program.copy(Frog frog, Program other) {
+    this.frog = frog;
+    start = other.start;
+    curr = other.curr;
+    running = other.running;
+  }
+  
+  
   void restart() {
     curr = start;
+    frog.clearVariables();
     running = false;
   }
   
@@ -60,6 +69,13 @@ class Program {
   
   bool get isRunning {
     return (running && curr != null);
+  }
+  
+  
+  void skip() {
+    if (isRunning) {
+      curr = curr.step(frog);
+    }
   }
 
   

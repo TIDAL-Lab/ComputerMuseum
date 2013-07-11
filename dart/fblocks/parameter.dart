@@ -43,6 +43,8 @@ class Parameter implements Touchable {
   
   bool dragging = false;
   
+  bool changed = false;
+  
   Block block;
   
 
@@ -185,7 +187,7 @@ class Parameter implements Touchable {
       ctx.fillStyle = textColor;
       num ty = y - _getDragIndex() * vspace;
       for (int i=-2; i<values.length + 1; i++) {
-        ctx.fillText(this[i].toString(), x, ty + i * vspace);
+        ctx.fillText(this[i].toString(), x, ty + i * vspace + 1);
       }
     }
     ctx.restore();
@@ -203,6 +205,7 @@ class Parameter implements Touchable {
   
   void touchUp(Contact c) {
     index = _getDragIndex().round().toInt();
+    if (index != downIndex) changed = true;
     downIndex = index;
     dragging = false;
     block.workspace.repaint();
@@ -229,7 +232,6 @@ class Parameter implements Touchable {
     num newIndex = _getDragIndex() % values.length;
     if (oldIndex != newIndex && newIndex == newIndex.floor()) {
       index = _getDragIndex().round().toInt();
-      block.workspace.resetPreview();
       block.workspace.preview(block);
       Sounds.playSound("tick");
     }
