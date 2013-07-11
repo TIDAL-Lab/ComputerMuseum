@@ -54,6 +54,7 @@ void main() {
   Sounds.loadSound("croak");
   Sounds.loadSound("sing");
   Sounds.loadSound("chirp");
+  Sounds.loadSound("click");
   Sounds.loadSound("splash");
   Sounds.loadSound("tick");
   Sounds.loadSound("turn");

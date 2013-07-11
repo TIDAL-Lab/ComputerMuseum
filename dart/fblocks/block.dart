@@ -103,6 +103,8 @@ class Block implements Touchable {
   
   num get connectorY => targetY;
   
+  num get targetY => hasPrev ? prev.connectorY : y;
+    
   num get targetX {
     if (hasPrev) {
       num tx = prev.connectorX;
@@ -112,8 +114,6 @@ class Block implements Touchable {
       return x;
     }
   }
-  
-  num get targetY => hasPrev ? prev.connectorY : y;
   
 
 /**
@@ -380,7 +380,7 @@ class Block implements Touchable {
   
   void touchUp(Contact c) {
     if (workspace.snapTogether(this)) {
-      Sounds.playSound("hop");
+      Sounds.playSound("click");
     } else if (wasInProgram || workspace.isOffscreen(this)) {
       workspace.removeBlock(this);
       Sounds.playSound("swoosh");

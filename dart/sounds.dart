@@ -10,11 +10,10 @@ class Sounds {
 
 
   static void loadSound(String name) {
-    /*
     AudioElement audio = new AudioElement();
     audio.src = "sounds/$name.wav";
     sounds[name] = audio;
-    */
+    /*
     HttpRequest http = new HttpRequest();
     http.responseType = "arraybuffer";
     http.onLoad.listen((e) {
@@ -25,17 +24,15 @@ class Sounds {
     });
     http.open('GET', "sounds/$name.wav");
     http.send();
+    */
   }
 
 
   static void playSound(String name) {
-    /*
     if (sounds[name] != null) {
       sounds[name].volume = 0.6;
       sounds[name].play();
     }
-    */
-    
     /*
     if (sounds[name] == null) return;
     AudioBufferSourceNode source = audio.createBufferSource();

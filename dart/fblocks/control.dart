@@ -66,11 +66,11 @@ class EndBlock extends Block {
       if (b is EndRepeat) {
         nest++;
       } else if (b is EndIf) {
-        nest += 2;
+        nest += 3;
       } else if (b is RepeatBlock) {
         nest--;
       } else if (b is IfBlock) {
-        nest -= 2;
+        nest -= 3;
       }
       if (nest > max) max = nest;
       b = b.prev;
