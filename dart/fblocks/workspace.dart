@@ -25,8 +25,8 @@ part of ComputerHistory;
 
 class CodeWorkspace extends TouchManager {
   
-  /* canvas */
-  CanvasElement canvas;
+  /* size of the canvas */
+  int width, height;
 
   /* list of frogs controlled by this workspace */  
   List<Turtle> frogs = new List<Frog>();
@@ -43,18 +43,17 @@ class CodeWorkspace extends TouchManager {
   FrogPond pond;
   
   
-  CodeWorkspace(this.canvas, this.pond) {
+  CodeWorkspace(this.pond, this.width, this.height) {
     registerEvents(document.documentElement);
-    //canvas.onSelectStart.listen((e) { e.preventDefault(); });
     
     Frog frog = new Frog(this);
-    frog.x = canvas.width / 2;
+    frog.x = width / 2;
     frog.y = 250.0;
     addFrog(frog);
     
     
-    menu = new Menu(this, 0, canvas.height - BLOCK_WIDTH * 1.5,
-                    canvas.width, BLOCK_WIDTH * 1.5);
+    menu = new Menu(this, 0, height - BLOCK_WIDTH * 1.5,
+                    width, BLOCK_WIDTH * 1.5);
     
     Block block;
     Parameter param;
@@ -111,7 +110,7 @@ class CodeWorkspace extends TouchManager {
     menu.addBlock(block);
         
     // START block
-    start = new StartBlock(this, 75.0, canvas.height - 170.0);
+    start = new StartBlock(this, 75.0, height - 170.0);
     addBlock(start);
     
     addTouchable(menu);
@@ -163,7 +162,9 @@ class CodeWorkspace extends TouchManager {
   
   void pauseProgram() {
     for (Frog frog in frogs) {
-      frog.program.pause();
+      if (frog.program != null) {
+        frog.program.pause();
+      }
     }
   }
   
@@ -185,7 +186,7 @@ class CodeWorkspace extends TouchManager {
   
   
   bool isOffscreen(Block block) {
-    return (block.x > canvas.width ||
+    return (block.x > width ||
             block.x < 0 ||
             block.y < 0 ||
             menu.overlaps(block));
@@ -230,25 +231,39 @@ class CodeWorkspace extends TouchManager {
   
   
   bool animate() {
-    bool repaint = false;
+    bool refresh = false;
 
     for (Block block in blocks) {
       if (block.isStartBlock) {
-        if (block.animate())  repaint = true;
+        if (block.animate())  refresh = true;
+      }
+    }
+    
+    // remove dead frogs
+    for (int i=frogs.length-1; i >= 0; i--) {
+      Frog frog = frogs[i];
+      if (frog.dead) {
+        frogs.remove(frog);
+        refresh = true;
       }
     }
     
     for (int i=0; i<frogs.length; i++) {
       Frog frog = frogs[i];  // use int loop to avoid concurrent modification exception
-      if (frog.animate()) repaint = true;
+      if (frog.animate()) refresh = true;
     }
     
-    return repaint;
+    return refresh;
+  }
+  
+  
+  bool inWater(num x, num y) {
+    return pond.inWater(x, y);
   }
   
   
   void repaint() {
-    pond.draw();
+    pond.drawForeground();
   }
 
   
