@@ -26,7 +26,8 @@ part of ComputerHistory;
 class FrogPond {
   
   CanvasElement canvas;
-  CanvasRenderingContext2D ctx;
+  CanvasRenderingContext2D background;
+  CanvasRenderingContext2D foreground;
   
   CodeWorkspace workspace;  
   
@@ -35,30 +36,49 @@ class FrogPond {
   ImageElement lilypad = new ImageElement();
   
   
-  FrogPond(String id) {
-    canvas = document.query("#${id}");
-    ctx = canvas.getContext('2d');
+  FrogPond() {
+    canvas = document.query("#background");
+    background = canvas.getContext('2d');
     width = canvas.width;
     height = canvas.height;
-    lilypad.src = "images/lilypad.png";
-    //registerEvents(canvas);
     
-    workspace = new CodeWorkspace(canvas, this);
+    canvas = document.query("#foreground");
+    foreground = canvas.getContext('2d');
+    
+    lilypad.src = "images/lilypad.png";
+    lilypad.onLoad.listen((event) => drawBackground());
+    
+    workspace = new CodeWorkspace(this, width, height);
     new Timer.periodic(const Duration(milliseconds : 40), animate);
-    draw();
   }
   
   
   
   void animate(Timer timer) {
-    if (workspace.animate()) draw();
+    if (workspace.animate()) drawForeground();
   }
   
   
-  void draw() {
+  bool inWater(num x, num y) {
+    ImageData imd = background.getImageData(x.toInt(), y.toInt(), 1, 1);
+    int r = imd.data[0];
+    int g = imd.data[1];
+    int b = imd.data[2];
+    // value of background water texture is all zero since it's from CSS
+    return (g == 0);
+  }
+
+  
+  void drawBackground() {
+    CanvasRenderingContext2D ctx = background;
     ctx.clearRect(0, 0, width, height);
     ctx.drawImage(lilypad, 200, 20);
-    workspace.draw(ctx);
   }
   
+  
+  void drawForeground() {
+    CanvasRenderingContext2D ctx = foreground;
+    ctx.clearRect(0, 0, width, height);
+    workspace.draw(ctx);
+  }
 }
