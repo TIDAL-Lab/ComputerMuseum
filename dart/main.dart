@@ -61,15 +61,6 @@ void main() {
   Sounds.loadSound("swoosh");
   Sounds.loadSound("gulp");
   
-  FrogPond pond = new FrogPond("pond");
+  FrogPond pond = new FrogPond();
 }
 
-/*
-bool inWater(int x, int y) {
-  ImageData imd = pctx.getImageData(x, y, 1, 1);
-  int r = imd.data[0];
-  int g = imd.data[1];
-  int b = imd.data[2];
-  return (r == 1 && g < 0x40 && b < 0x50);
-}
-*/
