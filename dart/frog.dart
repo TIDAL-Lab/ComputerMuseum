@@ -188,8 +188,14 @@ class Frog extends Turtle implements Touchable {
     tween.function = TWEEN_SINE2;
     tween.delay = 0;
     tween.duration = 12;
-    tween.onstart = (() { target.label = s; });
-    tween.onend = (() { _pause(); });
+    tween.onstart = (() { Sounds.playSound(cmd); target.label = s; });
+    tween.onend = (() {
+      _pause();
+      if (workspace.inWater(x, y)) {
+        Sounds.playSound("splash");
+        die();
+      }
+    });
     tween.addControlPoint(0, 0);
     tween.addControlPoint(length, 1);
     tween.ondelta = ((value) => target.forward(value));
