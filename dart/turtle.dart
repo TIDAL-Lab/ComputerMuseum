@@ -37,6 +37,9 @@ abstract class Turtle {
   /* visual alpha (opacity) of the turtle */
   double opacity = 1.0;
   
+  /* turtle is marked for removal from the model */
+  bool dead = false;
+  
   /* bitmap image */
   ImageElement img = new ImageElement();
   
@@ -83,6 +86,11 @@ abstract class Turtle {
   
   void right(double degrees) {
     left(-degrees);
+  }
+  
+  
+  void die() {
+    dead = true;
   }
   
   
