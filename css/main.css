@@ -13,16 +13,27 @@ body {
    background-color: #333;
 }
 
-#pond {
+#background {
+   position: absolute;
+   top: 0px;
+   left: 0px;
+   padding: 0px;
+   margin: 0px;
+   background-color: #445368;
+   background-image: url('../images/texture2.png');
+   background-repeat: repeat;
+   background-position: 0 0;
+   z-index: 1;   
+}
+
+
+#foreground {
    position: absolute;
    top: 0px;
    left: 0px;
    padding: 0;
    margin: 0;
-   background-color: #445368;
-   background-image: url('../images/texture2.png');
-   background-repeat: repeat;
-   background-position: 0 0;
+   z-index: 2;
 }
 
 #workspace {
