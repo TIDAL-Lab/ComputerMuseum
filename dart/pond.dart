@@ -33,6 +33,8 @@ class FrogPond {
   
   int width, height;
   
+  List<Gem> gems = new List<Gem>();
+  
   ImageElement lilypad = new ImageElement();
   
   
@@ -48,6 +50,11 @@ class FrogPond {
     lilypad.src = "images/lilypad.png";
     lilypad.onLoad.listen((event) => drawBackground());
     
+    Gem gem = new Gem();
+    gem.x = 400.0;
+    gem.y = 100.0;
+    gems.add(gem);
+    
     workspace = new CodeWorkspace(this, width, height);
     new Timer.periodic(const Duration(milliseconds : 40), animate);
   }
@@ -55,7 +62,13 @@ class FrogPond {
   
   
   void animate(Timer timer) {
-    if (workspace.animate()) drawForeground();
+    bool repaint = false;
+    for (Gem gem in gems) {
+      if (gem.animate()) repaint = true;
+    }
+    if (workspace.animate() || repaint) {
+      drawForeground();
+    }
   }
   
   
@@ -66,6 +79,14 @@ class FrogPond {
     int b = imd.data[2];
     // value of background water texture is all zero since it's from CSS
     return (g == 0);
+  }
+  
+  
+  Gem getGemHere(Frog frog) {
+    for (Gem gem in gems) {
+      if (gem.overlaps(frog.x, frog.y, frog.width)) return gem;
+    }
+    return null;
   }
 
   
@@ -79,6 +100,9 @@ class FrogPond {
   void drawForeground() {
     CanvasRenderingContext2D ctx = foreground;
     ctx.clearRect(0, 0, width, height);
+    for (Gem gem in gems) {
+      gem.draw(ctx);
+    }
     workspace.draw(ctx);
   }
 }
