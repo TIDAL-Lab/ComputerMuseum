@@ -186,12 +186,11 @@ class Block implements Touchable {
   
 
   bool overlapsConnector(Block target) {
-    double cx = connectorX - BLOCK_WIDTH / 2;
-    double cy = connectorY - BLOCK_HEIGHT / 2;
-    double tx = target.x - target.width / 2;
-    double ty = target.y - target.height / 2;
-    return (tx + target.width > cx && ty + target.height > cy &&
-            tx < cx + BLOCK_WIDTH && ty < cy + BLOCK_HEIGHT);
+    double cx = connectorX;
+    double cy = connectorY;
+    double tx = target.x;
+    double ty = target.y;
+    return (distance(cx, cy, tx, ty) < BLOCK_WIDTH);
   }
 
 
