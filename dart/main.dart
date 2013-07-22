@@ -29,6 +29,7 @@ import 'dart:web_audio';
 
 part 'fly.dart';
 part 'frog.dart';
+part 'gem.dart';
 part 'pond.dart';
 part 'sounds.dart';
 part 'touch.dart';
