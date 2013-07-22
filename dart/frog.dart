@@ -28,9 +28,6 @@ class Frog extends Turtle implements Touchable {
   /* workspace that controls this frog */
   CodeWorkspace workspace;
 
-  /* used for animation effects */
-  Tween tween = new Tween();
-  
   /* size of the sound wave emanating from the frog */
   double radius = -1.0;
   
@@ -46,10 +43,22 @@ class Frog extends Turtle implements Touchable {
   /* this frogs control program */
   Program program;
   
+  /* width and height of the frog bitmap */
+  double _width = 0.0, _height = 0.0;
+  
   
   Frog(this.workspace) : super() {
     img.src = "images/bluefrog.png";
+    img.onLoad.listen((e) {
+      _width = img.width * 0.5;
+      _height = img.height * 0.5;
+    });
   }
+  
+  
+  double get width => _width * size;
+  
+  double get height => _height * size;
   
   
 /**
@@ -134,10 +143,7 @@ class Frog extends Turtle implements Touchable {
     //---------------------------------------------
     // draw frog image
     //---------------------------------------------
-    num iw = img.width * 0.5 * size;
-    num ih = img.height * 0.5 * size;
-    
-    ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
+    ctx.drawImageScaled(img, -width/2, -height/2, width, height);
   }
   
   
@@ -194,6 +200,12 @@ class Frog extends Turtle implements Touchable {
       if (workspace.inWater(x, y)) {
         Sounds.playSound("splash");
         die();
+      } else {
+        Gem gem = workspace.getGemHere(this);
+        if (gem != null) {
+          Sounds.playSound("sing");
+          gem.flyTo(20, 20);
+        }
       }
     });
     tween.addControlPoint(0, 0);
