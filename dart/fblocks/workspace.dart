@@ -51,7 +51,6 @@ class CodeWorkspace extends TouchManager {
     frog.y = 250.0;
     addFrog(frog);
     
-    
     menu = new Menu(this, 0, height - BLOCK_WIDTH * 1.5,
                     width, BLOCK_WIDTH * 1.5);
     
@@ -74,14 +73,14 @@ class CodeWorkspace extends TouchManager {
     // TURN LEFT block
     block = new Block(this, 'left');
     block.param = new Parameter(block);
-    block.param.values = [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 'random' ];
+    block.param.values = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 'random' ];
     block.param.index = 3;
     menu.addBlock(block);
     
     // TURN RIGHT block
     block = new Block(this, 'right');
     block.param = new Parameter(block);
-    block.param.values = [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 'random' ];
+    block.param.values = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 'random' ];
     block.param.index = 3;
     menu.addBlock(block);
     
@@ -99,13 +98,13 @@ class CodeWorkspace extends TouchManager {
     
     block = new RepeatBlock(this);
     block.text = 'repeat\nuntil';
-    block.param.values = [ 'see-fly?', 'near-water?', 'hear-frog?' ];
+    block.param.values = [ 'see-fly?', 'see-gem?', 'near-water?', 'hear-frog?' ];
     menu.addBlock(block);
     
     // WAIT block
     block = new Block(this, 'wait\nuntil');
     block.param = new Parameter(block);
-    block.param.values = [ 'see-fly?', 'hear-frog?' ];
+    block.param.values = [ 'see-fly?', 'see-gem?', 'hear-frog?' ];
     block.color = '#c92';
     menu.addBlock(block);
         
@@ -221,8 +220,13 @@ class CodeWorkspace extends TouchManager {
   Block findInsertionPoint(Block target) {
     for (Block block in blocks) {
       if (block != target && !block.dragging) {
-        if (block.overlapsConnector(target) && target.checkSyntax(block)) {
-          return block;
+        if (block.overlapsConnector(target)) {
+          
+          if (block.connectorX < target.x && block.hasNext && block.next.hasNext && target.checkSyntax(block.next)) {
+            return block.next;
+          } else {
+            return block;
+          }
         }
       }
     }
@@ -232,7 +236,7 @@ class CodeWorkspace extends TouchManager {
   
   bool animate() {
     bool refresh = false;
-
+    
     for (Block block in blocks) {
       if (block.isStartBlock) {
         if (block.animate())  refresh = true;
@@ -259,6 +263,11 @@ class CodeWorkspace extends TouchManager {
   
   bool inWater(num x, num y) {
     return pond.inWater(x, y);
+  }
+  
+  
+  Gem getGemHere(Frog frog) {
+    return pond.getGemHere(frog);
   }
   
   
