@@ -40,7 +40,7 @@ void roundRect(CanvasRenderingContext2D ctx, num x, num y, num w, num h, num r) 
 
 void drawLineArrow(CanvasRenderingContext2D ctx,
                    num x0, num y0, num x1, num y1,
-                   int width) {
+                   num width) {
   ctx.save();
   {
     ctx.beginPath();
