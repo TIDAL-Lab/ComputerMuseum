@@ -40,6 +40,9 @@ abstract class Turtle {
   /* turtle is marked for removal from the model */
   bool dead = false;
   
+  /* used for animation effects */
+  Tween tween = new Tween();
+  
   /* bitmap image */
   ImageElement img = new ImageElement();
   
@@ -133,7 +136,8 @@ abstract class Turtle {
     }    
     ctx.restore();
   }
-  
-  
-  void _drawLocal(CanvasRenderingContext2D ctx);
+
+
+  void _drawLocal(CanvasRenderingContext2D ctx);  
+
 }
