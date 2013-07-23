@@ -103,6 +103,19 @@ class Frog extends Turtle implements Touchable {
   }
   
   
+  bool nearWater() {
+    forward(40.0);
+    bool wet = workspace.inWater(x, y);
+    backward(40.0);
+    return wet;
+  }
+  
+  
+  bool seeGem() {
+    return workspace.seeGem(this);
+  }
+  
+  
   void _drawLocal(CanvasRenderingContext2D ctx) {
     
     //---------------------------------------------
@@ -127,7 +140,7 @@ class Frog extends Turtle implements Touchable {
       ctx.textBaseline = "top";
       ctx.textAlign = "center";
       ctx.fillStyle = "white";
-      ctx.font = "16px helvetica, sans-serif";
+      ctx.font = "200 16px sans-serif";
       //ctx.fillText(label, model.worldToScreenX(x, y), model.worldToScreenY(x, y) + 65);
       ctx.fillText(label, x, y + 52);
       ctx.restore();
