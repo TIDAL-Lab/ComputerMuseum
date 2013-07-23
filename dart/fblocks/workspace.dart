@@ -92,7 +92,7 @@ class CodeWorkspace extends TouchManager {
     menu.addBlock(block);
     
     // REST block
-    menu.addBlock(new Block(this, 'rest'));
+    //menu.addBlock(new Block(this, 'rest'));
     
     // HATCH block
     menu.addBlock(new Block(this, 'hatch'));
