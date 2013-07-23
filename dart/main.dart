@@ -44,6 +44,7 @@ part 'fblocks/parameter.dart';
 part 'fblocks/program.dart';
 part 'fblocks/repeat.dart';
 part 'fblocks/start.dart';
+part 'fblocks/status.dart';
 part 'fblocks/workspace.dart';
 
 
