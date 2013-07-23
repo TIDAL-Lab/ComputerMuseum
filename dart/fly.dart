@@ -27,14 +27,27 @@ class Fly extends Turtle {
   
   double radius = 3.0;
   
+  FrogPond pond;
   
-  Fly() : super() {
+  
+  Fly(this.pond, double x, double y) : super() {
     img.src = "images/dragonfly.png";
+    this.x = x;
+    this.y = y;
+  }
+  
+  
+  void forward(double distance) {
+    super.forward(distance);
+    if (x < 0) x += pond.width;
+    if (y < 0) y += pond.height;
+    if (x > pond.width) x -= pond.width;
+    if (y > pond.height) y -= pond.height;
   }
   
   
   bool animate() {
-    forward(0.1);
+    forward(4.0);
     left(radius);
     if (Turtle.rand.nextInt(100) > 98) {
       radius = Turtle.rand.nextDouble() * 6.0 - 3.0;
@@ -44,8 +57,8 @@ class Fly extends Turtle {
   
   
   void _drawLocal(CanvasRenderingContext2D ctx) {
-    num iw = img.width / 70;
-    num ih = img.height / 70;
+    num iw = img.width * 0.7;
+    num ih = img.height * 0.7;
     ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
   }
 }
