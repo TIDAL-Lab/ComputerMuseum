@@ -35,6 +35,8 @@ class FrogPond {
   
   List<Gem> gems = new List<Gem>();
   
+  List<Fly> flies = new List<Fly>();
+  
   ImageElement lilypad = new ImageElement();
   
   
@@ -50,7 +52,13 @@ class FrogPond {
     lilypad.src = "images/lilypad.png";
     lilypad.onLoad.listen((event) => drawBackground());
 
-    addRandomGem();    
+    addRandomGem();
+    
+    for (int i=0; i<3; i++) {
+      flies.add(new Fly(this,
+                        Turtle.rand.nextInt(width).toDouble(),
+                        Turtle.rand.nextInt(height).toDouble()));
+    }
     
     workspaces.add(new CodeWorkspace(this, width, height));
     new Timer.periodic(const Duration(milliseconds : 40), animate);
@@ -72,6 +80,12 @@ class FrogPond {
     // animate gems
     for (Gem gem in gems) {
       if (gem.animate()) repaint = true;
+    }
+    
+    // animate flies
+    for (Fly fly in flies) {
+      fly.animate();
+      repaint = true;
     }
     
     for (CodeWorkspace workspace in workspaces) {
@@ -145,8 +159,13 @@ class FrogPond {
     for (Gem gem in gems) {
       gem.draw(ctx);
     }
+    
     for (CodeWorkspace workspace in workspaces) {
       workspace.draw(ctx);
+    }
+    
+    for (Fly fly in flies) {
+      fly.draw(ctx);
     }
   }
 }
