@@ -23,6 +23,8 @@
 part of ComputerHistory;
 
 
+// TODO: Draw menu and status in the background layer!!
+
 class CodeWorkspace extends TouchManager {
   
   /* size of the canvas */
@@ -36,6 +38,9 @@ class CodeWorkspace extends TouchManager {
   
   /* block menu */
   Menu menu;
+  
+  /* status display (frog color, number of gems, number of flies) */
+  StatusInfo status;
   
   /* fixed start block */
   StartBlock start;
@@ -53,6 +58,8 @@ class CodeWorkspace extends TouchManager {
     
     menu = new Menu(this, 0, height - BLOCK_WIDTH * 1.5,
                     width, BLOCK_WIDTH * 1.5);
+    
+    status = new StatusInfo(width - 280, height - 115, 280, 115);
     
     Block block;
     Parameter param;
@@ -266,19 +273,28 @@ class CodeWorkspace extends TouchManager {
   }
   
   
-  Gem getGemHere(Frog frog) {
-    return pond.getGemHere(frog);
+  bool captureGem(Frog frog) {
+    Gem gem = pond.getGemHere(frog);
+    if (gem != null) {
+      gem.flyTo(status.getGemX(gem.color), status.getGemY(gem.color));
+      return true;
+    }
+    return false;
   }
   
   
   void repaint() {
     pond.drawForeground();
   }
+  
+  
+  void drawBackground(CanvasRenderingContext2D ctx) {
+    menu.draw(ctx);
+    status.draw(ctx);
+  }
 
   
   void draw(CanvasRenderingContext2D ctx) {
-    
-    menu.draw(ctx);
     
     //----------------------------------------------
     // for each block being dragged, identify active
