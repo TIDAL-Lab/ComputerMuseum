@@ -33,9 +33,11 @@ class StatusInfo {
   ImageElement frog = new ImageElement();
   
   List<Gem> gems = new List<Gem>();
+  
+  CodeWorkspace workspace;
 
   
-  StatusInfo(this.x, this.y, this.w, this.h) {
+  StatusInfo(this.workspace, this.x, this.y, this.w, this.h) {
     frog.src = "images/bluefrog.png";
     for (var color in Gem.colors) {
       Gem gem = new Gem.fromColor(color);
@@ -44,25 +46,18 @@ class StatusInfo {
       gems.add(gem);
     }
   }
+
   
-  
-  double getGemX(String color) {
+  void captureGem(Gem captured) {
+    Gem target = null;
     for (Gem gem in gems) {
-      if (gem.color == color) {
-        return gem.x;
+      if (gem.color == captured.color) {
+        captured.flyTo(gem.x, gem.y, () {
+          gem.shadowed = false;
+          workspace.repaintBackground();
+        });
       }
     }
-    return 0.0;
-  }
-  
-  
-  double getGemY(String color) {
-    for (Gem gem in gems) {
-      if (gem.color == color) {
-        return gem.y;
-      }
-    }
-    return 0.0;
   }
   
   
