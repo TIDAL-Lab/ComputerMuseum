@@ -201,11 +201,7 @@ class Frog extends Turtle implements Touchable {
         Sounds.playSound("splash");
         die();
       } else {
-        Gem gem = workspace.getGemHere(this);
-        if (gem != null) {
-          Sounds.playSound("sing");
-          gem.flyTo(20, 20);
-        }
+        workspace.captureGem(this);
       }
     });
     tween.addControlPoint(0, 0);
