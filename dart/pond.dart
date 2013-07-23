@@ -29,7 +29,7 @@ class FrogPond {
   CanvasRenderingContext2D background;
   CanvasRenderingContext2D foreground;
   
-  CodeWorkspace workspace;  
+  List<CodeWorkspace> workspaces = new List<CodeWorkspace>();
   
   int width, height;
   
@@ -49,27 +49,35 @@ class FrogPond {
     
     lilypad.src = "images/lilypad.png";
     lilypad.onLoad.listen((event) => drawBackground());
+
+    addRandomGem();    
     
-    Gem gem = new Gem();
-    gem.x = 400.0;
-    gem.y = 100.0;
-    gems.add(gem);
-    
-    workspace = new CodeWorkspace(this, width, height);
+    workspaces.add(new CodeWorkspace(this, width, height));
     new Timer.periodic(const Duration(milliseconds : 40), animate);
     new Timer.periodic(const Duration(milliseconds : 2000), (timer) => drawBackground());
   }
   
   
-  
   void animate(Timer timer) {
     bool repaint = false;
+    
+    // remove dead gems
+    for (int i=gems.length-1; i >= 0; i--) {
+      if (gems[i].dead) {
+        gems.remove(gems[i]);
+        repaint = true;
+      }
+    }    
+
+    // animate gems
     for (Gem gem in gems) {
       if (gem.animate()) repaint = true;
     }
-    if (workspace.animate() || repaint) {
-      drawForeground();
+    
+    for (CodeWorkspace workspace in workspaces) {
+      if (workspace.animate()) repaint = true;
     }
+    if (repaint) drawForeground();
   }
   
   
@@ -89,13 +97,45 @@ class FrogPond {
     }
     return null;
   }
+  
+  
+  Frog getFrogHere(num x, num y) {
+    for (CodeWorkspace workspace in workspaces) {
+      Frog frog = workspace.getFrogHere(x, y);
+      if (frog != null) return frog;
+    }
+    return null;
+  }
+  
+  
+/**
+ * Adds a random gem to the pond in a place where there are no frogs... give up
+ * after a few tries and try again later.
+ */
+  void addRandomGem()  {
+    for (int i=0; i<25; i++) {
+      int x = Turtle.rand.nextInt(width - 100) + 50;
+      int y = Turtle.rand.nextInt(height - 200) + 100;
+      if (!inWater(x, y) && getFrogHere(x, y) == null) {
+        Gem gem = new Gem();
+        gem.x = x.toDouble();
+        gem.y = y.toDouble();
+        gems.add(gem);
+        return;
+      }
+    }
+    // try again in 4 seconds
+    new Timer(const Duration(milliseconds : 4000), addRandomGem);
+  }
 
   
   void drawBackground() {
     CanvasRenderingContext2D ctx = background;
     ctx.clearRect(0, 0, width, height);
     ctx.drawImage(lilypad, 200, 20);
-    workspace.drawBackground(ctx);
+    for (CodeWorkspace workspace in workspaces) {
+      workspace.drawBackground(ctx);
+    }
   }
   
   
@@ -105,6 +145,8 @@ class FrogPond {
     for (Gem gem in gems) {
       gem.draw(ctx);
     }
-    workspace.draw(ctx);
+    for (CodeWorkspace workspace in workspaces) {
+      workspace.draw(ctx);
+    }
   }
 }
