@@ -306,7 +306,7 @@ class Block implements Touchable {
       ctx.save();
       {
         ctx.lineWidth = 2;
-        ctx.setLineDash([8, 5]);
+        //ctx.setLineDash([8, 5]);
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
         ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
         _outline(ctx, cx, cy, cw, ch);
@@ -389,7 +389,7 @@ class Block implements Touchable {
       Sounds.playSound("click");
     } else if (wasInProgram || workspace.isOffscreen(this)) {
       workspace.removeBlock(this);
-      Sounds.playSound("swoosh");
+      Sounds.playSound("crunch");
     }
     dragging = false;
     workspace.repaint();
