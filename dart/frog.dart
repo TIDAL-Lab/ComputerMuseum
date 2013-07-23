@@ -98,6 +98,11 @@ class Frog extends Turtle implements Touchable {
   }
   
   
+  bool overlaps(num tx, num ty) {
+    return (tx > x - width/2 && ty > y - height/2 && tx < x + width/2 && ty < y + height/2);
+  }
+  
+  
   void _drawLocal(CanvasRenderingContext2D ctx) {
     
     //---------------------------------------------
