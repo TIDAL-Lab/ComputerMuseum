@@ -233,7 +233,7 @@ class Parameter implements Touchable {
     if (oldIndex != newIndex && newIndex == newIndex.floor()) {
       index = _getDragIndex().round().toInt();
       block.workspace.preview(block);
-      Sounds.playSound("tick");
+      Sounds.playSound("click");
     }
     block.workspace.repaint();
   }
