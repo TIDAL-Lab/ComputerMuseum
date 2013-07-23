@@ -59,7 +59,7 @@ class CodeWorkspace extends TouchManager {
     menu = new Menu(this, 0, height - BLOCK_WIDTH * 1.5,
                     width, BLOCK_WIDTH * 1.5);
     
-    status = new StatusInfo(width - 280, height - 115, 280, 115);
+    status = new StatusInfo(this, width - 280, height - 115, 280, 115);
     
     Block block;
     Parameter param;
@@ -135,6 +135,14 @@ class CodeWorkspace extends TouchManager {
   }
   
   
+  Frog getFrogHere(num x, num y) {
+    for (Frog frog in frogs) {
+      if (frog.overlaps(x, y)) return frog;
+    }
+    return null;
+  }
+  
+  
   void addBlock(Block block) {
     blocks.add(block);
     addTouchable(block);
@@ -205,6 +213,13 @@ class CodeWorkspace extends TouchManager {
   
   
   bool snapTogether(Block target) {
+    Block b = findInsertionPoint(target);
+    if (b != null) {
+      return b.snapTogether(target);
+    } else {
+      return false;
+    }
+  /*
     for (Block block in blocks) {
       if (block != target && !block.dragging) {
         if (block.snapTogether(target)) {
@@ -213,6 +228,7 @@ class CodeWorkspace extends TouchManager {
       }
     }
     return false;
+  */
   }
   
   
@@ -276,7 +292,8 @@ class CodeWorkspace extends TouchManager {
   bool captureGem(Frog frog) {
     Gem gem = pond.getGemHere(frog);
     if (gem != null) {
-      gem.flyTo(status.getGemX(gem.color), status.getGemY(gem.color));
+      status.captureGem(gem);
+      new Timer(const Duration(milliseconds : 3000), () { pond.addRandomGem(); });
       return true;
     }
     return false;
@@ -285,6 +302,11 @@ class CodeWorkspace extends TouchManager {
   
   void repaint() {
     pond.drawForeground();
+  }
+  
+  
+  void repaintBackground() {
+    pond.drawBackground();
   }
   
   
