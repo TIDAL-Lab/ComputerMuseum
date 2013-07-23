@@ -57,6 +57,7 @@ class FrogPond {
     
     workspace = new CodeWorkspace(this, width, height);
     new Timer.periodic(const Duration(milliseconds : 40), animate);
+    new Timer.periodic(const Duration(milliseconds : 2000), (timer) => drawBackground());
   }
   
   
@@ -94,6 +95,7 @@ class FrogPond {
     CanvasRenderingContext2D ctx = background;
     ctx.clearRect(0, 0, width, height);
     ctx.drawImage(lilypad, 200, 20);
+    workspace.drawBackground(ctx);
   }
   
   
