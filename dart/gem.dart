@@ -77,7 +77,7 @@ class Gem extends Turtle {
   }
   
   
-  void flyTo(num tx, num ty) {
+  void flyTo(num tx, num ty, Function onDone) {
     deltaX = (tx.toDouble() - x);
     deltaY = (ty.toDouble() - y);
     tween = new Tween();
@@ -85,7 +85,7 @@ class Gem extends Turtle {
     tween.delay = 0;
     tween.duration = 18;
     tween.onstart = (() { Sounds.playSound("chimes"); });
-    tween.onend = (() { });
+    tween.onend = (() { die(); onDone(); });
     tween.addControlPoint(0, 0);
     tween.addControlPoint(1, 1);
     tween.ondelta = ((value) {
