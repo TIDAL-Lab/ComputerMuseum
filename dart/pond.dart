@@ -105,6 +105,19 @@ class FrogPond {
   }
   
   
+  bool seeGem(Frog frog) {
+    for (Gem gem in gems) {
+      // compute the angle between the frog and the gem
+      double theta = -atan2(frog.x - gem.x, frog.y - gem.y);
+      if (theta < 0) theta += 2.0 * PI;
+      theta = theta / PI * 180.0;
+      double alpha = (frog.heading / PI * 180.0) % 360;
+      if ((alpha - theta).abs() < 20.0) return true;
+    }
+    return false;
+  }
+  
+  
   Gem getGemHere(Frog frog) {
     for (Gem gem in gems) {
       if (gem.overlaps(frog.x, frog.y, frog.width)) return gem;
