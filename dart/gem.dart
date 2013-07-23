@@ -26,21 +26,45 @@ part of ComputerHistory;
 class Gem extends Turtle {
   
   
-  var colors = [ 'red', 'green', 'orange', 'blue' ];
+  static var colors = [ 'red', 'orange', 'blue', 'green' ];
   
-  int width = 0, height = 0;
+  int _width = 0, _height = 0;
+  
+  String color;
+  
   double deltaX, deltaY;
+  
+  ImageElement shadow = new ImageElement();
+  
+  bool shadowed = false;
   
   
   Gem() : super() {
-    heading = 0.0;
-    int color = Turtle.rand.nextInt(colors.length);
-    img.src = "images/gems/${colors[color]}.png";
-    img.onLoad.listen((e) {
-      width = img.width;
-      height = img.height;
-    });
+    int r = Turtle.rand.nextInt(Gem.colors.length);
+    _init(Gem.colors[r]);
   }
+  
+  
+  Gem.fromColor(String clr) {
+    _init(clr);
+  }
+  
+  
+  void _init(String color) {
+    this.color = color;
+    heading = 0.0;
+    img.src = "images/gems/${color}.png";
+    img.onLoad.listen((e) {
+      _width = img.width;
+      _height = img.height;
+    });
+    shadow.src = "images/gems/${color}_shadow.png";
+  }
+  
+  
+  num get width => _width * size;
+  
+  num get height => _height * size;
   
   
   bool animate() {
@@ -80,8 +104,10 @@ class Gem extends Turtle {
   
   
   void _drawLocal(CanvasRenderingContext2D ctx) {
-    double iw = width * size;
-    double ih = height * size;
-    ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
+    if (shadowed) {
+      ctx.drawImageScaled(shadow, -width/2, -height/2, width, height);
+    } else {
+      ctx.drawImageScaled(img, -width/2, -height/2, width, height);
+    }
   }
 }
