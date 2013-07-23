@@ -53,6 +53,7 @@ void main() {
   Sounds.loadSound("hop");
   Sounds.loadSound("skip");
   Sounds.loadSound("jump");
+  Sounds.loadSound("chimes");
   Sounds.loadSound("croak");
   Sounds.loadSound("sing");
   Sounds.loadSound("chirp");
