@@ -55,7 +55,6 @@ class RepeatBlock extends BeginBlock {
   
   Block step(Frog frog) {
     String v = "repeat-counter-${id}";
-    
     if (!frog.hasVariable(v) || param.changed) {
       frog[v] = param.value;
       param.changed = false;
@@ -79,9 +78,13 @@ class RepeatBlock extends BeginBlock {
       return next;
     }
     
-    // conditional loop
-    else {
-      return next;
+    // conditional loops
+    else if (param.value == "near-water?") {
+      return frog.nearWater() ? end.next : next;
+    }
+    
+    else if (param.value == "see-gem?") {
+      return frog.seeGem() ? end.next : next;
     }
   }
   
@@ -109,7 +112,7 @@ class RepeatBlock extends BeginBlock {
       ctx.fillStyle = 'white';
       ctx.strokeStyle = 'white';
       double y0 = end.getTopLine();
-      double gap = height * 0.5;
+      double gap = height * 0.6;
       if (y0 > y + height / 2) {
         drawLineArrow(ctx, x, y0, x, y + gap, LINE_WIDTH);
       } else if (y0 < y - height / 2) {
