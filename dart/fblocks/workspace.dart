@@ -289,6 +289,11 @@ class CodeWorkspace extends TouchManager {
   }
   
   
+  bool seeGem(Frog frog) {
+    return pond.seeGem(frog);
+  }
+  
+  
   bool captureGem(Frog frog) {
     Gem gem = pond.getGemHere(frog);
     if (gem != null) {
