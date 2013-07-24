@@ -92,7 +92,7 @@ class Gem extends Turtle {
       x += value * deltaX;
       y += value * deltaY;
       left(360 * 4 * value);
-      size -= value * 0.5;
+      size -= value * 0.25;
     });
   }
   
