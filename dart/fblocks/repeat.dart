@@ -29,7 +29,7 @@ class RepeatBlock extends BeginBlock {
   RepeatBlock(CodeWorkspace workspace) : super(workspace, 'repeat') {
     color = '#c92';
     param = new Parameter(this);
-    param.values = [ 'forever', 1, 2, 3, 4, 5 ];
+    param.values = [ 'forever', 1, 2, 3, 4, 5, 'near-water?', 'see-gem?' ];
   }
 
   
@@ -40,6 +40,15 @@ class RepeatBlock extends BeginBlock {
     block.text = text;
     block.param.values = param.values;
     return block;
+  }
+  
+  
+  void parameterChanged(Parameter param) {
+    if (param.value == "near-water?" || param.value == "see-gem?") {
+      text = "repeat\nuntil";
+    } else {
+      text = "repeat";
+    }
   }
   
   
@@ -85,6 +94,10 @@ class RepeatBlock extends BeginBlock {
     
     else if (param.value == "see-gem?") {
       return frog.seeGem() ? end.next : next;
+    }
+    
+    else {
+      return next;
     }
   }
   
