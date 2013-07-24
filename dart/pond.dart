@@ -123,10 +123,9 @@ class FrogPond {
   
   bool nearFly(Frog frog) {
     for (Fly fly in flies) {
-      print(_angleBetween(frog, fly));
       if (_angleBetween(frog, fly).abs() < 10.0) {
         num d = distance(fly.x, fly.y, frog.x, frog.y);
-        if (d > frog.height / 4 && d < frog.height * 2.5) {
+        if (d > frog.height / 4 && d < frog.height * 1.5) {
           return true;
         }
       }
