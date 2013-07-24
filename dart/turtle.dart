@@ -52,6 +52,9 @@ abstract class Turtle {
   /* turtles-own variable storage */
   Map<String, dynamic> variables = new Map<String, dynamic>();
 
+  /* width and height of the bitmap */
+  double _width = 0.0, _height = 0.0;
+  
   
   Turtle() {
     right(Turtle.rand.nextInt(365).toDouble());
@@ -98,6 +101,22 @@ abstract class Turtle {
   
   
   bool animate();
+  
+  
+  bool overlaps(num tx, num ty, [ num tw = 0.0 ]) {
+    if (tw <= 0) {
+      return (tx > x - width/2 && ty > y - height/2 && tx < x + width/2 && ty < y + height/2);
+    } else {
+      num dist = distance(tx, ty, x, y);
+      return dist < (width/2 + tw/2);
+    }
+  }
+
+  
+  double get width => img.width * size;
+
+  
+  double get height => img.height * size;
   
   
   dynamic operator[] (String key) {
