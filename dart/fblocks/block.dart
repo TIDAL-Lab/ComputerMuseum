@@ -148,6 +148,14 @@ class Block implements Touchable {
   }
   
   
+/**
+ * Callback for when a parameter value has been changed by the user
+ */
+  void parameterChanged(Parameter param) {
+    workspace.preview(this);
+  }
+  
+  
   bool animate() {
     if (isInProgram) {
       double dx = targetX - x;
