@@ -134,6 +134,14 @@ class CodeWorkspace extends TouchManager {
   }
   
   
+  Fly getFlyHere(num x, num y) {
+    for (Fly fly in pond.flies) {
+      if (fly.overlaps(x, y, 20)) return fly;
+    }
+    return null;
+  }
+  
+  
   void addBlock(Block block) {
     blocks.add(block);
     addTouchable(block);
