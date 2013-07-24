@@ -49,7 +49,7 @@ class WaitBlock extends Block {
     } else if (param.value is num || param.value == "random") {
       frog.doWait("wait for ${param.value} seconds", param);
     } else {
-      frog.doWait("wait for ${param.value}", param);
+      frog.doWait("wait for ${param.value}", param, preview);
     }
   }
   
