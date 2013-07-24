@@ -103,17 +103,8 @@ class CodeWorkspace extends TouchManager {
     // REPEAT block
     menu.addBlock(new RepeatBlock(this));
     
-    block = new RepeatBlock(this);
-    block.text = 'repeat\nuntil';
-    block.param.values = [ 'see-fly?', 'see-gem?', 'near-water?', 'hear-frog?' ];
-    menu.addBlock(block);
-    
     // WAIT block
-    block = new Block(this, 'wait\nuntil');
-    block.param = new Parameter(block);
-    block.param.values = [ 'see-fly?', 'see-gem?', 'hear-frog?' ];
-    block.color = '#c92';
-    menu.addBlock(block);
+    menu.addBlock(new WaitBlock(this));
         
     // START block
     start = new StartBlock(this, 75.0, height - 170.0);
@@ -291,6 +282,11 @@ class CodeWorkspace extends TouchManager {
   
   bool seeGem(Frog frog) {
     return pond.seeGem(frog);
+  }
+  
+  
+  bool nearFly(Frog frog) {
+    return pond.nearFly(frog);
   }
   
   
