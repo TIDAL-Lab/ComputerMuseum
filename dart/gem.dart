@@ -28,8 +28,6 @@ class Gem extends Turtle {
   
   static var colors = [ 'red', 'orange', 'blue', 'green' ];
   
-  int _width = 0, _height = 0;
-  
   String color;
   
   double deltaX, deltaY;
@@ -54,17 +52,8 @@ class Gem extends Turtle {
     this.color = color;
     heading = 0.0;
     img.src = "images/gems/${color}.png";
-    img.onLoad.listen((e) {
-      _width = img.width;
-      _height = img.height;
-    });
     shadow.src = "images/gems/${color}_shadow.png";
   }
-  
-  
-  num get width => _width * size;
-  
-  num get height => _height * size;
   
   
   bool animate() {
@@ -94,12 +83,6 @@ class Gem extends Turtle {
       left(360 * 4 * value);
       size -= value * 0.25;
     });
-  }
-  
-  
-  bool overlaps(double tx, double ty, double dw) {
-    num dist = distance(tx, ty, x, y);
-    return dist < (width/2 + dw/2);
   }
   
   
