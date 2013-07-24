@@ -77,9 +77,9 @@ class StatusInfo {
       
       int ix = x + 10;
       int iy = y + 10;
-      int iw = frog.width ~/ 2;
-      int ih = frog.height ~/ 2;
-      ctx.drawImageScaled(frog, ix, iy, iw, ih);
+      int iw = frog.width;
+      int ih = frog.height;
+      ctx.drawImage(frog, ix, iy);
       
       ix += iw + 20;
       iy = y + h - h ~/ 3;
