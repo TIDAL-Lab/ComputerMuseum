@@ -54,7 +54,7 @@ class FrogPond {
 
     addRandomGem();
     
-    for (int i=0; i<3; i++) {
+    for (int i=0; i<5; i++) {
       flies.add(new Fly(this,
                         Turtle.rand.nextInt(width).toDouble(),
                         Turtle.rand.nextInt(height).toDouble()));
@@ -105,14 +105,31 @@ class FrogPond {
   }
   
   
+  double _angleBetween(Turtle a, Turtle b) {
+    double theta = -atan2(a.x - b.x, a.y - b.y) / PI * 180.0;
+    if (theta < 0) theta += 360.0;
+    double alpha = (a.heading / PI * 180.0) % 360;
+    return alpha - theta;
+  }
+  
+  
   bool seeGem(Frog frog) {
     for (Gem gem in gems) {
-      // compute the angle between the frog and the gem
-      double theta = -atan2(frog.x - gem.x, frog.y - gem.y);
-      if (theta < 0) theta += 2.0 * PI;
-      theta = theta / PI * 180.0;
-      double alpha = (frog.heading / PI * 180.0) % 360;
-      if ((alpha - theta).abs() < 20.0) return true;
+      if (_angleBetween(frog, gem).abs() < 20.0) return true;
+    }
+    return false;
+  }
+  
+  
+  bool nearFly(Frog frog) {
+    for (Fly fly in flies) {
+      print(_angleBetween(frog, fly));
+      if (_angleBetween(frog, fly).abs() < 10.0) {
+        num d = distance(fly.x, fly.y, frog.x, frog.y);
+        if (d > frog.height / 4 && d < frog.height * 2.5) {
+          return true;
+        }
+      }
     }
     return false;
   }
@@ -147,6 +164,7 @@ class FrogPond {
         Gem gem = new Gem();
         gem.x = x.toDouble();
         gem.y = y.toDouble();
+        gem.size = 0.75;
         gems.add(gem);
         return;
       }
