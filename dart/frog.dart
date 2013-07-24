@@ -46,22 +46,13 @@ class Frog extends Turtle implements Touchable {
   /* this frogs control program */
   Program program;
   
-  /* width and height of the frog bitmap */
-  double _width = 0.0, _height = 0.0;
+  /* Fly captured by frog for eating */
+  Fly prey = null;
   
   
   Frog(this.workspace) : super() {
     img.src = "images/bluefrog.png";
-    img.onLoad.listen((e) {
-      _width = img.width * 0.5;
-      _height = img.height * 0.5;
-    });
   }
-  
-  
-  double get width => _width * size;
-  
-  double get height => _height * size;
   
   
 /**
@@ -101,11 +92,6 @@ class Frog extends Turtle implements Touchable {
   }
   
   
-  bool overlaps(num tx, num ty) {
-    return (tx > x - width/2 && ty > y - height/2 && tx < x + width/2 && ty < y + height/2);
-  }
-  
-  
   bool nearWater() {
     forward(40.0);
     bool wet = workspace.inWater(x, y);
@@ -128,6 +114,10 @@ class Frog extends Turtle implements Touchable {
     return false;
   }
   
+  double get tongueX => x + sin(heading) * tongue * height * 1.5;
+  
+  double get tongueY => y - cos(heading) * tongue * height * 1.5;
+  
   
   void _drawLocal(CanvasRenderingContext2D ctx) {
     
@@ -149,7 +139,7 @@ class Frog extends Turtle implements Touchable {
     //---------------------------------------------
     if (vision > 0) {
       double theta = vision / 180.0 * PI;
-      double r = height * 2.0;
+      double r = height * 1.5;
       ctx.beginPath();
       ctx.moveTo(0, 0);
       ctx.arc(0, 0, r, PI * -0.5 - theta, PI * -0.5 + theta, false);
@@ -183,14 +173,16 @@ class Frog extends Turtle implements Touchable {
       ctx.lineWidth = 5;
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.lineTo(0, tongue * size * -150.0);
+      ctx.lineTo(0, tongue * height * -1.5);
       ctx.stroke();
     }
     
     //---------------------------------------------
     // draw frog image
     //---------------------------------------------
-    ctx.drawImageScaled(img, -width/2, -height/2, width, height);
+    num iw = width;
+    num ih = height;
+    ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
   }
   
   
@@ -278,14 +270,26 @@ class Frog extends Turtle implements Touchable {
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.onstart = (() { label = cmd; tongue = 0.0; });
-    tween.onend = (() { _pause(); });
     tween.addControlPoint(0.0, 0.0);
-    tween.addControlPoint(1.0, 0.5);
+    tween.addControlPoint(1.0, 0.4);
     tween.addControlPoint(0.0, 1.0);
-    tween.duration = 30;
+    tween.duration = 20;
     tween.ondelta = ((value) {
       tongue += value;
+      if (prey == null) {
+        prey = workspace.getFlyHere(tongueX, tongueY);
+      } else {
+        prey.x = tongueX;
+        prey.y = tongueY;
+      }
       if (tongue == 1.0) Sounds.playSound("swoosh");
+    });
+    tween.onend = (() {
+      if (prey != null) {
+        Sounds.playSound("gulp");
+        prey = null;
+      }
+      _pause();
     });
   }
 
@@ -330,7 +334,7 @@ class Frog extends Turtle implements Touchable {
   }
   
   
-  void doWait(String cmd, Parameter param) {
+  void doWait(String cmd, Parameter param, [ bool preview = false ]) {
     num duration = 0;
     if (param.value is num) {
       duration = 25 * param.value;
@@ -338,11 +342,17 @@ class Frog extends Turtle implements Touchable {
       duration = Turtle.rand.nextInt(100);
     } else if (param.value == 'fly') {
       vision = 10.0;
+      if (preview) duration = 30;
     }
     tween = new Tween();
     tween.duration = duration;
     tween.onstart = (() => label = cmd);
-    tween.onend = (() { if (duration > 0) label = null; });
+    tween.onend = (() {
+      if (duration > 0 || preview) {
+        label = null;
+        vision = 0.0;
+      }
+    });
   }
   
   
