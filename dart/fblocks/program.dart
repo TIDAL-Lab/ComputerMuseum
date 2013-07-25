@@ -85,4 +85,21 @@ class Program {
       curr = curr.step(frog);
     }
   }
+  
+  
+  String compile() {
+    String s = "void main() {\n";
+    Block b = start.next;
+    int indent = 1;
+    while (b != null && !(b is EndProgramBlock)) {
+      s += b.compile(indent);
+      if (b is BeginBlock) {
+        indent++;
+      } else if (b is EndBlock) {
+        indent--;
+      }
+      b = b.next;
+    }
+    return s + "}\n";
+  }
 }  

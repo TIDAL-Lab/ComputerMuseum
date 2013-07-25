@@ -50,7 +50,14 @@ class RepeatBlock extends BeginBlock {
       text = "repeat";
     }
   }
+
   
+  String compile(int indent) {
+    String tab = "";
+    for (int i=0; i<indent; i++) tab += "  ";
+    return "${tab}repeat (${param.value}) {\n";
+  }
+    
   
   void eval(Frog frog, [bool preview = false]) {
     String v = "repeat-counter-${id}";
@@ -171,6 +178,13 @@ class EndRepeat extends EndBlock {
     this.y = y;
   }
   
+  
+  String compile(int indent) {
+    String tab = "";
+    for (int i=0; i<indent - 1; i++) tab += "  ";
+    return "${tab}}\n";
+  }
+
   
   Block step(Frog frog) {
     return begin;
