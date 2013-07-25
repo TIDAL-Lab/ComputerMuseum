@@ -139,6 +139,20 @@ class Block implements Touchable {
     return next;
   }
   
+  
+/**
+ * Converts visual program to text
+ */
+  String compile(int indent) {
+    String tab = "";
+    for (int i=0; i<indent; i++) tab += "  ";
+    if (param == null) {
+      return "${tab}${text}();\n";
+    } else {
+      return "${tab}${text.replaceAll(' ', '-')}(${param.value});\n";
+    }
+  }
+  
     
 /**
  * Is it syntactically ok to put this block after the 'before' block?
