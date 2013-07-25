@@ -134,6 +134,32 @@ class Frog extends Turtle implements Touchable {
   }
   
   
+  void drawProgram(CanvasRenderingContext2D ctx) {
+    if (down && program != null) {
+      ctx.save();
+      {
+        var prog = program.compile().split('\n');
+        ctx.globalAlpha = 1.0;
+        ctx.textBaseline = "top";
+        ctx.textAlign = "left";
+        ctx.fillStyle = "white";
+        ctx.font = "200 16px monospace";
+        num lx = x + 80;
+        num ly = y - 20 * prog.length - 40;
+        ctx.strokeStyle = "black";
+        drawBubble(ctx, lx - 20, ly - 20, 260, y - ly, 20);
+        
+        ctx.fillStyle = "black";
+        for (int line = 0; line < prog.length; line++) {
+          ctx.fillText(prog[line], lx, ly);
+          ly += 20;
+        }
+      }
+      ctx.restore();
+    }    
+  }
+  
+  
   void _drawLocal(CanvasRenderingContext2D ctx) {
     
     //---------------------------------------------
@@ -181,7 +207,7 @@ class Frog extends Turtle implements Touchable {
     //---------------------------------------------
     num iw = width;
     num ih = height;
-    ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
+    ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);    
   }
   
   
@@ -394,11 +420,20 @@ class Frog extends Turtle implements Touchable {
     tween.ondelta = ((value) => baby.size += value);
   }
   
-  bool containsTouch(Contact c) { return false; }
+  bool containsTouch(Contact c) {
+    return overlaps(c.touchX, c.touchY);
+  }
   
-  bool touchDown(Contact c) { return false; }
+  bool down = false;
   
-  void touchUp(Contact c) { }
+  bool touchDown(Contact c) {
+    down = true;
+    return true;
+  }
+  
+  void touchUp(Contact c) {
+    down = false;
+  }
   
   void touchDrag(Contact c) { }
   
