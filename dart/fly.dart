@@ -55,7 +55,7 @@ class Fly extends Turtle {
       if (Turtle.rand.nextInt(100) > 98) {
         radius = Turtle.rand.nextDouble() * 6.0 - 3.0;
       } else if (Turtle.rand.nextInt(1000) > 995 && !pond.inWater(x, y)) {
-        perch = Turtle.rand.nextInt(400);
+        perch = Turtle.rand.nextInt(100);
       }
     } else {
       perch--;
