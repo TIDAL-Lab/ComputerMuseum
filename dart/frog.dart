@@ -93,9 +93,9 @@ class Frog extends Turtle implements Touchable {
   
   
   bool nearWater() {
-    forward(40.0);
+    forward(60.0);
     bool wet = workspace.inWater(x, y);
-    backward(40.0);
+    backward(60.0);
     return wet;
   }
   
