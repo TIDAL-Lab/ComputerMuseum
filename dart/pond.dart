@@ -26,8 +26,9 @@ part of ComputerHistory;
 class FrogPond {
   
   CanvasElement canvas;
-  CanvasRenderingContext2D background;
-  CanvasRenderingContext2D foreground;
+  CanvasRenderingContext2D layer0;  // lily pads
+  CanvasRenderingContext2D layer1;  // status bar / menu
+  CanvasRenderingContext2D layer2;  // foreground frogs / blocks
   
   List<CodeWorkspace> workspaces = new List<CodeWorkspace>();
   
@@ -41,16 +42,23 @@ class FrogPond {
   
   
   FrogPond() {
+    canvas = document.query("#pond");
+    layer0 = canvas.getContext('2d');
+    
     canvas = document.query("#background");
-    background = canvas.getContext('2d');
+    layer1 = canvas.getContext('2d');
+    
+    canvas = document.query("#foreground");
+    layer2 = canvas.getContext('2d');
+    
     width = canvas.width;
     height = canvas.height;
     
-    canvas = document.query("#foreground");
-    foreground = canvas.getContext('2d');
-    
     lilypad.src = "images/lilypad.png";
-    lilypad.onLoad.listen((event) => drawBackground());
+    lilypad.onLoad.listen((event) {
+      layer0.clearRect(0, 0, width, height);
+      layer0.drawImage(lilypad, 200, 20);
+    });
 
     addRandomGem();
     
@@ -94,7 +102,7 @@ class FrogPond {
   
   
   bool inWater(num x, num y) {
-    ImageData imd = background.getImageData(x.toInt(), y.toInt(), 1, 1);
+    ImageData imd = layer0.getImageData(x.toInt(), y.toInt(), 1, 1);
     int r = imd.data[0];
     int g = imd.data[1];
     int b = imd.data[2];
@@ -187,9 +195,8 @@ class FrogPond {
 
   
   void drawBackground() {
-    CanvasRenderingContext2D ctx = background;
+    CanvasRenderingContext2D ctx = layer1;
     ctx.clearRect(0, 0, width, height);
-    ctx.drawImage(lilypad, 200, 20);
     for (CodeWorkspace workspace in workspaces) {
       workspace.drawBackground(ctx);
     }
@@ -197,7 +204,7 @@ class FrogPond {
   
   
   void drawForeground() {
-    CanvasRenderingContext2D ctx = foreground;
+    CanvasRenderingContext2D ctx = layer2;
     ctx.clearRect(0, 0, width, height);
     for (Gem gem in gems) {
       gem.draw(ctx);
