@@ -55,14 +55,12 @@ class FrogPond {
     addRandomGem();
     
     for (int i=0; i<5; i++) {
-      flies.add(new Fly(this,
-                        Turtle.rand.nextInt(width).toDouble(),
-                        Turtle.rand.nextInt(height).toDouble()));
+      addRandomFly();
     }
     
     workspaces.add(new CodeWorkspace(this, width, height));
     new Timer.periodic(const Duration(milliseconds : 40), animate);
-    new Timer.periodic(const Duration(milliseconds : 2000), (timer) => drawBackground());
+    new Timer.periodic(const Duration(milliseconds : 800), (timer) => drawBackground());
   }
   
   
@@ -148,6 +146,21 @@ class FrogPond {
       if (frog != null) return frog;
     }
     return null;
+  }
+  
+  
+/**
+ * Adds a new random fly to the pond
+ */
+  void addRandomFly() {
+    flies.add(new Fly(this,
+                      Turtle.rand.nextInt(width).toDouble(),
+                      Turtle.rand.nextInt(height).toDouble()));
+  }
+  
+  
+  void removeFly(Fly fly) {
+    flies.remove(fly);
   }
   
   
