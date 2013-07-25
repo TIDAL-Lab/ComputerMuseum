@@ -30,8 +30,6 @@ class StartBlock extends Block {
   
   EndProgramBlock end;
   
-  bool playing = false;
-
   
   StartBlock(CodeWorkspace workspace, double x, double y) : super(workspace, '') {
     this.x = x;
@@ -82,7 +80,7 @@ class StartBlock extends Block {
     super.draw(ctx);
     ctx.beginPath();
     int delta = dragging ? 2 : 0;
-    if (playing) {
+    if (workspace.isProgramRunning()) {
       ctx.moveTo(x - 5 + delta, y - 9 + delta);
       ctx.lineTo(x - 5 + delta, y + 9 + delta);
       ctx.moveTo(x + 5 + delta, y - 9 + delta);
@@ -121,11 +119,10 @@ class StartBlock extends Block {
   
   void touchUp(Contact c) {
     dragging = false;
-    playing = !playing;
-    if (playing) {
-      workspace.playProgram();
-    } else {
+    if (workspace.isProgramRunning()) {
       workspace.pauseProgram();
+    } else {
+      workspace.playProgram();
     }
     workspace.repaint();
   }
@@ -152,6 +149,11 @@ class EndProgramBlock extends Block {
     this.x = x;
     this.y = y;
     color = '#a00';
+  }
+  
+  
+  Block step(Frog frog) {
+    return this;
   }
 
   

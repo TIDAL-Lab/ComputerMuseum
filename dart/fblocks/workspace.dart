@@ -51,10 +51,7 @@ class CodeWorkspace extends TouchManager {
   CodeWorkspace(this.pond, this.width, this.height) {
     registerEvents(document.documentElement);
     
-    Frog frog = new Frog(this);
-    frog.x = width / 2;
-    frog.y = 250.0;
-    addFrog(frog);
+    addRandomFrog();
     
     menu = new Menu(this, 0, height - BLOCK_WIDTH * 1.5,
                     width, BLOCK_WIDTH * 1.5);
@@ -120,6 +117,23 @@ class CodeWorkspace extends TouchManager {
   }
   
   
+  void addRandomFrog() {
+    for (int i=0; i<20; i++) {
+      int x = Turtle.rand.nextInt(width - 200) + 100;
+      int y = Turtle.rand.nextInt(height - 300) + 150;
+      if (!inWater(x, y)) {
+        Frog frog = new Frog(this);
+        frog.x = x.toDouble();
+        frog.y = y.toDouble();
+        addFrog(frog);
+        return;
+      }
+    }
+    // try again in 2 seconds
+    new Timer(const Duration(milliseconds : 2000), addRandomFrog);
+  }
+  
+  
   void removeFrog(Frog frog) {
     frogs.remove(frog);
     removeTouchable(frog);
@@ -173,13 +187,40 @@ class CodeWorkspace extends TouchManager {
   }
   
   
-  void playProgram() {
+/**
+ * Are frogs still running their programs?
+ */
+  bool isProgramRunning() {
     for (Frog frog in frogs) {
-      frog.program = new Program(frog, start);
+      if (frog.program != null && frog.program.isRunning) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  
+/**
+ * Resume the program for all frogs
+ */
+  void playProgram() {
+    if (frogs.length == 0) {
+      addRandomFrog();
+    }
+    for (Frog frog in frogs) {
+      if (frog.program == null) {
+        frog.program = new Program(frog, start);
+      } else if (frog.program.isFinished) {
+        frog.program.restart();
+      }
       frog.program.play();
     }
   }
   
+  
+/**
+ * Pause a running program for all frogs
+ */
   void pauseProgram() {
     for (Frog frog in frogs) {
       if (frog.program != null) {
@@ -189,6 +230,9 @@ class CodeWorkspace extends TouchManager {
   }
   
   
+/**
+ * Restart the program for all frogs
+ */
   void restartProgram() {
     for (Frog frog in frogs) {
       if (frog.program != null) {

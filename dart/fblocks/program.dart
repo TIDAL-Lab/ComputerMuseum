@@ -68,16 +68,14 @@ class Program {
   
   
   bool get isRunning {
-    return (running && curr != null);
+    return (running && curr != null && !isFinished);
   }
   
   
-  void skip() {
-    if (isRunning) {
-      curr = curr.step(frog);
-    }
+  bool get isFinished {
+    return (curr is EndProgramBlock);
   }
-
+  
   
   void step() {
     if (isRunning) {
