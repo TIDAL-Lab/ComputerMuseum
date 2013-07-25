@@ -447,6 +447,10 @@ class CodeWorkspace extends TouchManager {
       break;
     }
     
+    for (Frog frog in frogs) {
+      frog.drawProgram(ctx);
+    }
+    
     //if (frog.label != "hatch") {
     //  ctx.globalAlpha = 0.3;
     //}
