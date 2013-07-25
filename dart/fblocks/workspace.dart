@@ -297,7 +297,7 @@ class CodeWorkspace extends TouchManager {
           
           if (block.connectorX < target.x && block.hasNext && block.next.hasNext && target.checkSyntax(block.next)) {
             return block.next;
-          } else {
+          } else if (target.checkSyntax(block)) {
             return block;
           }
         }
