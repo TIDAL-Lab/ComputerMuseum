@@ -204,7 +204,7 @@ class Frog extends Turtle implements Touchable {
       _pause();
     }
   }
-
+  
   
   void _pause() {
     tween = new Tween();
@@ -212,11 +212,12 @@ class Frog extends Turtle implements Touchable {
     tween.duration = 20;
     tween.onstart = (() { });
     tween.onend = (() {
-      label = null;
       opacity = 1.0;
       ghost = null;
       radius = -1.0;
       vision = -1.0;
+      tongue = 0.0;
+      label = null;
     });
   }
   
