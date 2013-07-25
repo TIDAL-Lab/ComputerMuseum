@@ -57,8 +57,10 @@ class Program {
   
   
   void play() {
+    if (curr == null || isFinished) {
+      restart();
+    }
     running = true;
-    curr = start;
   }
   
   
