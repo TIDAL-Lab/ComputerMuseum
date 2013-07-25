@@ -32,13 +32,18 @@ class StatusInfo {
   
   ImageElement frog = new ImageElement();
   
+  ImageElement fly = new ImageElement();
+  
   List<Gem> gems = new List<Gem>();
   
   CodeWorkspace workspace;
+  
+  int fly_count = 0;
 
   
   StatusInfo(this.workspace, this.x, this.y, this.w, this.h) {
     frog.src = "images/bluefrog.png";
+    fly.src = "images/dragonfly.png";
     for (var color in Gem.colors) {
       Gem gem = new Gem.fromColor(color);
       gem.size = 0.5;
@@ -89,6 +94,15 @@ class StatusInfo {
         gem.y = iy.toDouble();
         gem.draw(ctx);
         ix += gem.width / 2 + 10;
+      }
+      
+      ix = x + 30 + frog.width;
+      iy = y + 30;
+      iw = (fly.width * 0.6).toInt();
+      ih = (fly.height * 0.6).toInt();
+      for (int i=0; i<min(fly_count, 6); i++) {
+        ctx.drawImageScaled(fly, ix, iy, iw, ih);
+        ix += fly.width;
       }
     }
     ctx.restore();
