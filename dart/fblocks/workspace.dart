@@ -142,6 +142,13 @@ class CodeWorkspace extends TouchManager {
   }
   
   
+  void captureFly(Fly fly) {
+    pond.removeFly(fly);
+    pond.addRandomFly();
+    status.fly_count++;
+  }
+  
+  
   void addBlock(Block block) {
     blocks.add(block);
     addTouchable(block);
@@ -274,9 +281,12 @@ class CodeWorkspace extends TouchManager {
       }
     }
     
+    bool stopped = true;
     for (int i=0; i<frogs.length; i++) {
       Frog frog = frogs[i];  // use int loop to avoid concurrent modification exception
-      if (frog.animate()) refresh = true;
+      if (frog.animate()) {
+        refresh = true;
+      }
     }
     
     return refresh;
@@ -382,6 +392,15 @@ class CodeWorkspace extends TouchManager {
       if (frog.ghost != null) {
         frog.ghost.draw(ctx);
       }
+    }
+    
+    for (Frog frog in frogs) {
+      if (frog.ghost != null && frog.ghost.label != null) {
+        frog.ghost.drawLabel(ctx);
+      } else {
+        frog.drawLabel(ctx);
+      }
+      break;
     }
     
     //if (frog.label != "hatch") {
