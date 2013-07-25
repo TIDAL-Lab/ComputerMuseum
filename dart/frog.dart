@@ -119,6 +119,21 @@ class Frog extends Turtle implements Touchable {
   double get tongueY => y - cos(heading) * tongue * height * 1.5;
   
   
+  void drawLabel(CanvasRenderingContext2D ctx) {
+    if (label != null) {
+      ctx.save();
+      ctx.globalAlpha = 1.0;
+      ctx.textBaseline = "top";
+      ctx.textAlign = "center";
+      ctx.fillStyle = "white";
+      ctx.font = "200 16px sans-serif";
+      //ctx.fillText(label, model.worldToScreenX(x, y), model.worldToScreenY(x, y) + 65);
+      ctx.fillText(label, x, y + 52);
+      ctx.restore();
+    }
+  }
+  
+  
   void _drawLocal(CanvasRenderingContext2D ctx) {
     
     //---------------------------------------------
@@ -150,22 +165,6 @@ class Frog extends Turtle implements Touchable {
     
     
     //---------------------------------------------
-    // draw command label
-    //---------------------------------------------
-    if (label != null) {
-      ctx.save();
-      ctx.globalAlpha = 1.0;
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.textBaseline = "top";
-      ctx.textAlign = "center";
-      ctx.fillStyle = "white";
-      ctx.font = "200 16px sans-serif";
-      //ctx.fillText(label, model.worldToScreenX(x, y), model.worldToScreenY(x, y) + 65);
-      ctx.fillText(label, x, y + 52);
-      ctx.restore();
-    }
-    
-    //---------------------------------------------
     // draw tongue sticking out
     //---------------------------------------------
     if (tongue > 0) {
@@ -188,6 +187,7 @@ class Frog extends Turtle implements Touchable {
   
   void doCommand(String cmd, Parameter param, [ bool preview = false ]) {
     opacity = 1.0;
+    ghost = null;
     if (cmd == "hop") {
       doMove(cmd, param, preview);
     } else if (cmd == "left" || cmd == "right") {
@@ -287,6 +287,7 @@ class Frog extends Turtle implements Touchable {
     tween.onend = (() {
       if (prey != null) {
         Sounds.playSound("gulp");
+        workspace.captureFly(prey);
         prey = null;
       }
       _pause();
