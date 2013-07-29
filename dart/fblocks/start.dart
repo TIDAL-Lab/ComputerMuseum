@@ -75,7 +75,6 @@ class StartBlock extends Block {
    * Draw the block
    */
   void draw(CanvasRenderingContext2D ctx) {
-    ctx.restore();
     ctx.fillStyle = 'white';
     super.draw(ctx);
     ctx.beginPath();
@@ -151,7 +150,7 @@ class EndProgramBlock extends Block {
     color = '#a00';
   }
   
-  
+
   Block step(Frog frog) {
     return this;
   }
