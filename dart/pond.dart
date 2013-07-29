@@ -44,7 +44,7 @@ class FrogPond extends TouchManager {
   List<Turtle> frogs = new List<Frog>();
   
   
-  ImageElement lilypad = new ImageElement();
+  ImageElement pond = new ImageElement();
   
   
   FrogPond() {
@@ -60,10 +60,10 @@ class FrogPond extends TouchManager {
     width = canvas.width;
     height = canvas.height;
     
-    lilypad.src = "images/lilypad.png";
-    lilypad.onLoad.listen((event) {
+    pond.src = "images/pond.png";
+    pond.onLoad.listen((event) {
       layer0.clearRect(0, 0, width, height);
-      layer0.drawImage(lilypad, 200, 20);
+      layer0.drawImage(pond, 0, 0);
     });
 
     addGem();
