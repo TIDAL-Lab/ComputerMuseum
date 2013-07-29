@@ -119,6 +119,14 @@ abstract class Turtle {
   double get height => img.height * size;
   
   
+  double angleBetween(Turtle b) {
+    double theta = -atan2(x - b.x, y - b.y) / PI * 180.0;
+    if (theta < 0) theta += 360.0;
+    double alpha = (heading / PI * 180.0) % 360;
+    return alpha - theta;
+  }
+  
+  
   dynamic operator[] (String key) {
     return variables[key];
   }

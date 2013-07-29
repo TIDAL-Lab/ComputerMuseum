@@ -60,6 +60,7 @@ class StatusInfo {
         captured.flyTo(gem.x, gem.y, () {
           gem.shadowed = false;
           workspace.repaintBackground();
+          captured.die();
         });
       }
     }

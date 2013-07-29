@@ -23,7 +23,7 @@
 part of ComputerHistory;
 
 
-class FrogPond {
+class FrogPond extends TouchManager {
   
   CanvasElement canvas;
   CanvasRenderingContext2D layer0;  // lily pads
@@ -34,9 +34,15 @@ class FrogPond {
   
   int width, height;
   
+  /* List of gems on the screen */
   List<Gem> gems = new List<Gem>();
-  
+
+  /* List of flies */  
   List<Fly> flies = new List<Fly>();
+  
+  /* List of frogs */  
+  List<Turtle> frogs = new List<Frog>();
+  
   
   ImageElement lilypad = new ImageElement();
   
@@ -60,98 +66,53 @@ class FrogPond {
       layer0.drawImage(lilypad, 200, 20);
     });
 
-    addRandomGem();
+    addGem();
     
-    for (int i=0; i<5; i++) {
-      addRandomFly();
+    for (int i=0; i<10; i++) {
+      addFly();
     }
     
     workspaces.add(new CodeWorkspace(this, width, height));
     new Timer.periodic(const Duration(milliseconds : 40), animate);
     new Timer.periodic(const Duration(milliseconds : 800), (timer) => drawBackground());
   }
-  
-  
-  void animate(Timer timer) {
-    bool repaint = false;
-    
-    // remove dead gems
-    for (int i=gems.length-1; i >= 0; i--) {
-      if (gems[i].dead) {
-        gems.remove(gems[i]);
-        repaint = true;
-      }
-    }    
 
-    // animate gems
-    for (Gem gem in gems) {
-      if (gem.animate()) repaint = true;
-    }
-    
-    // animate flies
-    for (Fly fly in flies) {
-      fly.animate();
-      repaint = true;
-    }
-    
-    for (CodeWorkspace workspace in workspaces) {
-      if (workspace.animate()) repaint = true;
-    }
-    if (repaint) drawForeground();
+
+  
+/**
+ * Add a frog to the pond
+ */
+  void addFrog(Frog frog) {
+    frogs.add(frog);
+    addTouchable(frog);
   }
   
-  
-  bool inWater(num x, num y) {
-    ImageData imd = layer0.getImageData(x.toInt(), y.toInt(), 1, 1);
-    int r = imd.data[0];
-    int g = imd.data[1];
-    int b = imd.data[2];
-    // value of background water texture is all zero since it's from CSS
-    return (g == 0);
+
+/**
+ * Remove a frog from the pond
+ */
+  void removeFrog(Frog frog) {
+    frogs.remove(frog);
+    removeTouchable(frog);
   }
   
-  
-  double _angleBetween(Turtle a, Turtle b) {
-    double theta = -atan2(a.x - b.x, a.y - b.y) / PI * 180.0;
-    if (theta < 0) theta += 360.0;
-    double alpha = (a.heading / PI * 180.0) % 360;
-    return alpha - theta;
-  }
-  
-  
-  bool seeGem(Frog frog) {
-    for (Gem gem in gems) {
-      if (_angleBetween(frog, gem).abs() < 20.0) return true;
+
+/**
+ * Remove dead frogs
+ */
+  void removeDeadFrogs() {
+    for (int i=frogs.length-1; i >= 0; i--) {
+      if (frogs[i].dead) removeFrog(frogs[i]);
     }
-    return false;
   }
-  
-  
-  bool nearFly(Frog frog) {
-    for (Fly fly in flies) {
-      if (_angleBetween(frog, fly).abs() < 10.0) {
-        num d = distance(fly.x, fly.y, frog.x, frog.y);
-        if (d > frog.height / 4 && d < frog.height * 1.5) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-  
-  
-  Gem getGemHere(Frog frog) {
-    for (Gem gem in gems) {
-      if (gem.overlaps(frog.x, frog.y, frog.width)) return gem;
-    }
-    return null;
-  }
-  
-  
+
+
+/**
+ * Returns any frog at the given location
+ */
   Frog getFrogHere(num x, num y) {
-    for (CodeWorkspace workspace in workspaces) {
-      Frog frog = workspace.getFrogHere(x, y);
-      if (frog != null) return frog;
+    for (Frog frog in frogs) {
+      if (frog.overlaps(x, y)) return frog;
     }
     return null;
   }
@@ -160,15 +121,31 @@ class FrogPond {
 /**
  * Adds a new random fly to the pond
  */
-  void addRandomFly() {
+  void addFly() {
     flies.add(new Fly(this,
                       Turtle.rand.nextInt(width).toDouble(),
                       Turtle.rand.nextInt(height).toDouble()));
   }
   
   
-  void removeFly(Fly fly) {
-    flies.remove(fly);
+/**
+ * Remove dead flies
+ */
+  void removeDeadFlies() {
+    for (int i=flies.length-1; i >= 0; i--) {
+      if (flies[i].dead) flies.removeAt(i);
+    }
+  }
+
+
+/**
+ * Returns the fly at the given location
+ */
+  Fly getFlyHere(num x, num y) {
+    for (Fly fly in flies) {
+      if (fly.overlaps(x, y, 20)) return fly;
+    }
+    return null;
   }
   
   
@@ -176,7 +153,7 @@ class FrogPond {
  * Adds a random gem to the pond in a place where there are no frogs... give up
  * after a few tries and try again later.
  */
-  void addRandomGem()  {
+  void addGem()  {
     for (int i=0; i<25; i++) {
       int x = Turtle.rand.nextInt(width - 100) + 50;
       int y = Turtle.rand.nextInt(height - 200) + 100;
@@ -190,10 +167,68 @@ class FrogPond {
       }
     }
     // try again in 4 seconds
-    new Timer(const Duration(milliseconds : 4000), addRandomGem);
+    new Timer(const Duration(milliseconds : 4000), addGem);
   }
 
   
+/**
+ * Remove dead gems
+ */
+  void removeDeadGems() {
+    for (int i=gems.length-1; i >= 0; i--) {
+      if (gems[i].dead) gems.removeAt(i);
+    }
+  }
+  
+  
+/**
+ * Get any gem at this location 
+ */
+  Gem getGemHere(num x, num y) {
+    for (Gem gem in gems) {
+      if (gem.overlaps(x, y, 65.0)) {
+        return gem;
+      }
+    }
+  }
+  
+  
+/**
+ * Animate all of the agents and the workspaces
+ */
+  void animate(Timer timer) {
+
+    // remove dead frogs, flies, and gems
+    removeDeadGems();
+    removeDeadFlies();
+    removeDeadFrogs();
+    
+    // animate agents and workspaces
+    gems.forEach((gem) => gem.animate());
+    flies.forEach((fly) => fly.animate());
+    frogs.forEach((frog) => frog.animate());
+    workspaces.forEach((workspace) => workspace.animate());
+    
+    // redraw
+    drawForeground();
+  }
+  
+
+/**
+ * Returns true if the given point is in the water
+ */
+  bool inWater(num x, num y) {
+    ImageData imd = layer0.getImageData(x.toInt(), y.toInt(), 1, 1);
+    int r = imd.data[0];
+    int g = imd.data[1];
+    int b = imd.data[2];
+    return (g == 0); // value of background water texture is all zero since it's from CSS
+  }
+  
+  
+/**
+ * Draw the menu and status areas
+ */
   void drawBackground() {
     CanvasRenderingContext2D ctx = layer1;
     ctx.clearRect(0, 0, width, height);
@@ -203,19 +238,21 @@ class FrogPond {
   }
   
   
+/**
+ * Draws the flies, frogs, gems, and programming blocks
+ */
   void drawForeground() {
     CanvasRenderingContext2D ctx = layer2;
     ctx.clearRect(0, 0, width, height);
-    for (Gem gem in gems) {
-      gem.draw(ctx);
-    }
     
-    for (CodeWorkspace workspace in workspaces) {
-      workspace.draw(ctx);
-    }
+    workspaces.forEach((workspace) => workspace.draw(ctx));    
+
+    gems.forEach((gem) => gem.draw(ctx));
+
+    frogs.forEach((frog) => frog.draw(ctx));
     
-    for (Fly fly in flies) {
-      fly.draw(ctx);
-    }
+    flies.forEach((fly) => fly.draw(ctx));
+
+    frogs.forEach((frog) => frog.drawProgram(ctx));
   }
 }

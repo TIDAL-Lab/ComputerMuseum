@@ -25,7 +25,10 @@ part of ComputerHistory;
 
 class Frog extends Turtle implements Touchable {
   
-  /* workspace that controls this frog */
+  /* pond that contains this frog */
+  FrogPond pond;
+  
+  /* code workspace that controls this frog */
   CodeWorkspace workspace;
 
   /* size of the sound wave emanating from the frog */
@@ -50,27 +53,13 @@ class Frog extends Turtle implements Touchable {
   Fly prey = null;
   
   
-  Frog(this.workspace) : super() {
+  Frog(this.pond, this.workspace) : super() {
     img.src = "images/bluefrog.png";
   }
   
   
-/**
- * Copy the state of another frog
- */
-  void copy(Turtle other) {
-    if (other is Frog) {
-      Frog frog = other as Frog;
-      radius = frog.radius;
-      label = frog.label;
-      tongue = frog.tongue;
-    }
-    super.copy(other);
-  }
-
-  
   Frog hatch() {
-    Frog clone = new Frog(workspace);
+    Frog clone = new Frog(pond, workspace);
     clone.copy(this);
     return clone;
   }
@@ -94,25 +83,37 @@ class Frog extends Turtle implements Touchable {
   
   bool nearWater() {
     forward(60.0);
-    bool wet = workspace.inWater(x, y);
+    bool wet = pond.inWater(x, y);
     backward(60.0);
     return wet;
   }
   
   
   bool seeGem() {
-    return workspace.seeGem(this);
+    for (Gem gem in pond.gems) {
+      if (angleBetween(gem).abs() < 20.0) return true;
+    }
+    return false;
   }
-  
+    
   
   bool nearFly() {
-    return workspace.nearFly(this);
+    for (Fly fly in pond.flies) {
+      if (angleBetween(fly).abs() < 10.0) {
+        num d = distance(fly.x, fly.y, x, y);
+        if (d > height / 4 && d < height * 1.5) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
   
   
   bool hearSound() {
     return false;
   }
+  
   
   double get tongueX => x + sin(heading) * tongue * height * 1.5;
   
@@ -127,8 +128,7 @@ class Frog extends Turtle implements Touchable {
       ctx.textAlign = "center";
       ctx.fillStyle = "white";
       ctx.font = "200 16px sans-serif";
-      //ctx.fillText(label, model.worldToScreenX(x, y), model.worldToScreenY(x, y) + 65);
-      ctx.fillText(label, x, y + 52);
+        ctx.fillText(label, x, y + 52);
       ctx.restore();
     }
   }
@@ -157,6 +157,12 @@ class Frog extends Turtle implements Touchable {
       }
       ctx.restore();
     }    
+  }
+  
+  
+  void draw(CanvasRenderingContext2D ctx) {
+    super.draw(ctx);
+    if (ghost != null) ghost.draw(ctx);
   }
   
   
@@ -207,7 +213,7 @@ class Frog extends Turtle implements Touchable {
     //---------------------------------------------
     num iw = width;
     num ih = height;
-    ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);    
+    ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
   }
   
   
@@ -267,11 +273,14 @@ class Frog extends Turtle implements Touchable {
     tween.onstart = (() { Sounds.playSound(cmd); target.label = s; });
     tween.onend = (() {
       _pause();
-      if (workspace.inWater(x, y)) {
+      if (pond.inWater(x, y)) {
         Sounds.playSound("splash");
         die();
       } else {
-        workspace.captureGem(this);
+        Gem gem = pond.getGemHere(x, y);
+        if (gem != null) {
+          workspace.captureGem(gem);
+        }
       }
     });
     tween.addControlPoint(0, 0);
@@ -304,7 +313,7 @@ class Frog extends Turtle implements Touchable {
     tween.ondelta = ((value) {
       tongue += value;
       if (prey == null) {
-        prey = workspace.getFlyHere(tongueX, tongueY);
+        prey = pond.getFlyHere(tongueX, tongueY);
       } else {
         prey.x = tongueX;
         prey.y = tongueY;
@@ -398,7 +407,7 @@ class Frog extends Turtle implements Touchable {
     if (preview) {
       ghost = baby;
     } else {
-      workspace.addFrog(baby);
+      pond.addFrog(baby);
     }
     baby.size = 0.05;
     baby.left(Turtle.rand.nextInt(360).toDouble());
@@ -420,11 +429,12 @@ class Frog extends Turtle implements Touchable {
     tween.ondelta = ((value) => baby.size += value);
   }
   
+  
+  bool down = false;
+  
   bool containsTouch(Contact c) {
     return overlaps(c.touchX, c.touchY);
   }
-  
-  bool down = false;
   
   bool touchDown(Contact c) {
     down = true;
@@ -438,5 +448,4 @@ class Frog extends Turtle implements Touchable {
   void touchDrag(Contact c) { }
   
   void touchSlide(Contact c) { }
-  
 }

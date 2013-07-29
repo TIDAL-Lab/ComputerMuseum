@@ -30,9 +30,6 @@ class CodeWorkspace extends TouchManager {
   /* size of the canvas */
   int width, height;
 
-  /* list of frogs controlled by this workspace */  
-  List<Turtle> frogs = new List<Frog>();
-  
   /* list of blocks in the workspace */
   List<Block> blocks = new List<Block>();
   
@@ -111,55 +108,20 @@ class CodeWorkspace extends TouchManager {
   }
   
   
-  void addFrog(Frog frog) {
-    frogs.add(frog);
-    addTouchable(frog);
-  }
-  
-  
   void addRandomFrog() {
     for (int i=0; i<20; i++) {
       int x = Turtle.rand.nextInt(width - 200) + 100;
       int y = Turtle.rand.nextInt(height - 300) + 150;
-      if (!inWater(x, y)) {
-        Frog frog = new Frog(this);
+      if (!pond.inWater(x, y)) {
+        Frog frog = new Frog(pond, this);
         frog.x = x.toDouble();
         frog.y = y.toDouble();
-        addFrog(frog);
+        pond.addFrog(frog);
         return;
       }
     }
     // try again in 2 seconds
     new Timer(const Duration(milliseconds : 2000), addRandomFrog);
-  }
-  
-  
-  void removeFrog(Frog frog) {
-    frogs.remove(frog);
-    removeTouchable(frog);
-  }
-  
-  
-  Frog getFrogHere(num x, num y) {
-    for (Frog frog in frogs) {
-      if (frog.overlaps(x, y)) return frog;
-    }
-    return null;
-  }
-  
-  
-  Fly getFlyHere(num x, num y) {
-    for (Fly fly in pond.flies) {
-      if (fly.overlaps(x, y, 20)) return fly;
-    }
-    return null;
-  }
-  
-  
-  void captureFly(Fly fly) {
-    pond.removeFly(fly);
-    pond.addRandomFly();
-    status.fly_count++;
   }
   
   
@@ -191,9 +153,11 @@ class CodeWorkspace extends TouchManager {
  * Are frogs still running their programs?
  */
   bool isProgramRunning() {
-    for (Frog frog in frogs) {
-      if (frog.program != null && frog.program.isRunning) {
-        return true;
+    for (Frog frog in pond.frogs) {
+      if (frog.workspace == this) {
+        if (frog.program != null && frog.program.isRunning) {
+          return true;
+        }
       }
     }
     return false;
@@ -201,19 +165,44 @@ class CodeWorkspace extends TouchManager {
   
   
 /**
+ * Returns the number of frogs currently controlled by this workspace
+ */
+  int getFrogCount() {
+    int count = 0;
+    for (Frog frog in pond.frogs) {
+      if (frog.workspace == this) count++;
+    }
+    return count;
+  }
+  
+  
+/**
+ * Returns the target frog (that we show program execution for)
+ */
+  Frog getTargetFrog() {
+    for (Frog frog in pond.frogs) {
+      if (frog.workspace == this) return frog;
+    }
+    return null;
+  }
+  
+  
+/**
  * Resume the program for all frogs
  */
   void playProgram() {
-    if (frogs.length == 0) {
+    if (getFrogCount() == 0) {
       addRandomFrog();
     }
-    for (Frog frog in frogs) {
-      if (frog.program == null) {
-        frog.program = new Program(frog, start);
-      } else if (frog.program.isFinished) {
-        frog.program.restart();
+    for (Frog frog in pond.frogs) {
+      if (frog.workspace == this) {
+        if (frog.program == null) {
+          frog.program = new Program(frog, start);
+        } else if (frog.program.isFinished) {
+          frog.program.restart();
+        }
+        frog.program.play();
       }
-      frog.program.play();
     }
   }
   
@@ -222,8 +211,8 @@ class CodeWorkspace extends TouchManager {
  * Pause a running program for all frogs
  */
   void pauseProgram() {
-    for (Frog frog in frogs) {
-      if (frog.program != null) {
+    for (Frog frog in pond.frogs) {
+      if (frog.workspace == this && frog.program != null) {
         frog.program.pause();
       }
     }
@@ -234,8 +223,8 @@ class CodeWorkspace extends TouchManager {
  * Restart the program for all frogs
  */
   void restartProgram() {
-    for (Frog frog in frogs) {
-      if (frog.program != null) {
+    for (Frog frog in pond.frogs) {
+      if (frog.workspace == this && frog.program != null) {
         frog.program.restart();
       }
     }
@@ -243,8 +232,10 @@ class CodeWorkspace extends TouchManager {
   
   
   void preview(Block block) {
-    for (Frog frog in frogs) {
-      block.eval(frog, true);
+    for (Frog frog in pond.frogs) {
+      if (frog.workspace == this) {
+        block.eval(frog, true);
+      }
     }
   }
   
@@ -315,51 +306,26 @@ class CodeWorkspace extends TouchManager {
         if (block.animate())  refresh = true;
       }
     }
-    
-    // remove dead frogs
-    for (int i=frogs.length-1; i >= 0; i--) {
-      Frog frog = frogs[i];
-      if (frog.dead) {
-        frogs.remove(frog);
-        refresh = true;
-      }
-    }
-    
-    bool stopped = true;
-    for (int i=0; i<frogs.length; i++) {
-      Frog frog = frogs[i];  // use int loop to avoid concurrent modification exception
-      if (frog.animate()) {
-        refresh = true;
-      }
-    }
-    
     return refresh;
   }
   
   
-  bool inWater(num x, num y) {
-    return pond.inWater(x, y);
-  }
-  
-  
-  bool seeGem(Frog frog) {
-    return pond.seeGem(frog);
-  }
-  
-  
-  bool nearFly(Frog frog) {
-    return pond.nearFly(frog);
-  }
-  
-  
-  bool captureGem(Frog frog) {
-    Gem gem = pond.getGemHere(frog);
-    if (gem != null) {
+  bool captureGem(Gem gem) {
+    if (!gem.dead) {
       status.captureGem(gem);
-      new Timer(const Duration(milliseconds : 3000), () { pond.addRandomGem(); });
+      new Timer(const Duration(milliseconds : 3000), () { pond.addGem(); });
       return true;
     }
     return false;
+  }
+  
+  
+  void captureFly(Fly fly) {
+    if (!fly.dead) {
+      fly.die();
+      pond.addFly();
+      status.fly_count++;
+    }
   }
   
   
@@ -428,34 +394,17 @@ class CodeWorkspace extends TouchManager {
       block.drawParams(ctx);
     }
     
-    //------------------------------------------------
-    // draw frogs
-    //------------------------------------------------
-    for (Frog frog in frogs) {
-      frog.draw(ctx);
-      if (frog.ghost != null) {
-        frog.ghost.draw(ctx);
-      }
-    }
     
-    for (Frog frog in frogs) {
-      if (frog.ghost != null && frog.ghost.label != null) {
-        frog.ghost.drawLabel(ctx);
+    //------------------------------------------------
+    // draw command label for the target frog
+    //------------------------------------------------
+    Frog target = getTargetFrog();
+    if (target != null) {
+      if (target.ghost != null && target.ghost.label != null) {
+        target.ghost.drawLabel(ctx);
       } else {
-        frog.drawLabel(ctx);
+        target.drawLabel(ctx);
       }
-      break;
     }
-    
-    for (Frog frog in frogs) {
-      frog.drawProgram(ctx);
-    }
-    
-    //if (frog.label != "hatch") {
-    //  ctx.globalAlpha = 0.3;
-    //}
-    //ghost.draw(ctx);
-    //ctx.globalAlpha = 1.0;
-    //frog.draw(ctx);
   }
 }
