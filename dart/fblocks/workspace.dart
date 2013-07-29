@@ -42,16 +42,25 @@ class CodeWorkspace extends TouchManager {
   /* fixed start block */
   StartBlock start;
   
+  /* reference back to the frog pond */
   FrogPond pond;
   
+  String frogimg = "images/greenfrog.png";
   
-  CodeWorkspace(this.pond, this.width, this.height) {
+  
+  CodeWorkspace(this.pond, String color) {
+    
+    width = pond.height;
+    height = pond.width;
+    frogimg = "images/${color}frog.png";
+    
     registerEvents(document.documentElement);
     
     addRandomFrog();
     
-    menu = new Menu(this, 0, height - BLOCK_WIDTH * 1.5,
-                    width, BLOCK_WIDTH * 1.5);
+    //menu = new Menu(this, 0, height - BLOCK_WIDTH * 1.5,
+    //                width, BLOCK_WIDTH * 1.5);
+    menu = new Menu(this, 0, height - BLOCK_WIDTH * 1.5, width, BLOCK_WIDTH * 1.5);
     
     status = new StatusInfo(this, width - 280, height - 115, 280, 115);
     
@@ -116,6 +125,7 @@ class CodeWorkspace extends TouchManager {
         Frog frog = new Frog(pond, this);
         frog.x = x.toDouble();
         frog.y = y.toDouble();
+        frog.img.src = frogimg;
         pond.addFrog(frog);
         return;
       }
@@ -340,61 +350,71 @@ class CodeWorkspace extends TouchManager {
   
   
   void drawBackground(CanvasRenderingContext2D ctx) {
-    menu.draw(ctx);
-    status.draw(ctx);
+    ctx.save();
+    {
+      xform.transformContext(ctx);
+      menu.draw(ctx);
+      status.draw(ctx);
+    }
+    ctx.restore();
   }
 
   
   void draw(CanvasRenderingContext2D ctx) {
-    
-    //----------------------------------------------
-    // for each block being dragged, identify active
-    // insertion points and highlight them
-    //----------------------------------------------
-    for (Block block in blocks) {
-      block.highlight = false;
-    }
-    
-    for (Block target in blocks) {
-      if (target.dragging) {
-        Block b = findInsertionPoint(target);
-        if (b != null) b.highlight = true;
-      }
-    }
-    
-    //------------------------------------------------
-    // draw sockets
-    //------------------------------------------------
-    if (isDragging()) {
+    ctx.save();
+    {
+      xform.transformContext(ctx);
+      
+      //----------------------------------------------
+      // for each block being dragged, identify active
+      // insertion points and highlight them
+      //----------------------------------------------
       for (Block block in blocks) {
-        if (!block.dragging && block.isInProgram) {
-          block.drawSockets(ctx);
+        block.highlight = false;
+      }
+      
+      for (Block target in blocks) {
+        if (target.dragging) {
+          Block b = findInsertionPoint(target);
+          if (b != null) b.highlight = true;
         }
       }
+      
+      //------------------------------------------------
+      // draw sockets
+      //------------------------------------------------
+      if (isDragging()) {
+        for (Block block in blocks) {
+          if (!block.dragging && block.isInProgram) {
+            block.drawSockets(ctx);
+          }
+        }
+      }
+      
+      //------------------------------------------------
+      // draw connecting lines
+      //------------------------------------------------
+      for (Block block in blocks) {
+        block.drawLines(ctx);
+      }
+      
+      //------------------------------------------------
+      // draw blocks
+      //------------------------------------------------
+      for (Block block in blocks) {
+        block.draw(ctx);
+      }
+      
+      //------------------------------------------------
+      // draw parameters
+      //------------------------------------------------
+      for (Block block in blocks) {
+        block.drawParams(ctx);
+      }
+      
     }
-    
-    //------------------------------------------------
-    // draw connecting lines
-    //------------------------------------------------
-    for (Block block in blocks) {
-      block.drawLines(ctx);
-    }
-
-    //------------------------------------------------
-    // draw blocks
-    //------------------------------------------------
-    for (Block block in blocks) {
-      block.draw(ctx);
-    }
-    
-    //------------------------------------------------
-    // draw parameters
-    //------------------------------------------------
-    for (Block block in blocks) {
-      block.drawParams(ctx);
-    }
-    
-    
+    ctx.restore();
+      
     //------------------------------------------------
     // draw command label for the target frog
     //------------------------------------------------

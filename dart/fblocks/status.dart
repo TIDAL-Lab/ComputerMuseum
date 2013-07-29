@@ -42,7 +42,7 @@ class StatusInfo {
 
   
   StatusInfo(this.workspace, this.x, this.y, this.w, this.h) {
-    frog.src = "images/bluefrog.png";
+    frog.src = workspace.frogimg;
     fly.src = "images/dragonfly.png";
     for (var color in Gem.colors) {
       Gem gem = new Gem.fromColor(color);
