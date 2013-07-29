@@ -36,6 +36,11 @@ class TouchManager {
   
   /* Element that receives touch or mouse events */
   Element parent = null;
+  
+  /* Transformation matrices */
+  Matrix2D xform = new Matrix2D();
+  Matrix2D iform = new Matrix2D();
+
    
   TouchManager();
    
@@ -57,7 +62,13 @@ class TouchManager {
     // Prevent screen from dragging on ipad
     document.onTouchMove.listen((e) => e.preventDefault());
   }
-   
+  
+  
+  void transform(num m11, num m12, num m21, num m22, num dx, num dy) {
+    xform.setTransform(m11, m12, m21, m22, dx, dy);
+    iform = xform.invert();
+  }
+
    
 /*
  * Add a touchable object to the list
@@ -94,7 +105,9 @@ class TouchManager {
   void _mouseUp(MouseEvent evt) {
     Touchable target = touch_bindings[-1];
     if (target != null) {
-      target.touchUp(new Contact.fromMouse(evt));
+      Contact c = new Contact.fromMouse(evt);
+      iform.transformContact(c);
+      target.touchUp(c);
     }
     touch_bindings[-1] = null;
     mdown = false;
@@ -107,7 +120,9 @@ class TouchManager {
   void _mouseExit(MouseEvent evt) {
     Touchable target = touch_bindings[-1];
     if (target != null) {
-      target.touchUp(new Contact.fromMouse(evt));
+      Contact c = new Contact.fromMouse(evt);
+      iform.transformContact(c);
+      target.touchUp(c);
     }
     touch_bindings[-1] = null;
     mdown = false;
@@ -119,6 +134,7 @@ class TouchManager {
  */
   void _mouseDown(MouseEvent evt) {
     Contact t = new Contact.fromMouse(evt);
+    iform.transformContact(t);
     Touchable target = findTouchTarget(t);
     if (target != null) {
       if (target.touchDown(t)) {
@@ -135,6 +151,7 @@ class TouchManager {
   void _mouseMove(MouseEvent evt) {
     if (mdown) {
       Contact t = new Contact.fromMouse(evt);
+      iform.transformContact(t);
       Touchable target = touch_bindings[-1];
       if (target != null) {
         target.touchDrag(t);
@@ -151,6 +168,7 @@ class TouchManager {
   void _touchDown(var tframe) {
     for (Touch touch in tframe.changedTouches) {
       Contact t = new Contact.fromTouch(touch, parent);
+      iform.transformContact(t);
       Touchable target = findTouchTarget(t);
       if (target != null) {
         if (target.touchDown(t)) {
@@ -164,6 +182,7 @@ class TouchManager {
   void _touchUp(var tframe) {
     for (Touch touch in tframe.changedTouches) {
       Contact t = new Contact.fromTouch(touch, parent);
+      iform.transformContact(t);
       Touchable target = touch_bindings[t.id];
       if (target != null) {
         target.touchUp(t);
@@ -179,6 +198,7 @@ class TouchManager {
   void _touchDrag(var tframe) {
     for (Touch touch in tframe.changedTouches) {
       Contact t = new Contact.fromTouch(touch, parent);
+      iform.transformContact(t);
       Touchable target = touch_bindings[t.id];
       if (target != null) {
         target.touchDrag(t);
