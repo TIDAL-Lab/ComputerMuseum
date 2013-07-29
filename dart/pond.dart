@@ -72,7 +72,14 @@ class FrogPond extends TouchManager {
       addFly();
     }
     
-    workspaces.add(new CodeWorkspace(this, width, height));
+    // right workspace
+    CodeWorkspace workspace = new CodeWorkspace(this, "blue");
+    workspace.transform(cos(PI / -2), sin(PI / -2), -sin(PI / -2), cos(PI / -2), 0, height);
+    workspaces.add(workspace);
+    
+    workspace = new CodeWorkspace(this, "green");
+    workspace.transform(cos(PI/2), sin(PI/2), -sin(PI/2),cos(PI/2), width, 0);
+    workspaces.add(workspace);
     new Timer.periodic(const Duration(milliseconds : 40), animate);
     new Timer.periodic(const Duration(milliseconds : 800), (timer) => drawBackground());
   }
