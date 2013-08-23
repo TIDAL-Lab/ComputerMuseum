@@ -22,6 +22,7 @@
  */
 library ComputerHistory;
 
+import 'dart:collection';
 import 'dart:html';
 import 'dart:math';
 import 'dart:async';
