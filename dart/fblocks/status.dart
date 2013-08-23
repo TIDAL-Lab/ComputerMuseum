@@ -90,11 +90,11 @@ class StatusInfo {
       ix += iw + 20;
       iy = y + h - h ~/ 3;
       for (Gem gem in gems) {
-        ix += gem.width / 2;
+        ix += gem.width ~/ 2;
         gem.x = ix.toDouble();
         gem.y = iy.toDouble();
         gem.draw(ctx);
-        ix += gem.width / 2 + 10;
+        ix += gem.width ~/ 2 + 10;
       }
       
       ix = x + 30 + frog.width;
