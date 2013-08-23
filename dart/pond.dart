@@ -112,14 +112,28 @@ class FrogPond extends TouchManager {
       if (frogs[i].dead) removeFrog(frogs[i]);
     }
   }
+  
+  
+/**
+ * Returns all frogs at the given location (not including the original frog)
+ */
+  Set<Frog> getFrogsHere(Frog frog) {
+    Set<Frog> aset = new HashSet<Frog>();
+    for (Frog f in frogs) {
+      if (f != frog && f.overlapsTurtle(frog)) {
+        aset.add(f);
+      }
+    }
+    return aset;
+  }
 
 
 /**
- * Returns any frog at the given location
+ * Returns one frog at the given location
  */
   Frog getFrogHere(num x, num y) {
     for (Frog frog in frogs) {
-      if (frog.overlaps(x, y)) return frog;
+      if (frog.overlapsPoint(x, y)) return frog;
     }
     return null;
   }
@@ -150,7 +164,7 @@ class FrogPond extends TouchManager {
  */
   Fly getFlyHere(num x, num y) {
     for (Fly fly in flies) {
-      if (fly.overlaps(x, y, 20)) return fly;
+      if (fly.overlapsPoint(x, y, 20)) return fly;
     }
     return null;
   }
@@ -191,12 +205,11 @@ class FrogPond extends TouchManager {
 /**
  * Get any gem at this location 
  */
-  Gem getGemHere(num x, num y) {
+  Gem getGemHere(Frog frog) {
     for (Gem gem in gems) {
-      if (gem.overlaps(x, y, 65.0)) {
-        return gem;
-      }
+      if (gem.overlapsTurtle(frog)) return gem;
     }
+    return null;
   }
   
   
