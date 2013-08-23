@@ -57,9 +57,9 @@ class CodeWorkspace extends TouchManager {
     registerEvents(document.documentElement);
     
     addRandomFrog();
+    addRandomFrog();
+    addRandomFrog();
     
-    //menu = new Menu(this, 0, height - BLOCK_WIDTH * 1.5,
-    //                width, BLOCK_WIDTH * 1.5);
     menu = new Menu(this, 0, height - BLOCK_WIDTH * 1.5, width, BLOCK_WIDTH * 1.5);
     
     status = new StatusInfo(this, width - 280, height - 115, 280, 115);
@@ -101,7 +101,7 @@ class CodeWorkspace extends TouchManager {
     menu.addBlock(new Block(this, 'hatch'));
     
     // IF block
-    menu.addBlock(new IfBlock(this));
+    //menu.addBlock(new IfBlock(this));
     
     // REPEAT block
     menu.addBlock(new RepeatBlock(this));
@@ -119,8 +119,8 @@ class CodeWorkspace extends TouchManager {
   
   void addRandomFrog() {
     for (int i=0; i<20; i++) {
-      int x = Turtle.rand.nextInt(width - 200) + 100;
-      int y = Turtle.rand.nextInt(height - 300) + 150;
+      int x = Turtle.rand.nextInt(pond.width - 200) + 100;
+      int y = Turtle.rand.nextInt(pond.height - 300) + 150;
       if (!pond.inWater(x, y)) {
         Frog frog = new Frog(pond, this);
         frog.x = x.toDouble();
@@ -293,12 +293,14 @@ class CodeWorkspace extends TouchManager {
   
   Block findInsertionPoint(Block target) {
     for (Block block in blocks) {
-      if (block != target && !block.dragging) {
+      if (block != target && !block.dragging && block.isInProgram) {
         if (block.overlapsConnector(target)) {
-          
-          if (block.connectorX < target.x && block.hasNext && block.next.hasNext && target.checkSyntax(block.next)) {
-            return block.next;
-          } else if (target.checkSyntax(block)) {
+          if (block.connectorX < target.x && block.hasNext && block.next.hasNext) {
+            if (block.next.overlapsConnector(target) && target.checkSyntax(block.next)) {
+              return block.next;
+            }
+          }
+          if (target.checkSyntax(block)) {
             return block;
           }
         }
@@ -313,7 +315,9 @@ class CodeWorkspace extends TouchManager {
     
     for (Block block in blocks) {
       if (block.isStartBlock) {
-        if (block.animate())  refresh = true;
+        if (block.animate()) refresh = true;
+      } else if (!block.isInProgram) {
+        if (block.animate()) refresh = true;
       }
     }
     return refresh;
@@ -376,7 +380,10 @@ class CodeWorkspace extends TouchManager {
       for (Block target in blocks) {
         if (target.dragging) {
           Block b = findInsertionPoint(target);
-          if (b != null) b.highlight = true;
+          if (b != null) {
+            b.highlight = true;
+            break; // TODO: Are you sure??
+          }
         }
       }
       
