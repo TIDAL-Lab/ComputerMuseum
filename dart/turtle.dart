@@ -101,9 +101,9 @@ abstract class Turtle {
   
   
   bool animate();
+
   
-  
-  bool overlaps(num tx, num ty, [ num tw = 0.0 ]) {
+  bool overlapsPoint(num tx, num ty, [ num tw = 0.0 ]) {
     if (tw <= 0) {
       return (tx > x - width/2 && ty > y - height/2 && tx < x + width/2 && ty < y + height/2);
     } else {
@@ -111,12 +111,21 @@ abstract class Turtle {
       return dist < (width/2 + tw/2);
     }
   }
+  
+  
+  bool overlapsTurtle(Turtle other) {
+    num dist = distance(other.x, other.y, x, y);
+    return dist < (radius + other.radius);
+  }
 
   
   double get width => img.width * size;
 
   
   double get height => img.height * size;
+  
+  
+  double get radius => (width < height) ? width / 2 : height / 2;
   
   
   double angleBetween(Turtle b) {
