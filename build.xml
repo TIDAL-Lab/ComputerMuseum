@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="ComputerMuseum" default="init">
+
+
+<target name="init">
+   <tstamp>
+      <format property="build.date" pattern="MM-dd-yyyy" />
+   </tstamp>
+   <property name="project.name" value="ComputerMuseum" />
+   <property name="deploy.user" value="litl" />
+   <property name="deploy.host" value="tidal.sesp.northwestern.edu" />
+   <property name="deploy.dir" value="/home/litl/public_html/chm" />
+</target>
+
+
+<target name="deploy" depends="init">
+   <input message="Password for ${deploy.host}: " addproperty="deploy.password" />
+
+   <scp todir="${deploy.user}:${deploy.password}@${deploy.host}:${deploy.dir}">
+      <fileset dir=".">
+         <include name="*.js" />
+         <include name="css/*.css" />
+         <include name="**/*.dart" />
+         <include name="**/*.js" />
+         <include name="index.html" />
+         <include name="sounds/*.wav" />
+         <include name="**/*.png" />
+         <include name="**/*.jpg" />
+      </fileset>
+   </scp>
+</target>
+
+</project>
