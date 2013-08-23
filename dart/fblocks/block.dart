@@ -48,6 +48,9 @@ class Block implements Touchable {
   /* Used for dragging the block on the screen */
   double deltaX, deltaY, lastX, lastY;
   
+  /* Used to animate blocks automatically */
+  double _targetX = 0.0, _targetY = 0.0;
+  
   /* Text displayed inside the block */
   String text = 'hop';
   
@@ -73,6 +76,8 @@ class Block implements Touchable {
   Parameter param = null;
   
   bool wasInProgram = false;
+  
+  bool wasInMenu = true;
   
   
   Block(this.workspace, this.text) {
@@ -111,10 +116,18 @@ class Block implements Touchable {
   
   num get connectorY => targetY;
   
-  num get targetY => hasPrev ? prev.connectorY : y;
+  num get targetY {
+    if (_targetY != 0.0) {
+      return _targetY;
+    } else {
+      return hasPrev ? prev.connectorY : y;
+    }
+  }
     
   num get targetX {
-    if (hasPrev) {
+    if (_targetX != 0.0) {
+      return _targetX;
+    } else if (hasPrev) {
       num tx = prev.connectorX;
       if (prev.highlight) tx += BLOCK_WIDTH * 1.2;
       return tx;
@@ -184,7 +197,20 @@ class Block implements Touchable {
       } else {
         return false;
       }
-    }      
+    }
+    else if (_targetX != 0.0 || _targetY != 0.0) {
+      double dx = targetX - x;
+      double dy = targetY - y;
+      if (dx.abs() > 1 || dy.abs() > 1) {
+        x += dx * 0.3;
+        y += dy * 0.3;
+        return true;
+      } else {
+        _targetX = 0.0;
+        _targetY = 0.0;
+        return false;
+      }
+    }
   }
   
   
@@ -220,7 +246,7 @@ class Block implements Touchable {
  * Add target into the chain of blocks after this block
  */
   bool snapTogether(Block target) {
-    if (overlapsConnector(target)) {
+    //if (overlapsConnector(target)) {
       if (hasNext) {
         target.next = next;
         next.prev = target;
@@ -228,9 +254,9 @@ class Block implements Touchable {
       target.prev = this;
       next = target;
       return true;
-    } else {
-      return false;
-    }
+    //} else {
+    //  return false;
+    //}
   }
   
   
@@ -400,7 +426,7 @@ class Block implements Touchable {
       next = null;
     }
     workspace.moveToTop(this);
-    workspace.preview(this);
+    //workspace.preview(this);
     workspace.repaint();
     return true;
   }
@@ -409,11 +435,15 @@ class Block implements Touchable {
   void touchUp(Contact c) {
     if (workspace.snapTogether(this)) {
       Sounds.playSound("click");
+    } else if (wasInMenu && workspace.isOverMenu(this)) {
+      _targetX = x - 5.0;
+      _targetY = y - 85.0;
     } else if (wasInProgram || workspace.isOffscreen(this)) {
       workspace.removeBlock(this);
       Sounds.playSound("crunch");
     }
     dragging = false;
+    wasInMenu = false;
     workspace.repaint();
   }
   
