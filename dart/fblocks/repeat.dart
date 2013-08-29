@@ -22,30 +22,39 @@
  */
 part of ComputerHistory;
 
-  
 class RepeatBlock extends BeginBlock {
-
   
   RepeatBlock(CodeWorkspace workspace) : super(workspace, 'repeat') {
     color = '#c92';
     param = new Parameter(this);
     param.values = [ 'forever', 1, 2, 3, 4, 5, 'near-water?', 'see-gem?' ];
+    param.align = 'center';
+    _width = BLOCK_WIDTH + 10;
   }
 
   
   Block clone() {
     RepeatBlock block = new RepeatBlock(workspace);
-    block.x = x;
-    block.y = y;
-    block.text = text;
-    block.param.values = param.values;
+    copyTo(block);
     return block;
+  }
+  
+  //num get targetY => hasPrev ? prev.connectorY - BLOCK_MARGIN : y;
+  
+  num get connectorY => targetY - BLOCK_MARGIN;
+  
+  num get connectorX {
+    if (next == end && candidate == null) {
+      return targetX + width + BLOCK_SPACE + BLOCK_WIDTH / 2;
+    } else {
+      return targetX + width + BLOCK_SPACE;
+    }
   }
   
   
   void parameterChanged(Parameter param) {
     if (param.value == "near-water?" || param.value == "see-gem?") {
-      text = "repeat\nuntil";
+      text = "repeat until";
     } else {
       text = "repeat";
     }
@@ -59,32 +68,22 @@ class RepeatBlock extends BeginBlock {
   }
     
   
-  void eval(Frog frog, [bool preview = false]) {
+  Block step(Program program) {
     String v = "repeat-counter-${id}";
-    if (!frog.hasVariable(v) || param.changed) {
-      frog.doRepeat("repeat ${param.value}", param);
-    } else {
-      frog.doRepeat("repeat ${frog[v]}", param);
-    }
-  }
-  
-  
-  Block step(Frog frog) {
-    String v = "repeat-counter-${id}";
-    if (!frog.hasVariable(v) || param.changed) {
-      frog[v] = param.value;
+    if (!program.hasVariable(v) || param.changed) {
+      program[v] = param.value;
       param.changed = false;
     }
     
-    var p = frog[v];
+    var p = program[v];
     
     // counting loop
     if (p is int) {
       if (p <= 0) {
-        frog.removeVariable(v);
+        program.removeVariable(v);
         return end.next;
       } else {
-        frog[v] = p - 1;
+        program[v] = p - 1;
         return next;
       }
     }
@@ -95,6 +94,8 @@ class RepeatBlock extends BeginBlock {
     }
     
     // conditional loops
+    // TODO!!
+    /*
     else if (param.value == "near-water?") {
       return frog.nearWater() ? end.next : next;
     }
@@ -102,43 +103,63 @@ class RepeatBlock extends BeginBlock {
     else if (param.value == "see-gem?") {
       return frog.seeGem() ? end.next : next;
     }
-    
+    */
     else {
       return next;
     }
   }
-  
-  
-  void drawLines(CanvasRenderingContext2D ctx) {
-    ctx.fillStyle = 'white';
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = LINE_WIDTH;
-    ctx.lineCap = 'round';
-    if (end != null) {
-      double y0 = end.getTopLine();
-      ctx.beginPath();
-      ctx.moveTo(end.x, y0);
-      ctx.lineTo(x, y0);
-      ctx.stroke();
-    }
-    super.drawLines(ctx);
-  }
 
   
-  void draw(CanvasRenderingContext2D ctx) {
-    super.draw(ctx);
+  void _outline(CanvasRenderingContext2D ctx, num x, num y, num w, num h) {
     if (end != null) {
-      ctx.save();
-      ctx.fillStyle = 'white';
-      ctx.strokeStyle = 'white';
-      double y0 = end.getTopLine();
-      double gap = height * 0.6;
-      if (y0 > y + height / 2) {
-        drawLineArrow(ctx, x, y0, x, y + gap, LINE_WIDTH);
-      } else if (y0 < y - height / 2) {
-        drawLineArrow(ctx, x, y0, x, y - gap, LINE_WIDTH);
-      }
-      ctx.restore();
+      
+      num x0 = min(x, end.x - w);
+      num x1 = x0 + w;
+      num x2 = end.x;
+      num x3 = end.x + end.width;
+      
+      num y0 = (dragging) ? end.y : y;
+      num y1 = (end.dragging) ? y : end.y;
+      num y2 = y1 + end.height - BLOCK_MARGIN; //end.getBottomLine() - BLOCK_MARGIN;
+      num y3 = y1 + end.height; //end.getBottomLine();
+      //y3 = max(y3, y + h + BLOCK_MARGIN);
+      
+      ctx.beginPath();
+      ctx.moveTo(x0, y0);
+      /*
+      ctx.lineTo(x0, y0 + h/2 - 8);
+      ctx.lineTo(x0 + 6, y0 + h/2 - 2);
+      ctx.lineTo(x0 + 6, y0 + h/2 + 2);
+      ctx.lineTo(x0, y0 + h/2 + 8);
+      */
+      ctx.lineTo(x0, y3);
+      ctx.lineTo(x3, y3);
+      /*
+      ctx.lineTo(x3, y1 + h/2 + 8);
+      ctx.lineTo(x3 + 6, y1 + h/2 + 2);
+      ctx.lineTo(x3 + 6, y1 + h/2 - 2);
+      ctx.lineTo(x3, y1 + h/2 - 8);
+      */
+      ctx.lineTo(x3, y1);
+      ctx.lineTo(x2, y1);
+      /*
+      ctx.lineTo(x2, y1 + h/2 - 8);
+      ctx.lineTo(x2 + 6, y1 + h/2 - 2);
+      ctx.lineTo(x2 + 6, y1 + h/2 + 2);
+      ctx.lineTo(x2, y1 + h/2 + 8);
+      */
+      ctx.lineTo(x2, y2);
+      ctx.lineTo(x1, y2);
+      /*
+      ctx.lineTo(x1, y0 + h/2 + 8);
+      ctx.lineTo(x1 + 6, y0 + h/2 + 2);
+      ctx.lineTo(x1 + 6, y0 + h/2 - 2);
+      ctx.lineTo(x1, y0 + h/2 - 8);
+      */
+      ctx.lineTo(x1, y0);
+      ctx.closePath();
+    } else {
+      super._outline(ctx, x, y, w, h);
     }
   }
   
@@ -171,11 +192,21 @@ class RepeatBlock extends BeginBlock {
 class EndRepeat extends EndBlock {
   
   
-  EndRepeat(CodeWorkspace workspace, double x, double y) : super(workspace, 'end\nrepeat') {
+  EndRepeat(CodeWorkspace workspace, double x, double y) : super(workspace, '') {
     color = '#eb0';
     color = '#c92';
     this.x = x;
     this.y = y;
+    _width = BLOCK_MARGIN * 2;
+  }
+  
+  //num get connectorY => targetY + BLOCK_MARGIN;
+  
+  num get targetY => hasPrev ? prev.connectorY + BLOCK_MARGIN : y;
+  
+  
+  Block step(Program program) {
+    return begin;
   }
   
   
@@ -186,44 +217,19 @@ class EndRepeat extends EndBlock {
   }
 
   
-  Block step(Frog frog) {
-    return begin;
+  void drawShadow(CanvasRenderingContext2D ctx) {
+    return;
   }
   
-  
-  void drawLines(CanvasRenderingContext2D ctx) {
-    double y1 = getTopLine();
-    ctx.save();
-    {
-      ctx.strokeStyle = 'white';
-      ctx.fillStyle = 'white';
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.lineWidth = LINE_WIDTH;
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(x, y1);
-      ctx.stroke();
-    }
-    ctx.restore();
-    super.drawLines(ctx);
-  }
-  
-  
-  Block clone() {
-    return new EndRepeat(workspace, x, y);
-  }
-  
-  
-  void touchUp(Contact c) {
-    super.touchUp(c);
-    if (!isInProgram) {
-      begin.next.prev = begin.prev;
-      begin.prev.next = begin.next;
-      begin.prev = null;
-      begin.next = null;
-      workspace.removeBlock(begin);
-      begin = null;
+  void draw(CanvasRenderingContext2D ctx) {
+    if (begin != null && begin.dragging) {
+      super.draw(ctx);
     }
   }
+  
+  bool touchDown(Contact c) {
+    workspace.moveToTop(begin);
+    return super.touchDown(c);
+  }
+  
 }

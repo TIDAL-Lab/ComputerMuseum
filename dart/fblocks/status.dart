@@ -42,7 +42,7 @@ class StatusInfo {
 
   
   StatusInfo(this.workspace, this.x, this.y, this.w, this.h) {
-    frog.src = workspace.frogimg;
+    frog.src = "images/${workspace.color}frog.png";
     fly.src = "images/dragonfly.png";
     for (var color in Gem.colors) {
       Gem gem = new Gem.fromColor(color);
@@ -59,7 +59,7 @@ class StatusInfo {
       if (gem.color == captured.color) {
         captured.flyTo(gem.x, gem.y, () {
           gem.shadowed = false;
-          workspace.repaintBackground();
+          workspace.draw();
           captured.die();
         });
       }

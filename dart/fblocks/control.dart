@@ -31,7 +31,11 @@ class BeginBlock extends Block {
   BeginBlock(CodeWorkspace workspace, String text) : super(workspace, text);
   
   
+/**
+ * Make sure blocks are properly nested
+ */
   bool checkSyntax(Block before) {
+
     int nest = 0;
     if (end == null) return true;
     Block after = before.next;
@@ -59,38 +63,19 @@ class EndBlock extends Block {
   EndBlock(CodeWorkspace workspace, String text) : super(workspace, text);
   
   
-  double getTopLine() {
-    int nest = 0, max = 0;
-    Block b = prev;
-    while (b != begin && b != null) {
-      if (b is EndRepeat) {
-        nest++;
-      } else if (b is EndIf) {
-        nest += 3;
-      } else if (b is RepeatBlock) {
-        nest--;
-      } else if (b is IfBlock) {
-        nest -= 3;
-      }
-      if (nest > max) max = nest;
-      b = b.prev;
-    }
-    return y - BLOCK_HEIGHT - BLOCK_HEIGHT * 0.4 * max;
-  }
-  
-  
   double getBottomLine() {
-    int nest = 0;
+    int nest = 1;
     Block b = prev;
     while (b != begin && b != null) {
-      if (b is EndIf) nest++;
+      if (b is EndBlock) nest++;
       b = b.prev;
     }
-    return y + BLOCK_HEIGHT + BLOCK_HEIGHT * 0.4 * nest;
+    return y + height + BLOCK_MARGIN * nest;
   }
-
+  
   
   bool checkSyntax(Block before) {
+    if (before is EndProgramBlock) return false;
     int nest = 0;
     while (before != null) {
       if (before == begin) {
@@ -103,5 +88,6 @@ class EndBlock extends Block {
       before = before.prev;
     }
     return false;
-  }
+  }  
+  
 }

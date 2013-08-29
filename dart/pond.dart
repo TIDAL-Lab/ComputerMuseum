@@ -23,6 +23,9 @@
 part of ComputerHistory;
 
 
+// Maximum number of frogs of a given color
+const MAX_FROGS = 40;
+
 class FrogPond extends TouchManager {
   
   CanvasElement canvas;
@@ -60,26 +63,45 @@ class FrogPond extends TouchManager {
     width = canvas.width;
     height = canvas.height;
     
+    registerEvents(document.documentElement);
+    
+    /*
     pond.src = "images/pond.png";
     pond.onLoad.listen((event) {
       layer0.clearRect(0, 0, width, height);
       layer0.drawImage(pond, 0, 0);
     });
-
+    */
+    
+    pond.src = "images/lilypad.png";
+    pond.onLoad.listen((event) {
+      layer0.clearRect(0, 0, width, height);
+      layer0.drawImage(pond, width / 2 - pond.width / 2, 0);
+    });
     addGem();
     
     for (int i=0; i<10; i++) {
       addFly();
     }
     
-    // right workspace
-    CodeWorkspace workspace = new CodeWorkspace(this, "blue");
+/*
+    CodeWorkspace workspace = new CodeWorkspace(height, width, "workspace1", "blue");
     workspace.transform(cos(PI / -2), sin(PI / -2), -sin(PI / -2), cos(PI / -2), 0, height);
     workspaces.add(workspace);
-    
-    workspace = new CodeWorkspace(this, "green");
+
+    workspace = new CodeWorkspace(height, width, "workspace2", "green");
     workspace.transform(cos(PI/2), sin(PI/2), -sin(PI/2),cos(PI/2), width, 0);
     workspaces.add(workspace);
+*/
+    CodeWorkspace workspace = new CodeWorkspace(width, height, "workspace1", "blue");
+    workspace.previewCallback = previewBlock;
+    workspace.playCallback = playProgram;
+    workspaces.add(workspace);
+
+    for (int i=0; i<3; i++) {
+      addRandomFrog(workspace);
+    }
+
     new Timer.periodic(const Duration(milliseconds : 40), animate);
     new Timer.periodic(const Duration(milliseconds : 800), (timer) => drawBackground());
   }
@@ -89,12 +111,81 @@ class FrogPond extends TouchManager {
 /**
  * Add a frog to the pond
  */
+  void addRandomFrog(CodeWorkspace workspace) {
+    for (int i=0; i<20; i++) {
+      int x = Turtle.rand.nextInt(width - 200) + 100;
+      int y = Turtle.rand.nextInt(height - 300) + 150;
+      if (!inWater(x, y)) {
+        Frog frog = new Frog(this);
+        frog["workspace"] = workspace.name;
+        frog.x = x.toDouble();
+        frog.y = y.toDouble();
+        frog.program = new Program(workspace.start, frog);
+        frog.img.src = "images/${workspace.color}frog.png";
+        addFrog(frog);
+        return;
+      }
+    }
+
+    // try again in 2 seconds
+    new Timer(const Duration(milliseconds : 2000), () => addRandomFrog(workspace));
+  }
+  
+
+/**
+ * Add an existing frog to the pond
+ */
   void addFrog(Frog frog) {
     frogs.add(frog);
     addTouchable(frog);
   }
   
+  
+/**
+ * Preview a programming command
+ */
+  void previewBlock(String workspace, String cmd, var param) {
+    for (Frog frog in frogs) {
+      if (frog["workspace"] == workspace) {
+        frog.program.doCommand(cmd, param, true);
+      }
+    }
+  }
 
+
+  void playProgram(String workspace) {
+    int count = 0;
+    for (Frog frog in frogs) {
+      if (frog["workspace"] == workspace) {
+        count++;
+        frog.program.restart();
+        frog.program.play();
+      }
+    }
+    if (count == 0) {
+      // TODO fixme
+    }
+  }
+  
+  
+/**
+ * Count the number of frogs of a given color
+ */
+  int getFrogCount([String name = null]) {
+    if (name == null) {
+      return frogs.length;
+    } else {
+      int count = 0;
+      for (Frog frog in frogs) {
+        if (frog["workspace"] == name) {
+          count++;
+        }
+      }
+      return count;
+    }
+  }
+  
+  
 /**
  * Remove a frog from the pond
  */
@@ -252,9 +343,6 @@ class FrogPond extends TouchManager {
   void drawBackground() {
     CanvasRenderingContext2D ctx = layer1;
     ctx.clearRect(0, 0, width, height);
-    for (CodeWorkspace workspace in workspaces) {
-      workspace.drawBackground(ctx);
-    }
   }
   
   
@@ -265,7 +353,7 @@ class FrogPond extends TouchManager {
     CanvasRenderingContext2D ctx = layer2;
     ctx.clearRect(0, 0, width, height);
     
-    workspaces.forEach((workspace) => workspace.draw(ctx));    
+    workspaces.forEach((workspace) => workspace.draw());    
 
     gems.forEach((gem) => gem.draw(ctx));
 

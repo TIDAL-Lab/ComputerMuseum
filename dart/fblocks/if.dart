@@ -36,7 +36,7 @@ class IfBlock extends BeginBlock {
   
   num get connectorY {
     if (end != null && end.isInProgram) {
-      return end.getTopLine();
+      return end.getBottomLine();
     } else {
       return targetY;
     }
@@ -54,7 +54,7 @@ class IfBlock extends BeginBlock {
   void drawLines(CanvasRenderingContext2D ctx) {
     if (end != null && isInProgram && end.isInProgram) {
       ctx.save();
-      double y0 = end.getTopLine();
+      double y0 = end.getBottomLine();
       double y1 = end.getBottomLine();
       double x0 = x + BLOCK_WIDTH * 0.9;
       ctx.fillStyle = 'white';
@@ -79,7 +79,7 @@ class IfBlock extends BeginBlock {
       ctx.fillText("NO?", x0, y1);
       ctx.restore();
     }
-    super.drawLines(ctx);
+    //super.drawLines(ctx);
   }
   
 
@@ -146,9 +146,7 @@ class EndIf extends EndBlock {
   }
   
   void drawLines(CanvasRenderingContext2D ctx) {
-    if (!begin.isInProgram) {
-      super.drawLines(ctx);
-    } else if (isInProgram) {
+    if (isInProgram) {
       double y0 = getTopLine();
       double y1 = getBottomLine();
       double x0 = begin.x + BLOCK_WIDTH * 2.1;

@@ -30,6 +30,10 @@ class StartBlock extends Block {
   
   EndProgramBlock end;
   
+  double _pulse = 1.0;
+  
+  Tween tween = new Tween();
+  
   
   StartBlock(CodeWorkspace workspace, double x, double y) : super(workspace, '') {
     this.x = x;
@@ -40,99 +44,115 @@ class StartBlock extends Block {
     next = end;
     workspace.addBlock(end);
   }
-
   
-  bool get isStartBlock => true;
-
   
-  bool overlapsConnector(Block target) {
-    if (next == end) {
-      return true;
-    } else {
-      return super.overlapsConnector(target);
-    }
+  void pulse() {
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.delay = 5;
+    tween.duration = 8;
+    tween.repeat = 3;
+    tween.onstart = (() => _pulse = 1.0 );
+    tween.onend = (() => _pulse = 1.0 );
+    tween.ondelta = ((value) {
+      _pulse += value;
+    });
+    tween.addControlPoint(1.0, 0.0);
+    tween.addControlPoint(0.0, 0.5);
+    tween.addControlPoint(1.0, 1.0);
   }
-
   
-  bool snapTogether(Block target) {
-    if (super.overlapsConnector(target)) {
-      return super.snapTogether(target);
-    } else {
-      return false;
-    }
-  }
-
   
   bool animate() {
-    if (hasNext) {
-      return next.animate();
+    bool refresh = super.animate();
+    if (tween.isTweening()) {
+      tween.animate();
+      return true;
     } else {
-      return false;
+      return refresh;
     }
   }
+
   
+  bool get isInProgram => true;
+
   /**
    * Draw the block
    */
   void draw(CanvasRenderingContext2D ctx) {
-    ctx.fillStyle = 'white';
     super.draw(ctx);
     ctx.beginPath();
     int delta = dragging ? 2 : 0;
+    double cx = centerX + delta;
+    double cy = centerY + delta;
     if (workspace.isProgramRunning()) {
-      ctx.moveTo(x - 5 + delta, y - 9 + delta);
-      ctx.lineTo(x - 5 + delta, y + 9 + delta);
-      ctx.moveTo(x + 5 + delta, y - 9 + delta);
-      ctx.lineTo(x + 5 + delta, y + 9 + delta);
+      _pauseShape(ctx, cx, cy);
     } else {
-      ctx.moveTo(x + 6 + delta, y + delta);
-      ctx.lineTo(x - 4 + delta, y - 5 + delta);
-      ctx.lineTo(x - 4 + delta, y + 5 + delta);
-      ctx.closePath();
+      _playShape(ctx, cx, cy);
     }
-    ctx.fill();
-    ctx.lineWidth = 6;
-    ctx.lineJoin = 'miter';
-    ctx.lineCap = 'butt';
-    ctx.strokeStyle = 'white';
-    ctx.stroke();
-  }
+    ctx.save();
+    {
+      double alpha = _pulse;
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
+      ctx.shadowBlur = 3;
+      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
 
-  
-  bool containsTouch(Contact c) {
-    return distance(c.touchX, c.touchY, x, y) <= width ~/ 2;
+      ctx.fillStyle = "rgba(255, 255, 255, ${alpha})";
+      ctx.fill(); 
+    }
+    ctx.restore();
   }
   
-
+  
+  void _playShape(CanvasRenderingContext2D ctx, num cx, num cy) {
+    ctx.beginPath();
+    ctx.moveTo(cx + 12, cy);
+    ctx.lineTo(cx - 8, cy - 10);
+    ctx.lineTo(cx - 8, cy + 10);
+    ctx.closePath();
+  }
+  
+  
+  void _pauseShape(CanvasRenderingContext2D ctx, num cx, num cy) {
+    ctx.beginPath();
+    ctx.moveTo(cx - 8, cy - 9);
+    ctx.lineTo(cx - 8, cy + 9);
+    ctx.lineTo(cx - 2, cy + 9);
+    ctx.lineTo(cx - 2, cy - 9);
+    ctx.closePath();
+    ctx.moveTo(cx + 8, cy - 9);
+    ctx.lineTo(cx + 8, cy + 9);
+    ctx.lineTo(cx + 2, cy + 9);
+    ctx.lineTo(cx + 2, cy - 9);
+    ctx.closePath();
+  }
+  
+  
   bool touchDown(Contact c) {
-    deltaX = c.touchX - x;
-    deltaY = c.touchY - y;
-    lastX = x;
-    lastY = y;
     dragging = true;
+    _lastX = c.touchX;
+    _lastY = c.touchY;
     workspace.moveToTop(this);
-    workspace.repaint();
+    workspace.draw();
+    workspace.playProgram();
     return true;
   }
   
   
   void touchUp(Contact c) {
     dragging = false;
-    if (workspace.isProgramRunning()) {
-      workspace.pauseProgram();
-    } else {
-      workspace.playProgram();
-    }
-    workspace.repaint();
+    workspace.draw();
   }
   
   
   void touchDrag(Contact c) {
-    moveChain((c.touchX - deltaX) - lastX, (c.touchY - deltaY) - lastY);
-    lastX = x;
-    lastY = y;
-    workspace.repaint();
+    //moveChain(c.touchX - _lastX, c.touchY - _lastY);
+    _lastX = c.touchX;
+    _lastY = c.touchY;
+    workspace.draw();
   }
+  
 }
 
 
@@ -151,39 +171,24 @@ class EndProgramBlock extends Block {
   }
   
 
+  /*
   Block step(Frog frog) {
     return this;
   }
-
-  
-  bool overlapsConnector(Block target) {
-    return false;
-  }
-  
-  
-  void drawLines(CanvasRenderingContext2D ctx) {
-    /*
-    ctx.save();
-    {
-      ctx.strokeStyle = 'white';
-      ctx.fillStyle = 'white';
-      drawLineArrow(ctx, prev.x, y, x - BLOCK_WIDTH * 0.4, y, LINE_WIDTH);
-    }
-    ctx.restore();
-    */
-  }
-  
+*/
+/*  
   void draw(CanvasRenderingContext2D ctx) {
     super.draw(ctx);
     ctx.save();
     {
       ctx.strokeStyle = 'white';
       ctx.fillStyle = 'white';
-      drawLineArrow(ctx, prev.x + prev.width / 2, y, x - BLOCK_WIDTH * 0.4, y, LINE_WIDTH);
+      drawLineArrow(ctx, centerX - width / 2, centerY,
+                    centerX - BLOCK_WIDTH * 0.4, centerY, LINE_WIDTH);
     }
     ctx.restore();
   }
-  
+*/  
   
   bool touchDown(Contact c) {
     return false;

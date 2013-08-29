@@ -26,45 +26,32 @@ part of ComputerHistory;
 class WaitBlock extends Block {
 
   
-  WaitBlock(CodeWorkspace workspace) : super(workspace, 'wait for\nfly') {
-    color = '#c92';
-    //param = new Parameter(this);
-    //param.values = [ 'fly', 'sound', 1, 2, 3, 'random' ];
+  WaitBlock(CodeWorkspace workspace) : super(workspace, 'wait for') {
+    color = '#b67196';
+    param = new Parameter(this);
+    param.values = [ 'fly', 'sound' ];
+    param.align = 'center';
   }
 
   
   Block clone() {
     WaitBlock block = new WaitBlock(workspace);
-    block.x = x;
-    block.y = y;
+    copyTo(block);
     block.text = text;
-    //block.param.values = param.values;
     return block;
   }
   
   
-  void eval(Frog frog, [bool preview = false]) {
-    Parameter param = new Parameter(this);
-    frog.doWait("wait for fly");
+  Block step(Program program) {
     /*
-    if (param.value == 1) {
-      frog.doWait("wait for 1 second", param);
-    } else if (param.value is num || param.value == "random") {
-      frog.doWait("wait for ${param.value} seconds", param);
+    if (param.value == "fly") {
+      return (frog.nearFly()) ? next : this;
+    } else if (param.value == "sound") {
+      return (frog.hearSound()) ? next : this;
     } else {
-      frog.doWait("wait for ${param.value}", param, preview);
+      return next;
     }
     */
-  }
-  
-  
-  Block step(Frog frog) {
-    //if (param.value == "fly") {
-      return (frog.nearFly()) ? next : this;
-    //} else if (param.value == "sound") {
-    //  return (frog.hearSound()) ? next : this;
-    //} else {
-    //  return next;
-    //}
+    return this;
   }
 }

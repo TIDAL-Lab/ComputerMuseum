@@ -13,33 +13,25 @@ body {
    background-color: #333;
 }
 
-#pond {
+canvas {
    position: absolute;
    top: 0px;
    left: 0px;
-   padding: 0;
-   margin: 0;
+   padding: 0px;
+   margin: 0px;
+}
+
+#pond {
    z-index: 0;
    background-image: url('../images/texture2.png');
    background-repeat: repeat;
    background-position: 0 0;
 }
 
-#background {
-   position: absolute;
-   top: 0px;
-   left: 0px;
-   padding: 0px;
-   margin: 0px;
-   z-index: 1;   
-}
+#background { z-index: 1; }
 
-#foreground {
-   position: absolute;
-   top: 0px;
-   left: 0px;
-   padding: 0;
-   margin: 0;
-   z-index: 2;
-}
+#foreground { z-index: 2; }
 
+#workspace1 { z-index: 3; }
+
+#workspace2 { z-index: 4; }

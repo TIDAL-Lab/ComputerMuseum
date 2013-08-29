@@ -47,7 +47,7 @@ class Menu implements Touchable {
   
   
   bool overlaps(Block block) {
-    return (block.y >= y && block.y <= y + h && block.x >= x && block.x <= x + w);
+    return (block.centerY >= y);
   }
 
   
@@ -57,15 +57,14 @@ class Menu implements Touchable {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
       ctx.fillRect(x, y, w, h);
       
-      num bx = x + BLOCK_WIDTH * 0.75;
+      num bx = x + BLOCK_WIDTH * 0.2;
       num by = y + h * 0.5;
-      num bs = BLOCK_WIDTH * 1.25;
       
       for (Block block in blocks) {
         block.x = bx;
-        block.y = by;
+        block.y = by - block.height / 2;
         block.draw(ctx);
-        bx += bs;
+        bx += block.width + 10;
       }
     }
     ctx.restore();
@@ -111,6 +110,5 @@ class Menu implements Touchable {
   }
   
   
-  void touchSlide(Contact c) {
-  }
+  void touchSlide(Contact c) { }
 }
