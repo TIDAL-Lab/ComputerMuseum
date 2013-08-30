@@ -25,6 +25,9 @@ part of ComputerHistory;
 
 class CodeWorkspace extends TouchManager {
   
+  /* reference to the frog pond */
+  FrogPond pond;
+  
   /* size of the canvas */
   int width, height;
 
@@ -46,15 +49,11 @@ class CodeWorkspace extends TouchManager {
   /* color of the frogs controlled by this workspace */
   String color;
   
-  /* preview callback function */
-  Function previewCallback = null;
-  
-  /* play program callback function */
-  Function playCallback = null;
-  
   CanvasRenderingContext2D ctx;
+
+
   
-  CodeWorkspace(this.width, this.height, this.name, this.color) {
+  CodeWorkspace(this.pond, this.width, this.height, this.name, this.color) {
     
     CanvasElement canvas = document.query("#${name}");
     ctx = canvas.getContext('2d');
@@ -305,11 +304,9 @@ class CodeWorkspace extends TouchManager {
   
   
   void preview(Block block) {
-    if (previewCallback != null) {
-      var pvalue = null;
-      if (block.hasParam) pvalue = block.param.value;
-      Function.apply(previewCallback, [ name, block.text, pvalue ]);
-    }
+    var pvalue = null;
+    if (block.hasParam) pvalue = block.param.value;
+    pond.previewBlock(name, block.text, pvalue);
   }
   
   
@@ -362,9 +359,7 @@ class CodeWorkspace extends TouchManager {
  * Resume the program for all frogs
  */
   void playProgram() {
-    if (playCallback != null) {
-      Function.apply(playCallback, [ name ]);
-    }
+    pond.playProgram(name);
   }
 
   

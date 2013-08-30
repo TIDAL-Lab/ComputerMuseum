@@ -62,6 +62,20 @@ class Program {
     }
   }
   
+  
+  bool animate() {
+    if (tween.isTweening()) {
+      tween.animate();
+      return true;
+    } else if (isRunning) {
+      step();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  
   dynamic operator[] (String key) {
     return variables[key];
   }

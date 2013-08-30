@@ -82,18 +82,8 @@ class Frog extends Turtle implements Touchable {
   
   
   bool animate() {
-    if (tween.isTweening()) {
-      tween.animate();
-      return true;
-    } else if (program != null && program.isRunning) {
-      program.step();
-      return true;
-    } else if (ghost != null && ghost.tween.isTweening()) {
-      ghost.tween.animate();
-      return true;
-    } else {
-      return false;
-    }
+    return program.animate();
+
   }
   
 

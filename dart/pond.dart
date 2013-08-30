@@ -93,9 +93,7 @@ class FrogPond extends TouchManager {
     workspace.transform(cos(PI/2), sin(PI/2), -sin(PI/2),cos(PI/2), width, 0);
     workspaces.add(workspace);
 */
-    CodeWorkspace workspace = new CodeWorkspace(width, height, "workspace1", "blue");
-    workspace.previewCallback = previewBlock;
-    workspace.playCallback = playProgram;
+    CodeWorkspace workspace = new CodeWorkspace(this, width, height, "workspace1", "blue");
     workspaces.add(workspace);
 
     for (int i=0; i<3; i++) {
