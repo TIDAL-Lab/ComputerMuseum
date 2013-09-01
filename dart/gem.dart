@@ -48,11 +48,19 @@ class Gem extends Turtle {
   }
   
   
+  Gem.copy(Gem other) {
+    copy(other);
+    _init(other.color);
+    shadowed = other.shadowed;
+  }
+  
+  
   void _init(String color) {
     this.color = color;
     heading = 0.0;
     img.src = "images/gems/${color}.png";
     shadow.src = "images/gems/${color}_shadow.png";
+    spin();
   }
   
   
@@ -66,13 +74,31 @@ class Gem extends Turtle {
   }
   
   
+  void spin() {
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.delay = 0;
+    tween.duration = 25;
+    tween.onstart = (() { });
+    tween.onend = (() {
+      final int timeout = 5000 + Turtle.rand.nextInt(5000);
+      new Timer(new Duration(milliseconds : timeout), spin);
+    });
+    tween.addControlPoint(0, 0);
+    tween.addControlPoint(1, 1);
+    tween.ondelta = ((value) {
+      left(360 * 2 * value);
+    });
+  }
+  
+  
   void flyTo(num tx, num ty, Function onDone) {
     deltaX = (tx.toDouble() - x);
     deltaY = (ty.toDouble() - y);
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.delay = 0;
-    tween.duration = 18;
+    tween.duration = 25;
     tween.onstart = (() { Sounds.playSound("chimes"); });
     tween.onend = (() { die(); onDone(); });
     tween.addControlPoint(0, 0);
