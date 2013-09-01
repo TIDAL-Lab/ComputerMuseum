@@ -229,6 +229,7 @@ class CodeWorkspace extends TouchManager {
         if (block.animate()) refresh = true;
       }
     }
+    if (status.animate()) refresh = true;
     return refresh;
   }
   
@@ -390,18 +391,6 @@ class CodeWorkspace extends TouchManager {
   */
   
 
-
-/*  
-  bool captureGem(Gem gem) {
-    if (!gem.dead) {
-      status.captureGem(gem);
-      new Timer(const Duration(milliseconds : 3000), () { pond.addGem(); });
-      return true;
-    }
-    return false;
-  }
-  */
-  
 /*  
   void captureFly(Fly fly) {
     if (!fly.dead) {
