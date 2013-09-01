@@ -71,6 +71,9 @@ abstract class Turtle {
     heading = other.heading;
     opacity = other.opacity;
     img.src = other.img.src;
+    for (String key in other.variables.keys) {
+      variables[key] = other[key];
+    }
   }
 
   
@@ -171,6 +174,11 @@ abstract class Turtle {
       ctx.globalAlpha = 1.0;
     }    
     ctx.restore();
+  }
+  
+  
+  void erase(CanvasRenderingContext2D ctx) {
+    ctx.clearRect(x - width/2, y - height/2, width, height);
   }
 
 
