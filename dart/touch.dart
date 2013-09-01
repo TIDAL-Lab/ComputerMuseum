@@ -99,7 +99,27 @@ class TouchManager {
     }
     return null;
   }
-   
+  
+  
+  num objectToWorldX(num x, num y) {
+    return xform.transformX(x, y);
+  }
+  
+  
+  num objectToWorldY(num x, num y) {
+    return xform.transformY(x, y);
+  }
+  
+  
+  num worldToObjectX(num x, num y) {
+    return iform.transformX(x, y);
+  }
+  
+  
+  num worldToObjectY(num x, num y) {
+    return iform.transformY(x, y);
+  }
+  
 
 /*
  * Convert mouseUp to touchUp events
