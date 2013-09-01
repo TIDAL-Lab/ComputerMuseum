@@ -36,6 +36,8 @@ class StatusInfo {
   
   List<Gem> gems = new List<Gem>();
   
+  Gem captured = null;
+  
   CodeWorkspace workspace;
   
   int fly_count = 0;
@@ -51,16 +53,27 @@ class StatusInfo {
       gems.add(gem);
     }
   }
+  
+  
+  bool animate() {
+    if (captured != null) {
+      return captured.animate();
+    } else {
+      return false;
+    }
+  }
 
   
-  void captureGem(Gem captured) {
-    Gem target = null;
+  void captureGem(Gem g) {
+    captured = new Gem.copy(g);
+    captured.x = workspace.worldToObjectX(g.x, g.y);
+    captured.y = workspace.worldToObjectY(g.x, g.y);
     for (Gem gem in gems) {
       if (gem.color == captured.color) {
         captured.flyTo(gem.x, gem.y, () {
           gem.shadowed = false;
           workspace.draw();
-          captured.die();
+          captured = null;
         });
       }
     }
@@ -104,6 +117,10 @@ class StatusInfo {
       for (int i=0; i<min(fly_count, 6); i++) {
         ctx.drawImageScaled(fly, ix, iy, iw, ih);
         ix += fly.width;
+      }
+      
+      if (captured != null) {
+        captured.draw(ctx);
       }
     }
     ctx.restore();
