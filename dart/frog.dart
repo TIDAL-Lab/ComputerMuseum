@@ -56,11 +56,10 @@ class Frog extends Turtle implements Touchable {
   
   
   Frog hatch() {
-    if (pond.getFrogCount(this["workspace"]) < MAX_FROGS) {
-      Frog clone = new Frog(pond);
-      clone.copy(this);
-      return clone;
-    }
+    Frog clone = new Frog(pond);
+    clone.copy(this);
+    clone.program = new Program.copy(program, clone);
+    return clone;
   }
   
   
@@ -83,7 +82,6 @@ class Frog extends Turtle implements Touchable {
   
   bool animate() {
     return program.animate();
-
   }
   
 
@@ -91,6 +89,7 @@ class Frog extends Turtle implements Touchable {
  * Push other frogs out of the way
  */
   void push(num distance) {
+    /*
     for (Frog frog in pond.getFrogsHere(this)) {
       double angle = angleBetween(frog);
       if (angle.abs() < 90.0) {
@@ -106,7 +105,9 @@ class Frog extends Turtle implements Touchable {
         }
       }
     }
+    */
   }
+  
   
   
   bool nearWater() {
@@ -130,8 +131,9 @@ class Frog extends Turtle implements Touchable {
   }
   
   
-  Gem getGemHere() {
-    return pond.getGemHere(this);
+  void captureGem() {
+    Gem gem = pond.getGemHere(this);
+    if (gem != null) pond.captureGem(this, gem);
   }
 
   
