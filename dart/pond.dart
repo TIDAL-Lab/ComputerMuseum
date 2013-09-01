@@ -30,8 +30,8 @@ class FrogPond extends TouchManager {
   
   CanvasElement canvas;
   CanvasRenderingContext2D layer0;  // lily pads
-  CanvasRenderingContext2D layer1;  // status bar / menu
-  CanvasRenderingContext2D layer2;  // foreground frogs / blocks
+  CanvasRenderingContext2D layer1;  // frogs / gems
+  CanvasRenderingContext2D layer2;  // flies
   
   List<CodeWorkspace> workspaces = new List<CodeWorkspace>();
   
@@ -54,10 +54,10 @@ class FrogPond extends TouchManager {
     canvas = document.query("#pond");
     layer0 = canvas.getContext('2d');
     
-    canvas = document.query("#background");
+    canvas = document.query("#frogs");
     layer1 = canvas.getContext('2d');
     
-    canvas = document.query("#foreground");
+    canvas = document.query("#flies");
     layer2 = canvas.getContext('2d');
     
     width = canvas.width;
@@ -65,43 +65,43 @@ class FrogPond extends TouchManager {
     
     registerEvents(document.documentElement);
     
-    /*
     pond.src = "images/pond.png";
     pond.onLoad.listen((event) {
       layer0.clearRect(0, 0, width, height);
       layer0.drawImage(pond, 0, 0);
     });
-    */
-    
+/*    
     pond.src = "images/lilypad.png";
     pond.onLoad.listen((event) {
       layer0.clearRect(0, 0, width, height);
       layer0.drawImage(pond, width / 2 - pond.width / 2, 0);
     });
+*/
+
     addGem();
     
     for (int i=0; i<10; i++) {
       addFly();
     }
     
-/*
-    CodeWorkspace workspace = new CodeWorkspace(height, width, "workspace1", "blue");
+
+    CodeWorkspace workspace = new CodeWorkspace(this, height, width, "workspace1", "blue");
     workspace.transform(cos(PI / -2), sin(PI / -2), -sin(PI / -2), cos(PI / -2), 0, height);
     workspaces.add(workspace);
 
-    workspace = new CodeWorkspace(height, width, "workspace2", "green");
+    workspace = new CodeWorkspace(this, height, width, "workspace2", "green");
     workspace.transform(cos(PI/2), sin(PI/2), -sin(PI/2),cos(PI/2), width, 0);
     workspaces.add(workspace);
-*/
+
+/*
     CodeWorkspace workspace = new CodeWorkspace(this, width, height, "workspace1", "blue");
     workspaces.add(workspace);
-
+*/
     for (int i=0; i<3; i++) {
       addRandomFrog(workspace);
     }
 
     new Timer.periodic(const Duration(milliseconds : 40), animate);
-    new Timer.periodic(const Duration(milliseconds : 800), (timer) => drawBackground());
   }
 
 
@@ -296,9 +296,24 @@ class FrogPond extends TouchManager {
  */
   Gem getGemHere(Frog frog) {
     for (Gem gem in gems) {
-      if (gem.overlapsTurtle(frog)) return gem;
+      if (gem.overlapsTurtle(frog) && !gem.dead) return gem;
     }
     return null;
+  }
+  
+  
+/**
+ * Capture a gem
+ */
+  void captureGem(Frog frog, Gem gem) {
+    // first find the workspace
+    for (CodeWorkspace workspace in workspaces) {
+      if (workspace.name == frog["workspace"]) {
+        workspace.status.captureGem(gem);
+        gem.die();
+        new Timer(const Duration(milliseconds : 3000), () { addGem(); });
+      }
+    }
   }
   
   
@@ -306,6 +321,7 @@ class FrogPond extends TouchManager {
  * Animate all of the agents and the workspaces
  */
   void animate(Timer timer) {
+    bool refresh = false;
 
     // remove dead frogs, flies, and gems
     removeDeadGems();
@@ -313,13 +329,26 @@ class FrogPond extends TouchManager {
     removeDeadFrogs();
     
     // animate agents and workspaces
-    gems.forEach((gem) => gem.animate());
-    flies.forEach((fly) => fly.animate());
-    frogs.forEach((frog) => frog.animate());
-    workspaces.forEach((workspace) => workspace.animate());
+    for (Gem gem in gems) {
+      if (gem.animate()) refresh = true;
+    }
+
+    // animate might add a new frog, so use a counting for loop
+    for (int i=0; i<frogs.length; i++) {
+      if (frogs[i].animate()) refresh = true;
+    }
+    
+    // animate code workspaces
+    for (CodeWorkspace workspace in workspaces) {
+      if (workspace.animate()) {
+        workspace.draw();
+      }
+    }
     
     // redraw
-    drawForeground();
+    if (refresh) drawForeground();
+    
+    drawFlies();
   }
   
 
@@ -336,29 +365,28 @@ class FrogPond extends TouchManager {
   
   
 /**
- * Draw the menu and status areas
+ * Draws the flies, frogs, gems, and programming blocks
  */
-  void drawBackground() {
+  void drawForeground() {
     CanvasRenderingContext2D ctx = layer1;
     ctx.clearRect(0, 0, width, height);
+    
+    gems.forEach((gem) => gem.draw(ctx));
+    
+    
+    frogs.forEach((frog) => frog.draw(ctx));
+    
+    frogs.forEach((frog) => frog.drawProgram(ctx));
   }
   
   
 /**
- * Draws the flies, frogs, gems, and programming blocks
+ * Animate and draw flies
  */
-  void drawForeground() {
+  void drawFlies() {
     CanvasRenderingContext2D ctx = layer2;
-    ctx.clearRect(0, 0, width, height);
-    
-    workspaces.forEach((workspace) => workspace.draw());    
-
-    gems.forEach((gem) => gem.draw(ctx));
-
-    frogs.forEach((frog) => frog.draw(ctx));
-    
+    flies.forEach((fly) => fly.erase(ctx));
+    flies.forEach((fly) => fly.animate());
     flies.forEach((fly) => fly.draw(ctx));
-
-    frogs.forEach((frog) => frog.drawProgram(ctx));
   }
 }
