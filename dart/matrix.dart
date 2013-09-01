@@ -93,8 +93,18 @@ class Matrix2D {
   void transformContact(Contact c) {
     double tx = c.touchX * xform[0] + c.touchY * xform[1] + xform[2];
     double ty = c.touchX * xform[3] + c.touchY * xform[4] + xform[5];
-    c.touchX = tx;
-    c.touchY = ty;
+    c.touchX = -tx;
+    c.touchY = -ty;
+  }
+  
+  
+  num transformX(num x, num y) {
+    return (x * xform[0] + y * xform[1] + xform[2]) * -1;
+  }
+  
+  
+  num transformY(num x, num y) {
+    return -1 * (x * xform[3] + y * xform[4] + xform[5]);
   }
   
   
