@@ -63,6 +63,14 @@ class Program {
   }
   
   
+  void skip() {
+    if (isRunning) {
+      curr = curr.step(this);
+      doPause();
+    }
+  }
+  
+  
   bool animate() {
     if (tween.isTweening()) {
       tween.animate();
@@ -170,22 +178,22 @@ class Program {
 
   
   void doPause() {
+    
+    // is the frog in the water? 
+    if (frog.inWater()) {
+      Sounds.playSound("splash");
+      frog.die();
+      return;
+    }
+    
+    // did we capture a gem?
+    frog.captureGem();
+    
     tween = new Tween();
     tween.delay = 0;
     tween.duration = 20;
     tween.onstart = (() { });
-    tween.onend = (() {
-      frog.reset();
-      if (frog.inWater()) {
-        Sounds.playSound("splash");
-        frog.die();
-      } else {
-        Gem gem = frog.getGemHere();
-        if (gem != null) {
-          //workspace.captureGem(gem);
-        }
-      }
-    });
+    tween.onend = (() { frog.reset(); });
   }
   
 
@@ -343,11 +351,16 @@ class Program {
  * Hatch a new frog
  */
   void doHatch(String cmd, var param, bool preview) {
-    Frog baby = frog.hatch();
+    Frog baby;
+    if (frog.pond.getFrogCount(frog["workspace"]) < MAX_FROGS) {
+       baby = frog.hatch();
+    }
+    if (baby == null) return;
     if (preview) {
       baby.opacity = 0.3;
       frog.ghost = baby;
     } else {
+      baby.program.skip();
       frog.pond.addFrog(baby);
     }
     baby.size = 0.05;
@@ -358,15 +371,10 @@ class Program {
     tween.delay = 0;
     tween.duration = 15;
     tween.onstart = (() => frog.label = cmd);
-    tween.onend = (() {
-      doPause();
-      baby.program = new Program.copy(this, baby);
-    });
+    tween.onend = (() => doPause());
     tween.addControlPoint(0.05, 0);
     tween.addControlPoint(frog.size + Turtle.rand.nextDouble() * 0.2 - 0.1, 1.0);
     tween.ondelta = ((value) => baby.size += value);
   }
-  
-  
 }  
 
