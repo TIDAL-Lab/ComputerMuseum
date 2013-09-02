@@ -25,9 +25,7 @@ part of ComputerHistory;
   
 class Parameter implements Touchable {
   
-  double width, height, displayWidth;
-  
-  String align = "right";  // center | right
+  double centerX, centerY, width, height;
   
   double downX, downY, lastX = 0.0, lastY = 0.0;
   
@@ -51,8 +49,9 @@ class Parameter implements Touchable {
   
 
   Parameter(this.block) {
+    centerX = block.width - 22;
+    centerY = block.height / 2;
     width = 28.0;
-    displayWidth = 28.0;
     height = 20.0;
     vspace = height * 0.85;
     textColor = block.color;
@@ -61,24 +60,20 @@ class Parameter implements Touchable {
   
   Parameter clone(Block parent) {
     Parameter p = new Parameter(parent);
+    p.centerX = centerX;
+    p.centerY = centerY;
     p.width = width;
-    p.displayWidth = width;
     p.height = height;
     p.values = values;
     p.index = index;
     p.color = color;
     p.textColor = textColor;
-    p.align = align;
     return p;
   }
   
   
   int get index => _index;
   
-  
-  double get deltaX => block.width * ((align == 'center') ? 0.5 : 0.75);
-  
-  double get deltaY => block.height * ((align == 'center') ? 0.9 : 0.5);
   
   void set index(int i) { _index = (max(i, 0) % values.length); }
   
@@ -130,82 +125,80 @@ class Parameter implements Touchable {
     return _throttleIndex(downIndex - ((lastX - downX) / vspace));
   }
   
+  
   double _getDragIndexY() {
     return _throttleIndex(downIndex - ((lastY - downY) / vspace));
   }
+  
   
   double _getDragIndex() {
     return dragging ? _getDragIndexY() : index.toDouble();
   }
   
+  
   void _drawVerticalArrows(CanvasRenderingContext2D ctx) {
-    double dx = deltaX;
-    double dy = deltaY;
-    double x = block.x + dx;
-    double y = block.y + dy;
-    double w = width;
+    double x = centerX + block.x - 18;
+    double cx = x + width / 2;
+    double cy = centerY + block.y;
+    double w = 19.0;
     double h = height;
     //double dy = (downIndex - _getDragIndex()) * vspace;
-    dy = (lastY - downY);
-    double y0 = y + h/2 + dy;
-    double y1 = y - h/2 + dy;
-    double x0 = x - w/2 + 4;
-    double x1 = x + w/2 - 4;
+    double dy = (lastY - downY);
+    double y0 = cy + h/2 + dy;
+    double y1 = cy - h/2 + dy;
+    double x0 = cx - w/2 + 4;
+    double x1 = cx + w/2 - 4;
     ctx.fillStyle = 'white';
     ctx.strokeStyle = 'white';
     ctx.beginPath();
     ctx.moveTo(x0, y0 + 2);
-    ctx.lineTo(x, y0 + 15);
+    ctx.lineTo(cx, y0 + 15);
     ctx.lineTo(x1, y0 + 2);
     ctx.closePath();
     ctx.moveTo(x0, y1 - 2);
-    ctx.lineTo(x, y1 - 15);
+    ctx.lineTo(cx, y1 - 15);
     ctx.lineTo(x1, y1 - 2);
     ctx.closePath();
     ctx.fill();
     ctx.beginPath();
     ctx.lineWidth = 3;
-    ctx.moveTo(x, y1 - 5);
-    ctx.lineTo(x, y0 + 5);
+    ctx.moveTo(cx, y1 - 5);
+    ctx.lineTo(cx, y0 + 5);
     ctx.stroke();
   }
   
   
-  double _computeDisplayWidth(CanvasRenderingContext2D ctx) {
-    double w = 1.0;
+  num getDisplayWidth(CanvasRenderingContext2D ctx) {
+    num w = 14;
     ctx.save();
     {
       ctx.font = '400 10pt sans-serif';
-      w = ctx.measureText(valueAsString).width + 14;
+      w += ctx.measureText(valueAsString).width;      
     }
     ctx.restore();
-    return max(w, width);
+    return w;
   }
-
+  
   
   void draw(CanvasRenderingContext2D ctx) {
     
-    displayWidth = _computeDisplayWidth(ctx);
     ctx.font = '400 10pt sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    
-    double dx = deltaX;
-    double dy = deltaY;
-    double x = block.x + dx;
-    double y = block.y + dy;
-    double w = displayWidth;
+    width = ctx.measureText(valueAsString).width + 14;
+
+    double x = centerX + block.x - 18;
+    double y = centerY + block.y;
+    double w = width;
     double h = height;
     
     if (dragging) _drawVerticalArrows(ctx);
     
     ctx.beginPath();
-    roundRect(ctx, x - w/2, y - h/2, w, h, h/2);
-    //ctx.arc(x, y, w/2, 0, PI * 2, true);
+    roundRect(ctx, x, y - h/2, w, h, h/2);
     ctx.fillStyle = color;
-    ctx.strokeStyle = textColor; //'white';
+    ctx.strokeStyle = textColor;
     ctx.lineWidth = 1;
-    ctx.lineJoin = 'round';
     ctx.fill();
     ctx.stroke();
     ctx.save();
@@ -214,7 +207,7 @@ class Parameter implements Touchable {
       ctx.fillStyle = textColor;
       num ty = y - _getDragIndex() * vspace;
       for (int i=-2; i<values.length + 1; i++) {
-        ctx.fillText(this[i].toString(), x, ty + i * vspace);
+        ctx.fillText(this[i].toString(), x + w/2, ty + i * vspace);
       }
     }
     ctx.restore();
@@ -222,12 +215,13 @@ class Parameter implements Touchable {
   
   
   bool containsTouch(Contact c) {
-    double w = displayWidth;
+    double cx = centerX + block.x;
+    double cy = centerY + block.y;
     return (block.isInProgram && 
-            c.touchX >= block.x + deltaX - w/2 &&
-            c.touchY >= block.y + deltaY - height/2 &&
-            c.touchX <= block.x + deltaX + w/2 &&
-            c.touchY <= block.y + deltaY + height/2);
+            c.touchX >= cx - width/2 &&
+            c.touchY >= cy - height/2 &&
+            c.touchX <= cx + width/2 &&
+            c.touchY <= cy + height/2);
   }
   
   
@@ -268,5 +262,4 @@ class Parameter implements Touchable {
   
   
   void touchSlide(Contact c) { }
-  
 }

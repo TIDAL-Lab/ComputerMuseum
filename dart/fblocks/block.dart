@@ -23,11 +23,14 @@
 part of ComputerHistory;
 
 
-const BLOCK_WIDTH = 76; // 58
-const BLOCK_HEIGHT = 35;
+const HORIZONTAL = 0;
+const VERTICAL = 1;
+int BLOCK_ORIENTATION = VERTICAL;
+const BLOCK_WIDTH = 85; // 58
+const BLOCK_HEIGHT = 40;
 const LINE_WIDTH = 6.5;
 const BLOCK_SPACE = 0; //11;
-const BLOCK_MARGIN = 8;
+const BLOCK_MARGIN = 10;
 
 
 /**
@@ -121,22 +124,45 @@ class Block implements Touchable {
   
   num get centerY => y + height / 2;
   
-  num get connectorX => targetX + width + BLOCK_SPACE;
-  
-  num get connectorY => targetY;
-  
-  num get targetY => hasPrev ? prev.connectorY : y;
-    
-  num get targetX {
-    if (hasPrev) {
-      num tx = prev.connectorX;
-      if (prev.candidate != null) tx += prev.candidate.width + BLOCK_SPACE;
-      return tx;
+  num get connectorX {
+    if (BLOCK_ORIENTATION == HORIZONTAL) {
+      return targetX + width + BLOCK_SPACE;
     } else {
-      return x;
+      return targetX;
     }
   }
+  
+  
+  num get connectorY {
+    if (BLOCK_ORIENTATION == HORIZONTAL) {
+      targetY;
+    } else {
+      return targetY + height + BLOCK_SPACE;
+    }
+  }
+  
+  
+  num get targetX {
+    num tx = hasPrev ? prev.connectorX : x;
+    if (BLOCK_ORIENTATION == HORIZONTAL && hasPrev && prev.candidate != null) {
+      tx += prev.candidate.width + BLOCK_SPACE;
+    }
+    return tx;
+  }
 
+  
+  num get targetY {
+    if (BLOCK_ORIENTATION == HORIZONTAL) {
+      return hasPrev ? prev.connectorY : y;
+    } else {
+      num ty = hasNext ? next.targetY - height - BLOCK_SPACE : y;
+      if (candidate != null) {
+        ty -= candidate.height + BLOCK_SPACE;
+      }
+      return ty;
+    }
+  }
+    
   
 /**
  * Move a chain of blocks by the given delta value
@@ -156,7 +182,7 @@ class Block implements Touchable {
     y += deltaY;
   }
   
-
+  
 /**
  * Does this block overlap with 'other'?
  */
@@ -255,16 +281,6 @@ class Block implements Touchable {
   
   
 /**
- * Draw parameters
- */
-  void drawParams(CanvasRenderingContext2D ctx) {
-    if (param != null && !wasInMenu) {
-      param.draw(ctx);
-    }
-  }
-
-  
-/**
  * Draw sockets where other blocks can be snapped into place
  */
   void drawSocket(CanvasRenderingContext2D ctx) {
@@ -296,6 +312,14 @@ class Block implements Touchable {
     }
     
     //-------------------------------------------
+    // expand width if the parameter value is long
+    //-------------------------------------------
+    if (param != null) {
+      double cw = param.getDisplayWidth(ctx) + param.centerX - 14;
+      _width = max(cw, BLOCK_WIDTH);
+    }
+    
+    //-------------------------------------------
     // draw block outline
     //-------------------------------------------
     _outline(ctx, x, y, width, height);
@@ -312,66 +336,59 @@ class Block implements Touchable {
     //-------------------------------------------
     // draw text label       
     //-------------------------------------------
+    var lines = text.split('\n');
     ctx.fillStyle = textColor;
     ctx.font = '200 11pt sans-serif';
-    ctx.textAlign = 'center';
+    ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    //var lines = text.split('\n');
-    double tx = centerX;
+    double tx = x + 12;
     double ty = centerY;
-    if (param != null && !wasInMenu) {
-      if (param.align == 'right') {
-        tx -= param.displayWidth * 0.5;
-      } else {
-        ty -= 7;
-      }
+    if (lines.length == 1) {
+      ctx.fillText(text, tx, ty);
+    } else {
+      ctx.fillText(lines[0], tx, ty - 7);
+      ctx.fillText(lines[1], tx, ty + 7);
     }
-    ctx.fillText(text, tx, ty);
+    
+    //-------------------------------------------
+    // draw parameter
+    //-------------------------------------------
+    if (param != null && !wasInMenu) {
+      param.draw(ctx);
+    }
   }
   
   
   void _outline(CanvasRenderingContext2D ctx, num x, num y, num w, num h) {
     
-    num r0 = (this is StartBlock) ? 10 : 2;
-    num r1 = (this is EndProgramBlock) ? 10 : 2;
+    num r0 = (prev == null || prev is BeginBlock) ? 14 : 2;
+    num r1 = (next == null || next is EndBlock) ? 14 : 2;
+    num r2 = 2;
+    num n = 20;
     
     ctx.beginPath();
     ctx.moveTo(x + r0, y);
-    ctx.lineTo(x + w - r1, y);
-    ctx.quadraticCurveTo(x + w, y, x + w, y + r1);
-    
-    // right-side line
-    if (this is EndProgramBlock) {
-      ctx.lineTo(x + w, y + h - r1);
-    } else {
-      //ctx.lineTo(x + w, y + h/2 - 8);
-      //ctx.lineTo(x + w + 6, y + h/2 - 2);
-      //ctx.lineTo(x + w + 6, y + h/2 + 2);
-      //ctx.lineTo(x + w, y + h/2 + 8);
-      ctx.lineTo(x + w, y + h - r1);
-    } 
-    
-    ctx.quadraticCurveTo(x + w, y + h, x + w - r1, y + h);
-    ctx.lineTo(x + r0, y + h);
-    ctx.quadraticCurveTo(x, y + h, x, y + h - r0);
-    
-    // left-side line
-    if (this is StartBlock) {
-      ctx.lineTo(x, y + r0);
-    } else {
-      //ctx.lineTo(x, y + h/2 + 8);
-      //ctx.lineTo(x + 6, y + h/2 + 2);
-      //ctx.lineTo(x + 6, y + h/2 - 2);
-      //ctx.lineTo(x, y + h/2 - 8);
-      ctx.lineTo(x, y + r0);
+    if (!(this is StartBlock)) {
+      ctx.lineTo(x + n, y);
+      ctx.lineTo(x + n + 5, y + 4);
+      ctx.lineTo(x + n + 10, y + 4);
+      ctx.lineTo(x + n + 15, y);
     }
-    
+    ctx.lineTo(x + w - r2, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r2);
+    ctx.lineTo(x + w, y + h - r2);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r2, y + h);
+    if (!(this is EndProgramBlock)) {
+      ctx.lineTo(x + n + 15, y + h);
+      ctx.lineTo(x + n + 10, y + h + 4);
+      ctx.lineTo(x + n + 5, y + h + 4);
+      ctx.lineTo(x + n, y + h);
+    }
+    ctx.lineTo(x + r1, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r1);
+    ctx.lineTo(x, y + r0);
     ctx.quadraticCurveTo(x, y, x + r0, y);
     ctx.closePath();
-    /*
-    ctx.beginPath();
-    ctx.arc(x + w/2, y + h/2, w / 2, 0, PI * 2, true);
-    */
   }
   
   

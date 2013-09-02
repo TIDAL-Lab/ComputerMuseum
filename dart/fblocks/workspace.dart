@@ -108,7 +108,7 @@ class CodeWorkspace extends TouchManager {
     menu.addBlock(new WaitBlock(this));
         
     // START block
-    start = new StartBlock(this, 55.0, height - 145.0);
+    start = new StartBlock(this, 55.0, height - 165.0);
     addBlock(start);
     
     addTouchable(menu);
@@ -282,7 +282,6 @@ class CodeWorkspace extends TouchManager {
       //------------------------------------------------
       for (Block block in blocks) {
         block.draw(ctx);
-        block.drawParams(ctx);
       }
       
     }
@@ -327,20 +326,6 @@ class CodeWorkspace extends TouchManager {
     */
     return false;
   }
-
-  
-/**
- * Returns the number of frogs currently controlled by this workspace
- */
-/*
-  int getFrogCount() {
-    int count = 0;
-    for (Frog frog in pond.frogs) {
-      if (frog.workspace == this) count++;
-    }
-    return count;
-  }
-  */
 
   
 /**

@@ -26,11 +26,10 @@ part of ComputerHistory;
 class WaitBlock extends Block {
 
   
-  WaitBlock(CodeWorkspace workspace) : super(workspace, 'wait for') {
+  WaitBlock(CodeWorkspace workspace) : super(workspace, 'wait\nfor') {
     color = '#b67196';
     param = new Parameter(this);
     param.values = [ 'fly', 'sound' ];
-    param.align = 'center';
   }
 
   

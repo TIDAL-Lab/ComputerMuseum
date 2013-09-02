@@ -34,10 +34,13 @@ class StartBlock extends Block {
   
   Tween tween = new Tween();
   
+  double startY = 0.0;
+  
   
   StartBlock(CodeWorkspace workspace, double x, double y) : super(workspace, '') {
     this.x = x;
     this.y = y;
+    startY = y;
     color = 'green';
     end = new EndProgramBlock(workspace, x, y);
     end.prev = this;
@@ -133,10 +136,17 @@ class StartBlock extends Block {
     dragging = true;
     _lastX = c.touchX;
     _lastY = c.touchY;
-    workspace.moveToTop(this);
     workspace.draw();
     workspace.playProgram();
     return true;
+  }
+  
+  
+  void touchDrag(Contact c) {
+    moveChain(c.touchX - _lastX, c.touchY - _lastY);
+    _lastX = c.touchX;
+    _lastY = c.touchY;
+    workspace.draw();
   }
   
   
@@ -144,15 +154,6 @@ class StartBlock extends Block {
     dragging = false;
     workspace.draw();
   }
-  
-  
-  void touchDrag(Contact c) {
-    //moveChain(c.touchX - _lastX, c.touchY - _lastY);
-    _lastX = c.touchX;
-    _lastY = c.touchY;
-    workspace.draw();
-  }
-  
 }
 
 

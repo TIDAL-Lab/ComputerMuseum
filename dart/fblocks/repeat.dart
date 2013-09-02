@@ -24,14 +24,32 @@ part of ComputerHistory;
 
 class RepeatBlock extends BeginBlock {
   
+  
   RepeatBlock(CodeWorkspace workspace) : super(workspace, 'repeat') {
     color = '#c92';
     param = new Parameter(this);
-    param.values = [ 'forever', 1, 2, 3, 4, 5, 'near-water?', 'see-gem?' ];
-    param.align = 'center';
-    _width = BLOCK_WIDTH + 10;
+    param.centerX = width - 7;
+    param.values = [ 2, 3, 4, 5, 'forever', 'near-water?', 'see-gem?' ];
   }
-
+  
+  
+  num get connectorX {
+    if (BLOCK_ORIENTATION == VERTICAL) {
+      return targetX + BLOCK_MARGIN;
+    } else {
+      return super.connectorX;
+    }
+  }
+  
+  
+  num get targetY {
+    if (BLOCK_ORIENTATION == VERTICAL && end != null && next == end && candidate == null) {
+      return next.targetY - height - BLOCK_SPACE - 30;
+    } else {
+      return super.targetY;
+    }
+  }
+  
   
   Block clone() {
     RepeatBlock block = new RepeatBlock(workspace);
@@ -39,22 +57,10 @@ class RepeatBlock extends BeginBlock {
     return block;
   }
   
-  //num get targetY => hasPrev ? prev.connectorY - BLOCK_MARGIN : y;
-  
-  num get connectorY => targetY - BLOCK_MARGIN;
-  
-  num get connectorX {
-    if (next == end && candidate == null) {
-      return targetX + width + BLOCK_SPACE + BLOCK_WIDTH / 2;
-    } else {
-      return targetX + width + BLOCK_SPACE;
-    }
-  }
-  
   
   void parameterChanged(Parameter param) {
     if (param.value == "near-water?" || param.value == "see-gem?") {
-      text = "repeat until";
+      text = "repeat\nuntil";
     } else {
       text = "repeat";
     }
@@ -111,52 +117,49 @@ class RepeatBlock extends BeginBlock {
 
   
   void _outline(CanvasRenderingContext2D ctx, num x, num y, num w, num h) {
-    if (end != null) {
+    if (end != null && !dragging) {
       
-      num x0 = min(x, end.x - w);
-      num x1 = x0 + w;
-      num x2 = end.x;
-      num x3 = end.x + end.width;
-      
-      num y0 = (dragging) ? end.y : y;
-      num y1 = (end.dragging) ? y : end.y;
-      num y2 = y1 + end.height - BLOCK_MARGIN; //end.getBottomLine() - BLOCK_MARGIN;
-      num y3 = y1 + end.height; //end.getBottomLine();
-      //y3 = max(y3, y + h + BLOCK_MARGIN);
-      
+      num r0 = hasPrev ? 2 : 14;
+      num r1 = hasPrev ? 2 : 14;
+      num r2 = 2;
+      num n = 20;
+      //if (dragging) {
+      //  y = min(y, end.y - height - BLOCK_SPACE - 30);
+      //}
       ctx.beginPath();
-      ctx.moveTo(x0, y0);
-      /*
-      ctx.lineTo(x0, y0 + h/2 - 8);
-      ctx.lineTo(x0 + 6, y0 + h/2 - 2);
-      ctx.lineTo(x0 + 6, y0 + h/2 + 2);
-      ctx.lineTo(x0, y0 + h/2 + 8);
-      */
-      ctx.lineTo(x0, y3);
-      ctx.lineTo(x3, y3);
-      /*
-      ctx.lineTo(x3, y1 + h/2 + 8);
-      ctx.lineTo(x3 + 6, y1 + h/2 + 2);
-      ctx.lineTo(x3 + 6, y1 + h/2 - 2);
-      ctx.lineTo(x3, y1 + h/2 - 8);
-      */
-      ctx.lineTo(x3, y1);
-      ctx.lineTo(x2, y1);
-      /*
-      ctx.lineTo(x2, y1 + h/2 - 8);
-      ctx.lineTo(x2 + 6, y1 + h/2 - 2);
-      ctx.lineTo(x2 + 6, y1 + h/2 + 2);
-      ctx.lineTo(x2, y1 + h/2 + 8);
-      */
-      ctx.lineTo(x2, y2);
-      ctx.lineTo(x1, y2);
-      /*
-      ctx.lineTo(x1, y0 + h/2 + 8);
-      ctx.lineTo(x1 + 6, y0 + h/2 + 2);
-      ctx.lineTo(x1 + 6, y0 + h/2 - 2);
-      ctx.lineTo(x1, y0 + h/2 - 8);
-      */
-      ctx.lineTo(x1, y0);
+      ctx.moveTo(x + r0, y);
+      ctx.lineTo(x + n, y);
+      ctx.lineTo(x + n + 5, y + 4);
+      ctx.lineTo(x + n + 10, y + 4);
+      ctx.lineTo(x + n + 15, y);
+      ctx.lineTo(x + w - r2, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r2);
+      ctx.lineTo(x + w, y + h - r2);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r2, y + h);
+      n += BLOCK_MARGIN;
+      ctx.lineTo(x + n + 15, y + h);
+      ctx.lineTo(x + n + 10, y + h + 4);
+      ctx.lineTo(x + n + 5, y + h + 4);
+      ctx.lineTo(x + n, y + h);
+      ctx.lineTo(x + BLOCK_MARGIN + 14, y + h);
+      ctx.quadraticCurveTo(x + BLOCK_MARGIN, y + h, x + BLOCK_MARGIN, y + h + 14);
+      ctx.lineTo(x + BLOCK_MARGIN, end.y - 14);
+      ctx.quadraticCurveTo(x + BLOCK_MARGIN, end.y, x + BLOCK_MARGIN + 14, end.y);
+      ctx.lineTo(x + n, end.y);
+      ctx.lineTo(x + n + 5, end.y + 4);
+      ctx.lineTo(x + n + 10, end.y + 4);
+      ctx.lineTo(x + n + 15, end.y);
+      ctx.lineTo(x + BLOCK_WIDTH, end.y);
+      ctx.lineTo(x + BLOCK_WIDTH, end.y + end.height);
+      n -= BLOCK_MARGIN;
+      ctx.lineTo(x + n + 15, end.y + end.height);
+      ctx.lineTo(x + n + 10, end.y + end.height + 4);
+      ctx.lineTo(x + n + 5, end.y + end.height + 4);
+      ctx.lineTo(x + n, end.y + end.height);
+      ctx.lineTo(x + r1, end.y + end.height);
+      ctx.quadraticCurveTo(x, end.y + end.height, x, end.y + end.height - r1);
+      ctx.lineTo(x, y + r0);
+      ctx.quadraticCurveTo(x, y, x + r0, y);
       ctx.closePath();
     } else {
       super._outline(ctx, x, y, w, h);
@@ -197,12 +200,17 @@ class EndRepeat extends EndBlock {
     color = '#c92';
     this.x = x;
     this.y = y;
-    _width = BLOCK_MARGIN * 2;
+    _height = BLOCK_MARGIN * 1.5;
   }
+
   
-  //num get connectorY => targetY + BLOCK_MARGIN;
-  
-  num get targetY => hasPrev ? prev.connectorY + BLOCK_MARGIN : y;
+  num get connectorX {
+    if (BLOCK_ORIENTATION == VERTICAL && begin != null && !begin.dragging) {
+      return targetX - BLOCK_MARGIN;
+    } else {
+      return super.connectorX;
+    }
+  }
   
   
   Block step(Program program) {
@@ -217,19 +225,17 @@ class EndRepeat extends EndBlock {
   }
 
   
-  void drawShadow(CanvasRenderingContext2D ctx) {
+  void draw(CanvasRenderingContext2D ctx) {
     return;
   }
   
-  void draw(CanvasRenderingContext2D ctx) {
-    if (begin != null && begin.dragging) {
-      super.draw(ctx);
-    }
+  void drawShadow(CanvasRenderingContext2D ctx) {
+    return;
   }
+
   
   bool touchDown(Contact c) {
-    workspace.moveToTop(begin);
-    return super.touchDown(c);
+    return false;
   }
   
 }
