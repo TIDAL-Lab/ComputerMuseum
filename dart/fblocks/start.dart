@@ -22,30 +22,27 @@
  */
 part of ComputerHistory;
 
-  
 /**
  * Start block
  */
-class StartBlock extends Block {
-  
-  EndProgramBlock end;
+class StartBlock extends BeginBlock {
   
   double _pulse = 1.0;
   
   Tween tween = new Tween();
   
-  double startY = 0.0;
   
   
   StartBlock(CodeWorkspace workspace, double x, double y) : super(workspace, '') {
     this.x = x;
     this.y = y;
-    startY = y;
     color = 'green';
-    end = new EndProgramBlock(workspace, x, y);
+    end = new EndProgramBlock(workspace, this);
+    end.y = y + height + BLOCK_MARGIN + 20;
     end.prev = this;
     next = end;
     workspace.addBlock(end);
+    _width = BLOCK_WIDTH + BLOCK_MARGIN;
   }
   
   
@@ -53,7 +50,7 @@ class StartBlock extends Block {
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.delay = 5;
-    tween.duration = 8;
+    tween.duration = 30;
     tween.repeat = 3;
     tween.onstart = (() => _pulse = 1.0 );
     tween.onend = (() => _pulse = 1.0 );
@@ -133,7 +130,7 @@ class StartBlock extends Block {
   
   
   bool touchDown(Contact c) {
-    dragging = true;
+    dragging = false;
     _lastX = c.touchX;
     _lastY = c.touchY;
     workspace.draw();
@@ -162,36 +159,16 @@ class StartBlock extends Block {
 /**
 * Visual programming block
 */
-class EndProgramBlock extends Block {
+class EndProgramBlock extends EndBlock {
+    //color = '#a00';
 
   
-  EndProgramBlock(CodeWorkspace workspace, double x, double y) : super(workspace, 'end') {
-    this.x = x;
-    this.y = y;
-    color = '#a00';
+  EndProgramBlock(CodeWorkspace workspace, StartBlock begin) : super(workspace, begin) {
+    _width = BLOCK_WIDTH + BLOCK_MARGIN;
   }
   
 
-  /*
-  Block step(Frog frog) {
+  Block step(Program program) {
     return this;
-  }
-*/
-/*  
-  void draw(CanvasRenderingContext2D ctx) {
-    super.draw(ctx);
-    ctx.save();
-    {
-      ctx.strokeStyle = 'white';
-      ctx.fillStyle = 'white';
-      drawLineArrow(ctx, centerX - width / 2, centerY,
-                    centerX - BLOCK_WIDTH * 0.4, centerY, LINE_WIDTH);
-    }
-    ctx.restore();
-  }
-*/  
-  
-  bool touchDown(Contact c) {
-    return false;
   }
 }

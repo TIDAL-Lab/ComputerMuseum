@@ -108,7 +108,7 @@ class CodeWorkspace extends TouchManager {
     menu.addBlock(new WaitBlock(this));
         
     // START block
-    start = new StartBlock(this, 55.0, height - 165.0);
+    start = new StartBlock(this, 150.0, height - 185.0);
     addBlock(start);
     
     addTouchable(menu);

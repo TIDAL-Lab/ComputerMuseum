@@ -32,17 +32,6 @@ class IfBlock extends BeginBlock {
   }
   
   
-  num get connectorX => targetX + BLOCK_WIDTH * 1.6;
-  
-  num get connectorY {
-    if (end != null && end.isInProgram) {
-      return end.getBottomLine();
-    } else {
-      return targetY;
-    }
-  }
-  
-  
   Block clone() {
     IfBlock block = new IfBlock(workspace);
     block.x = x;
@@ -51,42 +40,11 @@ class IfBlock extends BeginBlock {
   }
   
   
-  void drawLines(CanvasRenderingContext2D ctx) {
-    if (end != null && isInProgram && end.isInProgram) {
-      ctx.save();
-      double y0 = end.getBottomLine();
-      double y1 = end.getBottomLine();
-      double x0 = x + BLOCK_WIDTH * 0.9;
-      ctx.fillStyle = 'white';
-      ctx.strokeStyle = 'white';
-      ctx.lineWidth = LINE_WIDTH;
-      ctx.lineCap = 'round';
-      drawLineArrow(ctx, x + BLOCK_WIDTH * 0.7, y0, x0, y0, LINE_WIDTH);
-      drawLineArrow(ctx, x + BLOCK_WIDTH * 0.7, y1, x0, y1, LINE_WIDTH);
-      
-      ctx.beginPath();
-      ctx.moveTo(x + BLOCK_WIDTH * 0.7, y0);
-      ctx.lineTo(x + BLOCK_WIDTH * 0.3, y);
-      
-      ctx.moveTo(x + BLOCK_WIDTH * 0.7, y1);
-      ctx.lineTo(x + BLOCK_WIDTH * 0.3, y);
-      ctx.stroke();
-      
-      x0 += BLOCK_WIDTH * 0.3;
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'middle';
-      ctx.fillText("YES?", x0, y0);
-      ctx.fillText("NO?", x0, y1);
-      ctx.restore();
-    }
-    //super.drawLines(ctx);
-  }
-  
 
   void touchUp(Contact c) {
     super.touchUp(c);
     if (end == null && isInProgram) {
-      end = new EndIf(workspace, x + BLOCK_WIDTH * 1.3, y);
+      end = new EndIf(workspace, this);
       end.begin = this;
       if (hasNext) {
         next.prev = end;
@@ -112,7 +70,7 @@ class IfBlock extends BeginBlock {
 class EndIf extends EndBlock {
   
   
-  EndIf(CodeWorkspace workspace, double x, double y) : super(workspace, 'end if') {
+  EndIf(CodeWorkspace workspace, BeginBlock begin) : super(workspace, begin) {
     color = '#c92';
     this.x = x;
     this.y = y;
@@ -169,7 +127,7 @@ class EndIf extends EndBlock {
 
   
   Block clone() {
-    return new EndIf(workspace, x, y);
+    return new EndIf(workspace, begin);
   }
   
   

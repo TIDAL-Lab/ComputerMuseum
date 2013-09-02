@@ -26,28 +26,9 @@ class RepeatBlock extends BeginBlock {
   
   
   RepeatBlock(CodeWorkspace workspace) : super(workspace, 'repeat') {
-    color = '#c92';
     param = new Parameter(this);
     param.centerX = width - 7;
     param.values = [ 2, 3, 4, 5, 'forever', 'near-water?', 'see-gem?' ];
-  }
-  
-  
-  num get connectorX {
-    if (BLOCK_ORIENTATION == VERTICAL) {
-      return targetX + BLOCK_MARGIN;
-    } else {
-      return super.connectorX;
-    }
-  }
-  
-  
-  num get targetY {
-    if (BLOCK_ORIENTATION == VERTICAL && end != null && next == end && candidate == null) {
-      return next.targetY - height - BLOCK_SPACE - 30;
-    } else {
-      return super.targetY;
-    }
   }
   
   
@@ -116,62 +97,10 @@ class RepeatBlock extends BeginBlock {
   }
 
   
-  void _outline(CanvasRenderingContext2D ctx, num x, num y, num w, num h) {
-    if (end != null && !dragging) {
-      
-      num r0 = hasPrev ? 2 : 14;
-      num r1 = hasPrev ? 2 : 14;
-      num r2 = 2;
-      num n = 20;
-      //if (dragging) {
-      //  y = min(y, end.y - height - BLOCK_SPACE - 30);
-      //}
-      ctx.beginPath();
-      ctx.moveTo(x + r0, y);
-      ctx.lineTo(x + n, y);
-      ctx.lineTo(x + n + 5, y + 4);
-      ctx.lineTo(x + n + 10, y + 4);
-      ctx.lineTo(x + n + 15, y);
-      ctx.lineTo(x + w - r2, y);
-      ctx.quadraticCurveTo(x + w, y, x + w, y + r2);
-      ctx.lineTo(x + w, y + h - r2);
-      ctx.quadraticCurveTo(x + w, y + h, x + w - r2, y + h);
-      n += BLOCK_MARGIN;
-      ctx.lineTo(x + n + 15, y + h);
-      ctx.lineTo(x + n + 10, y + h + 4);
-      ctx.lineTo(x + n + 5, y + h + 4);
-      ctx.lineTo(x + n, y + h);
-      ctx.lineTo(x + BLOCK_MARGIN + 14, y + h);
-      ctx.quadraticCurveTo(x + BLOCK_MARGIN, y + h, x + BLOCK_MARGIN, y + h + 14);
-      ctx.lineTo(x + BLOCK_MARGIN, end.y - 14);
-      ctx.quadraticCurveTo(x + BLOCK_MARGIN, end.y, x + BLOCK_MARGIN + 14, end.y);
-      ctx.lineTo(x + n, end.y);
-      ctx.lineTo(x + n + 5, end.y + 4);
-      ctx.lineTo(x + n + 10, end.y + 4);
-      ctx.lineTo(x + n + 15, end.y);
-      ctx.lineTo(x + BLOCK_WIDTH, end.y);
-      ctx.lineTo(x + BLOCK_WIDTH, end.y + end.height);
-      n -= BLOCK_MARGIN;
-      ctx.lineTo(x + n + 15, end.y + end.height);
-      ctx.lineTo(x + n + 10, end.y + end.height + 4);
-      ctx.lineTo(x + n + 5, end.y + end.height + 4);
-      ctx.lineTo(x + n, end.y + end.height);
-      ctx.lineTo(x + r1, end.y + end.height);
-      ctx.quadraticCurveTo(x, end.y + end.height, x, end.y + end.height - r1);
-      ctx.lineTo(x, y + r0);
-      ctx.quadraticCurveTo(x, y, x + r0, y);
-      ctx.closePath();
-    } else {
-      super._outline(ctx, x, y, w, h);
-    }
-  }
-  
-  
   void touchUp(Contact c) {
     super.touchUp(c);
     if (end == null && isInProgram) {
-      end = new EndRepeat(workspace, x, y);
-      end.begin = this;
+      end = new EndRepeat(workspace, this);
       if (hasNext) {
         next.prev = end;
         end.next = next;
@@ -193,49 +122,11 @@ class RepeatBlock extends BeginBlock {
 
 
 class EndRepeat extends EndBlock {
-  
-  
-  EndRepeat(CodeWorkspace workspace, double x, double y) : super(workspace, '') {
-    color = '#eb0';
-    color = '#c92';
-    this.x = x;
-    this.y = y;
-    _height = BLOCK_MARGIN * 1.5;
-  }
 
-  
-  num get connectorX {
-    if (BLOCK_ORIENTATION == VERTICAL && begin != null && !begin.dragging) {
-      return targetX - BLOCK_MARGIN;
-    } else {
-      return super.connectorX;
-    }
-  }
-  
+  EndRepeat(CodeWorkspace workspace, BeginBlock begin) : super(workspace, begin);  
+
   
   Block step(Program program) {
     return begin;
   }
-  
-  
-  String compile(int indent) {
-    String tab = "";
-    for (int i=0; i<indent - 1; i++) tab += "  ";
-    return "${tab}}\n";
-  }
-
-  
-  void draw(CanvasRenderingContext2D ctx) {
-    return;
-  }
-  
-  void drawShadow(CanvasRenderingContext2D ctx) {
-    return;
-  }
-
-  
-  bool touchDown(Contact c) {
-    return false;
-  }
-  
 }
