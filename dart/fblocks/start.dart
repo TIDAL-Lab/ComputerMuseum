@@ -33,7 +33,7 @@ class StartBlock extends BeginBlock {
   
   
   
-  StartBlock(CodeWorkspace workspace, double x, double y) : super(workspace, '') {
+  StartBlock(CodeWorkspace workspace, double x, double y) : super(workspace, 'start') {
     this.x = x;
     this.y = y;
     color = 'green';

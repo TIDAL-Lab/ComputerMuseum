@@ -43,13 +43,19 @@ class BeginBlock extends Block {
   
   
   num get targetY {
-    if (BLOCK_ORIENTATION == VERTICAL && end != null && next == end && candidate == null) {
-      return next.targetY - height - BLOCK_SPACE - 30;
-    } else {
-      return super.targetY;
+    if (BLOCK_ORIENTATION == VERTICAL) {
+      num ty = hasNext ? next.targetY - height - BLOCK_SPACE : y;
+      if (candidate != null) {
+        ty -= candidate.height + BLOCK_SPACE;
+      }
+      if (end != null && next == end) {
+        ty -= 30;
+      }
+      return ty;
     }
+    return super.targetY;
   }  
-  
+
   
 /**
  * Make sure blocks are properly nested

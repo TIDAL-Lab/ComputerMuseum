@@ -187,10 +187,10 @@ class Block implements Touchable {
  * Does this block overlap with 'other'?
  */
   bool overlaps(Block other) {
-    return (x < other.x + other.width + BLOCK_SPACE &&
-            other.x < x + width * 1.1 + BLOCK_SPACE &&
-            y < other.y + other.height &&
-            other.y < y + height);
+    return (x <= other.x + other.width + BLOCK_SPACE &&
+            other.x <= x + width * 1.1 + BLOCK_SPACE &&
+            y <= other.y + other.height + BLOCK_SPACE &&
+            other.y <= y + height + BLOCK_SPACE);
   }
   
   
