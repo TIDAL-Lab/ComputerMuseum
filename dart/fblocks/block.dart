@@ -339,7 +339,7 @@ class Block implements Touchable {
     ctx.save();
     {
       ctx.fillStyle = color;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
       ctx.lineWidth = 2;
       ctx.fill();
       ctx.stroke();
