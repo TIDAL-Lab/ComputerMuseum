@@ -111,6 +111,11 @@ class TouchManager {
   }
   
   
+  num objectToWorldTheta(num theta) {
+    return xform.transformTheta(theta);
+  }
+  
+  
   num worldToObjectX(num x, num y) {
     return iform.transformX(x, y);
   }
