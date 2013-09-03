@@ -57,8 +57,8 @@ class Program {
   
   void step() {
     if (isRunning) {
-      curr.eval(this);
       curr = curr.step(this);
+      curr.eval(this);
     }
   }
   
@@ -79,6 +79,7 @@ class Program {
       step();
       return true;
     } else {
+      running = false;
       return false;
     }
   }
