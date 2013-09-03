@@ -152,7 +152,12 @@ class Frog extends Turtle implements Touchable {
   
   void eatFly() {
     if (prey == null) {
-      prey = pond.getFlyHere(tongueX, tongueY);
+      Fly fly = pond.getFlyHere(tongueX, tongueY);
+      if (fly != null) {
+        prey = fly.hatch();
+        fly.die();
+        pond.addFly();
+      }
     } else {
       prey.x = tongueX;
       prey.y = tongueY;
@@ -194,6 +199,7 @@ class Frog extends Turtle implements Touchable {
   
   
   void draw(CanvasRenderingContext2D ctx) {
+    if (prey != null) prey.draw(ctx);
     super.draw(ctx);
     if (ghost != null) ghost.draw(ctx);
   }

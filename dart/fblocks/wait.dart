@@ -42,15 +42,6 @@ class WaitBlock extends Block {
   
   
   Block step(Program program) {
-    /*
-    if (param.value == "fly") {
-      return (frog.nearFly()) ? next : this;
-    } else if (param.value == "sound") {
-      return (frog.hearSound()) ? next : this;
-    } else {
-      return next;
-    }
-    */
-    return this;
+    return (program.getSensorValue(param.value)) ? next : this;
   }
 }

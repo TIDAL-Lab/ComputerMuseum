@@ -80,7 +80,7 @@ class FrogPond extends TouchManager {
 
     addGem();
     
-    for (int i=0; i<10; i++) {
+    for (int i=0; i<12; i++) {
       addFly();
     }
     
@@ -365,7 +365,6 @@ class FrogPond extends TouchManager {
 
     // remove dead frogs, flies, and gems
     removeDeadGems();
-    removeDeadFlies();
     removeDeadFrogs();
     
     // animate agents and workspaces
@@ -436,5 +435,6 @@ class FrogPond extends TouchManager {
     flies.forEach((fly) => fly.erase(ctx));
     flies.forEach((fly) => fly.animate());
     flies.forEach((fly) => fly.draw(ctx));
+    removeDeadFlies();
   }
 }

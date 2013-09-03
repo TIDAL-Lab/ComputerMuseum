@@ -39,6 +39,13 @@ class Fly extends Turtle {
   }
   
   
+  Fly hatch() {
+    Fly clone = new Fly(pond, x, y);
+    clone.copy(this);
+    return clone;
+  }
+  
+  
   void forward(double distance) {
     super.forward(distance);
     if (x < 0) x += pond.width;
@@ -65,6 +72,7 @@ class Fly extends Turtle {
   
   
   void _drawLocal(CanvasRenderingContext2D ctx) {
+    if (dead) return;
     num iw = img.width * 0.7;
     num ih = img.height * 0.7;
     ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);

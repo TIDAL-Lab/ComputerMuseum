@@ -154,6 +154,15 @@ class Program {
     }
     return s + "}\n";
   }
+  
+  
+  bool getSensorValue(String sensor) {
+    if (sensor == "fly") {
+      return frog.nearFly();
+    } else {
+      return false;
+    }
+  }
 
   
   void doCommand(String cmd, var param, [ bool preview = false ]) {
@@ -330,21 +339,18 @@ class Program {
  * For waits we use a tight loop
  */
   void doWait(String cmd, var param, bool preview) {
-    num duration = 0;
     if (param.toString() == 'fly') {
       frog._vision = 10.0;
-      if (preview) duration = 30;
-    }
-
-    tween = new Tween();
-    tween.duration = duration;
-    tween.onstart = (() => frog.label = cmd);
-    tween.onend = (() {
-      if (duration > 0 || preview) {
-        frog.label = null;
-        frog._vision = 0.0;
+      frog.label = "$cmd $param";
+      if (preview) {
+        tween = new Tween();
+        tween.duration = 40;
+        tween.onend = (() {
+          frog.label = null;
+          frog._vision = 0.0;
+        });
       }
-    });
+    }
   }
   
 
