@@ -94,8 +94,8 @@ class StatusInfo {
       ctx.fill();
       ctx.stroke();
       
-      int iw = frog.width * 0.75;
-      int ih = frog.height * 0.75;
+      int iw = (frog.width * 0.75).toInt();
+      int ih = (frog.height * 0.75).toInt();
       int ix = x + 10;
       int iy = y + h - ih;
       ctx.drawImageScaled(frog, ix, iy, iw, ih);
