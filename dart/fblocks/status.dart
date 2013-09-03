@@ -48,7 +48,7 @@ class StatusInfo {
     fly.src = "images/dragonfly.png";
     for (var color in Gem.colors) {
       Gem gem = new Gem.fromColor(color);
-      gem.size = 0.5;
+      gem.size = 0.4;
       gem.shadowed = true;
       gems.add(gem);
     }
@@ -85,7 +85,7 @@ class StatusInfo {
     {
       ctx.fillStyle = '#3e5d64';
       ctx.strokeStyle = '#223333';
-      ctx.lineWidth = 5;
+      ctx.lineWidth = 3;
       
       ctx.beginPath();
       ctx.moveTo(x, y + h);
@@ -94,13 +94,13 @@ class StatusInfo {
       ctx.fill();
       ctx.stroke();
       
+      int iw = frog.width * 0.75;
+      int ih = frog.height * 0.75;
       int ix = x + 10;
-      int iy = y + 10;
-      int iw = frog.width;
-      int ih = frog.height;
-      ctx.drawImage(frog, ix, iy);
+      int iy = y + h - ih;
+      ctx.drawImageScaled(frog, ix, iy, iw, ih);
       
-      ix += iw + 20;
+      ix += iw + 10;
       iy = y + h - h ~/ 3;
       for (Gem gem in gems) {
         ix += gem.width ~/ 2;
