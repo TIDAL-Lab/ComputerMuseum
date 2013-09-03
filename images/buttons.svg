@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.2 r9819"
+   sodipodi:docname="buttons.svg">
+  <defs
+     id="defs4">
+    <filter
+       id="filter3835"
+       inkscape:label="Drop shadow"
+       width="1.5"
+       height="1.5"
+       x="-.25"
+       y="-.25">
+      <feGaussianBlur
+         id="feGaussianBlur3837"
+         in="SourceAlpha"
+         stdDeviation="10"
+         result="blur" />
+      <feColorMatrix
+         id="feColorMatrix3839"
+         result="bluralpha"
+         type="matrix"
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.6 0 " />
+      <feOffset
+         id="feOffset3841"
+         in="bluralpha"
+         dx="8"
+         dy="12"
+         result="offsetBlur" />
+      <feMerge
+         id="feMerge3843">
+        <feMergeNode
+           id="feMergeNode3845"
+           in="offsetBlur" />
+        <feMergeNode
+           id="feMergeNode3847"
+           in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter
+       id="filter3874"
+       inkscape:label="Drop shadow"
+       width="1.5"
+       height="1.5"
+       x="-.25"
+       y="-.25">
+      <feGaussianBlur
+         id="feGaussianBlur3876"
+         in="SourceAlpha"
+         stdDeviation="10"
+         result="blur" />
+      <feColorMatrix
+         id="feColorMatrix3878"
+         result="bluralpha"
+         type="matrix"
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.6 0 " />
+      <feOffset
+         id="feOffset3880"
+         in="bluralpha"
+         dx="8"
+         dy="12"
+         result="offsetBlur" />
+      <feMerge
+         id="feMerge3882">
+        <feMergeNode
+           id="feMergeNode3884"
+           in="offsetBlur" />
+        <feMergeNode
+           id="feMergeNode3886"
+           in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="376.26394"
+     inkscape:cy="-158.82476"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1217"
+     inkscape:window-height="838"
+     inkscape:window-x="56"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#ffffff;stroke:none;"
+       d="m -58.57052,1347.5756 0,-194.9982 191.38553,97.4991 z"
+       id="path2985"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/play.png"
+       inkscape:export-xdpi="9.230854"
+       inkscape:export-ydpi="9.230854" />
+    <text
+       xml:space="preserve"
+       style="font-size:22px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Webdings;-inkscape-font-specification:Webdings"
+       x="47.142857"
+       y="636.64789"
+       id="text2987"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan2989"
+         x="47.142857"
+         y="636.64789"
+         style="-inkscape-font-specification:Webdings;font-family:Webdings;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">abcdefghijklmnopqrstuvwxyz</tspan><tspan
+         sodipodi:role="line"
+         x="47.142857"
+         y="664.14789"
+         id="tspan2991"
+         style="-inkscape-font-specification:Webdings;font-family:Webdings;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">ABCDEFGHIJKLMNOPQRSTUVWXYZ</tspan><tspan
+         sodipodi:role="line"
+         x="47.142857"
+         y="691.64789"
+         id="tspan2993"
+         style="-inkscape-font-specification:Webdings;font-family:Webdings;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">1234567890-=`~!@#$%^&amp;*()_+</tspan><tspan
+         sodipodi:role="line"
+         x="47.142857"
+         y="719.14789"
+         id="tspan2995"
+         style="-inkscape-font-specification:Webdings;font-family:Webdings;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">,./&lt;&gt;?;':&quot;[]{}|\</tspan></text>
+    <g
+       id="g3870"
+       style="fill:#ffffff;stroke:none"
+       transform="matrix(-0.63123745,0.63123746,-0.63123746,-0.63123745,1365.1104,1531.7037)"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/restart.png"
+       inkscape:export-xdpi="10.121804"
+       inkscape:export-ydpi="10.121804">
+      <path
+         inkscape:connector-curvature="0"
+         id="path2997"
+         d="m 445.42041,768.46637 c -6.70673,-0.008 -13.50037,0.65611 -20.28575,2.02843 a 16.007526,18.960373 0 1 0 5.38671,37.37859 c 39.72088,-8.03344 76.91354,18.24063 84.06984,53.62453 7.1563,35.38389 -15.31371,71.16784 -55.03461,79.20129 -39.72089,8.03346 -76.89796,-18.22219 -84.05428,-53.60609 -0.81213,-4.01556 -1.23473,-8.07004 -1.27661,-12.13374 a 16.007526,18.960373 0 1 0 -32.00881,0.461 c 0.071,6.89864 0.80294,13.77587 2.16401,20.50567 11.85577,58.62002 66.27937,93.13036 120.56239,82.15175 l 0.17125,-0.0369 c 54.19141,-11.06214 92.44123,-66.81823 80.59807,-125.37593 -10.3738,-51.29251 -53.34504,-84.1442 -100.29221,-84.19862 z"
+         style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:64.25609588999999744;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans" />
+      <path
+         style="fill:#ffffff;stroke:none"
+         d="m 401.4465,891.00654 -81.0979,-7e-5 40.54898,-73.66774 z"
+         id="path2999"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccc" />
+    </g>
+    <rect
+       style="fill:none;stroke:none"
+       id="rect3888"
+       width="250"
+       height="250"
+       x="-87.877754"
+       y="1125.0765"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/play.png"
+       inkscape:export-xdpi="9"
+       inkscape:export-ydpi="9" />
+    <rect
+       y="1136.1425"
+       x="409.50919"
+       height="250"
+       width="250"
+       id="rect3890"
+       style="fill:none;stroke:none"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/restart.png"
+       inkscape:export-xdpi="9.932148"
+       inkscape:export-ydpi="9.932148" />
+  </g>
+</svg>
