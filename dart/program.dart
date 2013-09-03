@@ -408,8 +408,8 @@ class Program {
       baby.opacity = 0.3;
       frog.ghost = baby;
     } else {
-      baby.program.skip();
       frog.pond.addFrog(baby);
+      baby.program.pause();
     }
     baby.size = 0.05;
     baby.left(Turtle.rand.nextInt(360).toDouble());
@@ -419,7 +419,11 @@ class Program {
     tween.delay = 0;
     tween.duration = 15;
     tween.onstart = (() => frog.label = cmd);
-    tween.onend = (() => doPause(preview));
+    tween.onend = (() {
+      doPause(preview);
+      baby.program.play();
+      baby.program.skip();
+    });
     tween.addControlPoint(0.05, 0);
     tween.addControlPoint(frog.size + Turtle.rand.nextDouble() * 0.2 - 0.1, 1.0);
     tween.ondelta = ((value) => baby.size += value);
