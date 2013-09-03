@@ -88,18 +88,21 @@ class FrogPond extends TouchManager {
     CodeWorkspace workspace = new CodeWorkspace(this, height, width, "workspace1", "blue");
     workspace.transform(cos(PI / -2), sin(PI / -2), -sin(PI / -2), cos(PI / -2), 0, height);
     workspaces.add(workspace);
+    addHomeFrog(workspace);
 
     workspace = new CodeWorkspace(this, height, width, "workspace2", "green");
     workspace.transform(cos(PI/2), sin(PI/2), -sin(PI/2),cos(PI/2), width, 0);
     workspaces.add(workspace);
+    addHomeFrog(workspace);
 
 /*
     CodeWorkspace workspace = new CodeWorkspace(this, width, height, "workspace1", "blue");
     workspaces.add(workspace);
 */
-    for (int i=0; i<3; i++) {
-      addRandomFrog(workspace);
-    }
+//    for (int i=0; i<3; i++) {
+//      addRandomFrog(workspace);
+//    }
+
 
     new Timer.periodic(const Duration(milliseconds : 40), animate);
   }
@@ -127,6 +130,20 @@ class FrogPond extends TouchManager {
 
     // try again in 2 seconds
     new Timer(const Duration(milliseconds : 2000), () => addRandomFrog(workspace));
+  }
+  
+  
+/**
+ * Adds a new frog for the given workspace
+ */
+  void addHomeFrog(CodeWorkspace workspace) {
+    Frog frog = new Frog(this);
+    frog["workspace"] = workspace.name;
+    workspace.moveFrogHome(frog);
+    frog.heading = PI / 2;
+    frog.program = new Program(workspace.start, frog);
+    frog.img.src = "images/${workspace.color}frog.png";
+    addFrog(frog);
   }
   
 
