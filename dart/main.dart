@@ -40,6 +40,7 @@ part 'tween.dart';
 part 'utils.dart';
 part 'program.dart';
 part 'fblocks/block.dart';
+part 'fblocks/bug.dart';
 part 'fblocks/control.dart';
 part 'fblocks/if.dart';
 part 'fblocks/menu.dart';
