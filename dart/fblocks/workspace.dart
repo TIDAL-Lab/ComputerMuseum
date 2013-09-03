@@ -270,10 +270,10 @@ class CodeWorkspace extends TouchManager {
       ctx.fillStyle = 'white';
       ctx.font = '200 16px sans-serif';
       ctx.fillText(frog.label, tx, ty + 52);
-      if (frog.program.isRunning) {
-        bug.target = frog.program.curr;
-      }
       ctx.restore();
+    }
+    if (start.playing) {
+      bug.target = frog.program.curr;
     }
   }
   
