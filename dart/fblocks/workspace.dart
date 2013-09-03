@@ -49,6 +49,9 @@ class CodeWorkspace extends TouchManager {
   /* color of the frogs controlled by this workspace */
   String color;
   
+  /* traces execution of programs as they run */
+  TraceBug bug;
+  
   CanvasRenderingContext2D ctx;
 
 
@@ -110,6 +113,9 @@ class CodeWorkspace extends TouchManager {
     // START block
     start = new StartBlock(this);
     addBlock(start);
+    
+    // Trace bug
+    bug = new TraceBug(start);
     
     addTouchable(menu);
     
@@ -224,20 +230,51 @@ class CodeWorkspace extends TouchManager {
   bool animate() {
     bool refresh = false;
 
-    // change in program state...    
-    bool running = pond.isProgramRunning(name);
-    if (running != start.playing) {
-      refresh = true;
-      start.playing = running;
+    // change in program state...
+    if (pond.isProgramRunning(name)) {
+      if (!start.playing) {
+        refresh = true;
+        start.playing = true;
+      }
+    } else if (pond.isProgramFinished(name)) {
+      if (start.playing) {
+        refresh = true;
+        start.playing = false;
+      }
+      bug.reset();
     }
+
     
     for (Block block in blocks) {
       if (!block.hasPrev) {
         if (block.animate()) refresh = true;
       }
     }
+    
     if (status.animate()) refresh = true;
+    
+    if (bug.animate()) refresh = true;
+    
     return refresh;
+  }
+  
+  
+  void traceExecution(CanvasRenderingContext2D ctx, Frog frog) {
+    if (frog.label != null) {
+      ctx.save();
+      xform.transformContext(ctx);
+      double tx = worldToObjectX(frog.x, frog.y);
+      double ty = worldToObjectY(frog.x, frog.y);
+      ctx.textBaseline = 'top';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = 'white';
+      ctx.font = '200 16px sans-serif';
+      ctx.fillText(frog.label, tx, ty + 52);
+      if (frog.program.isRunning) {
+        bug.target = frog.program.curr;
+      }
+      ctx.restore();
+    }
   }
   
   
@@ -289,22 +326,15 @@ class CodeWorkspace extends TouchManager {
         block.draw(ctx);
       }
       
-    }
-    ctx.restore();
-      
-    //------------------------------------------------
-    // draw command label for the target frog
-    //------------------------------------------------
-    /*
-    Frog target = getTargetFrog();
-    if (target != null) {
-      if (target.ghost != null && target.ghost.label != null) {
-        target.ghost.drawLabel(ctx);
-      } else {
-        target.drawLabel(ctx);
+      //------------------------------------------------
+      // draw the trace bug
+      //------------------------------------------------
+      if (start.playing) {
+        bug.draw(ctx);
       }
     }
-    */
+    ctx.restore();
+
   }
   
   
@@ -314,36 +344,6 @@ class CodeWorkspace extends TouchManager {
     pond.previewBlock(name, block.text, pvalue);
   }
   
-  
-  
-/**
- * Are frogs still running their programs?
- */
-  bool isProgramRunning() {
-  /*
-    for (Frog frog in pond.frogs) {
-      if (frog.workspace == this) {
-        if (frog.program != null && frog.program.isRunning) {
-          return true;
-        }
-      }
-    }
-    */
-    return false;
-  }
-
-  
-/**
- * Returns the target frog (that we show program execution for)
- */
-/*
-  Frog getTargetFrog() {
-    for (Frog frog in pond.frogs) {
-      if (frog.workspace == this) return frog;
-    }
-    return null;
-  }
-  */
   
   
 /**
@@ -379,16 +379,5 @@ class CodeWorkspace extends TouchManager {
     }
   }
   */
-  
-
-/*  
-  void captureFly(Fly fly) {
-    if (!fly.dead) {
-      fly.die();
-      pond.addFly();
-      status.fly_count++;
-    }
-  }
-*/  
   
 }
