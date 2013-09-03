@@ -26,71 +26,28 @@ part of ComputerHistory;
 class IfBlock extends BeginBlock {
 
   IfBlock(CodeWorkspace workspace) : super(workspace, 'if') {
-    color = '#c92';
     param = new Parameter(this);
-    param.values = [ 'see-fly?', 'near-water?', 'random?' ];
+    param.centerX = width - 35;
+    param.values = [ 'see-gem?', 'near-water?', 'not see-gem?', 'not near-water?', 'random?' ];
   }
   
   
   Block clone() {
     IfBlock block = new IfBlock(workspace);
-    block.x = x;
-    block.y = y;
+    copyTo(block);
     return block;
   }
   
   
-
-  void touchUp(Contact c) {
-    super.touchUp(c);
-    if (end == null && isInProgram) {
-      end = new EndIf(workspace, this);
-      end.begin = this;
-      if (hasNext) {
-        next.prev = end;
-        end.next = next;
-      }
-      next = end;
-      end.prev = this;
-      workspace.addBlock(end);
-    }
-    else if (end != null && !isInProgram) {
-      end.next.prev = end.prev;
-      end.prev.next = end.next;
-      end.prev = null;
-      end.next = null;
-      workspace.removeBlock(end);
-      end = null;
-    }
+  String compile(int indent) {
+    String tab = "";
+    for (int i=0; i<indent; i++) tab += "  ";
+    return "${tab}if (${param.value}) {\n";
+  }
+  
+  
+  Block step(Program program) {
+    return program.getSensorValue(param.value) ? next : end.next;
   }
 }
 
-
-
-class EndIf extends EndBlock {
-  
-  
-  EndIf(CodeWorkspace workspace, BeginBlock begin) : super(workspace, begin) {
-    color = '#c92';
-    this.x = x;
-    this.y = y;
-  }
-
-  
-  Block clone() {
-    return new EndIf(workspace, begin);
-  }
-  
-  
-  void touchUp(Contact c) {
-    super.touchUp(c);
-    if (!isInProgram) {
-      begin.next.prev = begin.prev;
-      begin.prev.next = begin.next;
-      begin.prev = null;
-      begin.next = null;
-      workspace.removeBlock(begin);
-      begin = null;
-    }
-  }
-}

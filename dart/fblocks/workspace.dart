@@ -99,10 +99,12 @@ class CodeWorkspace extends TouchManager {
     //menu.addBlock(new Block(this, 'rest'));
     
     // HATCH block
-    menu.addBlock(new Block(this, 'hatch'));
+    block = new Block(this, 'hatch');
+    block.color = '#b67196';
+    menu.addBlock(block);
     
     // IF block
-    //menu.addBlock(new IfBlock(this));
+    menu.addBlock(new IfBlock(this));
     
     // REPEAT block
     menu.addBlock(new RepeatBlock(this));
@@ -211,9 +213,13 @@ class CodeWorkspace extends TouchManager {
   Block findInsertionPoint(Block target) {
     if (target == start) return null;
     Block block = start;
-    while (block != null && !(block is EndProgramBlock)) {
-      if (block.overlaps(target) && target.checkSyntax(block)) {
-        return block;
+    while (block != null) {
+      if (block.overlaps(target)) {
+        if (block is EndProgramBlock && target.checkSyntax(block.prev)) {
+          return block.prev;
+        } else if (target.checkSyntax(block)) {
+          return block;
+        }
       }
       block = block.next;
     }

@@ -215,7 +215,7 @@ class Parameter implements Touchable {
   
   
   bool containsTouch(Contact c) {
-    double cx = centerX + block.x;
+    double cx = centerX + block.x - 18 + width/2;
     double cy = centerY + block.y;
     return (block.isInProgram && 
             c.touchX >= cx - width/2 &&

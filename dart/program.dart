@@ -66,7 +66,7 @@ class Program {
   void skip() {
     if (isRunning) {
       curr = curr.step(this);
-      doPause();
+      doPause(false);
     }
   }
   
@@ -164,6 +164,16 @@ class Program {
   bool getSensorValue(String sensor) {
     if (sensor == "fly") {
       return frog.nearFly();
+    } else if (sensor == "near-water?") {
+      return frog.nearWater();
+    } else if (sensor == "not near-water?") {
+      return !frog.nearWater();
+    } else if (sensor == "see-gem?") {
+      return frog.seeGem();
+    } else if (sensor == "not see-gem?") {
+      return !frog.seeGem();
+    } else if (sensor == "random?") {
+      return Turtle.rand.nextInt(100) > 50;
     } else {
       return false;
     }
@@ -182,26 +192,30 @@ class Program {
       doEat(cmd, param, preview);
     } else if (cmd == "hatch") {
       doHatch(cmd, param, preview);
-    } else if (cmd == "end") {
-      doPause();
+    } else if (cmd.startsWith("if")) {
+      doIf(cmd, param, preview);
     } else if (cmd.startsWith("repeat")) {
       doRepeat(cmd, param, preview);
     } else if (cmd.startsWith("wait")) {
       doWait(cmd, param, preview);
     }
+    //else if (cmd.startsWith("end")) {
+    //  doEnd(cmd, param, preview);
+    //}
   }
 
   
-  void doPause() {
+  void doPause(bool preview) {
     
     // is the frog in the water? 
     if (frog.inWater()) {
       Sounds.playSound("splash");
       frog.die();
+      return;
     }
     
     // did we capture a gem?
-    else {
+    if (!preview) {
       frog.captureGem();
     }
     
@@ -232,7 +246,7 @@ class Program {
     tween.delay = 0;
     tween.duration = 12;
     tween.onstart = (() { Sounds.playSound(cmd); target.label = s; });
-    tween.onend = (() { doPause(); });
+    tween.onend = (() { doPause(preview); });
     tween.addControlPoint(0, 0);
     tween.addControlPoint(length, 1);
     tween.ondelta = ((value) {
@@ -270,7 +284,7 @@ class Program {
     tween.addControlPoint(0, 0);
     tween.addControlPoint(angle, 1);
     tween.ondelta = ((value) => target.left(value));
-    tween.onend = (() { doPause(); });
+    tween.onend = (() { doPause(preview); });
   }
   
 
@@ -287,7 +301,7 @@ class Program {
     });
     tween.onend = (() {
       frog._radius = -1.0;
-      doPause();
+      doPause(preview);
     });
     tween.addControlPoint(0, 0);
     tween.addControlPoint(175, 1);
@@ -324,7 +338,7 @@ class Program {
         //workspace.captureFly(prey);
         frog.prey = null;
       }
-      doPause();
+      doPause(preview);
     });
   }
   
@@ -334,10 +348,31 @@ class Program {
  */
   void doRepeat(String cmd, var param, bool preview) {
     tween = new Tween();
-    tween.delay = 0;
+    tween.duration = 5;
+    tween.onstart = (() => frog.label = "$cmd $param");
+    tween.onend = (() { doPause(preview); });
+  }
+  
+  
+/**
+ * For if statements just show the label and pause slightly
+ */
+  void doIf(String cmd, var param, bool preview) {
+    tween = new Tween();
+    tween.duration = 5;
+    tween.onstart = (() => frog.label = "$cmd $param");
+    tween.onend = (() { doPause(preview); });
+  }
+  
+  
+/**
+ * End of a control structure
+ */
+  void doEnd(String cmd, var param, bool preview) {
+    tween = new Tween();
     tween.duration = 5;
     tween.onstart = (() => frog.label = cmd);
-    tween.onend = (() { doPause(); });
+    tween.onend = (() => doPause(preview));
   }
   
 
@@ -384,7 +419,7 @@ class Program {
     tween.delay = 0;
     tween.duration = 15;
     tween.onstart = (() => frog.label = cmd);
-    tween.onend = (() => doPause());
+    tween.onend = (() => doPause(preview));
     tween.addControlPoint(0.05, 0);
     tween.addControlPoint(frog.size + Turtle.rand.nextDouble() * 0.2 - 0.1, 1.0);
     tween.ondelta = ((value) => baby.size += value);

@@ -107,11 +107,13 @@ class Frog extends Turtle implements Touchable {
   }
   
   
-  
   bool nearWater() {
-    forward(60.0);
-    bool wet = pond.inWater(x, y);
-    backward(60.0);
+    bool wet = false;
+    for (int i=0; i<5; i++) {
+      forward(10.0);
+      if (inWater()) wet = true;
+    }
+    backward(50.0);
     return wet;
   }
   

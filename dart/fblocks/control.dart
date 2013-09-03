@@ -33,6 +33,11 @@ class BeginBlock extends Block {
   }
   
   
+  Block _endStep(Program program) {
+    return end.next;
+  }
+  
+  
   num get connectorX {
     if (BLOCK_ORIENTATION == VERTICAL) {
       return targetX + BLOCK_MARGIN;
@@ -49,9 +54,9 @@ class BeginBlock extends Block {
       if (candidate != null) {
         ty -= candidate.height + BLOCK_SPACE;
       }
-      if (end != null && next == end) {
-        ty -= 30;
-      }
+      //if (end != null && next == end) {
+      //  ty -= 30;
+      //}
       return ty;
     }
     return super.targetY;
@@ -100,6 +105,7 @@ class BeginBlock extends Block {
       num r1 = (next == null || end.next is EndBlock || end.next == null) ? 14 : 2;
       num r2 = 2;
       num n = 20;
+      num endy = end.y + end.height - end._height;
       //if (dragging) {
       //  y = min(y, end.y - height - BLOCK_SPACE - 30);
       //}
@@ -122,13 +128,13 @@ class BeginBlock extends Block {
       ctx.lineTo(x + n, y + h);
       ctx.lineTo(x + BLOCK_MARGIN + 14, y + h);
       ctx.quadraticCurveTo(x + BLOCK_MARGIN, y + h, x + BLOCK_MARGIN, y + h + 14);
-      ctx.lineTo(x + BLOCK_MARGIN, end.y - 14);
-      ctx.quadraticCurveTo(x + BLOCK_MARGIN, end.y, x + BLOCK_MARGIN + 14, end.y);
-      ctx.lineTo(x + n, end.y);
-      ctx.lineTo(x + n + 5, end.y + 4);
-      ctx.lineTo(x + n + 10, end.y + 4);
-      ctx.lineTo(x + n + 15, end.y);
-      ctx.lineTo(x + end.width, end.y);
+      ctx.lineTo(x + BLOCK_MARGIN, endy - 14);
+      ctx.quadraticCurveTo(x + BLOCK_MARGIN, endy, x + BLOCK_MARGIN + 14, endy);
+      ctx.lineTo(x + n, endy);
+      ctx.lineTo(x + n + 5, endy + 4);
+      ctx.lineTo(x + n + 10, endy + 4);
+      ctx.lineTo(x + n + 15, endy);
+      ctx.lineTo(x + end.width, endy);
       ctx.lineTo(x + end.width, end.y + end.height);
       n -= BLOCK_MARGIN;
       if (!(this is StartBlock)) {
@@ -146,6 +152,29 @@ class BeginBlock extends Block {
       super._outline(ctx, x, y, w, h);
     }
   }
+
+  
+  void touchUp(Contact c) {
+    super.touchUp(c);
+    if (end == null && isInProgram) {
+      end = new EndBlock(workspace, this);
+      if (hasNext) {
+        next.prev = end;
+        end.next = next;
+      }
+      next = end;
+      end.prev = this;
+      workspace.addBlock(end);
+    }
+    else if (end != null && !isInProgram) {
+      end.next.prev = end.prev;
+      end.prev.next = end.next;
+      end.prev = null;
+      end.next = null;
+      workspace.removeBlock(end);
+      end = null;
+    }
+  }
 }
 
 
@@ -158,9 +187,27 @@ class EndBlock extends Block {
     this.begin = begin;
     color = '#c92';
     x = begin.x;
-    y = begin.y;
+    y = begin.y + BLOCK_MARGIN;
     _height = BLOCK_MARGIN * 1.5;
   }
+  
+  
+  Block step(Program program) {
+    if (begin != null) {
+      return begin._endStep(program);
+    } else {
+      return next;
+    }
+  }
+
+  
+  void eval(Program program) {
+    var pval = (param == null) ? null : param.value;
+    program.doCommand("end ${begin.text}", pval);
+  }
+  
+  
+  num get height => (prev == begin) ? _height * 3 : _height;
   
   
   num get connectorX {

@@ -80,6 +80,9 @@ class Block implements Touchable {
   /* Used for dragging the block on the screen */
   double _lastX, _lastY;
   
+  /* Flag used to make blocks in the menu slightly smaller */
+  bool inMenu = false;
+  
   bool wasInMenu = true, wasInProgram = false;
   
   
@@ -119,7 +122,7 @@ class Block implements Touchable {
   
   bool get isInProgram => hasPrev;
   
-  num get width => _width;
+  num get width => inMenu ? _width * 0.8 : _width;
   
   num get height => _height;
   
@@ -195,7 +198,7 @@ class Block implements Touchable {
     return (x <= other.x + other.width + BLOCK_SPACE &&
             other.x <= x + width * 1.1 + BLOCK_SPACE &&
             y <= other.y + other.height + BLOCK_SPACE &&
-            other.y <= y + height * 1.1 + BLOCK_SPACE);
+            other.y <= y + height * 1.5 + BLOCK_SPACE);
   }
   
   

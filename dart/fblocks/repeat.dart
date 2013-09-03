@@ -39,6 +39,11 @@ class RepeatBlock extends BeginBlock {
   }
   
   
+  Block _endStep(Program program) {
+    return this;
+  }
+  
+  
   void parameterChanged(Parameter param) {
     if (param.value == "near-water?" || param.value == "see-gem?") {
       text = "repeat\nuntil";
@@ -56,16 +61,19 @@ class RepeatBlock extends BeginBlock {
     
   
   Block step(Program program) {
-    String v = "repeat-counter-${id}";
-    if (!program.hasVariable(v) || param.changed) {
-      program[v] = param.value;
-      param.changed = false;
-    }
-    
-    var p = program[v];
     
     // counting loop
-    if (p is int) {
+    if (param.value is int) {
+      int p = param.value as int; 
+      String v = "repeat-counter-${id}";
+      
+      if (!program.hasVariable(v) || param.changed) {
+        program[v] = p;
+        param.changed = false;
+      } else {
+        p = program[v] as int;
+      }
+    
       if (p <= 0) {
         program.removeVariable(v);
         return end.next;
@@ -76,57 +84,19 @@ class RepeatBlock extends BeginBlock {
     }
     
     // infinite loop
-    else if (p == "forever") {
+    else if (param.value == "forever") {
       return next;
     }
     
     // conditional loops
-    // TODO!!
-    /*
-    else if (param.value == "near-water?") {
-      return frog.nearWater() ? end.next : next;
+    else if (param.value == "near-water?" || param.value == "see-gem?") {
+      return program.getSensorValue(param.value) ? end.next : next;
     }
     
-    else if (param.value == "see-gem?") {
-      return frog.seeGem() ? end.next : next;
-    }
-    */
     else {
       return next;
     }
   }
-
-  
-  void touchUp(Contact c) {
-    super.touchUp(c);
-    if (end == null && isInProgram) {
-      end = new EndRepeat(workspace, this);
-      if (hasNext) {
-        next.prev = end;
-        end.next = next;
-      }
-      next = end;
-      end.prev = this;
-      workspace.addBlock(end);
-    }
-    else if (end != null && !isInProgram) {
-      end.next.prev = end.prev;
-      end.prev.next = end.next;
-      end.prev = null;
-      end.next = null;
-      workspace.removeBlock(end);
-      end = null;
-    }
-  }
 }
 
 
-class EndRepeat extends EndBlock {
-
-  EndRepeat(CodeWorkspace workspace, BeginBlock begin) : super(workspace, begin);  
-
-  
-  Block step(Program program) {
-    return begin;
-  }
-}

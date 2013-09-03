@@ -57,12 +57,13 @@ class Menu implements Touchable {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
       ctx.fillRect(x, y, w, h);
       
-      num bx = x + BLOCK_WIDTH * 0.2;
+      num bx = x + BLOCK_WIDTH;
       num by = y + h * 0.5;
       
       for (Block block in blocks) {
         block.x = bx;
         block.y = by - block.height / 2;
+        block.inMenu = true;
         block.draw(ctx);
         bx += block.width + 10;
       }

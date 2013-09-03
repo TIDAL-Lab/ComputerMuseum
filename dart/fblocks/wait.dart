@@ -27,7 +27,7 @@ class WaitBlock extends Block {
 
   
   WaitBlock(CodeWorkspace workspace) : super(workspace, 'wait\nfor') {
-    color = '#b67196';
+    color = '#c92';
     param = new Parameter(this);
     param.values = [ 'fly', 'sound' ];
   }
