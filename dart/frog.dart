@@ -165,20 +165,6 @@ class Frog extends Turtle implements Touchable {
   }
   
   
-  void drawLabel(CanvasRenderingContext2D ctx) {
-    if (label != null) {
-      ctx.save();
-      ctx.globalAlpha = 1.0;
-      ctx.textBaseline = "top";
-      ctx.textAlign = "center";
-      ctx.fillStyle = "white";
-      ctx.font = "200 16px sans-serif";
-      ctx.fillText(label, x, y + 52);
-      ctx.restore();
-    }
-  }
-  
-  
   void drawProgram(CanvasRenderingContext2D ctx) {
 /*
     if (program != null) {
