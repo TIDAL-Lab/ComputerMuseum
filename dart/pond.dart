@@ -229,6 +229,22 @@ class FrogPond extends TouchManager {
   
   
 /**
+ * Is there a frog still running a program?
+ */
+  bool isProgramRunning(String workspace) {
+    bool running = false;
+    for (Frog frog in frogs) {
+      if (frog['workspace'] == workspace) {
+        if (frog.program.isRunning) {
+          running = true;
+        }
+      }
+    }
+    return running;
+  }
+  
+  
+/**
  * Adds a new random fly to the pond
  */
   void addFly() {
