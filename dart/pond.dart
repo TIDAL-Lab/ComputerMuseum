@@ -158,13 +158,13 @@ class FrogPond extends TouchManager {
 /**
  * Count the number of frogs of a given color
  */
-  int getFrogCount([String name = null]) {
-    if (name == null) {
+  int getFrogCount([String workspaceName = null]) {
+    if (workspaceName == null) {
       return frogs.length;
     } else {
       int count = 0;
       for (Frog frog in frogs) {
-        if (frog["workspace"] == name) {
+        if (frog["workspace"] == workspaceName) {
           count++;
         }
       }
@@ -417,7 +417,14 @@ class FrogPond extends TouchManager {
 
     // remove dead frogs, flies, and gems
     removeDeadGems();
-    if (removeDeadFrogs()) refresh = true;
+    if (removeDeadFrogs()) {
+      refresh = true;
+      for (CodeWorkspace workspace in workspaces) {
+        if (getFrogCount(workspace.name) == 0) {
+          addHomeFrog(workspace);
+        }
+      }
+    }
     
     // animate agents and workspaces
     for (Gem gem in gems) {
