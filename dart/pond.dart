@@ -140,7 +140,6 @@ class FrogPond extends TouchManager {
     Frog frog = new Frog(this);
     frog["workspace"] = workspace.name;
     workspace.moveFrogHome(frog);
-    frog.heading = PI / 2;
     frog.program = new Program(workspace.start, frog);
     frog.img.src = "images/${workspace.color}frog.png";
     addFrog(frog);
@@ -199,10 +198,15 @@ class FrogPond extends TouchManager {
 /**
  * Remove dead frogs
  */
-  void removeDeadFrogs() {
+  bool removeDeadFrogs() {
+    int count = 0;
     for (int i=frogs.length-1; i >= 0; i--) {
-      if (frogs[i].dead) removeFrog(frogs[i]);
+      if (frogs[i].dead) {
+        removeFrog(frogs[i]);
+        count++;
+      }
     }
+    return count > 0;
   }
   
   
@@ -243,17 +247,33 @@ class FrogPond extends TouchManager {
   }
 
 
-  void playProgram(String workspace) {
-    int count = 0;
+  void playProgram(CodeWorkspace workspace) {
+    int count = getFrogCount(workspace.name);
+    if (count == 0) addHomeFrog(workspace);
     for (Frog frog in frogs) {
-      if (frog["workspace"] == workspace) {
-        count++;
+      if (frog["workspace"] == workspace.name) {
         frog.program.play();
       }
     }
-    if (count == 0) {
-      // TODO fixme
+  }
+  
+  
+  void pauseProgram(CodeWorkspace workspace) {
+    for (Frog frog in frogs) {
+      if (frog["workspace"] == workspace.name) {
+        frog.program.pause();
+      }
     }
+  }
+  
+  
+  void restartProgram(CodeWorkspace workspace) {
+    for (Frog frog in frogs) {
+      if (frog["workspace"] == workspace.name) {
+        frog.die();
+      }
+    }
+    addHomeFrog(workspace);
   }
   
   
@@ -325,7 +345,7 @@ class FrogPond extends TouchManager {
       if (workspace.name == frog["workspace"]) {
         workspace.status.captureFly();
         fly.die();
-        pond.addFly();
+        addFly();
       }
     }
   }
@@ -397,7 +417,7 @@ class FrogPond extends TouchManager {
 
     // remove dead frogs, flies, and gems
     removeDeadGems();
-    removeDeadFrogs();
+    if (removeDeadFrogs()) refresh = true;
     
     // animate agents and workspaces
     for (Gem gem in gems) {
