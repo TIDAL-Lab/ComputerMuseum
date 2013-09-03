@@ -61,7 +61,7 @@ class CodeWorkspace extends TouchManager {
     registerEvents(document.documentElement);
     
     menu = new Menu(this, 0, height - BLOCK_HEIGHT * 1.85, width, BLOCK_HEIGHT * 1.85);
-    status = new StatusInfo(this, width - 280, height - 115, 280, 115);
+    status = new StatusInfo(this, width - 220, height - 100, 220, 100);
     
     Block block;
     Parameter param;
@@ -108,7 +108,7 @@ class CodeWorkspace extends TouchManager {
     menu.addBlock(new WaitBlock(this));
         
     // START block
-    start = new StartBlock(this, 150.0, height - 185.0);
+    start = new StartBlock(this);
     addBlock(start);
     
     addTouchable(menu);
@@ -205,7 +205,7 @@ class CodeWorkspace extends TouchManager {
   Block findInsertionPoint(Block target) {
     if (target == start) return null;
     Block block = start;
-    while (block != null) {
+    while (block != null && !(block is EndProgramBlock)) {
       if (block.overlaps(target) && target.checkSyntax(block)) {
         return block;
       }
@@ -223,6 +223,13 @@ class CodeWorkspace extends TouchManager {
  */
   bool animate() {
     bool refresh = false;
+
+    // change in program state...    
+    bool running = pond.isProgramRunning(name);
+    if (running != start.playing) {
+      refresh = true;
+      start.playing = running;
+    }
     
     for (Block block in blocks) {
       if (!block.hasPrev) {
@@ -243,8 +250,6 @@ class CodeWorkspace extends TouchManager {
       
       // erase the background
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      ctx.fillRect(0, height - 200, width, 200);
       
       // draw the menu
       menu.draw(ctx);
