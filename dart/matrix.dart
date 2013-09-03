@@ -98,6 +98,11 @@ class Matrix2D {
   }
   
   
+  num transformTheta(num theta) {
+    return theta + asin(xform[3]);
+  }
+  
+  
   num transformX(num x, num y) {
     return x * xform[0] + y * xform[1] + xform[2];
   }
