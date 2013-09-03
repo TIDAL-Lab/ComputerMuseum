@@ -134,7 +134,7 @@ class Program {
   
   
   bool get isFinished {
-    return (curr is EndProgramBlock);
+    return (curr is EndProgramBlock && !tween.isTweening());
   }
   
   
