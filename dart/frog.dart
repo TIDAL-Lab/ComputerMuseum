@@ -89,7 +89,6 @@ class Frog extends Turtle implements Touchable {
  * Push other frogs out of the way
  */
   void push(num distance) {
-    /*
     for (Frog frog in pond.getFrogsHere(this)) {
       double angle = angleBetween(frog);
       if (angle.abs() < 90.0) {
@@ -105,7 +104,6 @@ class Frog extends Turtle implements Touchable {
         }
       }
     }
-    */
   }
   
   
