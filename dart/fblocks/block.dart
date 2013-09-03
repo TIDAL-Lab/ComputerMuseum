@@ -50,6 +50,9 @@ class Block implements Touchable {
   /* Block dimensions */
   double x = 0.0, y = 0.0, _width = 0.0, _height = 0.0;
   
+  /* For animating blocks */
+  double _targetX = null, _targetY = null;
+  
   /* Text displayed inside the block */
   String text = 'hop';
   
@@ -143,6 +146,7 @@ class Block implements Touchable {
   
   
   num get targetX {
+    if (_targetX != null) return _targetX;
     num tx = hasPrev ? prev.connectorX : x;
     if (BLOCK_ORIENTATION == HORIZONTAL && hasPrev && prev.candidate != null) {
       tx += prev.candidate.width + BLOCK_SPACE;
@@ -152,6 +156,7 @@ class Block implements Touchable {
 
   
   num get targetY {
+    if (_targetY != null) return _targetY;
     if (BLOCK_ORIENTATION == HORIZONTAL) {
       return hasPrev ? prev.connectorY : y;
     } else {
@@ -190,7 +195,7 @@ class Block implements Touchable {
     return (x <= other.x + other.width + BLOCK_SPACE &&
             other.x <= x + width * 1.1 + BLOCK_SPACE &&
             y <= other.y + other.height + BLOCK_SPACE &&
-            other.y <= y + height + BLOCK_SPACE);
+            other.y <= y + height * 1.1 + BLOCK_SPACE);
   }
   
   
@@ -244,8 +249,16 @@ class Block implements Touchable {
   bool animate() {
     double dx = targetX - x;
     double dy = targetY - y;
-    if (dx.abs() > 1) dx *= 0.3;
-    if (dy.abs() > 1) dy *= 0.3;
+    if (dx.abs() > 1) {
+      dx *= 0.3;
+    } else {
+      _targetX = null;
+    }
+    if (dy.abs() > 1) {
+      dy *= 0.3;
+    } else {
+      _targetY = null;
+    }
     
     if (dx.abs() > 0 || dy.abs() > 0) {
       move(dx, dy);
@@ -314,7 +327,7 @@ class Block implements Touchable {
     //-------------------------------------------
     // expand width if the parameter value is long
     //-------------------------------------------
-    if (param != null) {
+    if (param != null && !wasInMenu) {
       double cw = param.getDisplayWidth(ctx) + param.centerX - 14;
       _width = max(cw, BLOCK_WIDTH);
     }
