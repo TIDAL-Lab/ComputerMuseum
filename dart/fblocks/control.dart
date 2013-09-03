@@ -43,6 +43,7 @@ class BeginBlock extends Block {
   
   
   num get targetY {
+    if (_targetY != null) return _targetY;
     if (BLOCK_ORIENTATION == VERTICAL) {
       num ty = hasNext ? next.targetY - height - BLOCK_SPACE : y;
       if (candidate != null) {
@@ -80,11 +81,23 @@ class BeginBlock extends Block {
   }
   
   
+  bool overlaps(Block other) {
+    if (end != null && end == next) {
+      return (x <= other.x + other.width + BLOCK_SPACE &&
+              other.x <= x + width + BLOCK_SPACE &&
+              y <= other.y + other.height + BLOCK_SPACE &&
+              other.y <= end.y + BLOCK_SPACE);
+    } else {
+      return super.overlaps(other);
+    }
+  }
+  
+  
   void _outline(CanvasRenderingContext2D ctx, num x, num y, num w, num h) {
     if (end != null && !dragging) {
       
-      num r0 = hasPrev ? 2 : 14;
-      num r1 = hasPrev ? 2 : 14;
+      num r0 = (prev == null || prev is BeginBlock) ? 14 : 2;
+      num r1 = (next == null || end.next is EndBlock || end.next == null) ? 14 : 2;
       num r2 = 2;
       num n = 20;
       //if (dragging) {
