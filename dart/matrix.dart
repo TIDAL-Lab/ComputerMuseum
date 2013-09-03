@@ -79,9 +79,9 @@ class Matrix2D {
   
   void setTransform(num m11, num m12, num m21, num m22, num dx, num dy) {
     xform[0] = m11;
-    xform[1] = m12;
+    xform[1] = m21; //m12;
     xform[2] = dx;
-    xform[3] = m21;
+    xform[3] = m12; //m21;
     xform[4] = m22;
     xform[5] = dy;
     xform[6] = 0.0;
@@ -93,22 +93,22 @@ class Matrix2D {
   void transformContact(Contact c) {
     double tx = c.touchX * xform[0] + c.touchY * xform[1] + xform[2];
     double ty = c.touchX * xform[3] + c.touchY * xform[4] + xform[5];
-    c.touchX = -tx;
-    c.touchY = -ty;
+    c.touchX = tx;
+    c.touchY = ty;
   }
   
   
   num transformX(num x, num y) {
-    return (x * xform[0] + y * xform[1] + xform[2]) * -1;
+    return x * xform[0] + y * xform[1] + xform[2];
   }
   
   
   num transformY(num x, num y) {
-    return -1 * (x * xform[3] + y * xform[4] + xform[5]);
+    return x * xform[3] + y * xform[4] + xform[5];
   }
   
   
   void transformContext(CanvasRenderingContext2D ctx) {
-    ctx.transform(xform[0], xform[1], xform[3], xform[4], xform[2], xform[5]);
+    ctx.transform(xform[0], xform[3], xform[1], xform[4], xform[2], xform[5]);
   }
 }
