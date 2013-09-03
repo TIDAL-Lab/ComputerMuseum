@@ -80,6 +80,12 @@ class StatusInfo {
   }
   
   
+  void captureFly() {
+    fly_count++;
+    workspace.draw();
+  }
+  
+  
   void draw(CanvasRenderingContext2D ctx) {
     ctx.save();
     {
@@ -110,14 +116,18 @@ class StatusInfo {
         ix += gem.width ~/ 2 + 10;
       }
       
-      ix = x + 30 + frog.width;
+      ix = x + 20 + (frog.width * 0.75).toInt();
       iy = y + 30;
       iw = (fly.width * 0.6).toInt();
       ih = (fly.height * 0.6).toInt();
-      for (int i=0; i<min(fly_count, 6); i++) {
-        ctx.drawImageScaled(fly, ix, iy, iw, ih);
-        ix += fly.width;
-      }
+      ctx.drawImageScaled(fly, ix, iy, iw, ih);
+      
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.font = "300 20px sans-serif";
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText("x  ${fly_count}", ix + iw + 15, iy + ih);
+
       
       if (captured != null) {
         captured.draw(ctx);

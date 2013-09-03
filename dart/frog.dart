@@ -153,10 +153,9 @@ class Frog extends Turtle implements Touchable {
   void eatFly() {
     if (prey == null) {
       Fly fly = pond.getFlyHere(tongueX, tongueY);
-      if (fly != null) {
+      if (fly != null && !fly.dead) {
         prey = fly.hatch();
-        fly.die();
-        pond.addFly();
+        pond.captureFly(this, fly);
       }
     } else {
       prey.x = tongueX;

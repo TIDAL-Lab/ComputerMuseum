@@ -300,6 +300,21 @@ class FrogPond extends TouchManager {
   
   
 /**
+ * Capture a fly
+ */
+  void captureFly(Frog frog, Fly fly) {
+    // first find the workspace
+    for (CodeWorkspace workspace in workspaces) {
+      if (workspace.name == frog["workspace"]) {
+        workspace.status.captureFly();
+        fly.die();
+        pond.addFly();
+      }
+    }
+  }
+  
+  
+/**
  * Adds a random gem to the pond in a place where there are no frogs... give up
  * after a few tries and try again later.
  */
@@ -356,7 +371,7 @@ class FrogPond extends TouchManager {
     }
   }
   
-  
+
 /**
  * Animate all of the agents and the workspaces
  */
