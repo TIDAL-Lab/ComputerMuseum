@@ -236,14 +236,11 @@ class CodeWorkspace extends TouchManager {
         refresh = true;
         start.playing = true;
       }
-    } else if (pond.isProgramFinished(name)) {
-      if (start.playing) {
-        refresh = true;
-        start.playing = false;
-      }
+    } else if (start.playing) {
+      refresh = true;
+      start.playing = false;
       bug.reset();
     }
-
     
     for (Block block in blocks) {
       if (!block.hasPrev) {
@@ -275,6 +272,13 @@ class CodeWorkspace extends TouchManager {
     if (start.playing) {
       bug.target = frog.program.curr;
     }
+  }
+  
+  
+  void moveFrogHome(Frog frog) {
+    frog.x = objectToWorldX(width / 2, height - 300.0);
+    frog.y = objectToWorldY(width / 2, height - 300.0);
+    frog.heading = objectToWorldTheta(0);
   }
   
   
@@ -350,34 +354,23 @@ class CodeWorkspace extends TouchManager {
  * Resume the program for all frogs
  */
   void playProgram() {
-    pond.playProgram(name);
+    pond.playProgram(this);
   }
 
   
 /**
  * Pause a running program for all frogs
  */
-/*
   void pauseProgram() {
-    for (Frog frog in pond.frogs) {
-      if (frog.workspace == this && frog.program != null) {
-        frog.program.pause();
-      }
-    }
+    pond.pauseProgram(this);
   }
-  */
+
   
 /**
  * Restart the program for all frogs
  */
-/*
   void restartProgram() {
-    for (Frog frog in pond.frogs) {
-      if (frog.workspace == this && frog.program != null) {
-        frog.program.restart();
-      }
-    }
+    pond.restartProgram(this);
+    draw();
   }
-  */
-  
 }
