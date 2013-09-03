@@ -158,7 +158,11 @@ class StartBlock extends BeginBlock {
   void touchUp(Contact c) {
     dragging = false;
     if (down && onButton(c)) {
-      workspace.playProgram();
+      if (playing) {
+        workspace.restartProgram();
+      } else {
+        workspace.playProgram();
+      }
     } else if (!down && isOutOfBounds()) {
       _targetX = getStartX();
       end._targetY = getStartY() + height;
