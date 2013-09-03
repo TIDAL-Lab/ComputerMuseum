@@ -54,13 +54,13 @@ class BeginBlock extends Block {
       if (candidate != null) {
         ty -= candidate.height + BLOCK_SPACE;
       }
-      //if (end != null && next == end) {
-      //  ty -= 30;
-      //}
+      if (end != null && next == end) {
+        ty -= 30;
+      }
       return ty;
     }
     return super.targetY;
-  }  
+  }
 
   
 /**
@@ -83,18 +83,6 @@ class BeginBlock extends Block {
       after = after.next;
     }
     return false;
-  }
-  
-  
-  bool overlaps(Block other) {
-    if (end != null && end == next) {
-      return (x <= other.x + other.width + BLOCK_SPACE &&
-              other.x <= x + width + BLOCK_SPACE &&
-              y <= other.y + other.height + BLOCK_SPACE &&
-              other.y <= end.y + BLOCK_SPACE);
-    } else {
-      return super.overlaps(other);
-    }
   }
   
   
@@ -152,6 +140,18 @@ class BeginBlock extends Block {
       super._outline(ctx, x, y, w, h);
     }
   }
+  
+  
+  bool touchDown(Contact c) {
+    if (end != null) {
+      if (end.hasPrev) end.prev.next = end.next;
+      if (end.hasNext) end.next.prev = end.prev;
+      end.prev = null;
+      end.next = null;
+      end = null;
+    }
+    return super.touchDown(c);
+  }
 
   
   void touchUp(Contact c) {
@@ -166,6 +166,7 @@ class BeginBlock extends Block {
       end.prev = this;
       workspace.addBlock(end);
     }
+    /*
     else if (end != null && !isInProgram) {
       end.next.prev = end.prev;
       end.prev.next = end.next;
@@ -174,6 +175,7 @@ class BeginBlock extends Block {
       workspace.removeBlock(end);
       end = null;
     }
+    */
   }
 }
 
@@ -205,9 +207,6 @@ class EndBlock extends Block {
     var pval = (param == null) ? null : param.value;
     program.doCommand("end ${begin.text}", pval);
   }
-  
-  
-  num get height => (prev == begin) ? _height * 3 : _height;
   
   
   num get connectorX {
