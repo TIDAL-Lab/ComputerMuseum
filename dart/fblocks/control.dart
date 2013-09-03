@@ -143,7 +143,7 @@ class BeginBlock extends Block {
   
   
   bool touchDown(Contact c) {
-    if (end != null) {
+    if (end != null && next == end) {
       if (end.hasPrev) end.prev.next = end.next;
       if (end.hasNext) end.next.prev = end.prev;
       end.prev = null;
