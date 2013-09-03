@@ -29,13 +29,20 @@ class StartBlock extends BeginBlock {
   
   double _pulse = 1.0;
   
+  bool down = false;
+  
+  bool playing = false;
+  
   Tween tween = new Tween();
   
+  ImageElement _play = new ImageElement();
+  ImageElement _restart = new ImageElement();
   
   
-  StartBlock(CodeWorkspace workspace, double x, double y) : super(workspace, 'start') {
-    this.x = x;
-    this.y = y;
+  
+  StartBlock(CodeWorkspace workspace) : super(workspace, 'start') {
+    x = getStartX();
+    y = getStartY();
     color = 'green';
     end = new EndProgramBlock(workspace, this);
     end.y = y + height + BLOCK_MARGIN + 20;
@@ -43,6 +50,24 @@ class StartBlock extends BeginBlock {
     next = end;
     workspace.addBlock(end);
     _width = BLOCK_WIDTH + BLOCK_MARGIN;
+    _play.src = "images/play.png";
+    _restart.src = "images/restart.png";
+    wasInMenu = false;
+  }
+  
+  
+  double getProgramHeight() {
+    return (end.y + end.height) - y;
+  }
+  
+  
+  double getStartX() {
+    return workspace.width / 2 - 300.0;
+  }
+  
+  
+  double getStartY() {
+    return workspace.height - 180.0;
   }
   
   
@@ -50,8 +75,8 @@ class StartBlock extends BeginBlock {
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.delay = 5;
-    tween.duration = 30;
-    tween.repeat = 3;
+    tween.duration = 20;
+    tween.repeat = 2;
     tween.onstart = (() => _pulse = 1.0 );
     tween.onend = (() => _pulse = 1.0 );
     tween.ondelta = ((value) {
@@ -76,80 +101,78 @@ class StartBlock extends BeginBlock {
   
   bool get isInProgram => true;
 
+  
   /**
    * Draw the block
    */
   void draw(CanvasRenderingContext2D ctx) {
     super.draw(ctx);
-    ctx.beginPath();
-    int delta = dragging ? 2 : 0;
-    double cx = centerX + delta;
-    double cy = centerY + delta;
-    if (workspace.isProgramRunning()) {
-      _pauseShape(ctx, cx, cy);
-    } else {
-      _playShape(ctx, cx, cy);
-    }
+    num iw = 20;
+    num ih = 20;
+    num ix = x + width - iw - 15;
+    num iy = y + height/2 - ih/2;
+    if (down) ix += 2;
+    if (down) iy += 2;
     ctx.save();
-    {
-      double alpha = _pulse;
-      ctx.shadowOffsetX = 1;
-      ctx.shadowOffsetY = 1;
-      ctx.shadowBlur = 3;
-      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-
-      ctx.fillStyle = "rgba(255, 255, 255, ${alpha})";
-      ctx.fill(); 
+    ctx.globalAlpha  = _pulse;
+    if (playing) {
+      ctx.drawImage(_restart, ix, iy);
+    } else {
+      ctx.drawImage(_play, ix, iy);
     }
     ctx.restore();
   }
   
   
-  void _playShape(CanvasRenderingContext2D ctx, num cx, num cy) {
-    ctx.beginPath();
-    ctx.moveTo(cx + 12, cy);
-    ctx.lineTo(cx - 8, cy - 10);
-    ctx.lineTo(cx - 8, cy + 10);
-    ctx.closePath();
-  }
-  
-  
-  void _pauseShape(CanvasRenderingContext2D ctx, num cx, num cy) {
-    ctx.beginPath();
-    ctx.moveTo(cx - 8, cy - 9);
-    ctx.lineTo(cx - 8, cy + 9);
-    ctx.lineTo(cx - 2, cy + 9);
-    ctx.lineTo(cx - 2, cy - 9);
-    ctx.closePath();
-    ctx.moveTo(cx + 8, cy - 9);
-    ctx.lineTo(cx + 8, cy + 9);
-    ctx.lineTo(cx + 2, cy + 9);
-    ctx.lineTo(cx + 2, cy - 9);
-    ctx.closePath();
+  bool isOutOfBounds() {
+    return (y < getStartY() - getProgramHeight() - 100.0 ||
+            y + getProgramHeight() > workspace.height ||
+            x < 0 ||
+            x + width > workspace.width);
   }
   
   
   bool touchDown(Contact c) {
     dragging = false;
-    _lastX = c.touchX;
-    _lastY = c.touchY;
+    if (onButton(c)) {
+      down = true;
+    } else {
+      _lastX = c.touchX;
+      _lastY = c.touchY;
+    }
     workspace.draw();
-    workspace.playProgram();
     return true;
   }
   
   
   void touchDrag(Contact c) {
-    moveChain(c.touchX - _lastX, c.touchY - _lastY);
-    _lastX = c.touchX;
-    _lastY = c.touchY;
+    if (!down) {
+      moveChain(c.touchX - _lastX, c.touchY - _lastY);
+      _lastX = c.touchX;
+      _lastY = c.touchY;
+    }
     workspace.draw();
   }
   
   
   void touchUp(Contact c) {
     dragging = false;
+    if (down && onButton(c)) {
+      workspace.playProgram();
+    } else if (!down && isOutOfBounds()) {
+      _targetX = getStartX();
+      end._targetY = getStartY() + height;
+    }
+    down = false;
     workspace.draw();
+  }
+  
+  
+  bool onButton(Contact c) {
+    return (c.touchX >= x + width - 35 &&
+            c.touchX <= x + width &&
+            c.touchY >= y &&
+            c.touchY <= y + height);
   }
 }
 
@@ -165,10 +188,6 @@ class EndProgramBlock extends EndBlock {
   
   EndProgramBlock(CodeWorkspace workspace, StartBlock begin) : super(workspace, begin) {
     _width = BLOCK_WIDTH + BLOCK_MARGIN;
-  }
-  
-
-  Block step(Program program) {
-    return this;
+    wasInMenu = false;
   }
 }
