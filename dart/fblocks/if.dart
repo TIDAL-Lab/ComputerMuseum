@@ -77,55 +77,6 @@ class EndIf extends EndBlock {
   }
 
   
-  double getTopLine() {
-    return y - BLOCK_HEIGHT * 1.2;
-  }
-  
-  
-  double getBottomLine() {
-    return y + BLOCK_HEIGHT * 1.2;
-  }
-  
-  
-  num get targetY {
-    if (begin.isInProgram) {
-      return begin.targetY;
-    } else {
-      return super.targetY;
-    }
-  }
-  
-  num get targetX {
-    if (prev == begin) {
-      return prev.connectorX + BLOCK_WIDTH * 1.2;
-    } else {
-      return super.targetX;
-    }
-  }
-  
-  void drawLines(CanvasRenderingContext2D ctx) {
-    if (isInProgram) {
-      double y0 = getTopLine();
-      double y1 = getBottomLine();
-      double x0 = begin.x + BLOCK_WIDTH * 2.1;
-      if (begin != prev) x0 = prev.x;
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(x - BLOCK_WIDTH * 0.4, y0);
-      ctx.lineTo(x0, y0);
-      
-      ctx.moveTo(x, y);
-      ctx.lineTo(x - BLOCK_WIDTH * 0.4, y1);
-      ctx.lineTo(begin.x + BLOCK_WIDTH * 2, y1);
-      
-      ctx.strokeStyle = 'white';
-      ctx.lineWidth = LINE_WIDTH;
-      ctx.lineCap = 'round';
-      ctx.stroke();
-    }
-  }
-
-  
   Block clone() {
     return new EndIf(workspace, begin);
   }
