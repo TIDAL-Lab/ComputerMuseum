@@ -140,33 +140,6 @@ class FrogPond extends TouchManager {
   
   
 /**
- * Preview a programming command
- */
-  void previewBlock(String workspace, String cmd, var param) {
-    for (Frog frog in frogs) {
-      if (frog["workspace"] == workspace) {
-        frog.program.doCommand(cmd, param, true);
-      }
-    }
-  }
-
-
-  void playProgram(String workspace) {
-    int count = 0;
-    for (Frog frog in frogs) {
-      if (frog["workspace"] == workspace) {
-        count++;
-        frog.program.restart();
-        frog.program.play();
-      }
-    }
-    if (count == 0) {
-      // TODO fixme
-    }
-  }
-  
-  
-/**
  * Count the number of frogs of a given color
  */
   int getFrogCount([String name = null]) {
@@ -181,6 +154,19 @@ class FrogPond extends TouchManager {
       }
       return count;
     }
+  }
+  
+
+/**
+ * Frog to trace program execution
+ */
+  Frog getFocalFrog(String workspace) {
+    for (Frog frog in frogs) {
+      if (frog["workspace"] == workspace) {
+        return frog;
+      }
+    }
+    return null;
   }
   
   
@@ -229,15 +215,53 @@ class FrogPond extends TouchManager {
   
   
 /**
+ * Preview a programming command
+ */
+  void previewBlock(String workspace, String cmd, var param) {
+    for (Frog frog in frogs) {
+      if (frog["workspace"] == workspace) {
+        frog.program.doCommand(cmd, param, true);
+      }
+    }
+  }
+
+
+  void playProgram(String workspace) {
+    int count = 0;
+    for (Frog frog in frogs) {
+      if (frog["workspace"] == workspace) {
+        count++;
+        frog.program.play();
+      }
+    }
+    if (count == 0) {
+      // TODO fixme
+    }
+  }
+  
+  
+/**
+ * Are all programs finished running?
+ */
+  bool isProgramFinished(String workspaceName) {
+    bool done = true;
+    for (Frog frog in frogs) {
+      if (frog['workspace'] == workspaceName) {
+        if (!frog.program.isFinished) done = false;
+      }
+    }
+    return done;
+  }
+  
+  
+/**
  * Is there a frog still running a program?
  */
-  bool isProgramRunning(String workspace) {
+  bool isProgramRunning(String workspaceName) {
     bool running = false;
     for (Frog frog in frogs) {
-      if (frog['workspace'] == workspace) {
-        if (frog.program.isRunning) {
-          running = true;
-        }
+      if (frog['workspace'] == workspaceName) {
+        if (frog.program.isRunning) running = true;
       }
     }
     return running;
@@ -389,10 +413,18 @@ class FrogPond extends TouchManager {
     
     gems.forEach((gem) => gem.draw(ctx));
     
-    
     frogs.forEach((frog) => frog.draw(ctx));
     
-    frogs.forEach((frog) => frog.drawProgram(ctx));
+    for (CodeWorkspace workspace in workspaces) {
+      Frog target = getFocalFrog(workspace.name);
+      if (target != null) {
+        if (target.ghost != null && target.ghost.label != null) {
+          workspace.traceExecution(ctx, target.ghost);
+        } else {
+          workspace.traceExecution(ctx, target);
+        }
+      }
+    }
   }
   
   
