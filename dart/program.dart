@@ -134,6 +134,11 @@ class Program {
   }
   
   
+  bool get isPaused {
+    return (!running && curr != null && !isFinished);
+  }
+  
+  
   bool get isFinished {
     return (curr is EndProgramBlock);
   }
@@ -193,11 +198,12 @@ class Program {
     if (frog.inWater()) {
       Sounds.playSound("splash");
       frog.die();
-      return;
     }
     
     // did we capture a gem?
-    frog.captureGem();
+    else {
+      frog.captureGem();
+    }
     
     tween = new Tween();
     tween.delay = 0;
