@@ -45,9 +45,8 @@ class BeginBlock extends Block {
     num ty = hasNext ? next.targetY - height - BLOCK_SPACE : y;
     if (candidate != null) {
       ty -= candidate.height + BLOCK_SPACE;
-    }
-    if (end != null && next == end) {
-      ty -= 30;
+    } else if (end != null && next == end) {
+      ty -= 25;
     }
     return ty;
   }
