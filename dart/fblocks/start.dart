@@ -75,7 +75,7 @@ class StartBlock extends BeginBlock {
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.delay = 5;
-    tween.duration = 20;
+    tween.duration = 30;
     tween.repeat = 2;
     tween.onstart = (() => _pulse = 1.0 );
     tween.onend = (() => _pulse = 1.0 );
@@ -83,7 +83,7 @@ class StartBlock extends BeginBlock {
       _pulse += value;
     });
     tween.addControlPoint(1.0, 0.0);
-    tween.addControlPoint(0.0, 0.5);
+    tween.addControlPoint(0.3, 0.5);
     tween.addControlPoint(1.0, 1.0);
   }
   
