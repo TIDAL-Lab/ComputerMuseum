@@ -36,6 +36,8 @@ class TraceBug {
   
   TraceBug(this.start) {
     target = start;
+    x = targetX;
+    y = targetY;
   }
   
   
