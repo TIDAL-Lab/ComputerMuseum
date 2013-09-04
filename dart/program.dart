@@ -263,7 +263,7 @@ class Program {
     num angle = 30;
     if (param is num) {
       angle = param;
-    } else if (param.toString() == '?') {
+    } else if (param.toString() == 'random') {
       angle = Turtle.rand.nextInt(90).toDouble();
     }
     if (cmd == 'right') {
