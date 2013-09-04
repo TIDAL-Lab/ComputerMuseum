@@ -107,9 +107,9 @@ class FrogPond extends TouchManager {
     new Timer.periodic(const Duration(milliseconds : 40), animate);
     
     // master timeout
-    resetMasterTimeout();
-    document.documentElement.onMouseDown.listen((e) => resetMasterTimeout());
-    document.documentElement.onTouchStart.listen((e) => resetMasterTimeout());
+    //resetMasterTimeout();
+    //document.documentElement.onMouseDown.listen((e) => resetMasterTimeout());
+    //document.documentElement.onTouchStart.listen((e) => resetMasterTimeout());
   }
   
   
