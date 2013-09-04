@@ -215,21 +215,22 @@ class CodeWorkspace extends TouchManager {
  */
   Block findInsertionPoint(Block target) {
     if (target == start) return null;
+    
     Block block = start;
+    Block result = null;
     while (block != null) {
-      if (block.overlaps(target)) {
-        if (block is EndProgramBlock && target.checkSyntax(block.prev)) {
-          return block.prev;
-        } else if (target.checkSyntax(block)) {
-          return block;
-        }
+      if (block.overlaps(target) && target.checkSyntax(block)) {
+        result = block;
       }
       block = block.next;
     }
-    if (target.wasInMenu) {
+    if (result == null && target.wasInMenu) {
       return start.end.prev;
+    } else if (target.y > start.end.y) {
+      return null;
+    } else {
+      return result;
     }
-    return null;
   }
   
   
@@ -316,17 +317,10 @@ class CodeWorkspace extends TouchManager {
           Block b = findInsertionPoint(target);
           if (b != null) {
             b.candidate = target;
-            b.drawSocket(ctx);
           }
         }
       }
       
-      //------------------------------------------------
-      // draw shadows
-      //------------------------------------------------
-      for (Block block in blocks) {
-        block.drawShadow(ctx);
-      }
       
       //------------------------------------------------
       // draw blocks themselves
