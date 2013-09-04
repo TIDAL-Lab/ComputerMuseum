@@ -219,9 +219,9 @@ class Parameter implements Touchable {
     double cy = centerY + block.y;
     return (block.isInProgram && 
             c.touchX >= cx - width/2 &&
-            c.touchY >= cy - height/2 &&
-            c.touchX <= cx + width/2 &&
-            c.touchY <= cy + height/2);
+            c.touchY >= block.y &&
+            c.touchX <= block.x + block.width &&
+            c.touchY <= block.y + block.height);
   }
   
   
