@@ -87,7 +87,7 @@ class BeginBlock extends Block {
   
   
   void _outline(CanvasRenderingContext2D ctx, num x, num y, num w, num h) {
-    if (end != null && !dragging) {
+    if (end != null && y + h + 20 < end.y) {
       
       num r0 = (prev == null || prev is BeginBlock) ? 14 : 2;
       num r1 = (next == null || end.next is EndBlock || end.next == null) ? 14 : 2;
@@ -142,18 +142,6 @@ class BeginBlock extends Block {
   }
   
   
-  bool touchDown(Contact c) {
-    if (end != null && next == end) {
-      if (end.hasPrev) end.prev.next = end.next;
-      if (end.hasNext) end.next.prev = end.prev;
-      end.prev = null;
-      end.next = null;
-      end = null;
-    }
-    return super.touchDown(c);
-  }
-
-  
   void touchUp(Contact c) {
     super.touchUp(c);
     if (end == null && isInProgram) {
@@ -166,7 +154,6 @@ class BeginBlock extends Block {
       end.prev = this;
       workspace.addBlock(end);
     }
-    /*
     else if (end != null && !isInProgram) {
       end.next.prev = end.prev;
       end.prev.next = end.next;
@@ -175,7 +162,6 @@ class BeginBlock extends Block {
       workspace.removeBlock(end);
       end = null;
     }
-    */
   }
 }
 
@@ -189,7 +175,7 @@ class EndBlock extends Block {
     this.begin = begin;
     color = '#c92';
     x = begin.x;
-    y = begin.y + BLOCK_MARGIN;
+    y = begin.y + begin.height + BLOCK_MARGIN;
     _height = BLOCK_MARGIN * 1.5;
   }
   
@@ -210,7 +196,7 @@ class EndBlock extends Block {
   
   
   num get connectorX {
-    if (BLOCK_ORIENTATION == VERTICAL && begin != null && !begin.dragging) {
+    if (BLOCK_ORIENTATION == VERTICAL && begin != null) {
       return targetX - BLOCK_MARGIN;
     } else {
       return super.connectorX;
@@ -228,11 +214,7 @@ class EndBlock extends Block {
   void draw(CanvasRenderingContext2D ctx) {
     return;
   }
-  
-  void drawShadow(CanvasRenderingContext2D ctx) {
-    return;
-  }
-  
+
   
   bool checkSyntax(Block before) {
     if (before is EndProgramBlock) return false;
