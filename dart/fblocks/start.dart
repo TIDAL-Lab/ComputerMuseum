@@ -31,8 +31,6 @@ class StartBlock extends BeginBlock {
   
   bool pdown = false, rdown = false;
   
-  bool playing = false;
-  
   Tween tween = new Tween();
   
   ImageElement _play = new ImageElement();
@@ -109,7 +107,7 @@ class StartBlock extends BeginBlock {
    */
   void draw(CanvasRenderingContext2D ctx) {
     super.draw(ctx);
-    if (playing) {
+    if (workspace.running) {
       _drawPause(ctx);
     } else {
       _drawPlay(ctx);
@@ -196,7 +194,7 @@ class StartBlock extends BeginBlock {
   void touchUp(Contact c) {
     dragging = false;
     if (pdown && onPlayPauseButton(c.touchX, c.touchY)) {
-      if (playing) {
+      if (workspace.running) {
         workspace.pauseProgram();
       } else {
         workspace.playProgram();
