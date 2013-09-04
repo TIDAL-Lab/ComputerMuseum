@@ -91,9 +91,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="283.60263"
-     inkscape:cy="-377.59202"
+     inkscape:zoom="1.4"
+     inkscape:cx="455.0312"
+     inkscape:cy="-359.38974"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -123,8 +123,8 @@
        id="rect3083"
        width="1315.7142"
        height="644.28571"
-       x="-382.85712"
-       y="1433.7906" />
+       x="-293.57141"
+       y="1109.5049" />
     <path
        style="fill:#ffffff;stroke:none;"
        d="m -58.57052,1347.5756 0,-194.9982 191.38553,97.4991 z"
@@ -166,13 +166,14 @@
        style="fill:#ffffff;stroke:none"
        transform="matrix(-0.63123745,0.63123746,-0.63123746,-0.63123745,1365.1104,1531.7037)"
        inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/restart.png"
-       inkscape:export-xdpi="10.121804"
-       inkscape:export-ydpi="10.121804">
+       inkscape:export-xdpi="9.6398134"
+       inkscape:export-ydpi="9.6398134">
       <path
          inkscape:connector-curvature="0"
          id="path2997"
-         d="m 445.42041,768.46637 c -6.70673,-0.008 -13.50037,0.65611 -20.28575,2.02843 a 16.007526,18.960373 0 1 0 5.38671,37.37859 c 39.72088,-8.03344 76.91354,18.24063 84.06984,53.62453 7.1563,35.38389 -15.31371,71.16784 -55.03461,79.20129 -39.72089,8.03346 -76.89796,-18.22219 -84.05428,-53.60609 -0.81213,-4.01556 -1.23473,-8.07004 -1.27661,-12.13374 a 16.007526,18.960373 0 1 0 -32.00881,0.461 c 0.071,6.89864 0.80294,13.77587 2.16401,20.50567 11.85577,58.62002 66.27937,93.13036 120.56239,82.15175 l 0.17125,-0.0369 c 54.19141,-11.06214 92.44123,-66.81823 80.59807,-125.37593 -10.3738,-51.29251 -53.34504,-84.1442 -100.29221,-84.19862 z"
-         style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:64.25609588999999744;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans" />
+         d="m 445.42041,768.46637 c -6.70673,-0.008 -13.50037,0.65611 -20.28575,2.02843 -4.16068,0.79597 -8.0168,3.62823 -10.46837,7.68883 -2.45157,4.0606 -3.4677,9.29841 -2.75855,14.21928 0.70916,4.92088 3.13468,9.46284 6.58466,12.33025 3.44998,2.8674 7.88096,4.02414 12.02897,3.14023 39.72088,-8.03344 75.21619,17.67485 82.37249,53.05875 7.1563,35.38389 -13.61636,71.73362 -53.33726,79.76707 -39.72089,8.03346 -76.89796,-18.22219 -84.05428,-53.60609 -0.81213,-4.01556 -1.23473,-8.07004 -1.27661,-12.13374 0.0144,-5.01296 -1.73233,-10.00092 -4.73807,-13.53008 -3.00575,-3.52916 -7.23203,-5.55433 -11.46399,-5.49338 -4.23196,0.0609 -8.41542,2.20724 -11.34783,5.82192 -2.93241,3.61469 -4.57622,8.65148 -4.45892,13.66254 0.071,6.89864 0.80294,13.77587 2.16401,20.50567 11.85577,58.62002 66.27937,93.13036 120.56239,82.15175 l 0.17125,-0.0369 c 54.19141,-11.06214 92.44123,-66.81823 80.59807,-125.37593 -10.3738,-51.29251 -53.34504,-84.1442 -100.29221,-84.19862 z"
+         style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:64.25609589;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         sodipodi:nodetypes="ccssscssscssscsccscc" />
       <path
          style="fill:#ffffff;stroke:none"
          d="m 401.4465,891.00654 -81.0979,-7e-5 40.54898,-73.66774 z"
