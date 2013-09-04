@@ -97,14 +97,13 @@ class FrogPond extends TouchManager {
     workspaces.add(workspace);
     addHomeFrog(workspace);
 
-/*
+    /*
     CodeWorkspace workspace = new CodeWorkspace(this, width, height, "workspace1", "blue");
     workspaces.add(workspace);
-*/
-//    for (int i=0; i<3; i++) {
-//      addRandomFrog(workspace);
-//    }
-
+    for (int i=0; i<3; i++) {
+      addRandomFrog(workspace);
+    }
+    */
 
     new Timer.periodic(const Duration(milliseconds : 40), animate);
     
