@@ -29,18 +29,19 @@ class StartBlock extends BeginBlock {
   
   double _pulse = 1.0;
   
-  bool down = false;
+  bool pdown = false, rdown = false;
   
   bool playing = false;
   
   Tween tween = new Tween();
   
   ImageElement _play = new ImageElement();
+  ImageElement _pause = new ImageElement();
   ImageElement _restart = new ImageElement();
   
   
   
-  StartBlock(CodeWorkspace workspace) : super(workspace, 'start') {
+  StartBlock(CodeWorkspace workspace) : super(workspace, '') {
     x = getStartX();
     y = getStartY();
     color = 'green';
@@ -51,6 +52,7 @@ class StartBlock extends BeginBlock {
     workspace.addBlock(end);
     _width = BLOCK_WIDTH + BLOCK_MARGIN;
     _play.src = "images/play.png";
+    _pause.src = "images/pause.png";
     _restart.src = "images/restart.png";
     wasInMenu = false;
   }
@@ -107,79 +109,121 @@ class StartBlock extends BeginBlock {
    */
   void draw(CanvasRenderingContext2D ctx) {
     super.draw(ctx);
-    num iw = 20;
-    num ih = 20;
-    num ix = x + width - iw - 15;
-    num iy = y + height/2 - ih/2;
-    if (down) ix += 2;
-    if (down) iy += 2;
+    if (playing) {
+      _drawPause(ctx);
+    } else {
+      _drawPlay(ctx);
+    }
+    _drawRestart(ctx);
+  }
+  
+  
+  void _drawPause(CanvasRenderingContext2D ctx) {
+    num ix = x + 35;
+    num iy = y + height/2;
+    num iw = _pause.width;
+    num ih = _pause.height;
+    if (pdown && onPlayPauseButton(_lastX, _lastY)) {
+      ix += 2;
+      iy += 2;
+    }
+    ctx.drawImage(_pause, ix - iw/2, iy - ih/2);
+  }
+  
+  
+  void _drawPlay(CanvasRenderingContext2D ctx) {
+    num ix = x + 35;
+    num iy = y + height/2;
+    num iw = _play.width;
+    num ih = _play.height;
+    if (pdown && onPlayPauseButton(_lastX, _lastY)) {
+      ix += 2;
+      iy += 2;
+    }
     ctx.save();
     ctx.globalAlpha  = _pulse;
-    if (playing) {
-      ctx.drawImage(_restart, ix, iy);
-    } else {
-      ctx.drawImage(_play, ix, iy);
-    }
+    ctx.drawImage(_play, ix - iw/2, iy - ih/2);
     ctx.restore();
+  }
+  
+  
+  void _drawRestart(CanvasRenderingContext2D ctx) {
+    num ix = x + 70;
+    num iy = y + height/2;
+    num iw = _restart.width;
+    num ih = _restart.height;
+    if (rdown && onRestartButton(_lastX, _lastY)) {
+      ix += 2;
+      iy += 2;
+    }
+    ctx.drawImage(_restart, ix - iw/2, iy - ih/2);
   }
   
   
   bool isOutOfBounds() {
     return (y < getStartY() - getProgramHeight() - 100.0 ||
             y + getProgramHeight() > workspace.height ||
-            x < 0 ||
-            x + width > workspace.width);
+            x < 0 || x + width > workspace.width);
   }
   
   
   bool touchDown(Contact c) {
     dragging = false;
-    if (onButton(c)) {
-      down = true;
-    } else {
-      _lastX = c.touchX;
-      _lastY = c.touchY;
-    }
+    pdown = false;
+    rdown = false;
+    if (onPlayPauseButton(c.touchX, c.touchY)) {
+      pdown = true;
+    } else if (onRestartButton(c.touchX, c.touchY)) {
+      rdown = true;
+    } 
+    _lastX = c.touchX;
+    _lastY = c.touchY;
     workspace.draw();
     return true;
   }
   
   
   void touchDrag(Contact c) {
-    if (!down) {
+    if (!pdown && !rdown) {
       moveChain(c.touchX - _lastX, c.touchY - _lastY);
-      _lastX = c.touchX;
-      _lastY = c.touchY;
     }
+    _lastX = c.touchX;
+    _lastY = c.touchY;
     workspace.draw();
   }
   
   
   void touchUp(Contact c) {
     dragging = false;
-    if (down && onButton(c)) {
+    if (pdown && onPlayPauseButton(c.touchX, c.touchY)) {
       if (playing) {
-        workspace.restartProgram();
+        workspace.pauseProgram();
       } else {
         workspace.playProgram();
       }
-    } else if (!down && isOutOfBounds()) {
+    }
+    else if (rdown && onRestartButton(c.touchX, c.touchY)) {
+      workspace.restartProgram();
+    }
+    else if (isOutOfBounds()) {
       _targetX = getStartX();
       end._targetY = getStartY() + height;
     }
-    down = false;
+    pdown = false;
+    rdown = false;
     workspace.draw();
   }
   
   
-  bool onButton(Contact c) {
-    return (c.touchX >= x + width - 35 &&
-            c.touchX <= x + width &&
-            c.touchY >= y &&
-            c.touchY <= y + height);
+  bool onPlayPauseButton(double tx, double ty) {
+    return (tx >= x + 23 && tx <= x + 47 && ty >= y && ty <= y + height);
+  }
+  
+  
+  bool onRestartButton(double tx, double ty) {
+    return (tx >= x + 58 && tx <= x + width && ty >= y && ty <= y + height);
   }
 }
-
 
 
 
