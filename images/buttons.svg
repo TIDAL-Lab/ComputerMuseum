@@ -91,9 +91,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="376.26394"
-     inkscape:cy="-158.82476"
+     inkscape:zoom="0.35"
+     inkscape:cx="283.60263"
+     inkscape:cy="-377.59202"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -118,6 +118,13 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <rect
+       style="fill:#999999;fill-opacity:0.6711111;stroke:none"
+       id="rect3083"
+       width="1315.7142"
+       height="644.28571"
+       x="-382.85712"
+       y="1433.7906" />
     <path
        style="fill:#ffffff;stroke:none;"
        d="m -58.57052,1347.5756 0,-194.9982 191.38553,97.4991 z"
@@ -193,5 +200,37 @@
        inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/restart.png"
        inkscape:export-xdpi="9.932148"
        inkscape:export-ydpi="9.932148" />
+    <g
+       id="g3091"
+       style="fill:#ffffff;fill-opacity:1"
+       transform="matrix(1.1930532,0,0,1.0036764,-45.573003,10.204897)"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/pause.png"
+       inkscape:export-xdpi="9.2647066"
+       inkscape:export-ydpi="9.2647066">
+      <rect
+         y="1148.7908"
+         x="190.26578"
+         height="194.28572"
+         width="45.182716"
+         id="rect3085"
+         style="fill:#ffffff;fill-opacity:1;stroke:none" />
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke:none"
+         id="rect3089"
+         width="45.182716"
+         height="194.28572"
+         x="288.26578"
+         y="1148.7908" />
+    </g>
+    <rect
+       inkscape:export-ydpi="9"
+       inkscape:export-xdpi="9"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/pause.png"
+       y="1125.0765"
+       x="136.12225"
+       height="250"
+       width="250"
+       id="rect3863"
+       style="fill:none;stroke:none" />
   </g>
 </svg>
