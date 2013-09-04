@@ -154,6 +154,11 @@ class Block implements Touchable {
     if (BLOCK_ORIENTATION == HORIZONTAL && hasPrev && prev.candidate != null) {
       tx += prev.candidate.width + BLOCK_SPACE;
     }
+    if (BLOCK_ORIENTATION == VERTICAL && hasPrev && prev.candidate != null) {
+      if (prev.candidate is BeginBlock) {
+        tx += BLOCK_MARGIN;
+      }
+    }
     return tx;
   }
 
@@ -195,11 +200,9 @@ class Block implements Touchable {
  * Does this block overlap with 'other'?
  */
   bool overlaps(Block other) {
-    double ty = y + 12;
     return (x <= other.x + other.width + BLOCK_SPACE &&
-            other.x <= x + width * 1.1 + BLOCK_SPACE &&
-            ty <= other.y + other.height + BLOCK_SPACE &&
-            other.y <= ty + height + BLOCK_SPACE);
+            other.x <= x + width + BLOCK_SPACE &&
+            y <= other.y);
   }
   
   
@@ -287,36 +290,6 @@ class Block implements Touchable {
   }
   
   
-/**
- * Draw drop shadows
- */
-  void drawShadow(CanvasRenderingContext2D ctx) {
-    _outline(ctx, x + 2.5, y + 2.5, width, height);
-    ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
-    ctx.fill();
-  }
-  
-  
-/**
- * Draw sockets where other blocks can be snapped into place
- */
-  void drawSocket(CanvasRenderingContext2D ctx) {
-    if (candidate != null) {
-      ctx.save();
-      {
-        candidate._outline(ctx, connectorX, connectorY, candidate.width, candidate.height);
-        ctx.lineWidth = 1;
-        ctx.setLineDash([8, 5]);
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-        ctx.fill();
-        ctx.stroke();
-      }
-      ctx.restore();
-    }
-  }
-  
-
 /**
  * Draw the block
  */
