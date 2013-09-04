@@ -87,7 +87,7 @@ class BeginBlock extends Block {
   
   
   void _outline(CanvasRenderingContext2D ctx, num x, num y, num w, num h) {
-    if (end != null && y + h + 20 < end.y) {
+    if (end != null && y + h + 16 < end.y) {
       
       num r0 = (prev == null || prev is BeginBlock) ? 14 : 2;
       num r1 = (next == null || end.next is EndBlock || end.next == null) ? 14 : 2;
@@ -176,7 +176,7 @@ class EndBlock extends Block {
     color = '#c92';
     x = begin.x;
     y = begin.y + begin.height + BLOCK_MARGIN;
-    _height = BLOCK_MARGIN * 1.5;
+    _height = BLOCK_MARGIN * 1.8;
   }
   
   
@@ -212,7 +212,6 @@ class EndBlock extends Block {
 
   
   void draw(CanvasRenderingContext2D ctx) {
-    return;
   }
 
   
