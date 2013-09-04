@@ -153,13 +153,14 @@ class FrogPond extends TouchManager {
 /**
  * Adds a new frog for the given workspace
  */
-  void addHomeFrog(CodeWorkspace workspace) {
+  Frog addHomeFrog(CodeWorkspace workspace) {
     Frog frog = new Frog(this);
     frog["workspace"] = workspace.name;
     workspace.moveFrogHome(frog);
     frog.program = new Program(workspace.start, frog);
     frog.img.src = "images/${workspace.color}frog.png";
     addFrog(frog);
+    return frog;
   }
   
 
@@ -290,7 +291,7 @@ class FrogPond extends TouchManager {
         frog.die();
       }
     }
-    addHomeFrog(workspace);
+    addHomeFrog(workspace).pulse();
   }
   
   
@@ -450,7 +451,7 @@ class FrogPond extends TouchManager {
       refresh = true;
       for (CodeWorkspace workspace in workspaces) {
         if (getFrogCount(workspace.name) == 0) {
-          addHomeFrog(workspace);
+          restartProgram(workspace);
         }
       }
     }
