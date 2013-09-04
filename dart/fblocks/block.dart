@@ -26,7 +26,7 @@ part of ComputerHistory;
 const HORIZONTAL = 0;
 const VERTICAL = 1;
 int BLOCK_ORIENTATION = VERTICAL;
-const BLOCK_WIDTH = 85; // 58
+const BLOCK_WIDTH = 95; // 58
 const BLOCK_HEIGHT = 40;
 const LINE_WIDTH = 6.5;
 const BLOCK_SPACE = 0; //11;
@@ -122,7 +122,7 @@ class Block implements Touchable {
   
   bool get isInProgram => hasPrev;
   
-  num get width => inMenu ? _width * 0.8 : _width;
+  num get width => inMenu ? _width * 0.7 : _width;
   
   num get height => _height;
   
@@ -130,30 +130,13 @@ class Block implements Touchable {
   
   num get centerY => y + height / 2;
   
-  num get connectorX {
-    if (BLOCK_ORIENTATION == HORIZONTAL) {
-      return targetX + width + BLOCK_SPACE;
-    } else {
-      return targetX;
-    }
-  }
+  num get connectorX => targetX;
   
-  
-  num get connectorY {
-    if (BLOCK_ORIENTATION == HORIZONTAL) {
-      targetY;
-    } else {
-      return targetY + height + BLOCK_SPACE;
-    }
-  }
-  
+  num get connectorY => targetY + height + BLOCK_SPACE;
   
   num get targetX {
     if (_targetX != null) return _targetX;
     num tx = hasPrev ? prev.connectorX : x;
-    if (BLOCK_ORIENTATION == HORIZONTAL && hasPrev && prev.candidate != null) {
-      tx += prev.candidate.width + BLOCK_SPACE;
-    }
     if (BLOCK_ORIENTATION == VERTICAL && hasPrev && prev.candidate != null) {
       if (prev.candidate is BeginBlock) {
         tx += BLOCK_MARGIN;
@@ -165,15 +148,11 @@ class Block implements Touchable {
   
   num get targetY {
     if (_targetY != null) return _targetY;
-    if (BLOCK_ORIENTATION == HORIZONTAL) {
-      return hasPrev ? prev.connectorY : y;
-    } else {
-      num ty = hasNext ? next.targetY - height - BLOCK_SPACE : y;
-      if (candidate != null) {
-        ty -= candidate.height + BLOCK_SPACE;
-      }
-      return ty;
+    num ty = hasNext ? next.targetY - height - BLOCK_SPACE : y;
+    if (candidate != null) {
+      ty -= candidate.height + BLOCK_SPACE;
     }
+    return ty;
   }
     
   
@@ -287,6 +266,7 @@ class Block implements Touchable {
     target.prev = this;
     if (hasNext) next.prev = target;
     next = target;
+    workspace.stopProgram();
   }
   
   
@@ -394,10 +374,13 @@ class Block implements Touchable {
     wasInProgram = isInProgram;
     _lastX = c.touchX;
     _lastY = c.touchY;
+    
+    // remove block from program
     if (hasPrev) prev.next = next;
     if (hasNext) next.prev = prev;
     prev = null;
     next = null;
+    if (wasInProgram) workspace.stopProgram();
     workspace.moveToTop(this);
     workspace.draw();
     return true;
