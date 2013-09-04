@@ -52,6 +52,9 @@ class CodeWorkspace extends TouchManager {
   /* traces execution of programs as they run */
   TraceBug bug;
   
+  /* is the program currently running? */
+  bool running = false;
+  
   CanvasRenderingContext2D ctx;
 
 
@@ -228,26 +231,24 @@ class CodeWorkspace extends TouchManager {
     }
     return null;
   }
-
-
+  
+  
 /**
  * Animate the blocks and return true if any of the blocks changed
  */
   bool animate() {
     bool refresh = false;
 
-    // change in program state...
-    if (pond.isProgramRunning(name)) {
-      if (!start.playing) {
+    if (running) {
+      if (!pond.isProgramRunning(this.name)) {
+        running = false;
         refresh = true;
-        start.playing = true;
-      }
-    } else if (start.playing) {
-      refresh = true;
-      start.playing = false;
-      bug.reset();
+      } 
+    } else if (pond.isProgramRunning(this.name)) {
+      running = true;
+      refresh = false;
     }
-    
+
     for (Block block in blocks) {
       if (!block.hasPrev) {
         if (block.animate()) refresh = true;
@@ -275,9 +276,7 @@ class CodeWorkspace extends TouchManager {
       ctx.fillText(frog.label, tx, ty + 52);
       ctx.restore();
     }
-    if (start.playing) {
-      bug.target = frog.program.curr;
-    }
+    bug.target = frog.program.curr;
   }
   
   
@@ -339,9 +338,7 @@ class CodeWorkspace extends TouchManager {
       //------------------------------------------------
       // draw the trace bug
       //------------------------------------------------
-      if (start.playing) {
-        bug.draw(ctx);
-      }
+      bug.draw(ctx);
     }
     ctx.restore();
 
@@ -377,6 +374,6 @@ class CodeWorkspace extends TouchManager {
  */
   void restartProgram() {
     pond.restartProgram(this);
-    draw();
+    bug.reset();
   }
 }
