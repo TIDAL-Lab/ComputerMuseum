@@ -38,28 +38,18 @@ class BeginBlock extends Block {
   }
   
   
-  num get connectorX {
-    if (BLOCK_ORIENTATION == VERTICAL) {
-      return targetX + BLOCK_MARGIN;
-    } else {
-      return super.connectorX;
-    }
-  }
-  
+  num get connectorX => targetX + BLOCK_MARGIN;
   
   num get targetY {
     if (_targetY != null) return _targetY;
-    if (BLOCK_ORIENTATION == VERTICAL) {
-      num ty = hasNext ? next.targetY - height - BLOCK_SPACE : y;
-      if (candidate != null) {
-        ty -= candidate.height + BLOCK_SPACE;
-      }
-      if (end != null && next == end) {
-        ty -= 30;
-      }
-      return ty;
+    num ty = hasNext ? next.targetY - height - BLOCK_SPACE : y;
+    if (candidate != null) {
+      ty -= candidate.height + BLOCK_SPACE;
     }
-    return super.targetY;
+    if (end != null && next == end) {
+      ty -= 30;
+    }
+    return ty;
   }
 
   
@@ -94,9 +84,6 @@ class BeginBlock extends Block {
       num r2 = 2;
       num n = 20;
       num endy = end.y + end.height - end._height;
-      //if (dragging) {
-      //  y = min(y, end.y - height - BLOCK_SPACE - 30);
-      //}
       ctx.beginPath();
       ctx.moveTo(x + r0, y);
       if (!(this is StartBlock)) {
@@ -180,6 +167,9 @@ class EndBlock extends Block {
   }
   
   
+  num get connectorX => targetX - BLOCK_MARGIN;
+
+  
   Block step(Program program) {
     if (begin != null) {
       return begin._endStep(program);
@@ -195,15 +185,6 @@ class EndBlock extends Block {
   }
   
   
-  num get connectorX {
-    if (BLOCK_ORIENTATION == VERTICAL && begin != null) {
-      return targetX - BLOCK_MARGIN;
-    } else {
-      return super.connectorX;
-    }
-  }
-
-  
   String compile(int indent) {
     String tab = "";
     for (int i=0; i<indent - 1; i++) tab += "  ";
@@ -211,8 +192,7 @@ class EndBlock extends Block {
   }
 
   
-  void draw(CanvasRenderingContext2D ctx) {
-  }
+  void draw(CanvasRenderingContext2D ctx) { }
 
   
   bool checkSyntax(Block before) {
