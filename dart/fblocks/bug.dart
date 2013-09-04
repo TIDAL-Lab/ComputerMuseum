@@ -70,7 +70,7 @@ class TraceBug {
   
   
   void draw(CanvasRenderingContext2D ctx) {
-    if (target == null) return;
+    if (target == null || target is StartBlock) return;
     
     ctx.beginPath();
     ctx.moveTo(x, y);
