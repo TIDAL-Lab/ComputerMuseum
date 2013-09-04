@@ -87,19 +87,16 @@ class CodeWorkspace extends TouchManager {
     // TURN LEFT block
     block = new Block(this, 'left');
     block.param = new Parameter(block);
-    block.param.values = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, '?' ];
+    block.param.values = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 'random' ];
     block.param.index = 3;
     menu.addBlock(block);
     
     // TURN RIGHT block
     block = new Block(this, 'right');
     block.param = new Parameter(block);
-    block.param.values = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, '?' ];
+    block.param.values = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 'random' ];
     block.param.index = 3;
     menu.addBlock(block);
-    
-    // REST block
-    //menu.addBlock(new Block(this, 'rest'));
     
     // HATCH block
     block = new Block(this, 'hatch');
@@ -195,17 +192,9 @@ class CodeWorkspace extends TouchManager {
  * Add a new block to the end of an existing program
  */
   bool snapToEnd(Block target) {
-    for (Block b in blocks) {
-      if (b is EndProgramBlock) {
-        target.next = b;
-        target.prev = b.prev;
-        b.prev.next = target;
-        b.prev = target;
-        start.pulse();
-        return true;
-      }
-    }
-    return false;
+    start.end.prev.insertBlock(target);
+    start.pulse();
+    return true;
   }
   
 
@@ -305,8 +294,7 @@ class CodeWorkspace extends TouchManager {
       status.draw(ctx);
   
       //----------------------------------------------
-      // for each block being dragged, identify active
-      // insertion points and highlight them
+      // for each block being dragged, identify active insertion points 
       //----------------------------------------------
       for (Block block in blocks) {
         block.candidate = null;
@@ -321,7 +309,6 @@ class CodeWorkspace extends TouchManager {
         }
       }
       
-      
       //------------------------------------------------
       // draw blocks themselves
       //------------------------------------------------
@@ -335,16 +322,18 @@ class CodeWorkspace extends TouchManager {
       bug.draw(ctx);
     }
     ctx.restore();
-
   }
   
   
+/**
+ * Preview a block for all frogs
+ */
   void preview(Block block) {
     var pvalue = null;
     if (block.hasParam) pvalue = block.param.value;
+    pond.pauseProgram(this);
     pond.previewBlock(name, block.text, pvalue);
   }
-  
   
   
 /**
@@ -361,10 +350,18 @@ class CodeWorkspace extends TouchManager {
   void pauseProgram() {
     pond.pauseProgram(this);
   }
+  
+  
+/**
+ * Halts all frogs and restarts their programs
+ */
+  void stopProgram() {
+    pond.stopProgram(this);
+  }
 
   
 /**
- * Restart the program for all frogs
+ * Restart to single frog on home lilypad
  */
   void restartProgram() {
     pond.restartProgram(this);
