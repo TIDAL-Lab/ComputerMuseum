@@ -295,16 +295,28 @@ class FrogPond extends TouchManager {
   
   
 /**
+ * Are all programs paused?
+ */
+  bool isProgramPaused(String workspaceName) {
+    for (Frog frog in frogs) {
+      if (frog["workspace"] == workspaceName) {
+        if (!frog.program.isPaused) return false;
+      }
+    }
+    return true;
+  }
+  
+  
+/**
  * Are all programs finished running?
  */
   bool isProgramFinished(String workspaceName) {
-    bool done = true;
     for (Frog frog in frogs) {
       if (frog['workspace'] == workspaceName) {
-        if (!frog.program.isFinished) done = false;
+        if (!frog.program.isFinished) return false;
       }
     }
-    return done;
+    return true;
   }
   
   
@@ -425,7 +437,7 @@ class FrogPond extends TouchManager {
     }
   }
   
-
+  
 /**
  * Animate all of the agents and the workspaces
  */
