@@ -285,6 +285,15 @@ class FrogPond extends TouchManager {
   }
   
   
+  void stopProgram(CodeWorkspace workspace) {
+    for (Frog frog in frogs) {
+      if (frog["workspace"] == workspace.name) {
+        frog.program.restart();
+      }
+    }
+  }
+  
+  
   void restartProgram(CodeWorkspace workspace) {
     for (Frog frog in frogs) {
       if (frog["workspace"] == workspace.name) {
