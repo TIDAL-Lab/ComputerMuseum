@@ -248,10 +248,7 @@ class Block implements Touchable {
     
     if (dx.abs() > 0 || dy.abs() > 0) {
       move(dx, dy);
-      if (hasNext) next.animate();
       return true;
-    } else if (hasNext) {
-      return next.animate();
     } else {
       return false;
     }
@@ -392,10 +389,9 @@ class Block implements Touchable {
       Sounds.playSound("click");
       workspace.preview(this);
     } else if (wasInMenu && workspace.isOverMenu(this)) {
-      if (workspace.snapToEnd(this)) {
-        Sounds.playSound("click");
-        workspace.preview(this);
-      }
+      workspace.snapToEnd(this);
+      Sounds.playSound("click");
+      workspace.preview(this);
     } else if (workspace.isOffscreen(this) || workspace.isOverMenu(this) || wasInProgram) {
       workspace.removeBlock(this);
       Sounds.playSound("crunch");
