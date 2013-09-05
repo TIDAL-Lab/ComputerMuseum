@@ -233,7 +233,7 @@ class EndProgramBlock extends EndBlock {
 
   
   EndProgramBlock(CodeWorkspace workspace, StartBlock begin) : super(workspace, begin) {
-    _width = BLOCK_WIDTH + BLOCK_MARGIN;
+    _width = (BLOCK_WIDTH + BLOCK_MARGIN).toDouble();
     wasInMenu = false;
   }
   
