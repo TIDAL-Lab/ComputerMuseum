@@ -209,9 +209,11 @@ class EndBlock extends Block {
     }
     return false;
   }  
-  
+
   
   bool touchDown(Contact c) {
-    return false;
+    super.touchDown(c);
+    workspace.moveToTop(begin);
+    return true;
   }
 }
