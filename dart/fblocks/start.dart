@@ -236,4 +236,9 @@ class EndProgramBlock extends EndBlock {
     _width = BLOCK_WIDTH + BLOCK_MARGIN;
     wasInMenu = false;
   }
+  
+  
+  bool touchDown(Contact c) {
+    return false;
+  }
 }
