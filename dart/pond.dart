@@ -150,7 +150,11 @@ class FrogPond extends TouchManager {
   Frog addHomeFrog(CodeWorkspace workspace) {
     Frog frog = new Frog(this);
     frog["workspace"] = workspace.name;
-    workspace.moveFrogHome(frog);
+    double fx = workspace.width / 2;
+    double fy = workspace.height - 300.0;
+    frog.x = workspace.objectToWorldX(fx, fy);
+    frog.y = workspace.objectToWorldY(fx, fy);
+    frog.heading = workspace.objectToWorldTheta(0);
     frog.program = new Program(workspace.start, frog);
     frog.img.src = "images/${workspace.color}frog.png";
     addFrog(frog);
