@@ -82,45 +82,50 @@ class BeginBlock extends Block {
       num r1 = (next == null || end.next is EndBlock || end.next == null) ? 14 : 2;
       num r2 = 2;
       num n = 20;
-      num endy = end.y + end.height - end._height;
+      
+      num y0 = y;
+      num y1 = y + h;
+      num y2 = max(end.y, y1 + 16);
+      num y3 = y2 + end.height;
+
       ctx.beginPath();
-      ctx.moveTo(x + r0, y);
+      ctx.moveTo(x + r0, y0);
       if (!(this is StartBlock)) {
-        ctx.lineTo(x + n, y);
-        ctx.lineTo(x + n + 5, y + 4);
-        ctx.lineTo(x + n + 10, y + 4);
-        ctx.lineTo(x + n + 15, y);
+        ctx.lineTo(x + n, y0);
+        ctx.lineTo(x + n + 5, y0 + 4);
+        ctx.lineTo(x + n + 10, y0 + 4);
+        ctx.lineTo(x + n + 15, y0);
       }
-      ctx.lineTo(x + w - r2, y);
-      ctx.quadraticCurveTo(x + w, y, x + w, y + r2);
-      ctx.lineTo(x + w, y + h - r2);
-      ctx.quadraticCurveTo(x + w, y + h, x + w - r2, y + h);
+      ctx.lineTo(x + w - r2, y0);
+      ctx.quadraticCurveTo(x + w, y0, x + w, y0 + r2);
+      ctx.lineTo(x + w, y1 - r2);
+      ctx.quadraticCurveTo(x + w, y1, x + w - r2, y1);
       n += BLOCK_MARGIN;
-      ctx.lineTo(x + n + 15, y + h);
-      ctx.lineTo(x + n + 10, y + h + 4);
-      ctx.lineTo(x + n + 5, y + h + 4);
-      ctx.lineTo(x + n, y + h);
-      ctx.lineTo(x + BLOCK_MARGIN + 14, y + h);
-      ctx.quadraticCurveTo(x + BLOCK_MARGIN, y + h, x + BLOCK_MARGIN, y + h + 14);
-      ctx.lineTo(x + BLOCK_MARGIN, endy - 14);
-      ctx.quadraticCurveTo(x + BLOCK_MARGIN, endy, x + BLOCK_MARGIN + 14, endy);
-      ctx.lineTo(x + n, endy);
-      ctx.lineTo(x + n + 5, endy + 4);
-      ctx.lineTo(x + n + 10, endy + 4);
-      ctx.lineTo(x + n + 15, endy);
-      ctx.lineTo(x + end.width, endy);
-      ctx.lineTo(x + end.width, end.y + end.height);
+      ctx.lineTo(x + n + 15, y1);
+      ctx.lineTo(x + n + 10, y1 + 4);
+      ctx.lineTo(x + n + 5, y1 + 4);
+      ctx.lineTo(x + n, y1);
+      ctx.lineTo(x + BLOCK_MARGIN + 14, y1);
+      ctx.quadraticCurveTo(x + BLOCK_MARGIN, y1, x + BLOCK_MARGIN, y1 + 14);
+      ctx.lineTo(x + BLOCK_MARGIN, y2 - 14);
+      ctx.quadraticCurveTo(x + BLOCK_MARGIN, y2, x + BLOCK_MARGIN + 14, y2);
+      ctx.lineTo(x + n, y2);
+      ctx.lineTo(x + n + 5, y2 + 4);
+      ctx.lineTo(x + n + 10, y2 + 4);
+      ctx.lineTo(x + n + 15, y2);
+      ctx.lineTo(x + end.width, y2);
+      ctx.lineTo(x + end.width, y3);
       n -= BLOCK_MARGIN;
       if (!(this is StartBlock)) {
-        ctx.lineTo(x + n + 15, end.y + end.height);
-        ctx.lineTo(x + n + 10, end.y + end.height + 4);
-        ctx.lineTo(x + n + 5, end.y + end.height + 4);
-        ctx.lineTo(x + n, end.y + end.height);
+        ctx.lineTo(x + n + 15, y3);
+        ctx.lineTo(x + n + 10, y3 + 4);
+        ctx.lineTo(x + n + 5, y3 + 4);
+        ctx.lineTo(x + n, y3);
       }
-      ctx.lineTo(x + r1, end.y + end.height);
-      ctx.quadraticCurveTo(x, end.y + end.height, x, end.y + end.height - r1);
-      ctx.lineTo(x, y + r0);
-      ctx.quadraticCurveTo(x, y, x + r0, y);
+      ctx.lineTo(x + r1, y3);
+      ctx.quadraticCurveTo(x, y3, x, y3 - r1);
+      ctx.lineTo(x, y0 + r0);
+      ctx.quadraticCurveTo(x, y0, x + r0, y0);
       ctx.closePath();
     } else {
       super._outline(ctx, x, y, w, h);
