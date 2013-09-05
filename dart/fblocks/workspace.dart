@@ -234,6 +234,21 @@ class CodeWorkspace extends TouchManager {
     if (r != running) refresh = true;
     running = r;
 
+    //----------------------------------------------
+    // for each block being dragged, identify active insertion points 
+    //----------------------------------------------
+    for (Block block in blocks) block.candidate = null;
+      
+    for (Block target in blocks) {
+      if (target.dragging) {
+        Block b = findInsertionPoint(target);
+        if (b != null) {
+          b.candidate = target;
+        }
+      }
+    }
+      
+    
     for (Block block in blocks) {
       if (block.animate()) refresh = true;
     }
@@ -282,22 +297,6 @@ class CodeWorkspace extends TouchManager {
       // draw the status bar
       status.draw(ctx);
   
-      //----------------------------------------------
-      // for each block being dragged, identify active insertion points 
-      //----------------------------------------------
-      for (Block block in blocks) {
-        block.candidate = null;
-      }
-      
-      for (Block target in blocks) {
-        if (target.dragging) {
-          Block b = findInsertionPoint(target);
-          if (b != null) {
-            b.candidate = target;
-          }
-        }
-      }
-      
       //------------------------------------------------
       // draw blocks themselves
       //------------------------------------------------
