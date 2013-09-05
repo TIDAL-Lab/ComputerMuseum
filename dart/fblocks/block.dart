@@ -250,7 +250,7 @@ class Block implements Touchable {
       move(dx, dy);
       return true;
     } else {
-      return false;
+      return dragging;
     }
   }
   
@@ -271,7 +271,6 @@ class Block implements Touchable {
  * Draw the block
  */
   void draw(CanvasRenderingContext2D ctx) {
-    
     if (workspace.isOverMenu(this) && dragging && wasInMenu) {
       ctx.fillStyle = 'orange';
       ctx.strokeStyle = 'orange';
@@ -406,7 +405,7 @@ class Block implements Touchable {
     move(c.touchX - _lastX, c.touchY - _lastY);
     _lastX = c.touchX;
     _lastY = c.touchY;
-    workspace.draw();
+    //workspace.draw();
   }
   
   
