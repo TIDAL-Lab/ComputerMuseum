@@ -66,64 +66,68 @@ class CodeWorkspace extends TouchManager {
 
     registerEvents(document.documentElement);
     
+    // menu bar
     menu = new Menu(this, 0, height - BLOCK_HEIGHT * 1.85, width, BLOCK_HEIGHT * 1.85);
+    _initMenu();
+    addTouchable(menu);
+    
+    // status area
     status = new StatusInfo(this, width - 220, height - 100, 220, 100);
     
-    Block block;
-    Parameter param;
-    
-    // HOP block
-    block = new Block(this, 'hop');
-    block.param = new Parameter(block);
-    block.param.values = [ 1, 2, 3, 4 ];
-    menu.addBlock(block);
-    
-    // CHIRP block
-    menu.addBlock(new Block(this, 'chirp'));
-    
-    // EAT block
-    menu.addBlock(new Block(this, 'eat'));
-    
-    // TURN LEFT block
-    block = new Block(this, 'left');
-    block.param = new Parameter(block);
-    block.param.values = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 'random' ];
-    block.param.index = 3;
-    menu.addBlock(block);
-    
-    // TURN RIGHT block
-    block = new Block(this, 'right');
-    block.param = new Parameter(block);
-    block.param.values = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 'random' ];
-    block.param.index = 3;
-    menu.addBlock(block);
-    
-    // HATCH block
-    block = new Block(this, 'hatch');
-    block.color = '#b67196';
-    menu.addBlock(block);
-    
-    // IF block
-    menu.addBlock(new IfBlock(this));
-    
-    // REPEAT block
-    menu.addBlock(new RepeatBlock(this));
-    
-    // WAIT block
-    menu.addBlock(new WaitBlock(this));
-        
-    // START block
+    // start block
     start = new StartBlock(this);
     addBlock(start);
     
-    // Trace bug
+    // trace bug
     bug = new TraceBug(start);
-    
-    addTouchable(menu);
     
     draw();
   }
   
+  
+/**
+ * Resume the program for all frogs
+ */
+  void playProgram() {
+    pond.playProgram(this);
+  }
+
+  
+/**
+ * Pause a running program for all frogs
+ */
+  void pauseProgram() {
+    pond.pauseProgram(this);
+  }
+  
+  
+/**
+ * Halts all frogs and restarts their programs
+ */
+  void stopProgram() {
+    pond.stopProgram(this);
+  }
+
+  
+/**
+ * Restart to single frog on home lilypad
+ */
+  void restartProgram() {
+    pond.restartProgram(this);
+    bug.reset();
+  }
+  
+  
+/**
+ * Preview a block for all frogs
+ */
+  void preview(Block block) {
+    var pvalue = null;
+    if (block.hasParam) pvalue = block.param.value;
+    pond.pauseProgram(this);
+    pond.previewBlock(name, block.text, pvalue);
+  }
+
 
 /**
  * Add a block to the workspace
@@ -146,14 +150,11 @@ class CodeWorkspace extends TouchManager {
   
   
 /**
- * Move a chain of blocks to the top of the visual stack
+ * Move a block to the top of the visual stack
  */
   void moveToTop(Block block) {
-    while (block != null) {
-      removeBlock(block);
-      addBlock(block);
-      block = block.next;
-    }
+    removeBlock(block);
+    addBlock(block);
   }
   
   
@@ -161,7 +162,10 @@ class CodeWorkspace extends TouchManager {
  * Has a block been dragged off of the screen?
  */
   bool isOffscreen(Block block) {
-    return (block.x > width || block.x < 0 || block.y < 0);
+    return (block.x + block.width > width ||
+            block.x < 0 ||
+            block.y + block.height > height ||
+            block.y < 0);
   }
   
   
@@ -191,10 +195,9 @@ class CodeWorkspace extends TouchManager {
 /**
  * Add a new block to the end of an existing program
  */
-  bool snapToEnd(Block target) {
+  void snapToEnd(Block target) {
     start.end.prev.insertBlock(target);
     start.pulse();
-    return true;
   }
   
 
@@ -203,8 +206,6 @@ class CodeWorkspace extends TouchManager {
  * will be inserted into a program
  */
   Block findInsertionPoint(Block target) {
-    if (target == start) return null;
-    
     Block block = start;
     Block result = null;
     while (block != null) {
@@ -229,20 +230,12 @@ class CodeWorkspace extends TouchManager {
   bool animate() {
     bool refresh = false;
 
-    if (running) {
-      if (!pond.isProgramRunning(this.name)) {
-        running = false;
-        refresh = true;
-      } 
-    } else if (pond.isProgramRunning(this.name)) {
-      running = true;
-      refresh = false;
-    }
+    bool r = pond.isProgramRunning(this.name);
+    if (r != running) refresh = true;
+    running = r;
 
     for (Block block in blocks) {
-      if (!block.hasPrev) {
-        if (block.animate()) refresh = true;
-      }
+      if (block.animate()) refresh = true;
     }
     
     if (status.animate()) refresh = true;
@@ -253,6 +246,9 @@ class CodeWorkspace extends TouchManager {
   }
   
   
+/**
+ * Called by pond to trace the execution of the program for the target frog
+ */
   void traceExecution(CanvasRenderingContext2D ctx, Frog frog) {
     if (frog.label != null) {
       ctx.save();
@@ -267,13 +263,6 @@ class CodeWorkspace extends TouchManager {
       ctx.restore();
     }
     bug.target = frog.program.curr;
-  }
-  
-  
-  void moveFrogHome(Frog frog) {
-    frog.x = objectToWorldX(width / 2, height - 300.0);
-    frog.y = objectToWorldY(width / 2, height - 300.0);
-    frog.heading = objectToWorldTheta(0);
   }
   
   
@@ -325,46 +314,49 @@ class CodeWorkspace extends TouchManager {
   }
   
   
-/**
- * Preview a block for all frogs
- */
-  void preview(Block block) {
-    var pvalue = null;
-    if (block.hasParam) pvalue = block.param.value;
-    pond.pauseProgram(this);
-    pond.previewBlock(name, block.text, pvalue);
-  }
-  
-  
-/**
- * Resume the program for all frogs
- */
-  void playProgram() {
-    pond.playProgram(this);
-  }
-
-  
-/**
- * Pause a running program for all frogs
- */
-  void pauseProgram() {
-    pond.pauseProgram(this);
-  }
-  
-  
-/**
- * Halts all frogs and restarts their programs
- */
-  void stopProgram() {
-    pond.stopProgram(this);
-  }
-
-  
-/**
- * Restart to single frog on home lilypad
- */
-  void restartProgram() {
-    pond.restartProgram(this);
-    bug.reset();
+  void _initMenu() {
+    Block block;
+    Parameter param;
+    
+    // HOP block
+    block = new Block(this, 'hop');
+    block.param = new Parameter(block);
+    block.param.values = [ 1, 2, 3, 4 ];
+    menu.addBlock(block);
+    
+    // CHIRP block
+    menu.addBlock(new Block(this, 'chirp'));
+    
+    // EAT block
+    menu.addBlock(new Block(this, 'eat'));
+    
+    // TURN LEFT block
+    block = new Block(this, 'left');
+    block.param = new Parameter(block);
+    block.param.values = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 'random' ];
+    block.param.index = 3;
+    menu.addBlock(block);
+    
+    // TURN RIGHT block
+    block = new Block(this, 'right');
+    block.param = new Parameter(block);
+    block.param.values = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 'random' ];
+    block.param.index = 3;
+    menu.addBlock(block);
+    
+    // HATCH block
+    block = new Block(this, 'hatch');
+    block.color = '#b67196';
+    menu.addBlock(block);
+    
+    // IF block
+    menu.addBlock(new IfBlock(this));
+    
+    // REPEAT block
+    menu.addBlock(new RepeatBlock(this));
+    
+    // WAIT block
+    menu.addBlock(new WaitBlock(this));
+        
   }
 }
