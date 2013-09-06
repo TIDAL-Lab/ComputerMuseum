@@ -72,7 +72,7 @@ class CodeWorkspace extends TouchManager {
     addTouchable(menu);
     
     // status area
-    status = new StatusInfo(this, width - 220, height - 100, 220, 100);
+    status = new StatusInfo(this, width - 150, height - 100, 150, 100);
     
     // start block
     start = new StartBlock(this);
@@ -115,6 +115,24 @@ class CodeWorkspace extends TouchManager {
   void restartProgram() {
     pond.restartProgram(this);
     bug.reset();
+  }
+  
+  
+/**
+ * Erase a program
+ */
+  void removeAllBlocks() {
+    stopProgram();
+    Block block = start.next;
+    while (block != null && block != start.end) {
+      Block b = block.next;
+      block.prev = null;
+      block.next = null;
+      removeBlock(block);
+      block = b;
+    }
+    start.next = start.end;
+    start.end.prev = start;
   }
   
   
@@ -185,6 +203,7 @@ class CodeWorkspace extends TouchManager {
     if (b != null) {
       b.insertBlock(target);
       start.pulse();
+      menu.pulsePlayButton();
       return true;
     } else {
       return false;
@@ -198,6 +217,7 @@ class CodeWorkspace extends TouchManager {
   void snapToEnd(Block target) {
     start.end.prev.insertBlock(target);
     start.pulse();
+    menu.pulsePlayButton();
   }
   
 
@@ -233,6 +253,8 @@ class CodeWorkspace extends TouchManager {
     bool r = pond.isProgramRunning(this.name);
     if (r != running) refresh = true;
     running = r;
+    
+    menu.animate();
 
     //----------------------------------------------
     // for each block being dragged, identify active insertion points 
