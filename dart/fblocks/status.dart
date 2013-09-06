@@ -30,8 +30,6 @@ class StatusInfo {
 
   num x, y, w, h;
   
-  ImageElement frog = new ImageElement();
-  
   ImageElement fly = new ImageElement();
   
   List<Gem> gems = new List<Gem>();
@@ -44,7 +42,6 @@ class StatusInfo {
 
   
   StatusInfo(this.workspace, this.x, this.y, this.w, this.h) {
-    frog.src = "images/${workspace.color}frog.png";
     fly.src = "images/dragonfly.png";
     for (var color in Gem.colors) {
       Gem gem = new Gem.fromColor(color);
@@ -100,14 +97,8 @@ class StatusInfo {
       ctx.fill();
       ctx.stroke();
       
-      int iw = (frog.width * 0.75).toInt();
-      int ih = (frog.height * 0.75).toInt();
-      int ix = x + 10;
-      int iy = y + h - ih;
-      ctx.drawImageScaled(frog, ix, iy, iw, ih);
-      
-      ix += iw + 10;
-      iy = y + h - h ~/ 3;
+      int ix = x + 18;
+      int iy = y + h - h ~/ 3;
       for (Gem gem in gems) {
         ix += gem.width ~/ 2;
         gem.x = ix.toDouble();
@@ -116,11 +107,11 @@ class StatusInfo {
         ix += gem.width ~/ 2 + 10;
       }
       
-      ix = x + 20 + (frog.width * 0.75).toInt();
-      iy = y + 30;
-      iw = (fly.width * 0.6).toInt();
-      ih = (fly.height * 0.6).toInt();
-      ctx.drawImageScaled(fly, ix, iy, iw, ih);
+      ix = x + 40;
+      iy = y + 20;
+      int iw = fly.width;
+      int ih = fly.height;
+      ctx.drawImage(fly, ix, iy);
       
       ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
       ctx.font = "300 20px sans-serif";
