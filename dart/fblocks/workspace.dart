@@ -332,14 +332,14 @@ class CodeWorkspace extends TouchManager {
     // TURN LEFT block
     block = new Block(this, 'left');
     block.param = new Parameter(block);
-    block.param.values = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 'random' ];
+    block.param.values = [ 'random', 10, 20, 30, 40, 50, 60, 70, 80, 90 ];
     block.param.index = 3;
     menu.addBlock(block);
     
     // TURN RIGHT block
     block = new Block(this, 'right');
     block.param = new Parameter(block);
-    block.param.values = [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 'random' ];
+    block.param.values = [ 'random', 10, 20, 30, 40, 50, 60, 70, 80, 90 ];
     block.param.index = 3;
     menu.addBlock(block);
     
