@@ -28,7 +28,7 @@ class RepeatBlock extends BeginBlock {
   RepeatBlock(CodeWorkspace workspace) : super(workspace, 'repeat') {
     param = new Parameter(this);
     param.centerX = width - 7;
-    param.values = [ 2, 3, 4, 5, 'forever', 'near-water?', 'see-gem?' ];
+    param.values = [ 'forever', 2, 3, 4, 5, 'near-water?', 'see-gem?' ];
   }
   
   
