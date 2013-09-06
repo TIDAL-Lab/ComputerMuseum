@@ -27,19 +27,10 @@ part of ComputerHistory;
  */
 class StartBlock extends BeginBlock {
   
-  double _pulse = 1.0;
-  
-  bool pdown = false, rdown = false;
-  
-  Tween tween = new Tween();
-  
-  ImageElement _play = new ImageElement();
-  ImageElement _pause = new ImageElement();
-  ImageElement _restart = new ImageElement();
+  Button _play, _pause, _target = null;
   
   
-  
-  StartBlock(CodeWorkspace workspace) : super(workspace, '') {
+  StartBlock(CodeWorkspace workspace) : super(workspace, 'start') {
     x = getStartX();
     y = getStartY();
     color = 'green';
@@ -48,11 +39,13 @@ class StartBlock extends BeginBlock {
     end.prev = this;
     next = end;
     workspace.addBlock(end);
-    _width = BLOCK_WIDTH + BLOCK_MARGIN;
-    _play.src = "images/play.png";
-    _pause.src = "images/pause.png";
-    _restart.src = "images/restart.png";
     wasInMenu = false;
+    _width = BLOCK_WIDTH + BLOCK_MARGIN;
+    _play = new Button(x + 65, y + height / 2 - 15, "images/toolbar/play.png", () {
+      workspace.playProgram(); });
+    _pause = new Button(x + 65, y + height / 2 - 15, "images/toolbar/pause.png", () {
+      workspace.pauseProgram(); });
+    _pause.visible = false;
   }
   
   
@@ -71,31 +64,16 @@ class StartBlock extends BeginBlock {
   }
   
   
-  void pulse() {
-    tween = new Tween();
-    tween.function = TWEEN_SINE2;
-    tween.delay = 5;
-    tween.duration = 30;
-    tween.repeat = 2;
-    tween.onstart = (() => _pulse = 1.0 );
-    tween.onend = (() => _pulse = 1.0 );
-    tween.ondelta = ((value) {
-      _pulse += value;
-    });
-    tween.addControlPoint(1.0, 0.0);
-    tween.addControlPoint(0.3, 0.5);
-    tween.addControlPoint(1.0, 1.0);
+  bool animate() {
+    bool refresh = super.animate();
+    if (_play.animate()) return true;
+    if (_pause.animate()) return true;
+    return refresh;
   }
   
   
-  bool animate() {
-    bool refresh = super.animate();
-    if (tween.isTweening()) {
-      tween.animate();
-      return true;
-    } else {
-      return refresh;
-    }
+  void pulse() {
+    _play.pulse();
   }
 
   
@@ -107,56 +85,16 @@ class StartBlock extends BeginBlock {
    */
   void draw(CanvasRenderingContext2D ctx) {
     super.draw(ctx);
-    if (workspace.running) {
-      _drawPause(ctx);
-    } else {
-      _drawPlay(ctx);
-    }
-    _drawRestart(ctx);
+    _play.x = x + 65;
+    _play.y = y + height/2 - 15;
+    _pause.x = x + 65;
+    _pause.y = y + height/2 - 15;
+    _play.visible = !workspace.running;
+    _pause.visible = workspace.running;
+    _play.draw(ctx);
+    _pause.draw(ctx);
   }
-  
-  
-  void _drawPause(CanvasRenderingContext2D ctx) {
-    num ix = x + 35;
-    num iy = y + height/2;
-    num iw = _pause.width;
-    num ih = _pause.height;
-    if (pdown && onPlayPauseButton(_lastX, _lastY)) {
-      ix += 2;
-      iy += 2;
-    }
-    ctx.drawImage(_pause, ix - iw/2, iy - ih/2);
-  }
-  
-  
-  void _drawPlay(CanvasRenderingContext2D ctx) {
-    num ix = x + 35;
-    num iy = y + height/2;
-    num iw = _play.width;
-    num ih = _play.height;
-    if (pdown && onPlayPauseButton(_lastX, _lastY)) {
-      ix += 2;
-      iy += 2;
-    }
-    ctx.save();
-    ctx.globalAlpha  = _pulse;
-    ctx.drawImage(_play, ix - iw/2, iy - ih/2);
-    ctx.restore();
-  }
-  
-  
-  void _drawRestart(CanvasRenderingContext2D ctx) {
-    num ix = x + 70;
-    num iy = y + height/2;
-    num iw = _restart.width;
-    num ih = _restart.height;
-    if (rdown && onRestartButton(_lastX, _lastY)) {
-      ix += 2;
-      iy += 2;
-    }
-    ctx.drawImage(_restart, ix - iw/2, iy - ih/2);
-  }
-  
+
   
   bool isOutOfBounds() {
     return (y < getStartY() - getProgramHeight() - 100.0 ||
@@ -167,13 +105,14 @@ class StartBlock extends BeginBlock {
   
   bool touchDown(Contact c) {
     dragging = false;
-    pdown = false;
-    rdown = false;
-    if (onPlayPauseButton(c.touchX, c.touchY)) {
-      pdown = true;
-    } else if (onRestartButton(c.touchX, c.touchY)) {
-      rdown = true;
-    } 
+    _target = null;
+    if (_play.containsTouch(c)) {
+      _target = _play;
+      _play.touchDown(c);
+    } else if (_pause.containsTouch(c)) {
+      _target = _pause;
+      _pause.touchDown(c);
+    }
     _lastX = c.touchX;
     _lastY = c.touchY;
     workspace.draw();
@@ -182,8 +121,10 @@ class StartBlock extends BeginBlock {
   
   
   void touchDrag(Contact c) {
-    if (!pdown && !rdown) {
+    if (_target == null) {
       moveChain(c.touchX - _lastX, c.touchY - _lastY);
+    } else {
+      _target.touchDrag(c);
     }
     _lastX = c.touchX;
     _lastY = c.touchY;
@@ -193,33 +134,15 @@ class StartBlock extends BeginBlock {
   
   void touchUp(Contact c) {
     dragging = false;
-    if (pdown && onPlayPauseButton(c.touchX, c.touchY)) {
-      if (workspace.running) {
-        workspace.pauseProgram();
-      } else {
-        workspace.playProgram();
-      }
-    }
-    else if (rdown && onRestartButton(c.touchX, c.touchY)) {
-      workspace.restartProgram();
+    if (_target != null) {
+      _target.touchUp(c);
     }
     else if (isOutOfBounds()) {
       _targetX = getStartX();
       end._targetY = getStartY() + height;
     }
-    pdown = false;
-    rdown = false;
+    _target = null;
     workspace.draw();
-  }
-  
-  
-  bool onPlayPauseButton(double tx, double ty) {
-    return (tx >= x + 23 && tx <= x + 47 && ty >= y && ty <= y + height);
-  }
-  
-  
-  bool onRestartButton(double tx, double ty) {
-    return (tx >= x + 58 && tx <= x + width && ty >= y && ty <= y + height);
   }
 }
 
