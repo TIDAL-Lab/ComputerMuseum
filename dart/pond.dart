@@ -105,7 +105,7 @@ class FrogPond extends TouchManager {
     }
     */
 
-    new Timer.periodic(const Duration(milliseconds : 40), animate);
+    new Timer.periodic(const Duration(milliseconds : 40), tick);
     
     // master timeout
     if (window.location.search.indexOf("debug=true") < 0) {
@@ -447,21 +447,42 @@ class FrogPond extends TouchManager {
   
   
 /**
+ * Animate and draw
+ */
+  void tick(Timer timer) {
+    flies.forEach((fly) => fly.erase(layer2));
+    
+    bool refresh = false;
+    for (int i=0; i<1; i++) {
+      if (animate()) refresh = true;
+    }
+    if (refresh) drawForeground();
+    flies.forEach((fly) => fly.draw(layer2));
+    
+    // animate code workspaces
+    for (CodeWorkspace workspace in workspaces) {
+      if (getFrogCount(workspace.name) == 0) {
+        restartProgram(workspace);
+      }
+      if (workspace.animate()) {
+        workspace.draw();
+      }
+    }
+  }
+  
+  
+/**
  * Animate all of the agents and the workspaces
  */
-  void animate(Timer timer) {
+  bool animate() {
     bool refresh = false;
 
     // remove dead frogs, flies, and gems
+    removeDeadFlies();
     removeDeadGems();
-    if (removeDeadFrogs()) {
-      refresh = true;
-      for (CodeWorkspace workspace in workspaces) {
-        if (getFrogCount(workspace.name) == 0) {
-          restartProgram(workspace);
-        }
-      }
-    }
+    removeDeadFrogs();
+    
+    flies.forEach((fly) => fly.animate());
     
     // animate agents and workspaces
     for (Gem gem in gems) {
@@ -473,17 +494,7 @@ class FrogPond extends TouchManager {
       if (frogs[i].animate()) refresh = true;
     }
     
-    // animate code workspaces
-    for (CodeWorkspace workspace in workspaces) {
-      if (workspace.animate()) {
-        workspace.draw();
-      }
-    }
-    
-    // redraw
-    if (refresh) drawForeground();
-    
-    drawFlies();
+    return refresh;
   }
   
 
@@ -520,17 +531,5 @@ class FrogPond extends TouchManager {
         }
       }
     }
-  }
-  
-  
-/**
- * Animate and draw flies
- */
-  void drawFlies() {
-    CanvasRenderingContext2D ctx = layer2;
-    flies.forEach((fly) => fly.erase(ctx));
-    flies.forEach((fly) => fly.animate());
-    flies.forEach((fly) => fly.draw(ctx));
-    removeDeadFlies();
   }
 }
