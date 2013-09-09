@@ -192,6 +192,8 @@ class Program {
       doEat(cmd, param, preview);
     } else if (cmd == "hatch") {
       doHatch(cmd, param, preview);
+    } else if (cmd == "die") {
+      doDie(cmd, param, preview);
     } else if (cmd.startsWith("if")) {
       doIf(cmd, param, preview);
     } else if (cmd.startsWith("repeat")) {
@@ -389,6 +391,25 @@ class Program {
         });
       }
     }
+  }
+  
+  
+/**
+ * Kill this frog
+ */
+  void doDie(String cmd, vara param, bool preview) {
+    tween = new Tween();
+    tween.function = TWEEN_DECAY;
+    tween.delay = 0;
+    tween.duration = 8;
+    tween.repeat = 3;
+    tween.addControlPoint(1.0, 0);
+    tween.addControlPoint(0.0, 0.5);
+    tween.addControlPoint(1.0, 1.0);
+    tween.ondelta = ((value) => frog.opacity += value );
+    tween.onend = (() {
+      if (!preview) frog.die();
+    });
   }
   
 
