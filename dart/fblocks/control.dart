@@ -22,47 +22,79 @@
  */
 part of ComputerHistory;
 
-  
-class BeginBlock extends Block {
-  
-  EndBlock end = null;
 
+/**
+ * Superclass for all control blocks (e.g. if, repeat, wait)
+ */
+class ControlBlock extends Block {
+
+  /* Reference to the first block of the control structure */  
+  BeginBlock begin = null;
   
-  BeginBlock(CodeWorkspace workspace, String text) : super(workspace, text) {
-    color = '#c92';
+  /* Next clause in a control structure (e.g. else if, else, end repeat) */
+  ControlBlock cnext = null;
+  
+  /* Previous clause in a control structure (e.g. else if, if, repeat) */
+  ControlBlock cprev = null;
+  
+  
+  ControlBlock(CodeWorkspace workspace, BeginBlock begin, String text) : super(workspace, text) {
+    color = '#c92';  // yellow-orange color
+    this.begin = begin;
   }
   
-  
-  Block _endStep(Program program) {
-    return end.next;
-  }
-  
-  
-  num get connectorX => targetX + BLOCK_MARGIN;
   
   num get targetY {
     if (_targetY != null) return _targetY;
     num ty = hasNext ? next.targetY - height - BLOCK_SPACE : y;
     if (candidate != null) {
-      ty -= candidate.height + BLOCK_SPACE;
-    } else if (end != null && next == end) {
+      ty -= (max(candidate.height, 25) + BLOCK_SPACE);
+    }
+    if (candidate == null && cnext != null && cnext == next) {
       ty -= 25;
     }
     return ty;
   }
+  
+  
+  void draw(CanvasRenderingContext2D ctx) { }
 
   
 /**
  * Make sure blocks are properly nested
  */
   bool checkSyntax(Block before) {
+    
+    // if there's a previous clause, make sure it's before this block
+    if (cprev != null) {
+      Block p = before;
+      while (p != cprev) {
+        if (p == null) {
+          return false;
+        } else {
+          p = p.prev;
+        }
+      }
+    }
+    
+    // if there's a next clause, make sure it's after this block
+    if (cnext != null) {
+      Block a = before.next;
+      while (a != cnext) {
+        if (a == null) {
+          return false;
+        } else {
+          a = a.next;
+        }
+      }
+    }
 
-    int nest = 0;
-    if (end == null) return true;
+    // make sure block is properly nested    
     Block after = before.next;
+    int nest = 0;
     
     while (after != null) {
-      if (after == end) {
+      if (after == cnext) {
         return (nest == 0);
       } else if (after is EndBlock) {
         nest--;
@@ -75,8 +107,135 @@ class BeginBlock extends Block {
   }
   
   
+  bool touchDown(Contact c) {
+    super.touchDown(c);
+    if (inserted && begin != null) workspace.moveToTop(begin);
+    return true;
+  }
+  
+  
+  void touchDrag(Contact c) {
+    if (!inserted) {
+      super.touchDrag(c);
+      return;
+    }
+    double miny = (cprev != null) ? cprev.y + cprev.height + 25 : 0;
+    double maxy = (cnext != null) ? cnext.y - height - 25 : workspace.start.end.y - height;
+    
+    double ty = y + (c.touchY - _lastY);
+    double dx = (this is BeginBlock) ? (c.touchX - _lastX) : 0.0;
+    
+    if (ty < miny) {
+      move(dx, (miny - y));
+      _lastX = c.touchX;
+      _lastY = y;
+    } else if (ty > maxy) {
+      move(dx, (maxy - y));
+      _lastX = c.touchX;
+      _lastY = y;
+    } else {
+      move(dx, c.touchY - _lastY);
+      _lastX = c.touchX;
+      _lastY = c.touchY;
+    }
+  }
+}
+
+
+/**
+ * First block in a control chain
+ */
+class BeginBlock extends ControlBlock {
+  
+  /* Every control squence in a program must have an end block */
+  EndBlock end;
+  
+  BeginBlock(CodeWorkspace workspace, String text) : super(workspace, null, text);
+  
+  num get connectorX => targetX + BLOCK_MARGIN;
+  
+  
+  void draw(CanvasRenderingContext2D ctx) {
+    _resize(ctx);
+    _drawMenuArrow(ctx);
+    _drawOutline(ctx);
+    _drawLabel(ctx);
+    _drawParam(ctx);
+    if (inserted) {
+      ControlBlock b = cnext;
+      while (b != null) {
+        b.x = x;
+        b._resize(ctx);
+        b._drawLabel(ctx);
+        b._drawParam(ctx);
+        b.x += BLOCK_MARGIN;
+        b = b.cnext;
+      }
+    }
+  }
+  
+  
+  void _addClause(ControlBlock clause) {
+    ControlBlock c = this;
+    while (c != null) {
+      if (c.cnext == null) {
+        c.cnext = clause;
+        c.next = clause;
+        clause.cprev = c;
+        clause.prev = c;
+        return;
+      } else {
+        c = c.cnext;
+      }
+    }
+  }
+  
+  
+  Block _endStep(Program program) {
+    return end.next;
+  }
+
+  
+  void _subpath(CanvasRenderingContext2D ctx, ControlBlock b) {
+    num x0 = x;
+    num x1 = x0 + b.width;
+    num y0 = b.y;
+    num y1 = b.y + b.height;
+    num n = 20 + BLOCK_MARGIN;
+    if (b is BeginBlock) n -= BLOCK_MARGIN;
+    if (!(b is StartBlock)) {
+      ctx.lineTo(x0 + n, y0);
+      ctx.lineTo(x0 + n + 5, y0 + 4);
+      ctx.lineTo(x0 + n + 10, y0 + 4);
+      ctx.lineTo(x0 + n + 15, y0);
+    }
+    ctx.lineTo(x1, y0);
+    ctx.lineTo(x1, y1);
+    if (b is BeginBlock) {
+      n += BLOCK_MARGIN;
+    } else if (b is EndBlock) {
+      n -= BLOCK_MARGIN;
+    }
+    if (!(b is EndProgramBlock)) {
+      ctx.lineTo(x0 + n + 15, y1);
+      ctx.lineTo(x0 + n + 10, y1 + 4);
+      ctx.lineTo(x0 + n + 5, y1 + 4);
+      ctx.lineTo(x0 + n, y1);
+    }
+    if (b.cnext != null) {
+      num y2 = b.cnext.y;
+      ctx.lineTo(x0 + BLOCK_MARGIN + 14, y1);
+      ctx.quadraticCurveTo(x0 + BLOCK_MARGIN, y1, x0 + BLOCK_MARGIN, y1 + 14);
+      ctx.lineTo(x0 + BLOCK_MARGIN, y2 - 14);
+      ctx.quadraticCurveTo(x0 + BLOCK_MARGIN, y2, x0 + BLOCK_MARGIN + 14, y2);
+    }    
+  }
+  
+  
   void _outline(CanvasRenderingContext2D ctx, num x, num y, num w, num h) {
-    if (end != null && y + h + 16 < end.y) {
+    if (!inserted) {
+      super._outline(ctx, x, y, w, h);
+    } else {
       
       num r0 = (prev == null || prev is BeginBlock) ? 14 : 2;
       num r1 = (next == null || end.next is EndBlock || end.next == null) ? 14 : 2;
@@ -86,92 +245,66 @@ class BeginBlock extends Block {
       num y0 = y;
       num y1 = y + h;
       num y2 = max(end.y, y1 + 16);
-      num y3 = y2 + end.height;
+      num y3 = end.y + end.height;
 
       ctx.beginPath();
       ctx.moveTo(x + r0, y0);
-      if (!(this is StartBlock)) {
-        ctx.lineTo(x + n, y0);
-        ctx.lineTo(x + n + 5, y0 + 4);
-        ctx.lineTo(x + n + 10, y0 + 4);
-        ctx.lineTo(x + n + 15, y0);
-      }
-      ctx.lineTo(x + w - r2, y0);
-      ctx.quadraticCurveTo(x + w, y0, x + w, y0 + r2);
-      ctx.lineTo(x + w, y1 - r2);
-      ctx.quadraticCurveTo(x + w, y1, x + w - r2, y1);
-      n += BLOCK_MARGIN;
-      ctx.lineTo(x + n + 15, y1);
-      ctx.lineTo(x + n + 10, y1 + 4);
-      ctx.lineTo(x + n + 5, y1 + 4);
-      ctx.lineTo(x + n, y1);
-      ctx.lineTo(x + BLOCK_MARGIN + 14, y1);
-      ctx.quadraticCurveTo(x + BLOCK_MARGIN, y1, x + BLOCK_MARGIN, y1 + 14);
-      ctx.lineTo(x + BLOCK_MARGIN, y2 - 14);
-      ctx.quadraticCurveTo(x + BLOCK_MARGIN, y2, x + BLOCK_MARGIN + 14, y2);
-      ctx.lineTo(x + n, y2);
-      ctx.lineTo(x + n + 5, y2 + 4);
-      ctx.lineTo(x + n + 10, y2 + 4);
-      ctx.lineTo(x + n + 15, y2);
-      ctx.lineTo(x + end.width, y2);
-      ctx.lineTo(x + end.width, y3);
-      n -= BLOCK_MARGIN;
-      if (!(this is StartBlock)) {
-        ctx.lineTo(x + n + 15, y3);
-        ctx.lineTo(x + n + 10, y3 + 4);
-        ctx.lineTo(x + n + 5, y3 + 4);
-        ctx.lineTo(x + n, y3);
+      ControlBlock clause = this;
+      while (clause != null) {
+        _subpath(ctx, clause);
+        clause = clause.cnext;
       }
       ctx.lineTo(x + r1, y3);
       ctx.quadraticCurveTo(x, y3, x, y3 - r1);
       ctx.lineTo(x, y0 + r0);
       ctx.quadraticCurveTo(x, y0, x + r0, y0);
       ctx.closePath();
-    } else {
-      super._outline(ctx, x, y, w, h);
     }
   }
   
   
   void touchUp(Contact c) {
+    bool wasInProgram = inserted;
     super.touchUp(c);
-    if (end == null && isInProgram) {
-      end = new EndBlock(workspace, this);
-      if (hasNext) {
-        next.prev = end;
-        end.next = next;
+    if (inserted && !wasInProgram) {
+      next.prev = end;
+      end.next = next;
+      next = cnext;
+      cnext.prev = this;
+      ControlBlock b = cnext;
+      while (b != null) {
+        b.x = x;
+        b.y = y + height;
+        workspace.addBlock(b);
+        b.inserted = true;
+        b = b.cnext;
       }
-      next = end;
-      end.prev = this;
-      workspace.addBlock(end);
     }
-    else if (end != null && !isInProgram) {
-      end.next.prev = end.prev;
-      end.prev.next = end.next;
-      end.prev = null;
-      end.next = null;
-      workspace.removeBlock(end);
-      end = null;
+    else if (!isInProgram) {
+      ControlBlock b = this;
+      while (b != null) {
+        if (b.hasPrev) b.prev.next = b.next;
+        if (b.hasNext) b.next.prev = b.prev;
+        b.prev = null;
+        b.next = null;
+        workspace.removeBlock(b);
+        b = b.cnext;
+      }
+      cnext = null;
+      workspace.draw();
     }
   }
 }
 
 
-class EndBlock extends Block {
+class EndBlock extends ControlBlock {
   
-  BeginBlock begin = null;
-  
-  
-  EndBlock(CodeWorkspace workspace, BeginBlock begin) : super(workspace, '') {
-    this.begin = begin;
-    color = '#c92';
-    x = begin.x;
-    y = begin.y + begin.height + BLOCK_MARGIN;
+  EndBlock(CodeWorkspace workspace, BeginBlock begin) : super(workspace, begin, '') {
     _height = BLOCK_MARGIN * 1.8;
   }
   
   
-  num get connectorX => targetX - BLOCK_MARGIN;
+  num get connectorX => (begin.isInProgram) ? targetX - BLOCK_MARGIN : targetX;
 
   
   Block step(Program program) {
@@ -215,10 +348,4 @@ class EndBlock extends Block {
     return false;
   }  
 
-  
-  bool touchDown(Contact c) {
-    super.touchDown(c);
-    workspace.moveToTop(begin);
-    return true;
-  }
 }
