@@ -181,7 +181,7 @@ roundRect: function(ctx, x, y, w, h, r) {
 },
 
 drawLineArrow: function(ctx, x0, y0, x1, y1, width) {
-  var t1, t2, t3, t4, t5, theta, x2, y2, x3, y3, x4, y4;
+  var t1, t2, t3, t4, theta, y2, t5, y3, t6, y4;
   t1 = $.getInterceptor$x(ctx);
   t1.save$0(ctx);
   t1.beginPath$0(ctx);
@@ -190,37 +190,34 @@ drawLineArrow: function(ctx, x0, y0, x1, y1, width) {
   t1.set$lineWidth(ctx, width);
   t1.set$lineCap(ctx, "butt");
   t1.stroke$0(ctx);
-  t2 = $.getInterceptor$n(x1);
-  t3 = t2.$sub(x1, x0);
-  t4 = $.getInterceptor$n(y1);
-  t5 = t4.$sub(y1, y0);
-  if (typeof t3 !== "number")
-    $.throwExpression(new $.ArgumentError(t3));
-  if (typeof t5 !== "number")
-    $.throwExpression(new $.ArgumentError(t5));
-  theta = Math.atan2(t3, t5);
-  x2 = t2.$add(x1, Math.sin(theta) * width * 1.2);
-  y2 = t4.$add(y1, Math.cos(theta) * width * 1.2);
-  t3 = theta + 1.8849555921538759;
-  x3 = t2.$add(x1, Math.sin(t3) * width * 1.2);
-  y3 = t4.$add(y1, Math.cos(t3) * width * 1.2);
-  t3 = theta - 1.8849555921538759;
-  x4 = t2.$add(x1, Math.sin(t3) * width * 1.2);
-  y4 = t4.$add(y1, Math.cos(t3) * width * 1.2);
+  t2 = x1 - x0;
+  t3 = $.getInterceptor$n(y1);
+  t4 = t3.$sub(y1, y0);
+  if (typeof t4 !== "number")
+    $.throwExpression(new $.ArgumentError(t4));
+  theta = Math.atan2(t2, t4);
+  t2 = Math.sin(theta);
+  y2 = t3.$add(y1, Math.cos(theta) * width * 1.2);
+  t4 = theta + 1.8849555921538759;
+  t5 = Math.sin(t4);
+  y3 = t3.$add(y1, Math.cos(t4) * width * 1.2);
+  t4 = theta - 1.8849555921538759;
+  t6 = Math.sin(t4);
+  y4 = t3.$add(y1, Math.cos(t4) * width * 1.2);
   t1.beginPath$0(ctx);
-  t1.moveTo$2(ctx, x2, y2);
-  t1.lineTo$2(ctx, x3, y3);
+  t1.moveTo$2(ctx, x1 + t2 * width * 1.2, y2);
+  t1.lineTo$2(ctx, x1 + t5 * width * 1.2, y3);
   t1.lineTo$2(ctx, x1, y1);
-  t1.lineTo$2(ctx, x4, y4);
+  t1.lineTo$2(ctx, x1 + t6 * width * 1.2, y4);
   t1.closePath$0(ctx);
   t1.fill$0(ctx);
   t1.restore$0(ctx);
 },
 
-Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,color<,textColor,dragging<,candidate',next<,prev,param,_lastX,_lastY,inMenu?,wasInMenu<,wasInProgram",
+Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,color<,textColor,dragging<,candidate',next<,prev,param,_lastX,_lastY,inMenu?,inserted<",
   clone$0: function(_) {
     var b, t1;
-    b = new $.Block(this.workspace, null, 0, 0, 0, 0, null, null, this.text, "#3399aa", "white", false, null, null, null, null, null, null, false, true, false);
+    b = new $.Block(this.workspace, null, 0, 0, 0, 0, null, null, this.text, "#3399aa", "white", false, null, null, null, null, null, null, false, false);
     t1 = $.Block_BLOCK_ID;
     if (typeof t1 !== "number")
       return this.clone$0$bailout(1, b, t1);
@@ -262,13 +259,13 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     if (typeof t2 !== "number")
       return this.get$width$bailout(1, t1, t2);
     if (t1)
-      t1 = t2 * 0.7;
+      t1 = t2 * 0.65;
     else
       t1 = t2;
     return t1;
   },
   get$width$bailout: function(state0, t1, t2) {
-    return t1 ? $.$mul$n(t2, 0.7) : t2;
+    return t1 ? $.$mul$n(t2, 0.65) : t2;
   },
   get$height: function(_) {
     return this._height;
@@ -277,23 +274,11 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     return this.get$targetX(this);
   },
   get$targetX: function(_) {
-    var t1, tx;
-    t1 = this._targetX;
+    var t1 = this._targetX;
     if (t1 != null)
       return t1;
     t1 = this.prev;
-    tx = t1 != null ? t1.get$connectorX() : this.x;
-    if ($.BLOCK_ORIENTATION === 1) {
-      t1 = this.prev;
-      t1 = t1 != null && t1.candidate != null;
-    } else
-      t1 = false;
-    if (t1) {
-      t1 = this.prev.candidate;
-      if (typeof t1 === "object" && t1 !== null && !!$.getInterceptor(t1).$isBeginBlock)
-        tx = $.$add$ns(tx, 10);
-    }
-    return tx;
+    return t1 != null ? t1.get$connectorX() : this.x;
   },
   get$targetY: function(_) {
     var t1, ty;
@@ -306,8 +291,10 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     return t1 != null ? $.$sub$n(ty, $.$add$ns($.get$height$x(t1), 0)) : ty;
   },
   moveChain$2: function(deltaX, deltaY) {
-    var t1;
-    this.x = $.$add$ns(this.x, deltaX);
+    var t1 = this.x;
+    if (typeof deltaX !== "number")
+      throw $.iae(deltaX);
+    this.x = t1 + deltaX;
     this.y = $.$add$ns(this.y, deltaY);
     t1 = this.next;
     if (t1 != null)
@@ -316,37 +303,33 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
   overlaps$1: function(other) {
     var t1, t2, t3, t4, t5;
     t1 = this.x;
-    if (typeof t1 !== "number")
-      return this.overlaps$1$bailout(1, other, t1);
     t2 = $.getInterceptor$x(other);
     t3 = t2.get$x(other);
     if (typeof t3 !== "number")
-      return this.overlaps$1$bailout(2, other, t1, t2, t3);
+      return this.overlaps$1$bailout(1, other, t1, t2, t3);
     t4 = t2.get$width(other);
     if (typeof t4 !== "number")
-      return this.overlaps$1$bailout(3, other, t1, t2, t3, t4);
+      return this.overlaps$1$bailout(2, other, t1, t2, t3, t4);
     if (t1 <= t3 + t4 + 0) {
       t1 = t2.get$x(other);
       if (typeof t1 !== "number")
-        return this.overlaps$1$bailout(4, other, t1, t2);
+        return this.overlaps$1$bailout(3, other, t1, t2);
       t3 = this.x;
-      if (typeof t3 !== "number")
-        return this.overlaps$1$bailout(5, other, t1, t2, t3);
       t4 = this.inMenu;
       t5 = this._width;
       if (typeof t5 !== "number")
-        return this.overlaps$1$bailout(6, other, t1, t2, t3, t4, t5);
+        return this.overlaps$1$bailout(4, other, t1, t2, t3, t4, t5);
       if (t4)
-        t4 = t5 * 0.7;
+        t4 = t5 * 0.65;
       else
         t4 = t5;
       if (t1 <= t3 + t4 + 0) {
         t1 = this.y;
         if (typeof t1 !== "number")
-          return this.overlaps$1$bailout(7, other, t1, t2);
+          return this.overlaps$1$bailout(5, other, t1, t2);
         t2 = t2.get$y(other);
         if (typeof t2 !== "number")
-          return this.overlaps$1$bailout(8, 0, t1, t2);
+          return this.overlaps$1$bailout(6, 0, t1, t2);
         t2 = t1 <= t2;
         t1 = t2;
       } else
@@ -359,38 +342,40 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     switch (state0) {
       case 0:
         t1 = this.x;
-      case 1:
-        state0 = 0;
         t2 = $.getInterceptor$x(other);
         t3 = t2.get$x(other);
-      case 2:
+      case 1:
         state0 = 0;
         t4 = t2.get$width(other);
-      case 3:
+      case 2:
         state0 = 0;
+        t4 = $.$add$ns($.$add$ns(t3, t4), 0);
+        if (typeof t4 !== "number")
+          throw $.iae(t4);
       default:
-        if (state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 0 && $.$le$n(t1, $.$add$ns($.$add$ns(t3, t4), 0)))
+        if (state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 0 && t1 <= t4)
           switch (state0) {
             case 0:
               t1 = t2.get$x(other);
-            case 4:
+            case 3:
               state0 = 0;
               t3 = this.x;
-            case 5:
-              state0 = 0;
               t4 = this.inMenu;
               t5 = this._width;
-            case 6:
+            case 4:
               state0 = 0;
+              t4 = t4 ? $.$mul$n(t5, 0.65) : t5;
+              if (typeof t4 !== "number")
+                throw $.iae(t4);
             default:
-              if (state0 === 8 || state0 === 7 || state0 === 0 && $.$le$n(t1, $.$add$ns($.$add$ns(t3, t4 ? $.$mul$n(t5, 0.7) : t5), 0)))
+              if (state0 === 6 || state0 === 5 || state0 === 0 && $.$le$n(t1, t3 + t4 + 0))
                 switch (state0) {
                   case 0:
                     t1 = this.y;
-                  case 7:
+                  case 5:
                     state0 = 0;
                     t2 = t2.get$y(other);
-                  case 8:
+                  case 6:
                     state0 = 0;
                     t2 = $.$le$n(t1, t2);
                     t1 = t2;
@@ -419,21 +404,18 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     this.workspace.preview$1(this);
   },
   animate$0: function() {
-    var t1, t2, dx, dy;
+    var t1, dx, t2, dy;
     t1 = this.get$targetX(this);
     if (typeof t1 !== "number")
       return this.animate$0$bailout(1, t1);
-    t2 = this.x;
-    if (typeof t2 !== "number")
-      return this.animate$0$bailout(2, t1, t2);
-    dx = t1 - t2;
-    t2 = this.get$targetY(this);
-    if (typeof t2 !== "number")
-      return this.animate$0$bailout(3, 0, t2, dx);
-    t1 = this.y;
+    dx = t1 - this.x;
+    t1 = this.get$targetY(this);
     if (typeof t1 !== "number")
-      return this.animate$0$bailout(4, t1, t2, dx);
-    dy = t2 - t1;
+      return this.animate$0$bailout(2, t1, dx);
+    t2 = this.y;
+    if (typeof t2 !== "number")
+      return this.animate$0$bailout(3, t1, dx, t2);
+    dy = t1 - t2;
     if (C.JSNumber_methods.abs$0(dx) > 1)
       dx *= 0.3;
     else
@@ -443,35 +425,29 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     else
       this._targetY = null;
     if (C.JSNumber_methods.abs$0(dx) > 0 || C.JSNumber_methods.abs$0(dy) > 0) {
-      t1 = this.x;
-      if (typeof t1 !== "number")
-        return this.animate$0$bailout(5, t1, 0, dx, dy);
-      this.x = t1 + dx;
+      this.x = this.x + dx;
       t1 = this.y;
       if (typeof t1 !== "number")
-        return this.animate$0$bailout(6, t1, 0, 0, dy);
+        return this.animate$0$bailout(4, t1, 0, 0, dy);
       this.y = t1 + dy;
       return true;
     } else
       return this.dragging;
   },
-  animate$0$bailout: function(state0, t1, t2, dx, dy) {
+  animate$0$bailout: function(state0, t1, dx, t2, dy) {
     switch (state0) {
       case 0:
         t1 = this.get$targetX(this);
       case 1:
         state0 = 0;
-        t2 = this.x;
+        dx = $.$sub$n(t1, this.x);
+        t1 = this.get$targetY(this);
       case 2:
         state0 = 0;
-        dx = $.$sub$n(t1, t2);
-        t2 = this.get$targetY(this);
+        t2 = this.y;
       case 3:
         state0 = 0;
-        t1 = this.y;
-      case 4:
-        state0 = 0;
-        dy = $.$sub$n(t2, t1);
+        dy = $.$sub$n(t1, t2);
         t1 = $.getInterceptor$n(dx);
         if (t1.abs$0(dx) > 1)
           dx = t1.$mul(dx, 0.3);
@@ -482,16 +458,16 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
           dy = t1.$mul(dy, 0.3);
         else
           this._targetY = null;
-      default:
-        if (state0 === 6 || state0 === 5 || state0 === 0 && ($.abs$0$n(dx) > 0 || $.abs$0$n(dy) > 0))
+      case 4:
+        if (state0 === 4 || state0 === 0 && ($.abs$0$n(dx) > 0 || $.abs$0$n(dy) > 0))
           switch (state0) {
             case 0:
               t1 = this.x;
-            case 5:
-              state0 = 0;
-              this.x = $.$add$ns(t1, dx);
+              if (typeof dx !== "number")
+                throw $.iae(dx);
+              this.x = t1 + dx;
               t1 = this.y;
-            case 6:
+            case 4:
               state0 = 0;
               this.y = $.$add$ns(t1, dy);
               return true;
@@ -511,52 +487,50 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     this.workspace.stopProgram$0();
   },
   draw$1: function(ctx) {
-    var t1, t2, t3, t4, t5, t6, lines, tx, ty;
-    if (this.workspace.isOverMenu$1(this) && this.dragging && this.wasInMenu) {
-      t1 = $.getInterceptor$x(ctx);
-      t1.set$fillStyle(ctx, "orange");
-      t1.set$strokeStyle(ctx, "orange");
-      t1 = this.x;
-      if (typeof t1 !== "number")
-        return this.draw$1$bailout(1, ctx, t1);
-      t2 = this.inMenu;
-      t3 = this._width;
-      if (typeof t3 !== "number")
-        return this.draw$1$bailout(2, ctx, t1, t2, t3);
-      if (t2)
-        t4 = t3 * 0.7;
-      else
-        t4 = t3;
-      t4 = t1 + t4 / 2;
-      t5 = this.y;
-      if (typeof t5 !== "number")
-        return this.draw$1$bailout(3, ctx, t5, t4);
-      t6 = this._height;
-      t5 += t6 / 2;
-      if (t2)
-        t2 = t3 * 0.7;
-      else
-        t2 = t3;
-      $.drawLineArrow(ctx, t4, t5, t1 + t2 / 2, t5 - t6, 18);
-    }
+    var t1;
+    this._drawMenuArrow$1(ctx);
+    this._resize$1(ctx);
+    this._drawOutline$1(ctx);
+    this._drawLabel$1(ctx);
     t1 = this.param;
-    if (t1 != null && !this.wasInMenu) {
+    if (t1 != null && this.inserted)
+      t1.draw$1(ctx);
+  },
+  _resize$1: function(ctx) {
+    var t1, t2;
+    t1 = this.param;
+    if (t1 != null && this.inserted) {
       t1 = t1.getDisplayWidth$1(ctx);
       t2 = this.param.get$centerX();
       if (typeof t2 !== "number")
         throw $.iae(t2);
       this._width = $.max(t1 + t2 - 14, 95);
     }
+  },
+  _drawMenuArrow$1: function(ctx) {
+    var t1, t2, t3, t4, t5, t6;
+    if (this.workspace.isOverMenu$1(this) && this.dragging && !this.inserted) {
+      t1 = $.getInterceptor$x(ctx);
+      t1.set$fillStyle(ctx, "orange");
+      t1.set$strokeStyle(ctx, "orange");
+      t1 = this.x;
+      t2 = this.inMenu;
+      t3 = this._width;
+      t2 = $.$div$n(t2 ? $.$mul$n(t3, 0.65) : t3, 2);
+      t3 = $.$add$ns(this.y, this._height / 2);
+      t4 = this.x;
+      t5 = this.inMenu;
+      t6 = this._width;
+      $.drawLineArrow(ctx, t1 + t2, t3, t4 + $.$div$n(t5 ? $.$mul$n(t6, 0.65) : t6, 2), $.$sub$n($.$add$ns(this.y, this._height / 2), this._height), 18);
+    }
+  },
+  _drawOutline$1: function(ctx) {
+    var t1, t2, t3, t4;
     t1 = this.x;
     t2 = this.y;
     t3 = this.inMenu;
     t4 = this._width;
-    if (typeof t4 !== "number")
-      return this.draw$1$bailout(7, ctx, t1, t2, t3, t4);
-    if (t3)
-      t3 = t4 * 0.7;
-    else
-      t3 = t4;
+    t3 = t3 ? $.$mul$n(t4, 0.65) : t4;
     this._outline$5(ctx, t1, t2, t3, this._height);
     t3 = $.getInterceptor$x(ctx);
     t3.save$0(ctx);
@@ -566,186 +540,109 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     t3.fill$0(ctx);
     t3.stroke$0(ctx);
     t3.restore$0(ctx);
+  },
+  _drawLabel$1: function(ctx) {
+    var lines, t1, tx, t2, ty;
     lines = $.split$1$s(this.text, "\n");
-    t3.set$fillStyle(ctx, this.textColor);
-    t3.set$font(ctx, "200 11pt sans-serif");
-    t3.set$textAlign(ctx, "left");
-    t3.set$textBaseline(ctx, "middle");
-    t2 = this.x;
-    if (typeof t2 !== "number")
-      return this.draw$1$bailout(8, ctx, 0, t2, t3, 0, 0, lines);
-    tx = t2 + 12;
+    t1 = $.getInterceptor$x(ctx);
+    t1.set$fillStyle(ctx, this.textColor);
+    t1.set$font(ctx, "200 11pt sans-serif");
+    t1.set$textAlign(ctx, "left");
+    t1.set$textBaseline(ctx, "middle");
+    tx = this.x + 12;
     t2 = this.y;
     if (typeof t2 !== "number")
-      return this.draw$1$bailout(9, ctx, 0, t2, t3, 0, 0, lines, tx);
+      return this._drawLabel$1$bailout(1, ctx, t1, lines, tx, t2);
     ty = t2 + this._height / 2;
-    t1 = lines.length;
-    if (t1 === 1)
-      t3.fillText$3(ctx, this.text, tx, ty);
+    t2 = lines.length;
+    if (t2 === 1)
+      t1.fillText$3(ctx, this.text, tx, ty);
     else {
-      if (0 >= t1)
+      if (0 >= t2)
         throw $.ioore(0);
-      t3.fillText$3(ctx, lines[0], tx, ty - 7);
+      t1.fillText$3(ctx, lines[0], tx, ty - 7);
       if (1 >= lines.length)
         throw $.ioore(1);
-      t3.fillText$3(ctx, lines[1], tx, ty + 7);
+      t1.fillText$3(ctx, lines[1], tx, ty + 7);
     }
-    t1 = this.param;
-    if (t1 != null && !this.wasInMenu)
-      t1.draw$1(ctx);
   },
-  draw$1$bailout: function(state0, ctx, t1, t2, t3, t4, t5, lines, tx) {
-    switch (state0) {
-      case 0:
-      default:
-        if (state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 2 || state0 === 1 || state0 === 0 && this.workspace.isOverMenu$1(this) && this.dragging && this.wasInMenu)
-          switch (state0) {
-            case 0:
-              t1 = $.getInterceptor$x(ctx);
-              t1.set$fillStyle(ctx, "orange");
-              t1.set$strokeStyle(ctx, "orange");
-              t1 = this.x;
-            case 1:
-              state0 = 0;
-              t2 = this.inMenu;
-              t3 = this._width;
-            case 2:
-              state0 = 0;
-              t2 = t2 ? $.$mul$n(t3, 0.7) : t3;
-              if (typeof t2 !== "number")
-                throw t2.$div();
-              t2 = $.$add$ns(t1, t2 / 2);
-              t1 = this.y;
-            case 3:
-              state0 = 0;
-              t1 = $.$add$ns(t1, this._height / 2);
-              t3 = this.x;
-            case 4:
-              state0 = 0;
-              t4 = this.inMenu;
-              t5 = this._width;
-            case 5:
-              state0 = 0;
-              t4 = t4 ? $.$mul$n(t5, 0.7) : t5;
-              if (typeof t4 !== "number")
-                throw t4.$div();
-              t4 = $.$add$ns(t3, t4 / 2);
-              t3 = this.y;
-            case 6:
-              state0 = 0;
-              $.drawLineArrow(ctx, t2, t1, t4, $.$sub$n($.$add$ns(t3, this._height / 2), this._height), 18);
-          }
-        t1 = this.param;
-        if (t1 != null && !this.wasInMenu) {
-          t1 = t1.getDisplayWidth$1(ctx);
-          t2 = this.param.get$centerX();
-          if (typeof t2 !== "number")
-            throw $.iae(t2);
-          this._width = $.max(t1 + t2 - 14, 95);
-        }
-        t1 = this.x;
-        t2 = this.y;
-        t3 = this.inMenu;
-        t4 = this._width;
-      case 7:
-        state0 = 0;
-        t3 = t3 ? $.$mul$n(t4, 0.7) : t4;
-        this._outline$5(ctx, t1, t2, t3, this._height);
-        t3 = $.getInterceptor$x(ctx);
-        t3.save$0(ctx);
-        t3.set$fillStyle(ctx, this.color);
-        t3.set$strokeStyle(ctx, "rgba(255, 255, 255, 0.3)");
-        t3.set$lineWidth(ctx, 2);
-        t3.fill$0(ctx);
-        t3.stroke$0(ctx);
-        t3.restore$0(ctx);
-        lines = $.split$1$s(this.text, "\n");
-        t3.set$fillStyle(ctx, this.textColor);
-        t3.set$font(ctx, "200 11pt sans-serif");
-        t3.set$textAlign(ctx, "left");
-        t3.set$textBaseline(ctx, "middle");
-        t2 = this.x;
-      case 8:
-        state0 = 0;
-        tx = $.$add$ns(t2, 12);
-        t2 = this.y;
-      case 9:
-        var ty;
-        state0 = 0;
-        ty = $.$add$ns(t2, this._height / 2);
-        t1 = lines.length;
-        if (t1 === 1)
-          t3.fillText$3(ctx, this.text, tx, ty);
-        else {
-          if (0 >= t1)
-            throw $.ioore(0);
-          t1 = $.getInterceptor$n(ty);
-          t3.fillText$3(ctx, lines[0], tx, t1.$sub(ty, 7));
-          if (1 >= lines.length)
-            throw $.ioore(1);
-          t3.fillText$3(ctx, lines[1], tx, t1.$add(ty, 7));
-        }
-        t1 = this.param;
-        if (t1 != null && !this.wasInMenu)
-          t1.draw$1(ctx);
+  _drawLabel$1$bailout: function(state0, ctx, t1, lines, tx, t2) {
+    var ty = $.$add$ns(t2, this._height / 2);
+    t2 = lines.length;
+    if (t2 === 1)
+      t1.fillText$3(ctx, this.text, tx, ty);
+    else {
+      if (0 >= t2)
+        throw $.ioore(0);
+      t2 = $.getInterceptor$n(ty);
+      t1.fillText$3(ctx, lines[0], tx, t2.$sub(ty, 7));
+      if (1 >= lines.length)
+        throw $.ioore(1);
+      t1.fillText$3(ctx, lines[1], tx, t2.$add(ty, 7));
     }
   },
   _outline$5: function(ctx, x, y, w, h) {
-    var t1, r0, r1, t2, t3;
+    var t1, r0, r1, t2, t3, t4, t5, t6, t7, t8;
     t1 = this.prev;
-    r0 = t1 == null || typeof t1 === "object" && t1 !== null && !!$.getInterceptor(t1).$isBeginBlock ? 14 : 2;
+    if (t1 != null)
+      t1 = typeof t1 === "object" && t1 !== null && !!$.getInterceptor(t1).$isControlBlock && (typeof t1 !== "object" || t1 === null || !$.getInterceptor(t1).$isEndBlock);
+    else
+      t1 = true;
+    r0 = t1 ? 14 : 2;
     t1 = this.next;
-    r1 = t1 == null || typeof t1 === "object" && t1 !== null && !!$.getInterceptor(t1).$isEndBlock ? 14 : 2;
+    if (t1 != null)
+      t1 = typeof t1 === "object" && t1 !== null && !!$.getInterceptor(t1).$isControlBlock && (typeof t1 !== "object" || t1 === null || !$.getInterceptor(t1).$isBeginBlock);
+    else
+      t1 = true;
+    r1 = t1 ? 14 : 2;
     t1 = $.getInterceptor$x(ctx);
     t1.beginPath$0(ctx);
-    t2 = $.getInterceptor$ns(x);
-    t1.moveTo$2(ctx, t2.$add(x, r0), y);
-    if (!$.getInterceptor(this).$isStartBlock) {
-      t1.lineTo$2(ctx, t2.$add(x, 20), y);
-      t3 = $.getInterceptor$ns(y);
-      t1.lineTo$2(ctx, $.$add$ns(t2.$add(x, 20), 5), t3.$add(y, 4));
-      t1.lineTo$2(ctx, $.$add$ns(t2.$add(x, 20), 10), t3.$add(y, 4));
-      t1.lineTo$2(ctx, $.$add$ns(t2.$add(x, 20), 15), y);
-    }
-    t1.lineTo$2(ctx, $.$sub$n(t2.$add(x, w), 2), y);
-    t3 = $.getInterceptor$ns(y);
-    t1.quadraticCurveTo$4(ctx, t2.$add(x, w), y, t2.$add(x, w), t3.$add(y, 2));
-    t1.lineTo$2(ctx, t2.$add(x, w), $.$sub$n(t3.$add(y, h), 2));
-    t1.quadraticCurveTo$4(ctx, t2.$add(x, w), t3.$add(y, h), $.$sub$n(t2.$add(x, w), 2), t3.$add(y, h));
-    if (!$.getInterceptor(this).$isEndProgramBlock) {
-      t1.lineTo$2(ctx, $.$add$ns(t2.$add(x, 20), 15), t3.$add(y, h));
-      t1.lineTo$2(ctx, $.$add$ns(t2.$add(x, 20), 10), $.$add$ns(t3.$add(y, h), 4));
-      t1.lineTo$2(ctx, $.$add$ns(t2.$add(x, 20), 5), $.$add$ns(t3.$add(y, h), 4));
-      t1.lineTo$2(ctx, t2.$add(x, 20), t3.$add(y, h));
-    }
-    t1.lineTo$2(ctx, t2.$add(x, r1), t3.$add(y, h));
-    t1.quadraticCurveTo$4(ctx, x, t3.$add(y, h), x, $.$sub$n(t3.$add(y, h), r1));
-    t1.lineTo$2(ctx, x, t3.$add(y, r0));
-    t1.quadraticCurveTo$4(ctx, x, y, t2.$add(x, r0), y);
+    t2 = x + r0;
+    t1.moveTo$2(ctx, t2, y);
+    t3 = x + 20;
+    t1.lineTo$2(ctx, t3, y);
+    t4 = t3 + 5;
+    t5 = $.getInterceptor$ns(y);
+    t1.lineTo$2(ctx, t4, t5.$add(y, 4));
+    t6 = t3 + 10;
+    t1.lineTo$2(ctx, t6, t5.$add(y, 4));
+    t7 = t3 + 15;
+    t1.lineTo$2(ctx, t7, y);
+    if (typeof w !== "number")
+      throw $.iae(w);
+    t8 = x + w;
+    t1.lineTo$2(ctx, t8, y);
+    t1.lineTo$2(ctx, t8, t5.$add(y, h));
+    t1.lineTo$2(ctx, t7, t5.$add(y, h));
+    t1.lineTo$2(ctx, t6, $.$add$ns(t5.$add(y, h), 4));
+    t1.lineTo$2(ctx, t4, $.$add$ns(t5.$add(y, h), 4));
+    t1.lineTo$2(ctx, t3, t5.$add(y, h));
+    t1.lineTo$2(ctx, x + r1, t5.$add(y, h));
+    t1.quadraticCurveTo$4(ctx, x, t5.$add(y, h), x, $.$sub$n(t5.$add(y, h), r1));
+    t1.lineTo$2(ctx, x, t5.$add(y, r0));
+    t1.quadraticCurveTo$4(ctx, x, y, t2, y);
     t1.closePath$0(ctx);
   },
   containsTouch$1: function(c) {
     var tx, ty, t1, t2, t3, t4;
-    tx = c.touchX;
+    tx = c.get$touchX();
     if (typeof tx !== "number")
       return this.containsTouch$1$bailout(1, c, tx);
-    ty = c.touchY;
+    ty = c.get$touchY();
     if (typeof ty !== "number")
       return this.containsTouch$1$bailout(2, 0, tx, ty);
     t1 = this.x;
-    if (typeof t1 !== "number")
-      return this.containsTouch$1$bailout(3, 0, tx, ty, t1);
     if (tx >= t1) {
       t2 = this.y;
       if (typeof t2 !== "number")
-        return this.containsTouch$1$bailout(4, 0, tx, ty, t1, C.JSNumber_methods, t2);
+        return this.containsTouch$1$bailout(3, 0, tx, ty, C.JSNumber_methods, t2);
       if (ty >= t2) {
         t3 = this.inMenu;
         t4 = this._width;
         if (typeof t4 !== "number")
-          return this.containsTouch$1$bailout(5, 0, tx, ty, t1, C.JSNumber_methods, t3, C.JSNumber_methods, t4);
+          return this.containsTouch$1$bailout(4, 0, tx, ty, C.JSNumber_methods, t1, C.JSNumber_methods, t4, t3);
         if (t3)
-          t3 = t4 * 0.7;
+          t3 = t4 * 0.65;
         else
           t3 = t4;
         t1 = tx <= t1 + t3 && ty <= t2 + this._height;
@@ -755,43 +652,44 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
       t1 = false;
     return t1;
   },
-  containsTouch$1$bailout: function(state0, c, tx, ty, t1, t2, t3, t4, t5) {
+  containsTouch$1$bailout: function(state0, c, tx, ty, t1, t2, t3, t5, t4) {
     switch (state0) {
       case 0:
-        tx = c.touchX;
+        tx = c.get$touchX();
       case 1:
         state0 = 0;
-        ty = c.touchY;
+        ty = c.get$touchY();
       case 2:
         state0 = 0;
-        t1 = this.x;
-      case 3:
-        state0 = 0;
-        t2 = $.getInterceptor$n(tx);
+        t1 = $.getInterceptor$n(tx);
       default:
-        if (state0 === 6 || state0 === 5 || state0 === 4 || state0 === 0 && t2.$ge(tx, t1))
+        if (state0 === 5 || state0 === 4 || state0 === 3 || state0 === 0 && t1.$ge(tx, this.x))
           switch (state0) {
             case 0:
-              t3 = this.y;
-            case 4:
+              t2 = this.y;
+            case 3:
               state0 = 0;
-              t4 = $.getInterceptor$n(ty);
+              t3 = $.getInterceptor$n(ty);
             default:
-              if (state0 === 6 || state0 === 5 || state0 === 0 && t4.$ge(ty, t3))
+              if (state0 === 5 || state0 === 4 || state0 === 0 && t3.$ge(ty, t2))
                 switch (state0) {
                   case 0:
-                    t3 = this.inMenu;
+                    t2 = this.x;
+                    t4 = this.inMenu;
                     t5 = this._width;
-                  case 5:
+                  case 4:
                     state0 = 0;
-                  case 6:
-                    if (state0 === 6 || state0 === 0 && t2.$le(tx, $.$add$ns(t1, t3 ? $.$mul$n(t5, 0.7) : t5)))
+                    t4 = t4 ? $.$mul$n(t5, 0.65) : t5;
+                    if (typeof t4 !== "number")
+                      throw $.iae(t4);
+                  case 5:
+                    if (state0 === 5 || state0 === 0 && t1.$le(tx, t2 + t4))
                       switch (state0) {
                         case 0:
                           t1 = this.y;
-                        case 6:
+                        case 5:
                           state0 = 0;
-                          t1 = t4.$le(ty, $.$add$ns(t1, this._height));
+                          t1 = t3.$le(ty, $.$add$ns(t1, this._height));
                       }
                     else
                       t1 = false;
@@ -805,9 +703,9 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     }
   },
   touchDown$1: function(c) {
-    var t1;
+    var wasInProgram, t1;
     this.dragging = true;
-    this.wasInProgram = this.get$isInProgram();
+    wasInProgram = this.get$isInProgram();
     this._lastX = c.touchX;
     this._lastY = c.touchY;
     t1 = this.prev;
@@ -818,7 +716,7 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
       t1.prev = this.prev;
     this.prev = null;
     this.next = null;
-    if (this.wasInProgram)
+    if (wasInProgram)
       this.workspace.stopProgram$0();
     t1 = this.workspace;
     t1.moveToTop$1(this);
@@ -830,23 +728,26 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     if (t1.snapTogether$1(this)) {
       $.Sounds_playSound("click");
       t1.preview$1(this);
-    } else if (this.wasInMenu && t1.isOverMenu$1(this)) {
+      this.inserted = true;
+    } else if (!this.inserted && t1.isOverMenu$1(this)) {
       t1.snapToEnd$1(this);
       $.Sounds_playSound("click");
       t1.preview$1(this);
-    } else if (t1.isOffscreen$1(this) || t1.isOverMenu$1(this) || this.wasInProgram) {
+      this.inserted = true;
+    } else if (t1.isOffscreen$1(this) || t1.isOverMenu$1(this) || this.inserted) {
       t1.removeBlock$1(this);
       $.Sounds_playSound("crunch");
     }
     this.dragging = false;
-    this.wasInMenu = false;
-    t1.draw$0();
   },
   touchDrag$1: function(c) {
-    var t1, t2;
+    var t1, t2, t3;
     t1 = $.$sub$n(c.touchX, this._lastX);
     t2 = $.$sub$n(c.touchY, this._lastY);
-    this.x = $.$add$ns(this.x, t1);
+    t3 = this.x;
+    if (typeof t1 !== "number")
+      throw $.iae(t1);
+    this.x = t3 + t1;
     this.y = $.$add$ns(this.y, t2);
     this._lastX = c.touchX;
     this._lastY = c.touchY;
@@ -863,7 +764,7 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
   static: {
 "": "Block_BLOCK_ID",
 Block$: function(workspace, text) {
-  var t1 = new $.Block(workspace, null, 0, 0, 0, 0, null, null, text, "#3399aa", "white", false, null, null, null, null, null, null, false, true, false);
+  var t1 = new $.Block(workspace, null, 0, 0, 0, 0, null, null, text, "#3399aa", "white", false, null, null, null, null, null, null, false, false);
   t1.Block$2(workspace, text);
   return t1;
 }}
@@ -883,17 +784,13 @@ TraceBug: {"": "Object;x*,y*,target,start>",
     return t1;
   },
   get$targetY: function(_) {
-    var t1, t2, t3;
+    var t1, t2;
     t1 = this.target;
     if (t1 == null)
       t1 = 0;
     else {
       t2 = $.getInterceptor$x(t1);
-      t3 = t2.get$y(t1);
-      t1 = t2.get$height(t1);
-      if (typeof t1 !== "number")
-        throw t1.$div();
-      t1 = $.$add$ns(t3, t1 / 2);
+      t1 = $.$add$ns(t2.get$y(t1), $.$div$n(t2.get$height(t1), 2));
     }
     return t1;
   },
@@ -929,7 +826,7 @@ TraceBug: {"": "Object;x*,y*,target,start>",
         return this.animate$0$bailout(3, t2, t3, t1, dx);
       t1 = t2.get$height(t1);
       if (typeof t1 !== "number")
-        throw t1.$div();
+        return this.animate$0$bailout(4, 0, t3, t1, dx);
       t1 = t3 + t1 / 2;
     }
     t2 = this.y;
@@ -943,11 +840,11 @@ TraceBug: {"": "Object;x*,y*,target,start>",
     if (C.JSNumber_methods.abs$0(dx) > 0 || C.JSNumber_methods.abs$0(dy) > 0) {
       t1 = this.x;
       if (typeof t1 !== "number")
-        return this.animate$0$bailout(4, 0, 0, t1, dx, dy);
+        return this.animate$0$bailout(5, 0, 0, t1, dx, dy);
       this.x = t1 + dx;
       t1 = this.y;
       if (typeof t1 !== "number")
-        return this.animate$0$bailout(5, 0, 0, t1, 0, dy);
+        return this.animate$0$bailout(6, 0, 0, t1, 0, dy);
       this.y = t1 + dy;
       return true;
     } else
@@ -981,6 +878,7 @@ TraceBug: {"": "Object;x*,y*,target,start>",
         dx = $.$sub$n(t1, t2);
         t1 = this.target;
       case 3:
+      case 4:
         if (state0 === 0 && t1 == null)
           t1 = 0;
         else
@@ -991,9 +889,9 @@ TraceBug: {"": "Object;x*,y*,target,start>",
             case 3:
               state0 = 0;
               t1 = t2.get$height(t1);
-              if (typeof t1 !== "number")
-                throw t1.$div();
-              t1 = $.$add$ns(t3, t1 / 2);
+            case 4:
+              state0 = 0;
+              t1 = $.$add$ns(t3, $.$div$n(t1, 2));
           }
         t2 = this.y;
         if (typeof t2 !== "number")
@@ -1005,17 +903,17 @@ TraceBug: {"": "Object;x*,y*,target,start>",
         t1 = $.getInterceptor$n(dy);
         if (t1.abs$0(dy) > 1)
           dy = t1.$mul(dy, 0.3);
-      case 4:
       case 5:
-        if (state0 === 5 || state0 === 4 || state0 === 0 && ($.abs$0$n(dx) > 0 || $.abs$0$n(dy) > 0))
+      case 6:
+        if (state0 === 6 || state0 === 5 || state0 === 0 && ($.abs$0$n(dx) > 0 || $.abs$0$n(dy) > 0))
           switch (state0) {
             case 0:
               t1 = this.x;
-            case 4:
+            case 5:
               state0 = 0;
               this.x = $.$add$ns(t1, dx);
               t1 = this.y;
-            case 5:
+            case 6:
               state0 = 0;
               this.y = $.$add$ns(t1, dy);
               return true;
@@ -1171,13 +1069,7 @@ TraceBug$: function(start) {
 
 },
 
-BeginBlock: {"": "Block;end,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,wasInMenu,wasInProgram",
-  _endStep$1: function(program) {
-    return this.end.next;
-  },
-  get$connectorX: function() {
-    return $.$add$ns(this.get$targetX(this), 10);
-  },
+ControlBlock: {"": "Block;begin,cnext,cprev,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,inserted",
   get$targetY: function(_) {
     var t1, ty, t2;
     t1 = this._targetY;
@@ -1187,12 +1079,13 @@ BeginBlock: {"": "Block;end,workspace,id,x,y,_width,_height,_targetX,_targetY,te
     ty = t1 != null ? $.$sub$n($.$sub$n(t1.get$targetY(t1), this._height), 0) : this.y;
     t1 = this.candidate;
     if (t1 != null)
-      ty = $.$sub$n(ty, $.$add$ns($.get$height$x(t1), 0));
+      ty = $.$sub$n(ty, $.$add$ns($.max($.get$height$x(t1), 25), 0));
     else {
-      t1 = this.end;
+      t1 = this.cnext;
       if (t1 != null) {
         t2 = this.next;
-        t1 = t2 == null ? t1 == null : t2 === t1;
+        t2 = t1 == null ? t2 == null : t1 === t2;
+        t1 = t2;
       } else
         t1 = false;
       if (t1)
@@ -1200,11 +1093,26 @@ BeginBlock: {"": "Block;end,workspace,id,x,y,_width,_height,_targetX,_targetY,te
     }
     return ty;
   },
+  draw$1: function(ctx) {
+  },
   checkSyntax$1: function(before) {
-    var t1, after, nest;
-    t1 = this.end;
-    if (t1 == null)
-      return true;
+    var t1, p, a, after, nest;
+    t1 = this.cprev;
+    if (t1 != null)
+      for (p = before; p == null ? t1 != null : p !== t1;)
+        if (p == null)
+          return false;
+        else
+          p = p.prev;
+    t1 = this.cnext;
+    if (t1 != null) {
+      a = before.next;
+      for (; a == null ? t1 != null : a !== t1;)
+        if (a == null)
+          return false;
+        else
+          a = a.next;
+    }
     after = before.next;
     for (nest = 0; after != null;) {
       if (after == null ? t1 == null : after === t1)
@@ -1217,9 +1125,230 @@ BeginBlock: {"": "Block;end,workspace,id,x,y,_width,_height,_targetX,_targetY,te
     }
     return false;
   },
+  touchDown$1: function(c) {
+    $.Block.prototype.touchDown$1.call(this, c);
+    if (this.inserted && this.begin != null)
+      this.workspace.moveToTop$1(this.begin);
+    return true;
+  },
+  touchDrag$1: function(c) {
+    var t1, t2, miny, maxy, ty, dx;
+    if (!this.inserted) {
+      $.Block.prototype.touchDrag$1.call(this, c);
+      return;
+    }
+    t1 = this.cprev;
+    if (t1 != null) {
+      t2 = t1.y;
+      t1.get$height;
+      miny = $.$add$ns($.$add$ns(t2, t1._height), 25);
+    } else
+      miny = 0;
+    t1 = this.cnext;
+    maxy = t1 != null ? $.$sub$n($.$sub$n(t1.y, this._height), 25) : $.$sub$n($.get$y$x($.get$start$x(this.workspace).get$end()), this._height);
+    ty = $.$add$ns(this.y, $.$sub$n(c.touchY, this._lastY));
+    dx = !!$.getInterceptor(this).$isBeginBlock ? $.$sub$n(c.touchX, this._lastX) : 0;
+    t1 = $.getInterceptor$n(ty);
+    if (t1.$lt(ty, miny)) {
+      t1 = $.$sub$n(miny, this.y);
+      t2 = this.x;
+      if (typeof dx !== "number")
+        throw $.iae(dx);
+      this.x = t2 + dx;
+      this.y = $.$add$ns(this.y, t1);
+      this._lastX = c.touchX;
+      this._lastY = this.y;
+    } else if (t1.$gt(ty, maxy)) {
+      t1 = $.$sub$n(maxy, this.y);
+      t2 = this.x;
+      if (typeof dx !== "number")
+        throw $.iae(dx);
+      this.x = t2 + dx;
+      this.y = $.$add$ns(this.y, t1);
+      this._lastX = c.touchX;
+      this._lastY = this.y;
+    } else {
+      t1 = $.$sub$n(c.touchY, this._lastY);
+      t2 = this.x;
+      if (typeof dx !== "number")
+        throw $.iae(dx);
+      this.x = t2 + dx;
+      this.y = $.$add$ns(this.y, t1);
+      this._lastX = c.touchX;
+      this._lastY = c.touchY;
+    }
+  },
+  $isControlBlock: true
+},
+
+BeginBlock: {"": "ControlBlock;end<,begin,cnext,cprev,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,inserted",
+  get$connectorX: function() {
+    return $.$add$ns(this.get$targetX(this), 10);
+  },
+  draw$1: function(ctx) {
+    var t1, b;
+    this._resize$1(ctx);
+    this._drawMenuArrow$1(ctx);
+    this._drawOutline$1(ctx);
+    this._drawLabel$1(ctx);
+    t1 = this.param;
+    if (t1 != null && this.inserted)
+      t1.draw$1(ctx);
+    if (this.inserted) {
+      b = this.cnext;
+      for (; b != null;) {
+        b.x = this.x;
+        b._resize$1(ctx);
+        b._drawLabel$1(ctx);
+        b._drawParam$1;
+        t1 = b.param;
+        if (t1 != null && b.inserted)
+          t1.draw$1(ctx);
+        b.x = b.x + 10;
+        b = b.cnext;
+      }
+    }
+  },
+  _addClause$1: function(clause) {
+    var c, c0;
+    for (c = this; c != null; c = c0) {
+      c0 = c.cnext;
+      if (c0 == null) {
+        c.cnext = clause;
+        c.next = clause;
+        clause.cprev = c;
+        clause.prev = c;
+        return;
+      }
+    }
+  },
+  _endStep$1: function(program) {
+    return this.end.next;
+  },
+  _subpath$2: function(ctx, b) {
+    var x0, t1, t2, x1, y0, y1, n, t3, t4, y2;
+    x0 = this.x;
+    b.get$width;
+    t1 = b.inMenu;
+    t2 = b._width;
+    if (typeof t2 !== "number")
+      return this._subpath$2$bailout(1, ctx, b, x0, t1, t2);
+    if (t1)
+      t1 = t2 * 0.65;
+    else
+      t1 = t2;
+    x1 = x0 + t1;
+    y0 = b.y;
+    if (typeof y0 !== "number")
+      return this._subpath$2$bailout(2, ctx, b, x0, 0, 0, y0, x1);
+    b.get$height;
+    y1 = y0 + b._height;
+    t1 = typeof b === "object" && b !== null && !!$.getInterceptor(b).$isBeginBlock;
+    n = t1 ? 20 : 30;
+    if (typeof b !== "object" || b === null || !$.getInterceptor(b).$isStartBlock) {
+      t2 = x0 + n;
+      t3 = $.getInterceptor$x(ctx);
+      t3.lineTo$2(ctx, t2, y0);
+      t4 = y0 + 4;
+      t3.lineTo$2(ctx, t2 + 5, t4);
+      t3.lineTo$2(ctx, t2 + 10, t4);
+      t3.lineTo$2(ctx, t2 + 15, y0);
+    }
+    t2 = $.getInterceptor$x(ctx);
+    t2.lineTo$2(ctx, x1, y0);
+    t2.lineTo$2(ctx, x1, y1);
+    if (t1)
+      n += 10;
+    else if (typeof b === "object" && b !== null && !!$.getInterceptor(b).$isEndBlock)
+      n -= 10;
+    if (typeof b !== "object" || b === null || !$.getInterceptor(b).$isEndProgramBlock) {
+      t1 = x0 + n;
+      t2.lineTo$2(ctx, t1 + 15, y1);
+      t3 = y1 + 4;
+      t2.lineTo$2(ctx, t1 + 10, t3);
+      t2.lineTo$2(ctx, t1 + 5, t3);
+      t2.lineTo$2(ctx, t1, y1);
+    }
+    t1 = b.cnext;
+    if (t1 != null) {
+      y2 = t1.y;
+      if (typeof y2 !== "number")
+        return this._subpath$2$bailout(3, ctx, 0, x0, t2, 0, 0, 0, y1, y2);
+      t1 = x0 + 10;
+      t3 = t1 + 14;
+      t2.lineTo$2(ctx, t3, y1);
+      t2.quadraticCurveTo$4(ctx, t1, y1, t1, y1 + 14);
+      t2.lineTo$2(ctx, t1, y2 - 14);
+      t2.quadraticCurveTo$4(ctx, t1, y2, t3, y2);
+    }
+  },
+  _subpath$2$bailout: function(state0, ctx, b, x0, t1, t2, y0, x1, y1, y2) {
+    switch (state0) {
+      case 0:
+        x0 = this.x;
+        b.get$width;
+        t1 = b.inMenu;
+        t2 = b._width;
+      case 1:
+        state0 = 0;
+        t1 = t1 ? $.$mul$n(t2, 0.65) : t2;
+        if (typeof t1 !== "number")
+          throw $.iae(t1);
+        x1 = x0 + t1;
+        y0 = b.y;
+      case 2:
+        state0 = 0;
+        b.get$height;
+        t1 = $.getInterceptor$ns(y0);
+        y1 = t1.$add(y0, b._height);
+        t2 = typeof b === "object" && b !== null && !!$.getInterceptor(b).$isBeginBlock;
+        n = t2 ? 20 : 30;
+        if (typeof b !== "object" || b === null || !$.getInterceptor(b).$isStartBlock) {
+          t3 = x0 + n;
+          t4 = $.getInterceptor$x(ctx);
+          t4.lineTo$2(ctx, t3, y0);
+          t4.lineTo$2(ctx, t3 + 5, t1.$add(y0, 4));
+          t4.lineTo$2(ctx, t3 + 10, t1.$add(y0, 4));
+          t4.lineTo$2(ctx, t3 + 15, y0);
+        }
+        t1 = $.getInterceptor$x(ctx);
+        t1.lineTo$2(ctx, x1, y0);
+        t1.lineTo$2(ctx, x1, y1);
+        if (t2)
+          n += 10;
+        else if (typeof b === "object" && b !== null && !!$.getInterceptor(b).$isEndBlock)
+          n -= 10;
+        if (typeof b !== "object" || b === null || !$.getInterceptor(b).$isEndProgramBlock) {
+          t2 = x0 + n;
+          t1.lineTo$2(ctx, t2 + 15, y1);
+          t3 = $.getInterceptor$ns(y1);
+          t1.lineTo$2(ctx, t2 + 10, t3.$add(y1, 4));
+          t1.lineTo$2(ctx, t2 + 5, t3.$add(y1, 4));
+          t1.lineTo$2(ctx, t2, y1);
+        }
+        t2 = b.cnext;
+      case 3:
+        var n, t3, t4;
+        if (state0 === 3 || state0 === 0 && t2 != null)
+          switch (state0) {
+            case 0:
+              y2 = t2.y;
+            case 3:
+              state0 = 0;
+              t2 = x0 + 10;
+              t3 = t2 + 14;
+              t1.lineTo$2(ctx, t3, y1);
+              t1.quadraticCurveTo$4(ctx, t2, y1, t2, $.$add$ns(y1, 14));
+              t1.lineTo$2(ctx, t2, $.$sub$n(y2, 14));
+              t1.quadraticCurveTo$4(ctx, t2, y2, t3, y2);
+          }
+    }
+  },
   _outline$5: function(ctx, x, y, w, h) {
-    var t1, r0, r1, y1, t2, y2, t3, t4, y3, t5, t6;
-    if (this.end != null && $.$lt$n($.$add$ns($.$add$ns(y, h), 16), this.end.y)) {
+    var t1, r0, r1, y1, t2, t3, y3, clause;
+    if (!this.inserted)
+      $.Block.prototype._outline$5.call(this, ctx, x, y, w, h);
+    else {
       t1 = this.prev;
       r0 = t1 == null || typeof t1 === "object" && t1 !== null && !!$.getInterceptor(t1).$isBeginBlock ? 14 : 2;
       if (this.next != null) {
@@ -1230,96 +1359,68 @@ BeginBlock: {"": "Block;end,workspace,id,x,y,_width,_height,_targetX,_targetY,te
       r1 = t1 ? 14 : 2;
       t1 = $.getInterceptor$ns(y);
       y1 = t1.$add(y, h);
-      t2 = $.getInterceptor$ns(y1);
-      y2 = $.max(this.end.y, t2.$add(y1, 16));
-      t3 = this.end;
-      t3.get$height;
-      t4 = $.getInterceptor$ns(y2);
-      y3 = t4.$add(y2, t3._height);
-      t3 = $.getInterceptor$x(ctx);
-      t3.beginPath$0(ctx);
-      t5 = $.getInterceptor$ns(x);
-      t3.moveTo$2(ctx, t5.$add(x, r0), y);
-      t6 = !$.getInterceptor(this).$isStartBlock;
-      if (t6) {
-        t3.lineTo$2(ctx, t5.$add(x, 20), y);
-        t3.lineTo$2(ctx, $.$add$ns(t5.$add(x, 20), 5), t1.$add(y, 4));
-        t3.lineTo$2(ctx, $.$add$ns(t5.$add(x, 20), 10), t1.$add(y, 4));
-        t3.lineTo$2(ctx, $.$add$ns(t5.$add(x, 20), 15), y);
-      }
-      t3.lineTo$2(ctx, $.$sub$n(t5.$add(x, w), 2), y);
-      t3.quadraticCurveTo$4(ctx, t5.$add(x, w), y, t5.$add(x, w), t1.$add(y, 2));
-      t3.lineTo$2(ctx, t5.$add(x, w), t2.$sub(y1, 2));
-      t3.quadraticCurveTo$4(ctx, t5.$add(x, w), y1, $.$sub$n(t5.$add(x, w), 2), y1);
-      t3.lineTo$2(ctx, $.$add$ns(t5.$add(x, 30), 15), y1);
-      t3.lineTo$2(ctx, $.$add$ns(t5.$add(x, 30), 10), t2.$add(y1, 4));
-      t3.lineTo$2(ctx, $.$add$ns(t5.$add(x, 30), 5), t2.$add(y1, 4));
-      t3.lineTo$2(ctx, t5.$add(x, 30), y1);
-      t3.lineTo$2(ctx, $.$add$ns(t5.$add(x, 10), 14), y1);
-      t3.quadraticCurveTo$4(ctx, t5.$add(x, 10), y1, t5.$add(x, 10), t2.$add(y1, 14));
-      t3.lineTo$2(ctx, t5.$add(x, 10), t4.$sub(y2, 14));
-      t3.quadraticCurveTo$4(ctx, t5.$add(x, 10), y2, $.$add$ns(t5.$add(x, 10), 14), y2);
-      t3.lineTo$2(ctx, t5.$add(x, 30), y2);
-      t3.lineTo$2(ctx, $.$add$ns(t5.$add(x, 30), 5), t4.$add(y2, 4));
-      t3.lineTo$2(ctx, $.$add$ns(t5.$add(x, 30), 10), t4.$add(y2, 4));
-      t3.lineTo$2(ctx, $.$add$ns(t5.$add(x, 30), 15), y2);
+      $.max(this.end.y, $.$add$ns(y1, 16));
       t2 = this.end;
-      t2.get$width;
-      t4 = t2.inMenu;
-      t2 = t2._width;
-      t3.lineTo$2(ctx, t5.$add(x, t4 ? $.$mul$n(t2, 0.7) : t2), y2);
-      t2 = this.end;
-      t2.get$width;
-      t4 = t2.inMenu;
-      t2 = t2._width;
-      t3.lineTo$2(ctx, t5.$add(x, t4 ? $.$mul$n(t2, 0.7) : t2), y3);
-      if (t6) {
-        t3.lineTo$2(ctx, $.$add$ns(t5.$add(x, 20), 15), y3);
-        t2 = $.getInterceptor$ns(y3);
-        t3.lineTo$2(ctx, $.$add$ns(t5.$add(x, 20), 10), t2.$add(y3, 4));
-        t3.lineTo$2(ctx, $.$add$ns(t5.$add(x, 20), 5), t2.$add(y3, 4));
-        t3.lineTo$2(ctx, t5.$add(x, 20), y3);
+      t3 = t2.y;
+      t2.get$height;
+      y3 = $.$add$ns(t3, t2._height);
+      t2 = $.getInterceptor$x(ctx);
+      t2.beginPath$0(ctx);
+      t3 = x + r0;
+      t2.moveTo$2(ctx, t3, y);
+      for (clause = this; clause != null;) {
+        this._subpath$2(ctx, clause);
+        clause = clause.cnext;
       }
-      t3.lineTo$2(ctx, t5.$add(x, r1), y3);
-      t3.quadraticCurveTo$4(ctx, x, y3, x, $.$sub$n(y3, r1));
-      t3.lineTo$2(ctx, x, t1.$add(y, r0));
-      t3.quadraticCurveTo$4(ctx, x, y, t5.$add(x, r0), y);
-      t3.closePath$0(ctx);
-    } else
-      $.Block.prototype._outline$5.call(this, ctx, x, y, w, h);
+      t2.lineTo$2(ctx, x + r1, y3);
+      t2.quadraticCurveTo$4(ctx, x, y3, x, $.$sub$n(y3, r1));
+      t2.lineTo$2(ctx, x, t1.$add(y, r0));
+      t2.quadraticCurveTo$4(ctx, x, y, t3, y);
+      t2.closePath$0(ctx);
+    }
   },
   touchUp$1: function(c) {
-    var t1, t2;
+    var wasInProgram, b, t1, t2;
+    wasInProgram = this.inserted;
     $.Block.prototype.touchUp$1.call(this, c);
-    t1 = this.end;
-    t2 = t1 == null;
-    if (t2 && this.get$isInProgram()) {
-      t1 = this.workspace;
-      this.end = $.EndBlock$(t1, this);
-      t2 = this.next;
-      if (t2 != null) {
-        t2.prev = this.end;
-        this.end.next = this.next;
+    if (this.inserted && !wasInProgram) {
+      this.next.prev = this.end;
+      this.end.next = this.next;
+      this.next = this.cnext;
+      this.cnext.prev = this;
+      b = this.cnext;
+      for (t1 = this.workspace; b != null;) {
+        b.x = this.x;
+        b.y = $.$add$ns(this.y, this._height);
+        t1.addBlock$1(b);
+        b.inserted = true;
+        b = b.cnext;
       }
-      this.next = this.end;
-      this.end.prev = this;
-      t1.addBlock$1(this.end);
-    } else if (!t2 && !this.get$isInProgram()) {
-      t1.next.prev = t1.prev;
-      t1 = this.end;
-      t1.prev.next = t1.next;
-      this.end.prev = null;
-      this.end.next = null;
-      this.workspace.removeBlock$1(this.end);
-      this.end = null;
+    } else if (!this.get$isInProgram()) {
+      for (t1 = this.workspace, b = this; b != null;) {
+        b.get$hasPrev;
+        t2 = b.prev;
+        if (t2 != null)
+          t2.next = b.next;
+        b.get$hasNext;
+        t2 = b.next;
+        if (t2 != null)
+          t2.prev = b.prev;
+        b.prev = null;
+        b.next = null;
+        t1.removeBlock$1(b);
+        b = b.cnext;
+      }
+      this.cnext = null;
+      t1.draw$0();
     }
   },
   $isBeginBlock: true
 },
 
-EndBlock: {"": "Block;begin,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,wasInMenu,wasInProgram",
+EndBlock: {"": "ControlBlock;begin,cnext,cprev,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,inserted",
   get$connectorX: function() {
-    return $.$sub$n(this.get$targetX(this), 10);
+    return this.begin.get$isInProgram() ? $.$sub$n(this.get$targetX(this), 10) : this.get$targetX(this);
   },
   step$1: function(_, program) {
     var t1 = this.begin;
@@ -1333,8 +1434,6 @@ EndBlock: {"": "Block;begin,workspace,id,x,y,_width,_height,_targetX,_targetY,te
     t1 = this.param;
     pval = t1 == null ? null : $.get$value$x(t1);
     program.doCommand$2("end " + $.S(this.begin.text), pval);
-  },
-  draw$1: function(ctx) {
   },
   checkSyntax$1: function(before) {
     var t1, nest;
@@ -1351,79 +1450,14 @@ EndBlock: {"": "Block;begin,workspace,id,x,y,_width,_height,_targetX,_targetY,te
     }
     return false;
   },
-  touchDown$1: function(c) {
-    $.Block.prototype.touchDown$1.call(this, c);
-    this.workspace.moveToTop$1(this.begin);
-    return true;
-  },
-  EndBlock$2: function(workspace, begin) {
-    this.begin = begin;
-    this.color = "#c92";
-    this.x = begin.x;
-    this.y = $.$add$ns($.$add$ns(begin.y, begin._height), 10);
-    this._height = 18;
-  },
-  $isEndBlock: true,
-  static: {
-EndBlock$: function(workspace, begin) {
-  var t1 = new $.EndBlock(null, workspace, null, 0, 0, 0, 0, null, null, "", "#3399aa", "white", false, null, null, null, null, null, null, false, true, false);
-  t1.Block$2(workspace, "");
-  t1.EndBlock$2(workspace, begin);
-  return t1;
-}}
-
+  $isEndBlock: true
 },
 
-IfBlock: {"": "BeginBlock;end,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,wasInMenu,wasInProgram",
+IfBlock: {"": "BeginBlock;end,begin,cnext,cprev,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,inserted",
   clone$0: function(_) {
-    var block, t1, t2, t3;
-    block = new $.IfBlock(null, this.workspace, null, 0, 0, 0, 0, null, null, "if", "#3399aa", "white", false, null, null, null, null, null, null, false, true, false);
-    t1 = $.Block_BLOCK_ID;
-    if (typeof t1 !== "number")
-      return this.clone$0$bailout1(1, block, t1);
-    $.Block_BLOCK_ID = t1 + 1;
-    block.id = t1;
-    block._width = 95;
-    block._height = 40;
-    block.color = "#c92";
-    block.param = $.Parameter$(block);
-    t1 = block.param;
-    t2 = block.inMenu;
-    t3 = block._width;
-    if (typeof t3 !== "number")
-      return this.clone$0$bailout1(2, block, t1, t2, t3);
-    if (t2)
-      t2 = t3 * 0.7;
-    else
-      t2 = t3;
-    t1.set$centerX(t2 - 35);
-    $.set$values$x(block.param, ["see-gem?", "near-water?", "not see-gem?", "not near-water?", "random?"]);
+    var block = $.IfBlock$(this.workspace);
     this.copyTo$1(block);
     return block;
-  },
-  clone$0$bailout1: function(state0, block, t1, t2, t3) {
-    switch (state0) {
-      case 0:
-        block = new $.IfBlock(null, this.workspace, null, 0, 0, 0, 0, null, null, "if", "#3399aa", "white", false, null, null, null, null, null, null, false, true, false);
-        t1 = $.Block_BLOCK_ID;
-      case 1:
-        state0 = 0;
-        $.Block_BLOCK_ID = $.$add$ns(t1, 1);
-        block.id = t1;
-        block._width = 95;
-        block._height = 40;
-        block.color = "#c92";
-        block.param = $.Parameter$(block);
-        t1 = block.param;
-        t2 = block.inMenu;
-        t3 = block._width;
-      case 2:
-        state0 = 0;
-        t1.set$centerX($.$sub$n(t2 ? $.$mul$n(t3, 0.7) : t3, 35));
-        $.set$values$x(block.param, ["see-gem?", "near-water?", "not see-gem?", "not near-water?", "random?"]);
-        this.copyTo$1(block);
-        return block;
-    }
   },
   step$1: function(_, program) {
     return program.getSensorValue$1($.get$value$x(this.param)) ? this.next : this.end.next;
@@ -1434,77 +1468,152 @@ IfBlock: {"": "BeginBlock;end,workspace,id,x,y,_width,_height,_targetX,_targetY,
     t1 = this.param;
     t2 = this.inMenu;
     t3 = this._width;
-    t1.set$centerX($.$sub$n(t2 ? $.$mul$n(t3, 0.7) : t3, 35));
+    t1.set$centerX($.$sub$n(t2 ? $.$mul$n(t3, 0.65) : t3, 35));
     $.set$values$x(this.param, ["see-gem?", "near-water?", "not see-gem?", "not near-water?", "random?"]);
+    t1 = new $.EndBlock(null, null, null, workspace, null, 0, 0, 0, 0, null, null, "", "#3399aa", "white", false, null, null, null, null, null, null, false, false);
+    t1.Block$2(workspace, "");
+    t1.color = "#c92";
+    t1.begin = this;
+    t1._height = 18;
+    this.end = t1;
+    this._addClause$1(this.end);
   },
   static: {
 IfBlock$: function(workspace) {
-  var t1 = new $.IfBlock(null, workspace, null, 0, 0, 0, 0, null, null, "if", "#3399aa", "white", false, null, null, null, null, null, null, false, true, false);
+  var t1 = new $.IfBlock(null, null, null, null, workspace, null, 0, 0, 0, 0, null, null, "if", "#3399aa", "white", false, null, null, null, null, null, null, false, false);
   t1.Block$2(workspace, "if");
   t1.color = "#c92";
+  t1.begin = null;
   t1.IfBlock$1(workspace);
   return t1;
 }}
 
 },
 
-Menu: {"": "Object;workspace<,x*,y*,w,h,blocks,target",
+Menu: {"": "Object;workspace<,x*,y*,w?,h?,blocks,target,play,pause,btarget,frog<,buttons",
+  play$0: function($receiver) {
+    return this.play.call$0();
+  },
   addBlock$1: function(block) {
     this.blocks.push(block);
   },
+  animate$0: function() {
+    this.play.animate$0();
+  },
   draw$1: function(ctx) {
-    var t1, t2, t3, bx, by, block, t4;
+    var t1, t2, t3, truncated, iw, ih, ix, iy, block, t4;
     t1 = $.getInterceptor$x(ctx);
     t1.save$0(ctx);
     t1.set$fillStyle(ctx, "rgba(0, 0, 0, 0.3)");
-    t2 = this.h;
-    t1.fillRect$4(ctx, this.x, this.y, this.w, t2);
-    t3 = this.x;
-    if (typeof t3 !== "number")
-      return this.draw$1$bailout(1, ctx, t2, t1, t3);
-    bx = t3 + 95;
+    t1.fillRect$4(ctx, this.x, this.y, this.w, this.h);
+    t1.set$fillStyle(ctx, "#3e5d64");
+    t1.set$strokeStyle(ctx, "#223333");
+    t1.set$lineWidth(ctx, 3);
+    t1.beginPath$0(ctx);
+    t1.moveTo$2(ctx, this.x + 250, this.y + this.h);
+    t2 = this.x;
     t3 = this.y;
-    if (typeof t3 !== "number")
-      return this.draw$1$bailout(2, ctx, t2, t1, t3, bx);
-    by = t3 + t2 * 0.5;
+    t1.bezierCurveTo$6(ctx, t2 + 270, t3 - 50, t2 + 160, t3 + 10, t2 - 6, t3 - 5);
+    t1.lineTo$2(ctx, this.x - 6, this.y + this.h);
+    t1.fill$0(ctx);
+    t1.stroke$0(ctx);
+    t3 = $.get$width$x(this.frog);
+    if (t3 !== (t3 | 0))
+      return this.draw$1$bailout(1, ctx, t1, t3);
+    t3 *= 0.7;
+    if (isNaN(t3))
+      $.throwExpression(new $.UnsupportedError("NaN"));
+    if (t3 == Infinity || t3 == -Infinity)
+      $.throwExpression(new $.UnsupportedError("Infinity"));
+    truncated = t3 < 0 ? Math.ceil(t3) : Math.floor(t3);
+    iw = truncated == -0.0 ? 0 : truncated;
+    t2 = $.get$height$x(this.frog);
+    if (t2 !== (t2 | 0))
+      return this.draw$1$bailout(2, ctx, t1, 0, t2, iw);
+    t2 *= 0.7;
+    if (isNaN(t2))
+      $.throwExpression(new $.UnsupportedError("NaN"));
+    if (t2 == Infinity || t2 == -Infinity)
+      $.throwExpression(new $.UnsupportedError("Infinity"));
+    truncated = t2 < 0 ? Math.ceil(t2) : Math.floor(t2);
+    ih = truncated == -0.0 ? 0 : truncated;
+    ix = this.x + 10;
+    t2 = this.y;
+    t1.drawImageScaled$5(ctx, this.frog, ix, t2 + 2, iw, ih);
+    t2 = this.workspace;
+    this.play.visible = !t2.running;
+    this.pause.visible = t2.running;
+    $.IterableMixinWorkaround_forEach(this.buttons, new $.Menu_draw_closure(ctx));
+    ix += 260;
+    iy = this.y + this.h / 2;
     for (t2 = this.blocks, t2 = new $.ListIterator(t2, t2.length, 0, null); t2.moveNext$0();) {
       block = t2._liblib0$_current;
       t3 = $.getInterceptor$x(block);
-      t3.set$x(block, bx);
+      t3.set$x(block, ix);
       t4 = t3.get$height(block);
       if (typeof t4 !== "number")
-        throw t4.$div();
-      t3.set$y(block, by - t4 / 2);
+        return this.draw$1$bailout(3, ctx, t1, t3, t2, 0, t4, iy, block, ix);
+      t3.set$y(block, iy - t4 / 2);
       block.set$inMenu(true);
       block.draw$1(ctx);
       t3 = t3.get$width(block);
       if (typeof t3 !== "number")
-        return this.draw$1$bailout(3, ctx, t2, t1, C.JSNumber_methods, bx, by, t3);
-      bx += t3 + 10;
+        return this.draw$1$bailout(4, ctx, t1, t3, t2, 0, 0, iy, 0, ix);
+      ix += t3 + 10;
     }
     t1.restore$0(ctx);
   },
-  draw$1$bailout: function(state0, ctx, t2, t1, t3, bx, by, t4) {
+  draw$1$bailout: function(state0, ctx, t1, t3, t2, iw, t4, iy, block, ix) {
     switch (state0) {
       case 0:
         t1 = $.getInterceptor$x(ctx);
         t1.save$0(ctx);
         t1.set$fillStyle(ctx, "rgba(0, 0, 0, 0.3)");
-        t2 = this.h;
-        t1.fillRect$4(ctx, this.x, this.y, this.w, t2);
-        t3 = this.x;
+        t1.fillRect$4(ctx, this.x, this.y, this.w, this.h);
+        t1.set$fillStyle(ctx, "#3e5d64");
+        t1.set$strokeStyle(ctx, "#223333");
+        t1.set$lineWidth(ctx, 3);
+        t1.beginPath$0(ctx);
+        t1.moveTo$2(ctx, this.x + 250, this.y + this.h);
+        t2 = this.x;
+        t3 = this.y;
+        t1.bezierCurveTo$6(ctx, t2 + 270, t3 - 50, t2 + 160, t3 + 10, t2 - 6, t3 - 5);
+        t1.lineTo$2(ctx, this.x - 6, this.y + this.h);
+        t1.fill$0(ctx);
+        t1.stroke$0(ctx);
+        t3 = $.get$width$x(this.frog);
       case 1:
         state0 = 0;
-        bx = $.$add$ns(t3, 95);
-        t3 = this.y;
+        t3 = $.$mul$n(t3, 0.7);
+        if (isNaN(t3))
+          $.throwExpression(new $.UnsupportedError("NaN"));
+        if (t3 == Infinity || t3 == -Infinity)
+          $.throwExpression(new $.UnsupportedError("Infinity"));
+        truncated = t3 < 0 ? Math.ceil(t3) : Math.floor(t3);
+        iw = truncated == -0.0 ? 0 : truncated;
+        t2 = $.get$height$x(this.frog);
       case 2:
         state0 = 0;
-        by = $.$add$ns(t3, t2 * 0.5);
+        t2 = $.$mul$n(t2, 0.7);
+        if (isNaN(t2))
+          $.throwExpression(new $.UnsupportedError("NaN"));
+        if (t2 == Infinity || t2 == -Infinity)
+          $.throwExpression(new $.UnsupportedError("Infinity"));
+        truncated = t2 < 0 ? Math.ceil(t2) : Math.floor(t2);
+        ih = truncated == -0.0 ? 0 : truncated;
+        ix = this.x + 10;
+        t2 = this.y;
+        t1.drawImageScaled$5(ctx, this.frog, ix, t2 + 2, iw, ih);
+        t2 = this.workspace;
+        this.play.visible = !t2.running;
+        this.pause.visible = t2.running;
+        $.IterableMixinWorkaround_forEach(this.buttons, new $.Menu_draw_closure(ctx));
+        ix += 260;
+        iy = this.y + this.h / 2;
         t2 = this.blocks;
         t2 = new $.ListIterator(t2, t2.length, 0, null);
-        t3 = $.getInterceptor$n(by);
-      case 3:
-        var block, t5;
+      default:
+        var truncated, ih;
         L0:
           while (true)
             switch (state0) {
@@ -1512,18 +1621,21 @@ Menu: {"": "Object;workspace<,x*,y*,w,h,blocks,target",
                 if (!t2.moveNext$0())
                   break L0;
                 block = t2._liblib0$_current;
-                t4 = $.getInterceptor$x(block);
-                t4.set$x(block, bx);
-                t5 = t4.get$height(block);
-                if (typeof t5 !== "number")
-                  throw t5.$div();
-                t4.set$y(block, t3.$sub(by, t5 / 2));
-                block.set$inMenu(true);
-                block.draw$1(ctx);
-                t4 = t4.get$width(block);
+                t3 = $.getInterceptor$x(block);
+                t3.set$x(block, ix);
+                t4 = t3.get$height(block);
               case 3:
                 state0 = 0;
-                bx = $.$add$ns(bx, $.$add$ns(t4, 10));
+                t3.set$y(block, iy - $.$div$n(t4, 2));
+                block.set$inMenu(true);
+                block.draw$1(ctx);
+                t3 = t3.get$width(block);
+              case 4:
+                state0 = 0;
+                t3 = $.$add$ns(t3, 10);
+                if (typeof t3 !== "number")
+                  throw $.iae(t3);
+                ix += t3;
             }
         t1.restore$0(ctx);
     }
@@ -1533,10 +1645,13 @@ Menu: {"": "Object;workspace<,x*,y*,w,h,blocks,target",
     for (t1 = this.blocks, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();)
       if (t1._liblib0$_current.containsTouch$1(c))
         return true;
+    for (t1 = this.buttons, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();)
+      if (t1._liblib0$_current.containsTouch$1(c))
+        return true;
     return false;
   },
   touchDown$1: function(c) {
-    var t1, block, t2, t3;
+    var t1, block, t2, t3, button;
     for (t1 = this.blocks, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();) {
       block = t1._liblib0$_current;
       if (block.containsTouch$1(c)) {
@@ -1552,27 +1667,33 @@ Menu: {"": "Object;workspace<,x*,y*,w,h,blocks,target",
           t2.push(t3);
         t2 = this.target;
         t2.move$2;
-        t3 = t2.x;
-        if (typeof t3 !== "number")
-          return this.touchDown$1$bailout(1, c, t1, t2, t3);
-        t2.x = t3 + -2;
+        t2.x = t2.x + -2;
         t3 = t2.y;
         if (typeof t3 !== "number")
-          return this.touchDown$1$bailout(2, c, t1, t2, t3);
+          return this.touchDown$1$bailout(1, c, t3, t1, t2);
         t2.y = t3 + -8;
         this.target.touchDown$1(c);
         return true;
       }
     }
+    for (t1 = this.buttons, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();) {
+      button = t1._liblib0$_current;
+      if (button.containsTouch$1(c)) {
+        this.btarget = button;
+        this.btarget.touchDown$1(c);
+        this.workspace.draw$0();
+        return true;
+      }
+    }
     return false;
   },
-  touchDown$1$bailout: function(state0, c, t1, t2, t3) {
+  touchDown$1$bailout: function(state0, c, t3, t1, t2) {
     switch (state0) {
       case 0:
         t1 = this.blocks;
         t1 = new $.ListIterator(t1, t1.length, 0, null);
-      default:
-        var block;
+      case 1:
+        var block, button;
         L0:
           while (true)
             switch (state0) {
@@ -1580,8 +1701,8 @@ Menu: {"": "Object;workspace<,x*,y*,w,h,blocks,target",
                 if (!t1.moveNext$0())
                   break L0;
                 block = t1._liblib0$_current;
-              default:
-                if (state0 === 2 || state0 === 1 || state0 === 0 && block.containsTouch$1(c))
+              case 1:
+                if (state0 === 1 || state0 === 0 && block.containsTouch$1(c))
                   switch (state0) {
                     case 0:
                       this.target = $.clone$0$x(block);
@@ -1596,18 +1717,24 @@ Menu: {"": "Object;workspace<,x*,y*,w,h,blocks,target",
                         t2.push(t3);
                       t2 = this.target;
                       t2.move$2;
-                      t3 = t2.x;
-                    case 1:
-                      state0 = 0;
-                      t2.x = $.$add$ns(t3, -2);
+                      t2.x = t2.x + -2;
                       t3 = t2.y;
-                    case 2:
+                    case 1:
                       state0 = 0;
                       t2.y = $.$add$ns(t3, -8);
                       this.target.touchDown$1(c);
                       return true;
                   }
             }
+        for (t1 = this.buttons, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();) {
+          button = t1._liblib0$_current;
+          if (button.containsTouch$1(c)) {
+            this.btarget = button;
+            this.btarget.touchDown$1(c);
+            this.workspace.draw$0();
+            return true;
+          }
+        }
         return false;
     }
   },
@@ -1615,61 +1742,380 @@ Menu: {"": "Object;workspace<,x*,y*,w,h,blocks,target",
     var t1 = this.target;
     if (t1 != null)
       t1.touchUp$1(c);
+    else {
+      t1 = this.btarget;
+      if (t1 != null) {
+        t1.touchUp$1(c);
+        this.workspace.draw$0();
+      }
+    }
     this.target = null;
+    this.btarget = null;
   },
   touchDrag$1: function(c) {
     var t1 = this.target;
     if (t1 != null)
       t1.touchDrag$1(c);
+    else {
+      t1 = this.btarget;
+      if (t1 != null) {
+        t1.touchDrag$1(c);
+        this.workspace.draw$0();
+      }
+    }
   },
   touchSlide$1: function(c) {
-  }
+  },
+  Menu$5: function(workspace, x, y, w, h) {
+    var t1;
+    $.set$src$x(this.frog, "images/" + this.workspace.color + "frog.png");
+    this.play = $.Button$(this.x + 95, this.y + this.h / 2 - 15, "images/toolbar/play.png", new $.Menu_closure(this));
+    this.pause = $.Button$(this.x + 95, this.y + this.h / 2 - 15, "images/toolbar/pause.png", new $.Menu_closure0(this));
+    this.pause.visible = false;
+    t1 = this.buttons;
+    t1.push(this.play);
+    t1.push(this.pause);
+    t1.push($.Button$(this.x + 130, this.y + this.h / 2 - 15, "images/toolbar/restart.png", new $.Menu_closure1(this)));
+    t1.push($.Button$(this.x + 165, this.y + this.h / 2 - 15, "images/toolbar/fastforward.png", new $.Menu_closure2(this)));
+    t1.push($.Button$(this.x + 200, this.y + this.h / 2 - 15, "images/toolbar/trash.png", new $.Menu_closure3(this)));
+  },
+  static: {
+Menu$: function(workspace, x, y, w, h) {
+  var t1 = new $.Menu(workspace, x, y, w, h, $.List_List(null), null, null, null, null, $.ImageElement_ImageElement(null, null, null), $.List_List(null));
+  t1.Menu$5(workspace, x, y, w, h);
+  return t1;
+}}
+
+},
+
+Menu_closure: {"": "Closure;this_0",
+  call$0: function() {
+    var t1 = this.this_0.get$workspace();
+    t1.get$pond().playProgram$1(t1);
+  },
+  "+call:0:0": 0
+},
+
+Menu_closure0: {"": "Closure;this_1",
+  call$0: function() {
+    var t1 = this.this_1.get$workspace();
+    t1.get$pond().pauseProgram$1(t1);
+  },
+  "+call:0:0": 0
+},
+
+Menu_closure1: {"": "Closure;this_2",
+  call$0: function() {
+    var t1 = this.this_2.get$workspace();
+    t1.get$pond().restartProgram$1(t1);
+    t1 = t1.get$bug();
+    t1.reset$0(t1);
+  },
+  "+call:0:0": 0
+},
+
+Menu_closure2: {"": "Closure;this_3",
+  call$0: function() {
+    var t1 = this.this_3.get$workspace();
+    t1.get$pond().fastForwardProgram$1(t1);
+  },
+  "+call:0:0": 0
+},
+
+Menu_closure3: {"": "Closure;this_4",
+  call$0: function() {
+    this.this_4.get$workspace().removeAllBlocks$0();
+  },
+  "+call:0:0": 0
+},
+
+Menu_draw_closure: {"": "Closure;ctx_0",
+  call$1: function(button) {
+    return button.draw$1(this.ctx_0);
+  },
+  "+call:1:0": 0
+},
+
+Button: {"": "Object;x*,y*,w?,h?,img>,down,over,visible,action,tween,_pulse@",
+  get$width: function(_) {
+    return this.w;
+  },
+  get$height: function(_) {
+    return this.h;
+  },
+  pulse$0: function() {
+    var t1 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
+    t1.segments = [];
+    this.tween = t1;
+    this.tween.$function = 1;
+    this.tween.delay = 5;
+    this.tween.duration = 30;
+    this.tween.repeat = 2;
+    this.tween.onstart = new $.Button_pulse_closure(this);
+    this.tween.onend = new $.Button_pulse_closure0(this);
+    this.tween.ondelta = new $.Button_pulse_closure1(this);
+    this.tween.addControlPoint$2(1, 0);
+    this.tween.addControlPoint$2(0.3, 0.5);
+    this.tween.addControlPoint$2(1, 1);
+  },
+  animate$0: function() {
+    var t1 = this.tween;
+    if (t1.isTweening$0()) {
+      t1.animate$0();
+      return true;
+    } else
+      return false;
+  },
+  draw$1: function(ctx) {
+    var t1, t2, ix, iy;
+    if (this.visible) {
+      t1 = this.down;
+      t2 = t1 && this.over;
+      ix = this.x;
+      if (t2)
+        ix += 2;
+      t1 = t1 && this.over;
+      t2 = this.y;
+      if (typeof t2 !== "number")
+        return this.draw$1$bailout(1, ctx, t1, t2, ix);
+      if (t1)
+        iy = t2 + 2;
+      else
+        iy = t2;
+      t1 = $.getInterceptor$x(ctx);
+      t1.set$globalAlpha(ctx, this._pulse);
+      t1.drawImage$3(ctx, this.img, ix, iy);
+      t1.set$globalAlpha(ctx, 1);
+    }
+  },
+  draw$1$bailout: function(state0, ctx, t1, t2, ix) {
+    switch (state0) {
+      case 0:
+      case 1:
+        var iy;
+        if (state0 === 1 || state0 === 0 && this.visible)
+          switch (state0) {
+            case 0:
+              t1 = this.down;
+              t2 = t1 && this.over;
+              ix = this.x;
+              if (t2)
+                ix += 2;
+              t1 = t1 && this.over;
+              t2 = this.y;
+            case 1:
+              state0 = 0;
+              iy = t1 ? $.$add$ns(t2, 2) : t2;
+              t1 = $.getInterceptor$x(ctx);
+              t1.set$globalAlpha(ctx, this._pulse);
+              t1.drawImage$3(ctx, this.img, ix, iy);
+              t1.set$globalAlpha(ctx, 1);
+          }
+    }
+  },
+  containsTouch$1: function(c) {
+    var t1, t2, t3, t4, t5;
+    if (this.visible) {
+      t1 = c.get$touchX();
+      if (typeof t1 !== "number")
+        return this.containsTouch$1$bailout(1, c, t1);
+      t2 = this.x;
+      if (t1 >= t2) {
+        t3 = c.get$touchY();
+        if (typeof t3 !== "number")
+          return this.containsTouch$1$bailout(2, c, t3);
+        t4 = this.y;
+        if (typeof t4 !== "number")
+          return this.containsTouch$1$bailout(3, c, t3, t4);
+        if (t3 >= t4) {
+          t5 = this.w;
+          if (typeof t5 !== "number")
+            throw $.iae(t5);
+          if (t1 <= t2 + t5) {
+            t1 = this.h;
+            if (t1 !== (t1 | 0))
+              return this.containsTouch$1$bailout(7, 0, t3, t4, t1);
+            t1 = t3 <= t4 + t1;
+          } else
+            t1 = false;
+        } else
+          t1 = false;
+      } else
+        t1 = false;
+    } else
+      t1 = false;
+    return t1;
+  },
+  containsTouch$1$bailout: function(state0, c, t1, t2, t3) {
+    switch (state0) {
+      case 0:
+      default:
+        if (state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 2 || state0 === 1 || state0 === 0 && this.visible)
+          switch (state0) {
+            case 0:
+              t1 = c.get$touchX();
+            case 1:
+              state0 = 0;
+            default:
+              if (state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 2 || state0 === 0 && $.$ge$n(t1, this.x))
+                switch (state0) {
+                  case 0:
+                    t1 = c.get$touchY();
+                  case 2:
+                    state0 = 0;
+                    t2 = this.y;
+                  case 3:
+                    state0 = 0;
+                  default:
+                    if (state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 0 && $.$ge$n(t1, t2))
+                      switch (state0) {
+                        case 0:
+                          t1 = c.get$touchX();
+                        case 4:
+                          state0 = 0;
+                          t2 = this.x;
+                          t3 = this.w;
+                          if (typeof t3 !== "number")
+                            throw $.iae(t3);
+                        default:
+                          if (state0 === 7 || state0 === 6 || state0 === 5 || state0 === 0 && $.$le$n(t1, t2 + t3))
+                            switch (state0) {
+                              case 0:
+                                t1 = c.get$touchY();
+                              case 5:
+                                state0 = 0;
+                                t2 = this.y;
+                              case 6:
+                                state0 = 0;
+                                t3 = this.h;
+                              case 7:
+                                state0 = 0;
+                                t3 = $.$le$n(t1, $.$add$ns(t2, t3));
+                                t1 = t3;
+                            }
+                          else
+                            t1 = false;
+                      }
+                    else
+                      t1 = false;
+                }
+              else
+                t1 = false;
+          }
+        else
+          t1 = false;
+        return t1;
+    }
+  },
+  touchDown$1: function(c) {
+    this.down = true;
+    this.over = true;
+    return this.visible;
+  },
+  touchUp$1: function(c) {
+    if (this.down && this.over && this.visible && this.action != null)
+      $.Primitives_applyFunction(this.action, [], $.Function__toMangledNames(null));
+    this.down = false;
+    this.over = false;
+  },
+  touchDrag$1: function(c) {
+    if (this.down && this.visible)
+      this.over = this.containsTouch$1(c);
+  },
+  Button$4: function(x, y, src, action) {
+    var t1, t2;
+    t1 = this.img;
+    t2 = $.getInterceptor$x(t1);
+    t2.set$src(t1, src);
+    t1 = t2.get$onLoad(t1);
+    new $._EventStreamSubscription(0, t1._target, t1._eventType, new $.Button_closure(this), t1._useCapture)._tryResume$0();
+  },
+  static: {
+Button$: function(x, y, src, action) {
+  var t1, t2;
+  t1 = $.ImageElement_ImageElement(null, null, null);
+  t2 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
+  t2.segments = [];
+  t2 = new $.Button(x, y, null, null, t1, false, false, true, action, t2, 1);
+  t2.Button$4(x, y, src, action);
+  return t2;
+}}
+
+},
+
+Button_closure: {"": "Closure;this_0",
+  call$1: function(e) {
+    var t1, t2;
+    t1 = this.this_0;
+    t2 = $.getInterceptor$x(t1);
+    t1.set$w($.get$width$x(t2.get$img(t1)));
+    t1.set$h($.get$height$x(t2.get$img(t1)));
+  },
+  "+call:1:0": 0
+},
+
+Button_pulse_closure: {"": "Closure;this_0",
+  call$0: function() {
+    this.this_0.set$_pulse(1);
+    return 1;
+  },
+  "+call:0:0": 0
+},
+
+Button_pulse_closure0: {"": "Closure;this_1",
+  call$0: function() {
+    this.this_1.set$_pulse(1);
+    return 1;
+  },
+  "+call:0:0": 0
+},
+
+Button_pulse_closure1: {"": "Closure;this_2",
+  call$1: function(value) {
+    var t1, t2;
+    t1 = this.this_2;
+    t2 = t1.get$_pulse();
+    if (typeof value !== "number")
+      throw $.iae(value);
+    t1.set$_pulse(t2 + value);
+  },
+  "+call:1:0": 0
 },
 
 Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,downIndex,values',_liblib3$_index,vspace,color<,textColor,dragging<,changed@,block",
   clone$1: function(_, $parent) {
-    var p, t1, t2;
-    p = $.Parameter$($parent);
+    var p = $.Parameter$($parent);
     p.centerX = this.centerX;
     p.centerY = this.centerY;
     p.width = this.width;
     p.height = this.height;
     p.values = this.values;
-    t1 = $.max(this._liblib3$_index, 0);
-    t2 = p.values.length;
-    if (typeof t1 !== "number")
-      throw t1.$mod();
-    p._liblib3$_index = C.JSNumber_methods.$mod(t1, t2);
+    p._liblib3$_index = $.$mod$n($.max(this._liblib3$_index, 0), p.values.length);
     p.color = this.color;
     p.textColor = this.textColor;
     return p;
   },
   set$index: function(_, i) {
-    var t1, t2;
-    t1 = $.max(i, 0);
-    t2 = this.values.length;
-    if (typeof t1 !== "number")
-      throw t1.$mod();
-    this._liblib3$_index = C.JSNumber_methods.$mod(t1, t2);
+    this._liblib3$_index = $.$mod$n($.max(i, 0), this.values.length);
   },
   $index: function(_, i) {
     var t1, t2, t3;
+    if (i !== (i | 0))
+      return this.$$index$bailout(1, i);
     t1 = this.values;
     t2 = t1.length;
-    if (typeof i !== "number")
-      throw i.$mod();
-    if (i !== (i | 0))
-      return this.$$index$bailout(1, t1, i, t2);
-    t3 = C.JSNumber_methods.$mod(i, t2);
-    if (t3 < 0 || t3 >= t2)
-      throw $.ioore(t3);
-    return t1[t3];
-  },
-  $$index$bailout: function(state0, t1, i, t2) {
-    var t3 = C.JSNumber_methods.$mod(i, t2);
+    t3 = C.JSInt_methods.$mod(i, t2);
     if (t3 >>> 0 !== t3 || t3 >= t2)
       throw $.ioore(t3);
     return t1[t3];
+  },
+  $$index$bailout: function(state0, i) {
+    var t1, t2;
+    t1 = this.values;
+    t2 = $.$mod$n(i, t1.length);
+    if (t2 >>> 0 !== t2 || t2 >= t1.length)
+      throw $.ioore(t2);
+    return t1[t2];
   },
   $indexSet: function(_, i, value) {
     var t1;
@@ -1711,13 +2157,7 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
     return i;
   },
   _getDragIndexY$0: function() {
-    var t1, t2, t3;
-    t1 = this.downIndex;
-    t2 = $.$sub$n(this.lastY, this.downY);
-    t3 = this.vspace;
-    if (typeof t2 !== "number")
-      throw t2.$div();
-    return this._throttleIndex$1(t1 - t2 / t3);
+    return this._throttleIndex$1(this.downIndex - $.$div$n($.$sub$n(this.lastY, this.downY), this.vspace));
   },
   _drawVerticalArrows$1: function(ctx) {
     var t1, cx, t2, cy, h, dy, y0, y1, x0, x1;
@@ -1771,7 +2211,7 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
     return 14 + t2;
   },
   draw$1: function(ctx) {
-    var t1, t2, t3, t4, x, y, w, h, ty, i, t5;
+    var t1, t2, t3, x, y, w, h, t4, ty, i, t5;
     t1 = $.getInterceptor$x(ctx);
     t1.set$font(ctx, "400 10pt sans-serif");
     t1.set$textAlign(ctx, "center");
@@ -1784,15 +2224,12 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
     if (typeof t2 !== "number")
       return this.draw$1$bailout(1, ctx, t1, t2);
     t3 = this.block;
-    t4 = t3.x;
-    if (typeof t4 !== "number")
-      return this.draw$1$bailout(2, ctx, t1, t2, t4, t3);
-    x = t2 + t4 - 18;
-    t4 = this.centerY;
+    x = t2 + t3.x - 18;
+    t2 = this.centerY;
     t3 = t3.y;
     if (typeof t3 !== "number")
       throw $.iae(t3);
-    y = t4 + t3;
+    y = t2 + t3;
     w = this.width;
     h = this.height;
     if (this.dragging)
@@ -1812,10 +2249,10 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
       t2 = this.downIndex;
       t3 = this.lastY;
       if (typeof t3 !== "number")
-        return this.draw$1$bailout(3, ctx, t1, t2, 0, t3, y, x, w);
+        return this.draw$1$bailout(2, ctx, t1, t2, x, w, t3, y);
       t4 = this.downY;
       if (typeof t4 !== "number")
-        return this.draw$1$bailout(4, ctx, t1, t2, t4, t3, y, x, w);
+        return this.draw$1$bailout(3, ctx, t1, t2, x, w, t3, y, t4);
       t4 = this._throttleIndex$1(t2 - (t3 - t4) / this.vspace);
       t2 = t4;
     } else
@@ -1829,7 +2266,7 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
     }
     t1.restore$0(ctx);
   },
-  draw$1$bailout: function(state0, ctx, t1, t2, t4, t3, y, x, w) {
+  draw$1$bailout: function(state0, ctx, t1, t2, x, w, t3, y, t4) {
     switch (state0) {
       case 0:
         t1 = $.getInterceptor$x(ctx);
@@ -1844,15 +2281,12 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
       case 1:
         state0 = 0;
         t3 = this.block;
-        t4 = t3.x;
-      case 2:
-        state0 = 0;
-        x = $.$sub$n($.$add$ns(t2, t4), 18);
-        t4 = this.centerY;
+        x = $.$sub$n($.$add$ns(t2, t3.x), 18);
+        t2 = this.centerY;
         t3 = t3.y;
         if (typeof t3 !== "number")
           throw $.iae(t3);
-        y = t4 + t3;
+        y = t2 + t3;
         w = this.width;
         h = this.height;
         if (this.dragging)
@@ -1870,22 +2304,18 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
         t1.set$fillStyle(ctx, this.textColor);
       default:
         var h, ty, i, t5, t6;
-        if (state0 === 4 || state0 === 3 || state0 === 0 && this.dragging)
+        if (state0 === 3 || state0 === 2 || state0 === 0 && this.dragging)
           switch (state0) {
             case 0:
               t2 = this.downIndex;
               t3 = this.lastY;
-            case 3:
+            case 2:
               state0 = 0;
               t4 = this.downY;
-            case 4:
+            case 3:
               state0 = 0;
-              t4 = $.$sub$n(t3, t4);
-              t3 = this.vspace;
-              if (typeof t4 !== "number")
-                throw t4.$div();
-              t3 = this._throttleIndex$1(t2 - t4 / t3);
-              t2 = t3;
+              t4 = this._throttleIndex$1(t2 - $.$div$n($.$sub$n(t3, t4), this.vspace));
+              t2 = t4;
           }
         else
           t2 = this._liblib3$_index;
@@ -1906,28 +2336,26 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
       return this.containsTouch$1$bailout(1, c, t1);
     t2 = this.block;
     t3 = t2.x;
-    if (typeof t3 !== "number")
-      return this.containsTouch$1$bailout(2, c, t1, t2, t3);
     t4 = this.width / 2;
     cx = t1 + t3 - 18 + t4;
     t1 = t2.y;
     if (typeof t1 !== "number")
       throw $.iae(t1);
     if (t2.get$isInProgram()) {
-      t5 = c.touchX;
+      t5 = c.get$touchX();
       if (typeof t5 !== "number")
-        return this.containsTouch$1$bailout(3, c, t5, t2, 0, cx);
+        return this.containsTouch$1$bailout(2, c, t5, cx, t2);
       if (t5 >= cx - t4) {
-        t4 = c.touchY;
+        t4 = c.get$touchY();
         if (typeof t4 !== "number")
-          return this.containsTouch$1$bailout(4, c, t4, t2);
+          return this.containsTouch$1$bailout(3, c, t4, 0, t2);
         if (t4 >= t1) {
           t6 = t2.inMenu;
           t7 = t2._width;
           if (typeof t7 !== "number")
-            return this.containsTouch$1$bailout(8, c, t5, t2, t3, 0, t7, t6);
+            return this.containsTouch$1$bailout(6, c, t5, 0, t2, t3, t6, t7);
           if (t6)
-            t6 = t7 * 0.7;
+            t6 = t7 * 0.65;
           else
             t6 = t7;
           t1 = t5 <= t3 + t6 && t4 <= t1 + t2._height;
@@ -1939,60 +2367,58 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
       t1 = false;
     return t1;
   },
-  containsTouch$1$bailout: function(state0, c, t1, t2, t3, cx, t5, t4) {
+  containsTouch$1$bailout: function(state0, c, t1, cx, t2, t3, t4, t5) {
     switch (state0) {
       case 0:
         t1 = this.centerX;
       case 1:
         state0 = 0;
         t2 = this.block;
-        t3 = t2.x;
-      case 2:
-        state0 = 0;
-        cx = $.$add$ns($.$sub$n($.$add$ns(t1, t3), 18), this.width / 2);
-        t3 = t2.y;
-        if (typeof t3 !== "number")
-          throw $.iae(t3);
+        cx = $.$add$ns($.$sub$n($.$add$ns(t1, t2.x), 18), this.width / 2);
+        t1 = t2.y;
+        if (typeof t1 !== "number")
+          throw $.iae(t1);
       default:
-        if (state0 === 10 || state0 === 9 || state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 0 && t2.get$isInProgram())
+        if (state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 2 || state0 === 0 && t2.get$isInProgram())
           switch (state0) {
             case 0:
-              t1 = c.touchX;
-            case 3:
+              t1 = c.get$touchX();
+            case 2:
               state0 = 0;
             default:
-              if (state0 === 10 || state0 === 9 || state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 0 && $.$ge$n(t1, $.$sub$n(cx, this.width / 2)))
+              if (state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 0 && $.$ge$n(t1, $.$sub$n(cx, this.width / 2)))
                 switch (state0) {
                   case 0:
-                    t1 = c.touchY;
-                  case 4:
+                    t1 = c.get$touchY();
+                  case 3:
                     state0 = 0;
                     t3 = t2.y;
-                  case 5:
+                  case 4:
                     state0 = 0;
                   default:
-                    if (state0 === 10 || state0 === 9 || state0 === 8 || state0 === 7 || state0 === 6 || state0 === 0 && $.$ge$n(t1, t3))
+                    if (state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 0 && $.$ge$n(t1, t3))
                       switch (state0) {
                         case 0:
-                          t1 = c.touchX;
-                        case 6:
+                          t1 = c.get$touchX();
+                        case 5:
                           state0 = 0;
                           t3 = t2.x;
-                        case 7:
-                          state0 = 0;
                           t4 = t2.inMenu;
                           t5 = t2._width;
-                        case 8:
+                        case 6:
                           state0 = 0;
+                          t4 = t4 ? $.$mul$n(t5, 0.65) : t5;
+                          if (typeof t4 !== "number")
+                            throw $.iae(t4);
                         default:
-                          if (state0 === 10 || state0 === 9 || state0 === 0 && $.$le$n(t1, $.$add$ns(t3, t4 ? $.$mul$n(t5, 0.7) : t5)))
+                          if (state0 === 8 || state0 === 7 || state0 === 0 && $.$le$n(t1, t3 + t4))
                             switch (state0) {
                               case 0:
-                                t1 = c.touchY;
-                              case 9:
+                                t1 = c.get$touchY();
+                              case 7:
                                 state0 = 0;
                                 t3 = t2.y;
-                              case 10:
+                              case 8:
                                 state0 = 0;
                                 t2 = $.$le$n(t1, $.$add$ns(t3, t2._height));
                                 t1 = t2;
@@ -2012,12 +2438,7 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
     }
   },
   touchUp$1: function(c) {
-    var t1, t2;
-    t1 = $.max(C.JSNumber_methods.toInt$0(C.JSNumber_methods.toInt$0(C.JSNumber_methods.roundToDouble$0(this.dragging ? this._getDragIndexY$0() : this._liblib3$_index))), 0);
-    t2 = this.values.length;
-    if (typeof t1 !== "number")
-      throw t1.$mod();
-    this._liblib3$_index = C.JSNumber_methods.$mod(t1, t2);
+    this._liblib3$_index = $.$mod$n($.max(C.JSNumber_methods.toInt$0(C.JSNumber_methods.toInt$0(C.JSNumber_methods.roundToDouble$0(this.dragging ? this._getDragIndexY$0() : this._liblib3$_index))), 0), this.values.length);
     if (this._liblib3$_index !== this.downIndex)
       this.changed = true;
     this.downIndex = this._liblib3$_index;
@@ -2035,7 +2456,7 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
     return true;
   },
   touchDrag$1: function(c) {
-    var t1, oldIndex, newIndex, t2;
+    var t1, oldIndex, newIndex;
     t1 = this.dragging ? this._getDragIndexY$0() : this._liblib3$_index;
     oldIndex = C.JSNumber_methods.$mod(t1, this.values.length);
     this.lastX = c.touchX;
@@ -2043,11 +2464,7 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
     t1 = this.dragging ? this._getDragIndexY$0() : this._liblib3$_index;
     newIndex = C.JSNumber_methods.$mod(t1, this.values.length);
     if (oldIndex !== newIndex && newIndex === C.JSNumber_methods.toInt$0(Math.floor(newIndex))) {
-      t1 = $.max(C.JSNumber_methods.toInt$0(C.JSNumber_methods.toInt$0(C.JSNumber_methods.roundToDouble$0(this.dragging ? this._getDragIndexY$0() : this._liblib3$_index))), 0);
-      t2 = this.values.length;
-      if (typeof t1 !== "number")
-        throw t1.$mod();
-      this._liblib3$_index = C.JSNumber_methods.$mod(t1, t2);
+      this._liblib3$_index = $.$mod$n($.max(C.JSNumber_methods.toInt$0(C.JSNumber_methods.toInt$0(C.JSNumber_methods.roundToDouble$0(this.dragging ? this._getDragIndexY$0() : this._liblib3$_index))), 0), this.values.length);
       this.block.parameterChanged$1(this);
       $.Sounds_playSound("click");
     }
@@ -2060,7 +2477,7 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
     t1 = this.block;
     t2 = t1.inMenu;
     t3 = t1._width;
-    this.centerX = $.$sub$n(t2 ? $.$mul$n(t3, 0.7) : t3, 22);
+    this.centerX = $.$sub$n(t2 ? $.$mul$n(t3, 0.65) : t3, 22);
     this.centerY = t1._height / 2;
     this.width = 28;
     this.height = 20;
@@ -2076,7 +2493,7 @@ Parameter$: function(block) {
 
 },
 
-RepeatBlock: {"": "BeginBlock;end,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,wasInMenu,wasInProgram",
+RepeatBlock: {"": "BeginBlock;end,begin,cnext,cprev,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,inserted",
   clone$0: function(_) {
     var block = $.RepeatBlock$(this.workspace);
     this.copyTo$1(block);
@@ -2125,21 +2542,29 @@ RepeatBlock: {"": "BeginBlock;end,workspace,id,x,y,_width,_height,_targetX,_targ
     t1 = this.param;
     t2 = this.inMenu;
     t3 = this._width;
-    t1.set$centerX($.$sub$n(t2 ? $.$mul$n(t3, 0.7) : t3, 7));
-    $.set$values$x(this.param, [2, 3, 4, 5, "forever", "near-water?", "see-gem?"]);
+    t1.set$centerX($.$sub$n(t2 ? $.$mul$n(t3, 0.65) : t3, 7));
+    $.set$values$x(this.param, ["forever", 2, 3, 4, 5, "near-water?", "see-gem?"]);
+    t1 = new $.EndBlock(null, null, null, workspace, null, 0, 0, 0, 0, null, null, "", "#3399aa", "white", false, null, null, null, null, null, null, false, false);
+    t1.Block$2(workspace, "");
+    t1.color = "#c92";
+    t1.begin = this;
+    t1._height = 18;
+    this.end = t1;
+    this._addClause$1(this.end);
   },
   static: {
 RepeatBlock$: function(workspace) {
-  var t1 = new $.RepeatBlock(null, workspace, null, 0, 0, 0, 0, null, null, "repeat", "#3399aa", "white", false, null, null, null, null, null, null, false, true, false);
+  var t1 = new $.RepeatBlock(null, null, null, null, workspace, null, 0, 0, 0, 0, null, null, "repeat", "#3399aa", "white", false, null, null, null, null, null, null, false, false);
   t1.Block$2(workspace, "repeat");
   t1.color = "#c92";
+  t1.begin = null;
   t1.RepeatBlock$1(workspace);
   return t1;
 }}
 
 },
 
-StartBlock: {"": "BeginBlock;_pulse@,pdown,rdown,tween,_play,_pause,_restart,end,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,wasInMenu,wasInProgram",
+StartBlock: {"": "BeginBlock;_play,_pause,_liblib3$_target,end,begin,cnext,cprev,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,inserted",
   getProgramHeight$0: function() {
     var t1, t2;
     t1 = this.end;
@@ -2147,115 +2572,78 @@ StartBlock: {"": "BeginBlock;_pulse@,pdown,rdown,tween,_play,_pause,_restart,end
     t1.get$height;
     return $.$sub$n($.$add$ns(t2, t1._height), this.y);
   },
-  pulse$0: function() {
-    var t1 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
-    t1.segments = [];
-    this.tween = t1;
-    this.tween.$function = 1;
-    this.tween.delay = 5;
-    this.tween.duration = 30;
-    this.tween.repeat = 2;
-    this.tween.onstart = new $.StartBlock_pulse_closure(this);
-    this.tween.onend = new $.StartBlock_pulse_closure0(this);
-    this.tween.ondelta = new $.StartBlock_pulse_closure1(this);
-    this.tween.addControlPoint$2(1, 0);
-    this.tween.addControlPoint$2(0.3, 0.5);
-    this.tween.addControlPoint$2(1, 1);
-  },
   animate$0: function() {
-    var refresh, t1;
-    refresh = $.Block.prototype.animate$0.call(this);
-    t1 = this.tween;
-    if (t1.isTweening$0()) {
-      t1.animate$0();
+    var refresh = $.Block.prototype.animate$0.call(this);
+    if (this._play.animate$0())
       return true;
-    } else
-      return refresh;
+    if (this._pause.animate$0())
+      return true;
+    return refresh;
   },
   get$isInProgram: function() {
     return true;
   },
   draw$1: function(ctx) {
-    $.Block.prototype.draw$1.call(this, ctx);
-    if (this.workspace.get$running())
-      this._drawPause$1(ctx);
-    else
-      this._drawPlay$1(ctx);
-    this._drawRestart$1(ctx);
-  },
-  _drawPause$1: function(ctx) {
-    var ix, iy, t1, t2, iw, ih;
-    ix = $.$add$ns(this.x, 35);
-    iy = $.$add$ns(this.y, this._height / 2);
-    t1 = this._pause;
-    t2 = $.getInterceptor$x(t1);
-    iw = t2.get$width(t1);
-    ih = t2.get$height(t1);
-    if (this.pdown && this.onPlayPauseButton$2(this._lastX, this._lastY)) {
-      ix = $.$add$ns(ix, 2);
-      iy = $.$add$ns(iy, 2);
-    }
-    if (typeof iw !== "number")
-      throw iw.$div();
-    t2 = $.$sub$n(ix, iw / 2);
-    if (typeof ih !== "number")
-      throw ih.$div();
-    $.drawImage$3$x(ctx, t1, t2, $.$sub$n(iy, ih / 2));
-  },
-  _drawPlay$1: function(ctx) {
-    var ix, iy, t1, t2, iw, ih, t3;
-    ix = $.$add$ns(this.x, 35);
-    iy = $.$add$ns(this.y, this._height / 2);
+    var t1, t2;
+    $.BeginBlock.prototype.draw$1.call(this, ctx);
+    this._play.x = this.x + 65;
     t1 = this._play;
-    t2 = $.getInterceptor$x(t1);
-    iw = t2.get$width(t1);
-    ih = t2.get$height(t1);
-    if (this.pdown && this.onPlayPauseButton$2(this._lastX, this._lastY)) {
-      ix = $.$add$ns(ix, 2);
-      iy = $.$add$ns(iy, 2);
-    }
-    t2 = $.getInterceptor$x(ctx);
-    t2.save$0(ctx);
-    t2.set$globalAlpha(ctx, this._pulse);
-    if (typeof iw !== "number")
-      throw iw.$div();
-    t3 = $.$sub$n(ix, iw / 2);
-    if (typeof ih !== "number")
-      throw ih.$div();
-    t2.drawImage$3(ctx, t1, t3, $.$sub$n(iy, ih / 2));
-    t2.restore$0(ctx);
+    t2 = this.y;
+    if (typeof t2 !== "number")
+      return this.draw$1$bailout3(1, ctx, t1, t2);
+    t1.y = t2 + this._height / 2 - 15;
+    this._pause.x = this.x + 65;
+    t2 = this._pause;
+    t1 = this.y;
+    if (typeof t1 !== "number")
+      return this.draw$1$bailout3(2, ctx, t1, t2);
+    t2.y = t1 + this._height / 2 - 15;
+    t1 = this.workspace;
+    this._play.visible = !t1.get$running();
+    this._pause.visible = t1.get$running();
+    this._play.draw$1(ctx);
+    this._pause.draw$1(ctx);
   },
-  _drawRestart$1: function(ctx) {
-    var ix, iy, t1, t2, iw, ih;
-    ix = $.$add$ns(this.x, 70);
-    iy = $.$add$ns(this.y, this._height / 2);
-    t1 = this._restart;
-    t2 = $.getInterceptor$x(t1);
-    iw = t2.get$width(t1);
-    ih = t2.get$height(t1);
-    if (this.rdown && this.onRestartButton$2(this._lastX, this._lastY)) {
-      ix = $.$add$ns(ix, 2);
-      iy = $.$add$ns(iy, 2);
+  draw$1$bailout3: function(state0, ctx, t1, t2) {
+    switch (state0) {
+      case 0:
+        $.BeginBlock.prototype.draw$1.call(this, ctx);
+        this._play.x = this.x + 65;
+        t1 = this._play;
+        t2 = this.y;
+      case 1:
+        state0 = 0;
+        t1.y = $.$sub$n($.$add$ns(t2, this._height / 2), 15);
+        this._pause.x = this.x + 65;
+        t2 = this._pause;
+        t1 = this.y;
+      case 2:
+        state0 = 0;
+        t2.y = $.$sub$n($.$add$ns(t1, this._height / 2), 15);
+        t1 = this.workspace;
+        this._play.visible = !t1.get$running();
+        this._pause.visible = t1.get$running();
+        this._play.draw$1(ctx);
+        this._pause.draw$1(ctx);
     }
-    if (typeof iw !== "number")
-      throw iw.$div();
-    t2 = $.$sub$n(ix, iw / 2);
-    if (typeof ih !== "number")
-      throw ih.$div();
-    $.drawImage$3$x(ctx, t1, t2, $.$sub$n(iy, ih / 2));
   },
   isOutOfBounds$0: function() {
-    var t1, t2, t3, t4, t5, t6;
+    var t1, t2, t3, t4, t5;
     t1 = this.workspace;
     t2 = $.getInterceptor$x(t1);
     if (!$.$lt$n(this.y, $.$sub$n($.$sub$n($.$sub$n(t2.get$height(t1), 180), this.getProgramHeight$0()), 100)))
       if (!$.$gt$n($.$add$ns(this.y, this.getProgramHeight$0()), t2.get$height(t1))) {
         t3 = this.x;
-        t4 = $.getInterceptor$n(t3);
-        if (!t4.$lt(t3, 0)) {
-          t5 = this.inMenu;
-          t6 = this._width;
-          t1 = $.$gt$n(t4.$add(t3, t5 ? $.$mul$n(t6, 0.7) : t6), t2.get$width(t1));
+        if (!(t3 < 0)) {
+          t4 = this.inMenu;
+          t5 = this._width;
+          t4 = t4 ? $.$mul$n(t5, 0.65) : t5;
+          if (typeof t4 !== "number")
+            throw $.iae(t4);
+          t1 = t2.get$width(t1);
+          if (typeof t1 !== "number")
+            throw $.iae(t1);
+          t1 = t3 + t4 > t1;
         } else
           t1 = true;
       } else
@@ -2265,161 +2653,123 @@ StartBlock: {"": "BeginBlock;_pulse@,pdown,rdown,tween,_play,_pause,_restart,end
     return t1;
   },
   touchDown$1: function(c) {
+    var t1;
     this.dragging = false;
-    this.pdown = false;
-    this.rdown = false;
-    if (this.onPlayPauseButton$2(c.touchX, c.touchY))
-      this.pdown = true;
-    else if (this.onRestartButton$2(c.touchX, c.touchY))
-      this.rdown = true;
+    this._liblib3$_target = null;
+    if (this._play.containsTouch$1(c)) {
+      this._liblib3$_target = this._play;
+      t1 = this._play;
+      t1.touchDown$1;
+      t1.down = true;
+      t1.over = true;
+      t1.visible;
+    } else if (this._pause.containsTouch$1(c)) {
+      this._liblib3$_target = this._pause;
+      t1 = this._pause;
+      t1.touchDown$1;
+      t1.down = true;
+      t1.over = true;
+      t1.visible;
+    }
     this._lastX = c.touchX;
     this._lastY = c.touchY;
     this.workspace.draw$0();
     return true;
   },
   touchDrag$1: function(c) {
-    if (!this.pdown && !this.rdown)
+    var t1 = this._liblib3$_target;
+    if (t1 == null)
       this.moveChain$2($.$sub$n(c.touchX, this._lastX), $.$sub$n(c.touchY, this._lastY));
+    else
+      t1.touchDrag$1(c);
     this._lastX = c.touchX;
     this._lastY = c.touchY;
     this.workspace.draw$0();
   },
   touchUp$1: function(c) {
-    var t1, t2, t3;
+    var t1, t2;
     this.dragging = false;
-    if (this.pdown && this.onPlayPauseButton$2(c.touchX, c.touchY)) {
-      t1 = this.workspace;
-      if (t1.get$running())
-        t1.pauseProgram$0();
-      else
-        t1.playProgram$0();
-    } else if (this.rdown && this.onRestartButton$2(c.touchX, c.touchY))
-      this.workspace.restartProgram$0();
+    t1 = this._liblib3$_target;
+    if (t1 != null)
+      t1.touchUp$1(c);
     else if (this.isOutOfBounds$0()) {
       t1 = this.workspace;
       t2 = $.getInterceptor$x(t1);
-      t3 = t2.get$width(t1);
-      if (typeof t3 !== "number")
-        throw t3.$div();
-      this._targetX = t3 / 2 - 300;
+      this._targetX = $.$div$n(t2.get$width(t1), 2) - 300;
       this.end._targetY = $.$add$ns($.$sub$n(t2.get$height(t1), 180), this._height);
     }
-    this.pdown = false;
-    this.rdown = false;
+    this._liblib3$_target = null;
     this.workspace.draw$0();
   },
-  onPlayPauseButton$2: function(tx, ty) {
-    var t1, t2;
-    t1 = $.getInterceptor$n(tx);
-    if (t1.$ge(tx, $.$add$ns(this.x, 23)))
-      if (t1.$le(tx, $.$add$ns(this.x, 47))) {
-        t1 = this.y;
-        t2 = $.getInterceptor$n(ty);
-        t1 = t2.$ge(ty, t1) && t2.$le(ty, $.$add$ns(t1, this._height));
-      } else
-        t1 = false;
-    else
-      t1 = false;
-    return t1;
-  },
-  onRestartButton$2: function(tx, ty) {
-    var t1, t2, t3, t4;
-    t1 = $.getInterceptor$n(tx);
-    if (t1.$ge(tx, $.$add$ns(this.x, 58))) {
-      t2 = this.x;
-      t3 = this.inMenu;
-      t4 = this._width;
-      if (t1.$le(tx, $.$add$ns(t2, t3 ? $.$mul$n(t4, 0.7) : t4))) {
-        t1 = this.y;
-        t2 = $.getInterceptor$n(ty);
-        t1 = t2.$ge(ty, t1) && t2.$le(ty, $.$add$ns(t1, this._height));
-      } else
-        t1 = false;
-    } else
-      t1 = false;
-    return t1;
-  },
   StartBlock$1: function(workspace) {
-    var t1, t2, t3;
+    var t1, t2;
     t1 = this.workspace;
     t2 = $.getInterceptor$x(t1);
-    t3 = t2.get$width(t1);
-    if (typeof t3 !== "number")
-      throw t3.$div();
-    this.x = t3 / 2 - 300;
+    this.x = $.$div$n(t2.get$width(t1), 2) - 300;
     this.y = $.$sub$n(t2.get$height(t1), 180);
     this.color = "green";
     this.end = $.EndProgramBlock$(workspace, this);
     this.end.y = $.$add$ns($.$add$ns($.$add$ns(this.y, this._height), 10), 20);
-    this.end.prev = this;
-    this.next = this.end;
+    this._addClause$1(this.end);
     workspace.addBlock$1(this.end);
+    this.inserted = true;
     this._width = 105;
-    $.set$src$x(this._play, "images/play.png");
-    $.set$src$x(this._pause, "images/pause.png");
-    $.set$src$x(this._restart, "images/restart.png");
-    this.wasInMenu = false;
+    this._play = $.Button$(this.x + 65, $.$sub$n($.$add$ns(this.y, this._height / 2), 15), "images/toolbar/play.png", new $.StartBlock_closure(workspace));
+    this._pause = $.Button$(this.x + 65, $.$sub$n($.$add$ns(this.y, this._height / 2), 15), "images/toolbar/pause.png", new $.StartBlock_closure0(workspace));
+    this._pause.visible = false;
   },
   $isStartBlock: true,
   static: {
 StartBlock$: function(workspace) {
-  var t1 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
-  t1.segments = [];
-  t1 = new $.StartBlock(1, false, false, t1, $.ImageElement_ImageElement(null, null, null), $.ImageElement_ImageElement(null, null, null), $.ImageElement_ImageElement(null, null, null), null, workspace, null, 0, 0, 0, 0, null, null, "", "#3399aa", "white", false, null, null, null, null, null, null, false, true, false);
-  t1.Block$2(workspace, "");
+  var t1 = new $.StartBlock(null, null, null, null, null, null, null, workspace, null, 0, 0, 0, 0, null, null, "start", "#3399aa", "white", false, null, null, null, null, null, null, false, false);
+  t1.Block$2(workspace, "start");
   t1.color = "#c92";
+  t1.begin = null;
   t1.StartBlock$1(workspace);
   return t1;
 }}
 
 },
 
-StartBlock_pulse_closure: {"": "Closure;this_0",
+StartBlock_closure: {"": "Closure;workspace_0",
   call$0: function() {
-    this.this_0.set$_pulse(1);
-    return 1;
-  }
+    var t1 = this.workspace_0;
+    t1.pond.playProgram$1(t1);
+  },
+  "+call:0:0": 0
 },
 
-StartBlock_pulse_closure0: {"": "Closure;this_1",
+StartBlock_closure0: {"": "Closure;workspace_1",
   call$0: function() {
-    this.this_1.set$_pulse(1);
-    return 1;
-  }
+    var t1 = this.workspace_1;
+    t1.pond.pauseProgram$1(t1);
+  },
+  "+call:0:0": 0
 },
 
-StartBlock_pulse_closure1: {"": "Closure;this_2",
-  call$1: function(value) {
-    var t1, t2;
-    t1 = this.this_2;
-    t2 = t1.get$_pulse();
-    if (typeof value !== "number")
-      throw $.iae(value);
-    t1.set$_pulse(t2 + value);
-  }
-},
-
-EndProgramBlock: {"": "EndBlock;begin,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,wasInMenu,wasInProgram",
+EndProgramBlock: {"": "EndBlock;begin,cnext,cprev,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,inserted",
   touchDown$1: function(c) {
     return false;
   },
   EndProgramBlock$2: function(workspace, begin) {
     this._width = 105;
-    this.wasInMenu = false;
+    this.inserted = true;
   },
   $isEndProgramBlock: true,
   static: {
 EndProgramBlock$: function(workspace, begin) {
-  var t1 = new $.EndProgramBlock(null, workspace, null, 0, 0, 0, 0, null, null, "", "#3399aa", "white", false, null, null, null, null, null, null, false, true, false);
+  var t1 = new $.EndProgramBlock(null, null, null, workspace, null, 0, 0, 0, 0, null, null, "", "#3399aa", "white", false, null, null, null, null, null, null, false, false);
   t1.Block$2(workspace, "");
-  t1.EndBlock$2(workspace, begin);
+  t1.color = "#c92";
+  t1.begin = begin;
+  t1._height = 18;
   t1.EndProgramBlock$2(workspace, begin);
   return t1;
 }}
 
 },
 
-StatusInfo: {"": "Object;x*,y*,w,h,frog<,fly,gems<,captured?,workspace<,fly_count",
+StatusInfo: {"": "Object;x*,y*,w?,h?,fly,gems<,captured?,workspace<,fly_count",
   animate$0: function() {
     var t1 = this.captured;
     if (t1 != null)
@@ -2561,138 +2911,62 @@ StatusInfo: {"": "Object;x*,y*,w,h,frog<,fly,gems<,captured?,workspace<,fly_coun
     this.workspace.draw$0();
   },
   draw$1: function(ctx) {
-    var t1, t2, t3, t4, t5, t6, truncated, iw, ih, ix, iy, gem;
+    var t1, t2, t3, ix, iy, gem, t4, iw, ih;
     t1 = $.getInterceptor$x(ctx);
     t1.save$0(ctx);
     t1.set$fillStyle(ctx, "#3e5d64");
     t1.set$strokeStyle(ctx, "#223333");
     t1.set$lineWidth(ctx, 3);
     t1.beginPath$0(ctx);
+    t1.moveTo$2(ctx, this.x, this.y + this.h);
     t2 = this.x;
     t3 = this.y;
-    if (typeof t3 !== "number")
-      return this.draw$1$bailout(1, ctx, t1, t2, t3);
-    t4 = this.h;
-    t1.moveTo$2(ctx, t2, t3 + t4);
-    t3 = this.x;
-    if (typeof t3 !== "number")
-      return this.draw$1$bailout(2, ctx, t1, 0, t3, t4);
-    t2 = t3 - 15;
-    t5 = this.y;
-    if (typeof t5 !== "number")
-      return this.draw$1$bailout(3, ctx, t1, t5, t2, t4);
-    t6 = this.w;
-    t1.bezierCurveTo$6(ctx, t2, t5 - t4 / 2, t3 + 40, t5 + 25, t3 + t6 + 6, t5);
-    t5 = this.x;
-    if (typeof t5 !== "number")
-      return this.draw$1$bailout(7, ctx, t1, 0, 0, t4, 0, 0, t5, t6);
-    t6 = t5 + t6 + 6;
-    t5 = this.y;
-    if (typeof t5 !== "number")
-      return this.draw$1$bailout(8, ctx, t1, 0, 0, t4, 0, 0, t5, t6);
-    t1.lineTo$2(ctx, t6, t5 + t4);
+    t1.bezierCurveTo$6(ctx, t2 - 15, t3 - this.h / 2, t2 + 40, t3 + 25, t2 + this.w + 6, t3);
+    t1.lineTo$2(ctx, this.x + this.w + 6, this.y + this.h);
     t1.fill$0(ctx);
     t1.stroke$0(ctx);
-    t5 = $.get$width$x(this.frog);
-    if (typeof t5 !== "number")
-      throw t5.$mul();
-    t5 *= 0.75;
-    if (isNaN(t5))
-      $.throwExpression(new $.UnsupportedError("NaN"));
-    if (t5 == Infinity || t5 == -Infinity)
-      $.throwExpression(new $.UnsupportedError("Infinity"));
-    truncated = t5 < 0 ? Math.ceil(t5) : Math.floor(t5);
-    iw = truncated == -0.0 ? 0 : truncated;
-    t2 = $.get$height$x(this.frog);
-    if (typeof t2 !== "number")
-      throw t2.$mul();
-    t2 *= 0.75;
-    if (isNaN(t2))
-      $.throwExpression(new $.UnsupportedError("NaN"));
-    if (t2 == Infinity || t2 == -Infinity)
-      $.throwExpression(new $.UnsupportedError("Infinity"));
-    truncated = t2 < 0 ? Math.ceil(t2) : Math.floor(t2);
-    ih = truncated == -0.0 ? 0 : truncated;
-    t2 = this.x;
-    if (typeof t2 !== "number")
-      return this.draw$1$bailout(9, ctx, t1, t2, 0, t4, 0, 0, 0, 0, iw, ih);
-    ix = t2 + 10;
-    t2 = this.y;
-    if (typeof t2 !== "number")
-      return this.draw$1$bailout(10, ctx, t1, t2, 0, t4, 0, 0, 0, 0, iw, ih, ix);
-    t1.drawImageScaled$5(ctx, this.frog, ix, t2 + t4 - ih, iw, ih);
-    ix += iw + 10;
-    t2 = this.y;
-    if (typeof t2 !== "number")
-      return this.draw$1$bailout(11, ctx, t1, t2, 0, t4, 0, 0, 0, 0, 0, 0, ix);
-    iy = t2 + t4 - C.JSInt_methods.$tdiv(t4, 3);
+    ix = this.x + 18;
+    t3 = this.y;
+    t2 = this.h;
+    iy = t3 + t2 - C.JSInt_methods.$tdiv(t2, 3);
     for (t2 = this.gems, t2 = new $.ListIterator(t2, t2.length, 0, null); t2.moveNext$0();) {
       gem = t2._liblib0$_current;
       t3 = $.getInterceptor$x(gem);
       t4 = t3.get$width(gem);
       if (typeof t4 !== "number")
-        return this.draw$1$bailout(12, ctx, t1, t2, C.JSNumber_methods, t3, t4, 0, 0, 0, 0, 0, ix, iy, gem);
+        return this.draw$1$bailout(1, ctx, iy, t2, t1, ix, t3, t4, gem);
       ix += C.JSNumber_methods.$tdiv(t4, 2);
-      t3.set$x(gem, C.JSNumber_methods.toDouble$0(ix));
-      t3.set$y(gem, C.JSNumber_methods.toDouble$0(iy));
+      t3.set$x(gem, ix);
+      t3.set$y(gem, iy);
       gem.draw$1(ctx);
       t3 = t3.get$width(gem);
       if (typeof t3 !== "number")
-        return this.draw$1$bailout(13, ctx, t1, t2, C.JSNumber_methods, t3, C.JSNumber_methods, 0, 0, 0, 0, 0, ix, iy);
+        return this.draw$1$bailout(2, ctx, iy, t2, t1, ix, t3);
       ix += C.JSNumber_methods.$tdiv(t3, 2) + 10;
     }
-    t2 = this.x;
-    if (typeof t2 !== "number")
-      return this.draw$1$bailout(14, ctx, t1, t2);
-    t3 = $.get$width$x(this.frog);
-    if (typeof t3 !== "number")
-      throw t3.$mul();
-    t3 *= 0.75;
-    if (isNaN(t3))
-      $.throwExpression(new $.UnsupportedError("NaN"));
-    if (t3 == Infinity || t3 == -Infinity)
-      $.throwExpression(new $.UnsupportedError("Infinity"));
-    truncated = t3 < 0 ? Math.ceil(t3) : Math.floor(t3);
-    t3 = truncated == -0.0 ? 0 : truncated;
-    ix = t2 + 20 + t3;
-    t3 = this.y;
-    if (typeof t3 !== "number")
-      return this.draw$1$bailout(15, ctx, t1, t3, 0, 0, 0, 0, 0, 0, 0, 0, ix);
-    iy = t3 + 30;
-    t3 = this.fly;
-    t2 = $.getInterceptor$x(t3);
-    t4 = t2.get$width(t3);
-    if (typeof t4 !== "number")
-      throw t4.$mul();
-    t4 *= 0.6;
-    if (isNaN(t4))
-      $.throwExpression(new $.UnsupportedError("NaN"));
-    if (t4 == Infinity || t4 == -Infinity)
-      $.throwExpression(new $.UnsupportedError("Infinity"));
-    truncated = t4 < 0 ? Math.ceil(t4) : Math.floor(t4);
-    iw = truncated == -0.0 ? 0 : truncated;
-    t2 = t2.get$height(t3);
-    if (typeof t2 !== "number")
-      throw t2.$mul();
-    t2 *= 0.6;
-    if (isNaN(t2))
-      $.throwExpression(new $.UnsupportedError("NaN"));
-    if (t2 == Infinity || t2 == -Infinity)
-      $.throwExpression(new $.UnsupportedError("Infinity"));
-    truncated = t2 < 0 ? Math.ceil(t2) : Math.floor(t2);
-    ih = truncated == -0.0 ? 0 : truncated;
-    t1.drawImageScaled$5(ctx, t3, ix, iy, iw, ih);
+    ix = this.x + 40;
+    iy = this.y + 20;
+    t2 = this.fly;
+    t3 = $.getInterceptor$x(t2);
+    iw = t3.get$width(t2);
+    ih = t3.get$height(t2);
+    t1.drawImage$3(ctx, t2, ix, iy);
     t1.set$fillStyle(ctx, "rgba(255, 255, 255, 0.7)");
     t1.set$font(ctx, "300 20px sans-serif");
     t1.set$textAlign(ctx, "left");
     t1.set$textBaseline(ctx, "bottom");
-    t1.fillText$3(ctx, "x  " + this.fly_count, ix + iw + 15, iy + ih);
+    t2 = "x  " + this.fly_count;
+    if (typeof iw !== "number")
+      throw $.iae(iw);
+    if (typeof ih !== "number")
+      throw $.iae(ih);
+    t1.fillText$3(ctx, t2, ix + iw + 15, iy + ih);
     t2 = this.captured;
     if (t2 != null)
       t2.draw$1(ctx);
     t1.restore$0(ctx);
   },
-  draw$1$bailout: function(state0, ctx, t1, t2, t3, t4, t5, t6, t7, t8, iw, ih, ix, iy, gem) {
+  draw$1$bailout: function(state0, ctx, iy, t2, t1, ix, t3, t4, gem) {
     switch (state0) {
       case 0:
         t1 = $.getInterceptor$x(ctx);
@@ -2701,81 +2975,21 @@ StatusInfo: {"": "Object;x*,y*,w,h,frog<,fly,gems<,captured?,workspace<,fly_coun
         t1.set$strokeStyle(ctx, "#223333");
         t1.set$lineWidth(ctx, 3);
         t1.beginPath$0(ctx);
+        t1.moveTo$2(ctx, this.x, this.y + this.h);
         t2 = this.x;
         t3 = this.y;
-      case 1:
-        state0 = 0;
-        t4 = this.h;
-        t1.moveTo$2(ctx, t2, $.$add$ns(t3, t4));
-        t3 = this.x;
-      case 2:
-        state0 = 0;
-        t3 = $.$sub$n(t3, 15);
-        t2 = this.y;
-      case 3:
-        state0 = 0;
-        t2 = $.$sub$n(t2, t4 / 2);
-        t5 = this.x;
-      case 4:
-        state0 = 0;
-        t5 = $.$add$ns(t5, 40);
-        t6 = this.y;
-      case 5:
-        state0 = 0;
-        t6 = $.$add$ns(t6, 25);
-        t7 = this.x;
-      case 6:
-        state0 = 0;
-        t8 = this.w;
-        t1.bezierCurveTo$6(ctx, t3, t2, t5, t6, $.$add$ns($.$add$ns(t7, t8), 6), this.y);
-        t7 = this.x;
-      case 7:
-        state0 = 0;
-        t8 = $.$add$ns($.$add$ns(t7, t8), 6);
-        t7 = this.y;
-      case 8:
-        state0 = 0;
-        t1.lineTo$2(ctx, t8, $.$add$ns(t7, t4));
+        t1.bezierCurveTo$6(ctx, t2 - 15, t3 - this.h / 2, t2 + 40, t3 + 25, t2 + this.w + 6, t3);
+        t1.lineTo$2(ctx, this.x + this.w + 6, this.y + this.h);
         t1.fill$0(ctx);
         t1.stroke$0(ctx);
-        t7 = $.get$width$x(this.frog);
-        if (typeof t7 !== "number")
-          throw t7.$mul();
-        t7 *= 0.75;
-        if (isNaN(t7))
-          $.throwExpression(new $.UnsupportedError("NaN"));
-        if (t7 == Infinity || t7 == -Infinity)
-          $.throwExpression(new $.UnsupportedError("Infinity"));
-        truncated = t7 < 0 ? Math.ceil(t7) : Math.floor(t7);
-        iw = truncated == -0.0 ? 0 : truncated;
-        t2 = $.get$height$x(this.frog);
-        if (typeof t2 !== "number")
-          throw t2.$mul();
-        t2 *= 0.75;
-        if (isNaN(t2))
-          $.throwExpression(new $.UnsupportedError("NaN"));
-        if (t2 == Infinity || t2 == -Infinity)
-          $.throwExpression(new $.UnsupportedError("Infinity"));
-        truncated = t2 < 0 ? Math.ceil(t2) : Math.floor(t2);
-        ih = truncated == -0.0 ? 0 : truncated;
-        t2 = this.x;
-      case 9:
-        state0 = 0;
-        ix = $.$add$ns(t2, 10);
-        t2 = this.y;
-      case 10:
-        state0 = 0;
-        iy = $.$sub$n($.$add$ns(t2, t4), ih);
-        t1.drawImageScaled$5(ctx, this.frog, ix, iy, iw, ih);
-        ix = $.$add$ns(ix, iw + 10);
-        t2 = this.y;
-      case 11:
-        state0 = 0;
-        iy = $.$sub$n($.$add$ns(t2, t4), C.JSInt_methods.$tdiv(t4, 3));
+        ix = this.x + 18;
+        t3 = this.y;
+        t2 = this.h;
+        iy = t3 + t2 - C.JSInt_methods.$tdiv(t2, 3);
         t2 = this.gems;
         t2 = new $.ListIterator(t2, t2.length, 0, null);
-        t3 = $.getInterceptor$n(iy);
       default:
+        var iw, ih;
         L0:
           while (true)
             switch (state0) {
@@ -2783,67 +2997,42 @@ StatusInfo: {"": "Object;x*,y*,w,h,frog<,fly,gems<,captured?,workspace<,fly_coun
                 if (!t2.moveNext$0())
                   break L0;
                 gem = t2._liblib0$_current;
-                t4 = $.getInterceptor$x(gem);
-                t5 = t4.get$width(gem);
-              case 12:
+                t3 = $.getInterceptor$x(gem);
+                t4 = t3.get$width(gem);
+              case 1:
                 state0 = 0;
-                ix = $.$add$ns(ix, $.$tdiv$n(t5, 2));
-                t5 = $.getInterceptor$n(ix);
-                t4.set$x(gem, t5.toDouble$0(ix));
-                t4.set$y(gem, t3.toDouble$0(iy));
+                t4 = $.$tdiv$n(t4, 2);
+                if (typeof t4 !== "number")
+                  throw $.iae(t4);
+                ix += t4;
+                t3.set$x(gem, ix);
+                t3.set$y(gem, iy);
                 gem.draw$1(ctx);
-                t4 = t4.get$width(gem);
-              case 13:
+                t3 = t3.get$width(gem);
+              case 2:
                 state0 = 0;
-                ix = t5.$add(ix, $.$add$ns($.$tdiv$n(t4, 2), 10));
+                t3 = $.$add$ns($.$tdiv$n(t3, 2), 10);
+                if (typeof t3 !== "number")
+                  throw $.iae(t3);
+                ix += t3;
             }
-        t2 = this.x;
-      case 14:
-        state0 = 0;
-        t2 = $.$add$ns(t2, 20);
-        t3 = $.get$width$x(this.frog);
-        if (typeof t3 !== "number")
-          throw t3.$mul();
-        t3 *= 0.75;
-        if (isNaN(t3))
-          $.throwExpression(new $.UnsupportedError("NaN"));
-        if (t3 == Infinity || t3 == -Infinity)
-          $.throwExpression(new $.UnsupportedError("Infinity"));
-        truncated = t3 < 0 ? Math.ceil(t3) : Math.floor(t3);
-        ix = $.$add$ns(t2, truncated == -0.0 ? 0 : truncated);
-        t2 = this.y;
-      case 15:
-        var truncated;
-        state0 = 0;
-        iy = $.$add$ns(t2, 30);
+        ix = this.x + 40;
+        iy = this.y + 20;
         t2 = this.fly;
         t3 = $.getInterceptor$x(t2);
-        t4 = t3.get$width(t2);
-        if (typeof t4 !== "number")
-          throw t4.$mul();
-        t4 *= 0.6;
-        if (isNaN(t4))
-          $.throwExpression(new $.UnsupportedError("NaN"));
-        if (t4 == Infinity || t4 == -Infinity)
-          $.throwExpression(new $.UnsupportedError("Infinity"));
-        truncated = t4 < 0 ? Math.ceil(t4) : Math.floor(t4);
-        iw = truncated == -0.0 ? 0 : truncated;
-        t3 = t3.get$height(t2);
-        if (typeof t3 !== "number")
-          throw t3.$mul();
-        t3 *= 0.6;
-        if (isNaN(t3))
-          $.throwExpression(new $.UnsupportedError("NaN"));
-        if (t3 == Infinity || t3 == -Infinity)
-          $.throwExpression(new $.UnsupportedError("Infinity"));
-        truncated = t3 < 0 ? Math.ceil(t3) : Math.floor(t3);
-        ih = truncated == -0.0 ? 0 : truncated;
-        t1.drawImageScaled$5(ctx, t2, ix, iy, iw, ih);
+        iw = t3.get$width(t2);
+        ih = t3.get$height(t2);
+        t1.drawImage$3(ctx, t2, ix, iy);
         t1.set$fillStyle(ctx, "rgba(255, 255, 255, 0.7)");
         t1.set$font(ctx, "300 20px sans-serif");
         t1.set$textAlign(ctx, "left");
         t1.set$textBaseline(ctx, "bottom");
-        t1.fillText$3(ctx, "x  " + this.fly_count, $.$add$ns($.$add$ns(ix, iw), 15), $.$add$ns(iy, ih));
+        t2 = "x  " + this.fly_count;
+        if (typeof iw !== "number")
+          throw $.iae(iw);
+        if (typeof ih !== "number")
+          throw $.iae(ih);
+        t1.fillText$3(ctx, t2, ix + iw + 15, iy + ih);
         t2 = this.captured;
         if (t2 != null)
           t2.draw$1(ctx);
@@ -2852,7 +3041,6 @@ StatusInfo: {"": "Object;x*,y*,w,h,frog<,fly,gems<,captured?,workspace<,fly_coun
   },
   StatusInfo$5: function(workspace, x, y, w, h) {
     var t1, t2, color, t3, t4, gem, max;
-    $.set$src$x(this.frog, "images/" + this.workspace.color + "frog.png");
     $.set$src$x(this.fly, "images/dragonfly.png");
     for (t1 = new $.ListIterator($.get$Gem_colors(), 4, 0, null), t2 = this.gems; t1.moveNext$0();) {
       color = t1._liblib0$_current;
@@ -2872,7 +3060,7 @@ StatusInfo: {"": "Object;x*,y*,w,h,frog<,fly,gems<,captured?,workspace<,fly_coun
   },
   static: {
 StatusInfo$: function(workspace, x, y, w, h) {
-  var t1 = new $.StatusInfo(x, y, w, h, $.ImageElement_ImageElement(null, null, null), $.ImageElement_ImageElement(null, null, null), $.List_List(null), null, workspace, 0);
+  var t1 = new $.StatusInfo(x, y, w, h, $.ImageElement_ImageElement(null, null, null), $.List_List(null), null, workspace, 0);
   t1.StatusInfo$5(workspace, x, y, w, h);
   return t1;
 }}
@@ -2885,71 +3073,128 @@ StatusInfo_captureGem_closure: {"": "Closure;this_0,gem_1",
     var t1 = this.this_0;
     t1.get$workspace().draw$0();
     t1.set$captured(null);
-  }
+  },
+  "+call:0:0": 0
 },
 
-WaitBlock: {"": "Block;workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,wasInMenu,wasInProgram",
+WaitBlock: {"": "BeginBlock;timeout,end,begin,cnext,cprev,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,inserted",
   clone$0: function(_) {
-    var block, t1;
-    block = new $.WaitBlock(this.workspace, null, 0, 0, 0, 0, null, null, "wait\nfor", "#3399aa", "white", false, null, null, null, null, null, null, false, true, false);
-    t1 = $.Block_BLOCK_ID;
-    if (typeof t1 !== "number")
-      return this.clone$0$bailout1(1, block, t1);
-    $.Block_BLOCK_ID = t1 + 1;
-    block.id = t1;
-    block._width = 95;
-    block._height = 40;
-    block.color = "#c92";
-    block.param = $.Parameter$(block);
-    $.set$values$x(block.param, ["fly", "sound"]);
-    this.copyTo$1(block);
-    block.text = this.text;
-    return block;
-  },
-  clone$0$bailout1: function(state0, block, t1) {
-    $.Block_BLOCK_ID = $.$add$ns(t1, 1);
-    block.id = t1;
-    block._width = 95;
-    block._height = 40;
-    block.color = "#c92";
-    block.param = $.Parameter$(block);
-    $.set$values$x(block.param, ["fly", "sound"]);
+    var block = $.WaitBlock$(this.workspace);
     this.copyTo$1(block);
     block.text = this.text;
     return block;
   },
   step$1: function(_, program) {
-    return program.getSensorValue$1($.get$value$x(this.param)) ? this.next : this;
+    var v, t, t1;
+    v = $.get$value$x(this.timeout.param);
+    t = typeof v === "number" && Math.floor(v) === v ? v * 20 : $.get$Turtle_rand().nextInt$1(6000);
+    t1 = program.variables;
+    if (!t1.containsKey$1("timeout"))
+      t1.$indexSet(t1, "timeout", t);
+    if (program.getSensorValue$1($.get$value$x(this.param))) {
+      t1.remove$1(t1, "timeout");
+      return this.next;
+    } else if ($.$le$n(t1.$index(t1, "timeout"), 0)) {
+      t1.remove$1(t1, "timeout");
+      t1.$indexSet(t1, "do-timeout" + $.S(this.timeout.id), true);
+      return this.timeout;
+    } else {
+      t1.$indexSet(t1, "timeout", $.$sub$n(t1.$index(t1, "timeout"), 1));
+      return this;
+    }
   },
   WaitBlock$1: function(workspace) {
-    this.color = "#c92";
+    var t1;
     this.param = $.Parameter$(this);
     $.set$values$x(this.param, ["fly", "sound"]);
+    this.timeout = $.TimeoutBlock$(workspace, this);
+    this._addClause$1(this.timeout);
+    t1 = new $.EndBlock(null, null, null, workspace, null, 0, 0, 0, 0, null, null, "", "#3399aa", "white", false, null, null, null, null, null, null, false, false);
+    t1.Block$2(workspace, "");
+    t1.color = "#c92";
+    t1.begin = this;
+    t1._height = 18;
+    this.end = t1;
+    this._addClause$1(this.end);
   },
   static: {
 WaitBlock$: function(workspace) {
-  var t1 = new $.WaitBlock(workspace, null, 0, 0, 0, 0, null, null, "wait\nfor", "#3399aa", "white", false, null, null, null, null, null, null, false, true, false);
+  var t1 = new $.WaitBlock(null, null, null, null, null, workspace, null, 0, 0, 0, 0, null, null, "wait\nfor", "#3399aa", "white", false, null, null, null, null, null, null, false, false);
   t1.Block$2(workspace, "wait\nfor");
+  t1.color = "#c92";
+  t1.begin = null;
   t1.WaitBlock$1(workspace);
   return t1;
 }}
 
 },
 
-CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start>,name>,color<,bug,running<,ctx,touchables,touch_bindings,mdown,parent,xform,iform",
-  playProgram$0: function() {
-    this.pond.playProgram$1(this);
+TimeoutBlock: {"": "ControlBlock;begin,cnext,cprev,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,inserted",
+  step$1: function(_, program) {
+    var v, t1;
+    v = "do-timeout" + $.S(this.id);
+    t1 = program.variables;
+    if (t1.containsKey$1(v)) {
+      t1.remove$1(t1, v);
+      return this.next;
+    } else
+      return this.begin.end;
   },
-  pauseProgram$0: function() {
-    this.pond.pauseProgram$1(this);
+  TimeoutBlock$2: function(workspace, begin) {
+    var t1, t2, t3;
+    this.param = $.Parameter$(this);
+    $.set$values$x(this.param, [10, 50, 100, 150, 200, "random"]);
+    t1 = this.param;
+    t2 = this.inMenu;
+    t3 = this._width;
+    t1.set$centerX($.$sub$n(t2 ? $.$mul$n(t3, 0.65) : t3, 12));
+    $.set$index$x(this.param, 5);
   },
+  static: {
+TimeoutBlock$: function(workspace, begin) {
+  var t1 = new $.TimeoutBlock(null, null, null, workspace, null, 0, 0, 0, 0, null, null, "timeout", "#3399aa", "white", false, null, null, null, null, null, null, false, false);
+  t1.Block$2(workspace, "timeout");
+  t1.color = "#c92";
+  t1.begin = begin;
+  t1.TimeoutBlock$2(workspace, begin);
+  return t1;
+}}
+
+},
+
+CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start>,name>,color<,bug<,running<,ctx,touchables,touch_bindings,mdown,parent,xform,iform",
   stopProgram$0: function() {
     this.pond.stopProgram$1(this);
   },
-  restartProgram$0: function() {
-    this.pond.restartProgram$1(this);
-    var t1 = this.bug;
-    t1.reset$0(t1);
+  removeAllBlocks$0: function() {
+    var block, t1, t2, t3, b;
+    this.pond.stopProgram$1(this);
+    block = this.start.next;
+    t1 = this.touchables;
+    t2 = this.blocks;
+    while (true) {
+      if (block != null) {
+        t3 = this.start.end;
+        t3 = block == null ? t3 != null : block !== t3;
+      } else
+        t3 = false;
+      if (!t3)
+        break;
+      b = block.next;
+      block.prev = null;
+      block.next = null;
+      C.JSArray_methods.remove$1(t2, block);
+      C.JSArray_methods.remove$1(t1, block);
+      block.get$hasParam;
+      t3 = block.param;
+      if (t3 != null)
+        C.JSArray_methods.remove$1(t1, t3);
+      block = b;
+    }
+    t1 = this.start;
+    t1.next = t1.end;
+    t1 = this.start;
+    t1.end.prev = t1;
   },
   preview$1: function(block) {
     var t1, pvalue;
@@ -2988,7 +3233,13 @@ CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start
     t1 = block.x;
     t2 = block.inMenu;
     t3 = block._width;
-    return $.$gt$n($.$add$ns(t1, t2 ? $.$mul$n(t3, 0.7) : t3), this.width) || $.$lt$n(block.x, 0) || $.$gt$n($.$add$ns(block.y, block._height), this.height) || $.$lt$n(block.y, 0);
+    t2 = t2 ? $.$mul$n(t3, 0.65) : t3;
+    if (typeof t2 !== "number")
+      throw $.iae(t2);
+    t3 = this.width;
+    if (typeof t3 !== "number")
+      throw $.iae(t3);
+    return t1 + t2 > t3 || block.x < 0 || $.$gt$n($.$add$ns(block.y, block._height), this.height) || $.$lt$n(block.y, 0);
   },
   isOverMenu$1: function(block) {
     var t1 = this.menu;
@@ -2996,17 +3247,29 @@ CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start
     return $.$ge$n($.$add$ns(block.y, block._height / 2), t1.y);
   },
   snapTogether$1: function(target) {
-    var b = this.findInsertionPoint$1(target);
+    var b, t1;
+    b = this.findInsertionPoint$1(target);
     if (b != null) {
       b.insertBlock$1(target);
-      this.start.pulse$0();
+      t1 = this.start;
+      t1.pulse$0;
+      t1._play.pulse$0();
+      t1 = this.menu;
+      t1.pulsePlayButton$0;
+      t1.play.pulse$0();
       return true;
     } else
       return false;
   },
   snapToEnd$1: function(target) {
+    var t1;
     this.start.end.prev.insertBlock$1(target);
-    this.start.pulse$0();
+    t1 = this.start;
+    t1.pulse$0;
+    t1._play.pulse$0();
+    t1 = this.menu;
+    t1.pulsePlayButton$0;
+    t1.play.pulse$0();
   },
   findInsertionPoint$1: function(target) {
     var block, result, t1, t2;
@@ -3016,22 +3279,22 @@ CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start
         result = block;
       block = block.next;
     }
-    if (result == null && target.get$wasInMenu())
+    if (result == null && !target.get$inserted())
       return this.start.end.prev;
     else {
       t1 = $.get$y$x(target);
       if (typeof t1 !== "number")
-        return this.findInsertionPoint$1$bailout(1, t1, result);
+        return this.findInsertionPoint$1$bailout(1, result, t1);
       t2 = this.start.end.y;
       if (typeof t2 !== "number")
-        return this.findInsertionPoint$1$bailout(2, t1, result, t2);
+        return this.findInsertionPoint$1$bailout(2, result, t1, t2);
       if (t1 > t2)
         return;
       else
         return result;
     }
   },
-  findInsertionPoint$1$bailout: function(state0, t1, result, t2) {
+  findInsertionPoint$1$bailout: function(state0, result, t1, t2) {
     switch (state0) {
       case 0:
         block = this.start;
@@ -3042,7 +3305,7 @@ CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start
         }
       default:
         var block;
-        if (state0 === 0 && result == null && target.get$wasInMenu())
+        if (state0 === 0 && result == null && !target.get$inserted())
           return this.start.end.prev;
         else
           switch (state0) {
@@ -3065,6 +3328,9 @@ CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start
     r = this.pond.isProgramRunning$1(this.name);
     refresh = r !== this.running && true;
     this.running = r;
+    t1 = this.menu;
+    t1.animate$0;
+    t1.play.animate$0();
     for (t1 = this.blocks, t2 = new $.ListIterator(t1, t1.length, 0, null); t2.moveNext$0();)
       $.set$candidate$x(t2._liblib0$_current, null);
     for (t2 = new $.ListIterator(t1, t1.length, 0, null); t2.moveNext$0();) {
@@ -3078,9 +3344,7 @@ CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start
     for (t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();)
       if (t1._liblib0$_current.animate$0() === true)
         refresh = true;
-    if (this.status.animate$0())
-      refresh = true;
-    return this.bug.animate$0() ? true : refresh;
+    return this.status.animate$0() ? true : refresh;
   },
   traceExecution$2: function(ctx, frog) {
     var t1, t2, t3, t4, t5, t6, t7, t8, tx;
@@ -3188,6 +3452,15 @@ CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start
         this.bug.target = frog.get$program().curr;
     }
   },
+  drawBug$1: function(ctx) {
+    var t1, t2;
+    t1 = $.getInterceptor$x(ctx);
+    t1.save$0(ctx);
+    t2 = this.xform.xform;
+    t1.transform$6(ctx, t2[0], t2[3], t2[1], t2[4], t2[2], t2[5]);
+    this.bug.draw$1(ctx);
+    t1.restore$0(ctx);
+  },
   draw$0: function() {
     var t1, t2, t3;
     $.save$0$x(this.ctx);
@@ -3198,8 +3471,7 @@ CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start
     this.status.draw$1(this.ctx);
     for (t1 = this.blocks, t1 = new $.ListIterator(t1, t1.length, 0, null); t2 = t1.moveNext$0(), t3 = this.ctx, t2;)
       t1._liblib0$_current.draw$1(t3);
-    this.bug.draw$1(t3);
-    $.restore$0$x(this.ctx);
+    $.restore$0$x(t3);
   },
   _initMenu$0: function() {
     var block, t1, t2;
@@ -3217,21 +3489,19 @@ CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start
     t1 = $.Block$(this, "eat");
     t2.addBlock$1;
     t2.blocks.push(t1);
-    block = $.Block$(this, "left");
+    block = $.Block$(this, "turn");
     block.param = $.Parameter$(block);
-    $.set$values$x(block.param, [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, "random"]);
-    $.set$index$x(block.param, 3);
-    t1 = this.menu;
-    t1.addBlock$1;
-    t1.blocks.push(block);
-    block = $.Block$(this, "right");
-    block.param = $.Parameter$(block);
-    $.set$values$x(block.param, [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, "random"]);
-    $.set$index$x(block.param, 3);
+    $.set$values$x(block.param, [-90, -75, -60, -45, -30, -15, "random", 15, 30, 45, 60, 75, 90]);
+    $.set$index$x(block.param, 6);
     t1 = this.menu;
     t1.addBlock$1;
     t1.blocks.push(block);
     block = $.Block$(this, "hatch");
+    block.color = "#b67196";
+    t1 = this.menu;
+    t1.addBlock$1;
+    t1.blocks.push(block);
+    block = $.Block$(this, "die");
     block.color = "#b67196";
     t1 = this.menu;
     t1.addBlock$1;
@@ -3250,22 +3520,12 @@ CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start
     t1.blocks.push(t2);
   },
   CodeWorkspace$5: function(pond, width, height, $name, color) {
-    var t1, t2;
     this.ctx = $.getContext$1$x(document.querySelector("#" + this.name), "2d");
     this.registerEvents$1(document.documentElement);
-    t1 = this.height;
-    if (typeof t1 !== "number")
-      throw t1.$sub();
-    this.menu = new $.Menu(this, 0, t1 - 74, this.width, 74, $.List_List(null), null);
+    this.menu = $.Menu$(this, 0, $.$sub$n(this.height, 74), this.width, 74);
     this._initMenu$0();
     this.touchables.push(this.menu);
-    t1 = this.width;
-    if (typeof t1 !== "number")
-      throw t1.$sub();
-    t2 = this.height;
-    if (typeof t2 !== "number")
-      throw t2.$sub();
-    this.status = $.StatusInfo$(this, t1 - 220, t2 - 100, 220, 100);
+    this.status = $.StatusInfo$(this, $.$sub$n(this.width, 150), $.$sub$n(this.height, 100), 150, 100);
     this.start = $.StartBlock$(this);
     this.addBlock$1(this.start);
     this.bug = $.TraceBug$(this.start);
@@ -3289,14 +3549,10 @@ Fly: {"": "Turtle;radius<,perch,pond<,x,y,size,heading,opacity,dead,tween,img,va
   forward$1: function(distance) {
     var t1, t2;
     $.Turtle.prototype.forward$1.call(this, distance);
-    t1 = this.x;
-    t2 = $.getInterceptor$n(t1);
-    if (t2.$lt(t1, 0))
-      this.x = t2.$add(t1, $.get$width$x(this.pond));
-    t1 = this.y;
-    t2 = $.getInterceptor$n(t1);
-    if (t2.$lt(t1, 0))
-      this.y = t2.$add(t1, $.get$height$x(this.pond));
+    if ($.$lt$n(this.x, 0))
+      this.x = $.$add$ns(this.x, $.get$width$x(this.pond));
+    if ($.$lt$n(this.y, 0))
+      this.y = $.$add$ns(this.y, $.get$height$x(this.pond));
     t1 = this.pond;
     t2 = $.getInterceptor$x(t1);
     if ($.$gt$n(this.x, t2.get$width(t1)))
@@ -3330,19 +3586,13 @@ Fly: {"": "Turtle;radius<,perch,pond<,x,y,size,heading,opacity,dead,tween,img,va
     return true;
   },
   _drawLocal$1: function(ctx) {
-    var t1, t2, t3, iw, ih;
+    var t1, t2, iw, ih;
     if (this.dead)
       return;
     t1 = this.img;
     t2 = $.getInterceptor$x(t1);
-    t3 = t2.get$width(t1);
-    if (typeof t3 !== "number")
-      throw t3.$mul();
-    iw = t3 * 0.7;
-    t2 = t2.get$height(t1);
-    if (typeof t2 !== "number")
-      throw t2.$mul();
-    ih = t2 * 0.7;
+    iw = $.$mul$n(t2.get$width(t1), 0.7);
+    ih = $.$mul$n(t2.get$height(t1), 0.7);
     $.drawImageScaled$5$x(ctx, t1, -iw / 2, -ih / 2, iw, ih);
   },
   Fly$3: function(pond, x, y) {
@@ -3378,32 +3628,16 @@ Frog: {"": "Turtle;pond<,_radius@,_tongue@,_vision?,label*,ghost<,program<,prey@
     return clone;
   },
   get$tongueX: function() {
-    var t1, t2, t3, t4, t5;
+    var t1, t2;
     t1 = this.x;
     t2 = this.heading;
-    t2 = Math.sin(t2);
-    t3 = this._tongue;
-    t4 = $.get$height$x(this.img);
-    t5 = this.size;
-    if (typeof t4 !== "number")
-      throw t4.$mul();
-    if (typeof t5 !== "number")
-      throw $.iae(t5);
-    return $.$add$ns(t1, t2 * t3 * (t4 * t5) * 1.5);
+    return $.$add$ns(t1, Math.sin(t2) * this._tongue * $.$mul$n($.get$height$x(this.img), this.size) * 1.5);
   },
   get$tongueY: function() {
-    var t1, t2, t3, t4, t5;
+    var t1, t2;
     t1 = this.y;
     t2 = this.heading;
-    t2 = Math.cos(t2);
-    t3 = this._tongue;
-    t4 = $.get$height$x(this.img);
-    t5 = this.size;
-    if (typeof t4 !== "number")
-      throw t4.$mul();
-    if (typeof t5 !== "number")
-      throw $.iae(t5);
-    return $.$sub$n(t1, t2 * t3 * (t4 * t5) * 1.5);
+    return $.$sub$n(t1, Math.cos(t2) * this._tongue * $.$mul$n($.get$height$x(this.img), this.size) * 1.5);
   },
   get$radius: function() {
     return $.Turtle.prototype.get$radius.call(this) * 0.75;
@@ -3482,14 +3716,7 @@ Frog: {"": "Turtle;pond<,_radius@,_tongue@,_vision?,label*,ghost<,program<,prey@
         if (typeof t4 !== "number")
           $.throwExpression(new $.ArgumentError(t4));
         d = Math.sqrt(t4);
-        t4 = t3.get$height(t2);
-        t5 = this.size;
-        if (typeof t4 !== "number")
-          throw t4.$mul();
-        if (typeof t5 !== "number")
-          throw $.iae(t5);
-        t5 = t4 * t5;
-        if (d > t5 / 4 && d < t5 * 1.5)
+        if (d > $.$mul$n(t3.get$height(t2), this.size) / 4 && d < $.$mul$n(t3.get$height(t2), this.size) * 1.5)
           return true;
       }
     }
@@ -3529,7 +3756,7 @@ Frog: {"": "Turtle;pond<,_radius@,_tongue@,_vision?,label*,ghost<,program<,prey@
     }
   },
   _drawLocal$1: function(ctx) {
-    var t1, t2, theta, t3, t4, iw, ih;
+    var t1, t2, theta, iw, ih;
     t1 = this._radius;
     if (t1 > 0) {
       t2 = $.getInterceptor$x(ctx);
@@ -3542,19 +3769,14 @@ Frog: {"": "Turtle;pond<,_radius@,_tongue@,_vision?,label*,ghost<,program<,prey@
     t1 = this._vision;
     if (t1 > 0) {
       theta = t1 / 180 * 3.141592653589793;
-      t1 = $.get$height$x(this.img);
-      t2 = this.size;
-      if (typeof t1 !== "number")
-        throw t1.$mul();
-      if (typeof t2 !== "number")
-        throw $.iae(t2);
-      t3 = $.getInterceptor$x(ctx);
-      t3.beginPath$0(ctx);
-      t3.moveTo$2(ctx, 0, 0);
-      t3.arc$6(ctx, 0, 0, t1 * t2 * 1.5, -1.5707963267948966 - theta, -1.5707963267948966 + theta, false);
-      t3.closePath$0(ctx);
-      t3.set$fillStyle(ctx, "rgba(255, 255, 255, 0.1)");
-      t3.fill$0(ctx);
+      t1 = $.$mul$n($.get$height$x(this.img), this.size);
+      t2 = $.getInterceptor$x(ctx);
+      t2.beginPath$0(ctx);
+      t2.moveTo$2(ctx, 0, 0);
+      t2.arc$6(ctx, 0, 0, t1 * 1.5, -1.5707963267948966 - theta, -1.5707963267948966 + theta, false);
+      t2.closePath$0(ctx);
+      t2.set$fillStyle(ctx, "rgba(255, 255, 255, 0.1)");
+      t2.fill$0(ctx);
     }
     if (this._tongue > 0) {
       t1 = $.getInterceptor$x(ctx);
@@ -3562,33 +3784,17 @@ Frog: {"": "Turtle;pond<,_radius@,_tongue@,_vision?,label*,ghost<,program<,prey@
       t1.set$lineWidth(ctx, 5);
       t1.beginPath$0(ctx);
       t1.moveTo$2(ctx, 0, 0);
-      t2 = this._tongue;
-      t3 = $.get$height$x(this.img);
-      t4 = this.size;
-      if (typeof t3 !== "number")
-        throw t3.$mul();
-      if (typeof t4 !== "number")
-        throw $.iae(t4);
-      t1.lineTo$2(ctx, 0, t2 * (t3 * t4) * -1.5);
+      t1.lineTo$2(ctx, 0, this._tongue * $.$mul$n($.get$height$x(this.img), this.size) * -1.5);
       t1.stroke$0(ctx);
     }
     t1 = this.img;
     t2 = $.getInterceptor$x(t1);
-    t3 = t2.get$width(t1);
-    t4 = this.size;
-    if (typeof t3 !== "number")
-      throw t3.$mul();
-    if (typeof t4 !== "number")
-      throw $.iae(t4);
-    iw = t3 * t4;
-    t2 = t2.get$height(t1);
-    if (typeof t2 !== "number")
-      throw t2.$mul();
-    ih = t2 * t4;
+    iw = $.$mul$n(t2.get$width(t1), this.size);
+    ih = $.$mul$n(t2.get$height(t1), this.size);
     $.drawImageScaled$5$x(ctx, t1, -iw / 2, -ih / 2, iw, ih);
   },
   containsTouch$1: function(c) {
-    return this.overlapsPoint$2(c.touchX, c.touchY);
+    return this.overlapsPoint$2(c.get$touchX(), c.get$touchY());
   },
   touchDown$1: function(c) {
     return true;
@@ -3611,7 +3817,8 @@ Frog_pulse_closure: {"": "Closure;this_0",
     t2 += value;
     t1.set$opacity(t2);
     return t2;
-  }
+  },
+  "+call:1:0": 0
 },
 
 Gem: {"": "Turtle;color<,deltaX>,deltaY>,shadow,shadowed@,x,y,size,heading,opacity,dead,tween,img,variables,_width,_height",
@@ -3671,37 +3878,17 @@ Gem: {"": "Turtle;color<,deltaX>,deltaY>,shadow,shadowed@,x,y,size,heading,opaci
     this.tween.ondelta = new $.Gem_flyTo_closure1(this);
   },
   _drawLocal$1: function(ctx) {
-    var t1, t2, t3, t4, t5;
+    var t1, t2, t3, t4;
     t1 = this.shadowed;
     t2 = $.getInterceptor$x(ctx);
     t3 = this.img;
     t4 = this.size;
     if (t1) {
       t1 = $.getInterceptor$x(t3);
-      t5 = t1.get$width(t3);
-      if (typeof t5 !== "number")
-        throw t5.$mul();
-      if (typeof t4 !== "number")
-        throw $.iae(t4);
-      t5 *= t4;
-      t3 = t1.get$height(t3);
-      if (typeof t3 !== "number")
-        throw t3.$mul();
-      t4 = t3 * t4;
-      t2.drawImageScaled$5(ctx, this.shadow, -t5 / 2, -t4 / 2, t5, t4);
+      t2.drawImageScaled$5(ctx, this.shadow, -$.$mul$n(t1.get$width(t3), t4) / 2, -$.$mul$n(t1.get$height(t3), this.size) / 2, $.$mul$n(t1.get$width(t3), this.size), $.$mul$n(t1.get$height(t3), this.size));
     } else {
       t1 = $.getInterceptor$x(t3);
-      t5 = t1.get$width(t3);
-      if (typeof t5 !== "number")
-        throw t5.$mul();
-      if (typeof t4 !== "number")
-        throw $.iae(t4);
-      t5 *= t4;
-      t1 = t1.get$height(t3);
-      if (typeof t1 !== "number")
-        throw t1.$mul();
-      t4 = t1 * t4;
-      t2.drawImageScaled$5(ctx, t3, -t5 / 2, -t4 / 2, t5, t4);
+      t2.drawImageScaled$5(ctx, t3, -$.$mul$n(t1.get$width(t3), t4) / 2, -$.$mul$n(t1.get$height(t3), this.size) / 2, $.$mul$n(t1.get$width(t3), this.size), $.$mul$n(t1.get$height(t3), this.size));
     }
   },
   static: {
@@ -3712,7 +3899,8 @@ Gem: {"": "Turtle;color<,deltaX>,deltaY>,shadow,shadowed@,x,y,size,heading,opaci
 
 Gem_spin_closure: {"": "Closure;",
   call$0: function() {
-  }
+  },
+  "+call:0:0": 0
 },
 
 Gem_spin_closure0: {"": "Closure;this_0",
@@ -3724,7 +3912,8 @@ Gem_spin_closure0: {"": "Closure;this_0",
     t3 = t2._zone;
     t3._openCallbacks = t3._openCallbacks + 1;
     t2._timer = $._createTimer(t1, t2.get$_run());
-  }
+  },
+  "+call:0:0": 0
 },
 
 Gem_spin_closure1: {"": "Closure;this_1",
@@ -3733,20 +3922,23 @@ Gem_spin_closure1: {"": "Closure;this_1",
     if (typeof value !== "number")
       throw $.iae(value);
     t1.set$heading(t1.get$heading() - 720 * value / 180 * 3.141592653589793);
-  }
+  },
+  "+call:1:0": 0
 },
 
 Gem_flyTo_closure: {"": "Closure;",
   call$0: function() {
     $.Sounds_playSound("chimes");
-  }
+  },
+  "+call:0:0": 0
 },
 
 Gem_flyTo_closure0: {"": "Closure;this_0,onDone_1",
   call$0: function() {
     this.this_0.set$dead(true);
     this.onDone_1.call$0();
-  }
+  },
+  "+call:0:0": 0
 },
 
 Gem_flyTo_closure1: {"": "Closure;this_2",
@@ -3761,7 +3953,8 @@ Gem_flyTo_closure1: {"": "Closure;this_2",
       throw $.iae(value);
     t1.set$heading(t1.get$heading() - 1440 * value / 180 * 3.141592653589793);
     t2.set$size(t1, $.$sub$n(t2.get$size(t1), value * 0.25));
-  }
+  },
+  "+call:1:0": 0
 },
 
 Matrix2D: {"": "Object;xform",
@@ -3788,23 +3981,8 @@ Matrix2D: {"": "Object;xform",
     return i;
   },
   get$determinant: function() {
-    var t1, t2, t3, t4, t5, t6, t7, t8, t9, x, t10, t11;
-    t1 = this.xform;
-    t2 = t1[0];
-    t3 = t1[4];
-    t4 = t1[8];
-    t5 = $.getInterceptor$n(t3);
-    t6 = t5.$mul(t3, t4);
-    t7 = t1[7];
-    t8 = t1[5];
-    t9 = $.getInterceptor$n(t7);
-    x = $.$mul$n(t2, t6 - t9.$mul(t7, t8));
-    t6 = t1[3];
-    t2 = t1[1];
-    t10 = $.getInterceptor$n(t2);
-    t4 = t10.$mul(t2, t4);
-    t11 = t1[2];
-    return x - $.$mul$n(t6, t4 - t9.$mul(t7, t11)) + $.$mul$n(t1[6], t10.$mul(t2, t8) - t5.$mul(t3, t11));
+    var t1 = this.xform;
+    return $.$mul$n(t1[0], $.$mul$n(t1[4], t1[8]) - $.$mul$n(t1[7], t1[5])) - $.$mul$n(t1[3], $.$mul$n(t1[1], t1[8]) - $.$mul$n(t1[7], t1[2])) + $.$mul$n(t1[6], $.$mul$n(t1[1], t1[5]) - $.$mul$n(t1[4], t1[2]));
   },
   setTransform$6: function(_, m11, m12, m21, m22, dx, dy) {
     var t1 = this.xform;
@@ -3906,7 +4084,7 @@ Matrix2D: {"": "Object;xform",
   }
 },
 
-FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2,workspaces,width>,height>,gems<,flies<,frogs,_countdown@,pond<,touchables,touch_bindings,mdown,parent,xform,iform",
+FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2<,workspaces,width>,height>,gems<,flies<,frogs,play_state,_countdown@,pond<,touchables,touch_bindings,mdown,parent,xform,iform",
   addHomeFrog$1: function(workspace) {
     var t1, frog, t2, t3, t4, fx, fy;
     t1 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
@@ -3920,10 +4098,7 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2,workspaces,width>,heig
     t3 = $.getInterceptor$x(workspace);
     t4 = frog.variables;
     t4.$indexSet(t4, "workspace", t3.get$name(workspace));
-    t4 = t3.get$width(workspace);
-    if (typeof t4 !== "number")
-      throw t4.$div();
-    fx = t4 / 2;
+    fx = $.$div$n(t3.get$width(workspace), 2);
     fy = $.$sub$n(t3.get$height(workspace), 300);
     frog.x = workspace.objectToWorldX$2(fx, fy);
     frog.y = workspace.objectToWorldY$2(fx, fy);
@@ -4043,6 +4218,16 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2,workspaces,width>,heig
     }
     this.addHomeFrog$1(workspace).pulse$0();
   },
+  fastForwardProgram$1: function(workspace) {
+    var t1 = this.play_state;
+    if (t1 <= 0)
+      this.play_state = 1;
+    else if (t1 < 64)
+      this.play_state = t1 * 2;
+    else
+      this.play_state = 1;
+    this.drawForeground$0();
+  },
   isProgramRunning$1: function(workspaceName) {
     var t1, running, frog, t2;
     for (t1 = this.frogs, t1 = new $.ListIterator(t1, t1.length, 0, null), running = false; t1.moveNext$0();) {
@@ -4088,26 +4273,20 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2,workspaces,width>,heig
         t4.get$status(workspace).captureFly$0();
         fly.die$0();
         $.get$Turtle_rand();
-        t4 = this.width;
-        if (typeof t4 !== "number")
-          throw t4.$lt();
-        if (t4 < 0)
-          $.throwExpression(new $.ArgumentError("negative max: " + $.S(t4)));
-        if (t4 > 4294967295)
+        max = this.width;
+        t4 = $.getInterceptor$n(max);
+        if (t4.$lt(max, 0))
+          $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
+        if (t4.$gt(max, 4294967295))
           max = 4294967295;
-        else
-          max = t4;
         t4 = Math.random() * max >>> 0;
         $.get$Turtle_rand();
-        t5 = this.height;
-        if (typeof t5 !== "number")
-          throw t5.$lt();
-        if (t5 < 0)
-          $.throwExpression(new $.ArgumentError("negative max: " + $.S(t5)));
-        if (t5 > 4294967295)
+        max = this.height;
+        t5 = $.getInterceptor$n(max);
+        if (t5.$lt(max, 0))
+          $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
+        if (t5.$gt(max, 4294967295))
           max = 4294967295;
-        else
-          max = t5;
         t5 = Math.random() * max >>> 0;
         t6 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
         t6.segments = [];
@@ -4128,21 +4307,21 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2,workspaces,width>,heig
     for (i = 0; i < 25; ++i) {
       $.get$Turtle_rand();
       t1 = this.width;
-      if (typeof t1 !== "number")
-        throw t1.$sub();
+      if (t1 !== (t1 | 0))
+        return this.addGem$0$bailout(1, t1, i);
       max = t1 - 100;
       if (max < 0)
-        $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
+        $.throwExpression(new $.ArgumentError("negative max: " + max));
       if (max > 4294967295)
         max = 4294967295;
       x = (Math.random() * max >>> 0) + 50;
       $.get$Turtle_rand();
       t1 = this.height;
-      if (typeof t1 !== "number")
-        throw t1.$sub();
+      if (t1 !== (t1 | 0))
+        return this.addGem$0$bailout(2, t1, i, x);
       max = t1 - 200;
       if (max < 0)
-        $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
+        $.throwExpression(new $.ArgumentError("negative max: " + max));
       if (max > 4294967295)
         max = 4294967295;
       y = (Math.random() * max >>> 0) + 100;
@@ -4175,6 +4354,70 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2,workspaces,width>,heig
     t2 = t1._zone;
     t2._openCallbacks = t2._openCallbacks + 1;
     t1._timer = $._createTimer(C.Duration_4000000, t1.get$_run());
+  },
+  addGem$0$bailout: function(state0, t1, i, x) {
+    switch (state0) {
+      case 0:
+        i = 0;
+      default:
+        var max, y, t2, gem, r;
+        L0:
+          while (true)
+            switch (state0) {
+              case 0:
+                if (!(i < 25))
+                  break L0;
+                $.get$Turtle_rand();
+                t1 = this.width;
+              case 1:
+                state0 = 0;
+                max = $.$sub$n(t1, 100);
+                if (max < 0)
+                  $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
+                if (max > 4294967295)
+                  max = 4294967295;
+                x = (Math.random() * max >>> 0) + 50;
+                $.get$Turtle_rand();
+                t1 = this.height;
+              case 2:
+                state0 = 0;
+                max = $.$sub$n(t1, 200);
+                if (max < 0)
+                  $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
+                if (max > 4294967295)
+                  max = 4294967295;
+                y = (Math.random() * max >>> 0) + 100;
+                if (!this.inWater$2(x, y) && this.getFrogHere$2(x, y) == null) {
+                  t1 = $.ImageElement_ImageElement(null, null, null);
+                  t2 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
+                  t2.segments = [];
+                  gem = new $.Gem(null, null, null, t1, false, 0, 0, 1, 0, 1, false, t2, $.ImageElement_ImageElement(null, null, null), new $.HashMap(0, null, null, null, null), 0, 0);
+                  $.get$Turtle_rand();
+                  max = 365;
+                  t1 = Math.random() * max >>> 0;
+                  gem.heading = gem.heading - -t1 / 180 * 3.141592653589793;
+                  $.get$Turtle_rand();
+                  $.get$Gem_colors();
+                  max = 4;
+                  r = Math.random() * max >>> 0;
+                  t1 = $.get$Gem_colors();
+                  if (r < 0 || r >= 4)
+                    throw $.ioore(r);
+                  gem._init$1(t1[r]);
+                  gem.x = x;
+                  gem.y = y;
+                  gem.size = 0.75;
+                  this.gems.push(gem);
+                  return;
+                }
+                ++i;
+            }
+        t1 = this.get$addGem();
+        t1 = new $._ZoneTimer($.get$_Zone__current(), t1, null);
+        t2 = t1._zone;
+        t2._openCallbacks = t2._openCallbacks + 1;
+        t1._timer = $._createTimer(C.Duration_4000000, t1.get$_run());
+    }
   },
   get$addGem: function() {
     return new $.BoundClosure$0(this, "addGem$0", null);
@@ -4214,35 +4457,43 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2,workspaces,width>,heig
       }
     }
   },
-  animate$1: function(timer) {
-    var t1, workspace, refresh, i;
+  tick$1: function(timer) {
+    var t1, refresh, i, workspace;
+    t1 = this.flies;
+    $.IterableMixinWorkaround_forEach(t1, new $.FrogPond_tick_closure(this));
+    for (refresh = false, i = 0; i < this.play_state; ++i)
+      if (this.animate$0())
+        refresh = true;
+    if (refresh)
+      this.drawForeground$0();
+    $.IterableMixinWorkaround_forEach(t1, new $.FrogPond_tick_closure0(this));
+    for (t1 = this.workspaces, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();) {
+      workspace = t1._liblib0$_current;
+      if (this.getFrogCount$1($.get$name$x(workspace)) === 0)
+        this.restartProgram$1(workspace);
+      if (workspace.animate$0() === true)
+        workspace.draw$0();
+    }
+  },
+  get$tick: function() {
+    return new $.BoundClosure$1(this, "tick$1", null);
+  },
+  animate$0: function() {
+    var t1, refresh, i;
+    this.removeDeadFlies$0();
     this.removeDeadGems$0();
-    if (this.removeDeadFrogs$0()) {
-      for (t1 = this.workspaces, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();) {
-        workspace = t1._liblib0$_current;
-        if (this.getFrogCount$1($.get$name$x(workspace)) === 0)
-          this.restartProgram$1(workspace);
-      }
-      refresh = true;
-    } else
-      refresh = false;
-    for (t1 = this.gems, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();)
+    this.removeDeadFrogs$0();
+    $.IterableMixinWorkaround_forEach(this.flies, new $.FrogPond_animate_closure());
+    for (t1 = this.gems, t1 = new $.ListIterator(t1, t1.length, 0, null), refresh = false; t1.moveNext$0();)
       if (t1._liblib0$_current.animate$0() === true)
         refresh = true;
     for (t1 = this.frogs, i = 0; i < t1.length; ++i)
       if (t1[i].animate$0() === true)
         refresh = true;
-    for (t1 = this.workspaces, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();) {
-      workspace = t1._liblib0$_current;
-      if (workspace.animate$0() === true)
-        workspace.draw$0();
-    }
-    if (refresh)
-      this.drawForeground$0();
-    this.drawFlies$0();
-  },
-  get$animate: function() {
-    return new $.BoundClosure$1(this, "animate$1", null);
+    for (t1 = this.workspaces, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();)
+      if (t1._liblib0$_current.get$bug().animate$0())
+        refresh = true;
+    return refresh;
   },
   inWater$2: function(x, y) {
     var imd, t1, g;
@@ -4262,9 +4513,17 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2,workspaces,width>,heig
   drawForeground$0: function() {
     var ctx, t1, workspace, target, t2;
     ctx = this.layer1;
-    $.clearRect$4$x(ctx, 0, 0, this.width, this.height);
+    t1 = $.getInterceptor$x(ctx);
+    t1.clearRect$4(ctx, 0, 0, this.width, this.height);
     $.IterableMixinWorkaround_forEach(this.gems, new $.FrogPond_drawForeground_closure(ctx));
     $.IterableMixinWorkaround_forEach(this.frogs, new $.FrogPond_drawForeground_closure0(ctx));
+    if (this.play_state > 1) {
+      t1.set$font(ctx, "20px sans-serif");
+      t1.set$textAlign(ctx, "center");
+      t1.set$textBaseline(ctx, "top");
+      t1.set$fillStyle(ctx, "white");
+      t1.fillText$3(ctx, "Speedup: x" + this.play_state, $.$div$n(this.width, 2), 15);
+    }
     for (t1 = this.workspaces, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();) {
       workspace = t1._liblib0$_current;
       target = this.getFocalFrog$1($.get$name$x(workspace));
@@ -4274,17 +4533,9 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2,workspaces,width>,heig
           workspace.traceExecution$2(ctx, t2);
         else
           workspace.traceExecution$2(ctx, target);
+        workspace.drawBug$1(ctx);
       }
     }
-  },
-  drawFlies$0: function() {
-    var ctx, t1;
-    ctx = this.layer2;
-    t1 = this.flies;
-    $.IterableMixinWorkaround_forEach(t1, new $.FrogPond_drawFlies_closure(ctx));
-    $.IterableMixinWorkaround_forEach(t1, new $.FrogPond_drawFlies_closure0());
-    $.IterableMixinWorkaround_forEach(t1, new $.FrogPond_drawFlies_closure1(ctx));
-    this.removeDeadFlies$0();
   },
   FrogPond$0: function() {
     var t1, t2, i, max, t3, t4, t5, workspace;
@@ -4305,26 +4556,20 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2,workspaces,width>,heig
     this.addGem$0();
     for (t1 = this.flies, i = 0; i < 12; ++i) {
       $.get$Turtle_rand();
-      t2 = this.width;
-      if (typeof t2 !== "number")
-        throw t2.$lt();
-      if (t2 < 0)
-        $.throwExpression(new $.ArgumentError("negative max: " + $.S(t2)));
-      if (t2 > 4294967295)
+      max = this.width;
+      t2 = $.getInterceptor$n(max);
+      if (t2.$lt(max, 0))
+        $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
+      if (t2.$gt(max, 4294967295))
         max = 4294967295;
-      else
-        max = t2;
       t2 = Math.random() * max >>> 0;
       $.get$Turtle_rand();
-      t3 = this.height;
-      if (typeof t3 !== "number")
-        throw t3.$lt();
-      if (t3 < 0)
-        $.throwExpression(new $.ArgumentError("negative max: " + $.S(t3)));
-      if (t3 > 4294967295)
+      max = this.height;
+      t3 = $.getInterceptor$n(max);
+      if (t3.$lt(max, 0))
+        $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
+      if (t3.$gt(max, 4294967295))
         max = 4294967295;
-      else
-        max = t3;
       t3 = Math.random() * max >>> 0;
       t4 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
       t4.segments = [];
@@ -4357,7 +4602,7 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2,workspaces,width>,heig
     workspace.iform = t5.invert$0();
     t4.push(workspace);
     this.addHomeFrog$1(workspace);
-    t4 = this.get$animate();
+    t4 = this.get$tick();
     t4 = new $._PeriodicZoneTimer($.get$_Zone__current(), t4, null);
     t5 = t4._zone;
     t5._openCallbacks = t5._openCallbacks + 1;
@@ -4382,7 +4627,7 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2,workspaces,width>,heig
   },
   static: {
 FrogPond$: function() {
-  var t1 = new $.FrogPond(null, null, null, null, $.List_List(null), null, null, $.List_List(null), $.List_List(null), $.List_List(null), 0, $.ImageElement_ImageElement(null, null, null), $.List_List(null), new $.HashMap(0, null, null, null, null), false, null, new $.Matrix2D([1, 0, 0, 0, 1, 0, 0, 0, 1]), new $.Matrix2D([1, 0, 0, 0, 1, 0, 0, 0, 1]));
+  var t1 = new $.FrogPond(null, null, null, null, $.List_List(null), null, null, $.List_List(null), $.List_List(null), $.List_List(null), 1, 0, $.ImageElement_ImageElement(null, null, null), $.List_List(null), new $.HashMap(0, null, null, null, null), false, null, new $.Matrix2D([1, 0, 0, 0, 1, 0, 0, 0, 1]), new $.Matrix2D([1, 0, 0, 0, 1, 0, 0, 0, 1]));
   t1.FrogPond$0();
   return t1;
 }}
@@ -4396,7 +4641,8 @@ FrogPond_closure: {"": "Closure;this_0",
     t2 = $.getInterceptor$x(t1);
     $.clearRect$4$x(t1.get$layer0(), 0, 0, t2.get$width(t1), t2.get$height(t1));
     $.drawImage$3$x(t1.get$layer0(), t1.get$pond(), 0, 0);
-  }
+  },
+  "+call:1:0": 0
 },
 
 FrogPond_closure0: {"": "Closure;this_1",
@@ -4405,66 +4651,69 @@ FrogPond_closure0: {"": "Closure;this_1",
     t1.set$_countdown(t1.get$_countdown() + 10);
     if (t1.get$_countdown() >= 80)
       $.reload$0$x(C.Window_methods.get$location(window));
-  }
+  },
+  "+call:1:0": 0
 },
 
 FrogPond_closure1: {"": "Closure;this_2",
   call$1: function(e) {
     this.this_2.set$_countdown(0);
     return 0;
-  }
+  },
+  "+call:1:0": 0
 },
 
 FrogPond_closure2: {"": "Closure;this_3",
   call$1: function(e) {
     this.this_3.set$_countdown(0);
     return 0;
-  }
+  },
+  "+call:1:0": 0
 },
 
 FrogPond_captureGem_closure: {"": "Closure;this_0",
   call$0: function() {
     this.this_0.addGem$0();
-  }
+  },
+  "+call:0:0": 0
+},
+
+FrogPond_tick_closure: {"": "Closure;this_0",
+  call$1: function(fly) {
+    return fly.erase$1(this.this_0.get$layer2());
+  },
+  "+call:1:0": 0
+},
+
+FrogPond_tick_closure0: {"": "Closure;this_1",
+  call$1: function(fly) {
+    return fly.draw$1(this.this_1.get$layer2());
+  },
+  "+call:1:0": 0
+},
+
+FrogPond_animate_closure: {"": "Closure;",
+  call$1: function(fly) {
+    return fly.animate$0();
+  },
+  "+call:1:0": 0
 },
 
 FrogPond_drawForeground_closure: {"": "Closure;ctx_0",
   call$1: function(gem) {
     return gem.draw$1(this.ctx_0);
-  }
+  },
+  "+call:1:0": 0
 },
 
 FrogPond_drawForeground_closure0: {"": "Closure;ctx_1",
   call$1: function(frog) {
     return frog.draw$1(this.ctx_1);
-  }
-},
-
-FrogPond_drawFlies_closure: {"": "Closure;ctx_0",
-  call$1: function(fly) {
-    return fly.erase$1(this.ctx_0);
-  }
-},
-
-FrogPond_drawFlies_closure0: {"": "Closure;",
-  call$1: function(fly) {
-    return fly.animate$0();
-  }
-},
-
-FrogPond_drawFlies_closure1: {"": "Closure;ctx_1",
-  call$1: function(fly) {
-    return fly.draw$1(this.ctx_1);
-  }
+  },
+  "+call:1:0": 0
 },
 
 Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
-  skip$0: function(_) {
-    if (this.get$isRunning()) {
-      this.curr = $.step$1$x(this.curr, this);
-      this.doPause$1(false);
-    }
-  },
   animate$0: function() {
     var t1, t2;
     t1 = this.tween;
@@ -4511,14 +4760,6 @@ Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
     }
     this.running = true;
   },
-  get$isRunning: function() {
-    if (this.running) {
-      var t1 = this.curr;
-      t1 = t1 != null && (typeof t1 !== "object" || t1 === null || !$.getInterceptor(t1).$isEndProgramBlock);
-    } else
-      t1 = false;
-    return t1;
-  },
   getSensorValue$1: function(sensor) {
     var t1 = $.getInterceptor(sensor);
     if (t1.$eq(sensor, "fly"))
@@ -4544,7 +4785,7 @@ Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
     t1.reset$0(t1);
     if (cmd === "hop")
       this.doMove$3(cmd, param, preview);
-    else if (cmd === "left" || cmd === "right")
+    else if (cmd === "turn")
       this.doTurn$3(cmd, param, preview);
     else if (cmd === "chirp")
       this.doSound$3(cmd, param, preview);
@@ -4552,6 +4793,8 @@ Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
       this.doEat$3(cmd, param, preview);
     else if (cmd === "hatch")
       this.doHatch$3(cmd, param, preview);
+    else if (cmd === "die")
+      this.doDie$3(cmd, param, preview);
     else if (C.JSString_methods.startsWith$1(cmd, "if"))
       this.doIf$3(cmd, param, preview);
     else if (C.JSString_methods.startsWith$1(cmd, "repeat"))
@@ -4565,7 +4808,7 @@ Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
     t1 = $.getInterceptor(cmd);
     if (t1.$eq(cmd, "hop"))
       this.doMove$3(cmd, param, preview);
-    else if (t1.$eq(cmd, "left") || t1.$eq(cmd, "right"))
+    else if (t1.$eq(cmd, "turn"))
       this.doTurn$3(cmd, param, preview);
     else if (t1.$eq(cmd, "chirp"))
       this.doSound$3(cmd, param, preview);
@@ -4573,6 +4816,8 @@ Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
       this.doEat$3(cmd, param, preview);
     else if (t1.$eq(cmd, "hatch"))
       this.doHatch$3(cmd, param, preview);
+    else if (t1.$eq(cmd, "die"))
+      this.doDie$3(cmd, param, preview);
     else if (t1.startsWith$1(cmd, "if"))
       this.doIf$3(cmd, param, preview);
     else if (t1.startsWith$1(cmd, "repeat"))
@@ -4631,12 +4876,7 @@ Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
     if (typeof param === "number")
       angle = param;
     else
-      angle = $.$eq($.toString$0(param), "random") ? $.get$Turtle_rand().nextInt$1(90) : 30;
-    if ($.$eq(cmd, "right")) {
-      if (typeof angle !== "number")
-        throw angle.$mul();
-      angle *= -1;
-    }
+      angle = $.$eq($.toString$0(param), "random") ? $.get$Turtle_rand().nextInt$1(180) - 90 : 30;
     t1.target_0 = this.frog;
     if (preview) {
       t1.target_0 = this.frog.hatch$0();
@@ -4700,7 +4940,7 @@ Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
   },
   doWait$3: function(cmd, param, preview) {
     var t1;
-    if ($.$eq($.toString$0(param), "fly")) {
+    if ($.$eq(param, "fly")) {
       this.frog._vision = 10;
       this.frog.label = $.S(cmd) + " " + $.S(param);
       if (preview) {
@@ -4712,8 +4952,22 @@ Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
       }
     }
   },
+  doDie$3: function(cmd, param, preview) {
+    var t1 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
+    t1.segments = [];
+    this.tween = t1;
+    this.tween.$function = 2;
+    this.tween.delay = 0;
+    this.tween.duration = 8;
+    this.tween.repeat = 3;
+    this.tween.addControlPoint$2(1, 0);
+    this.tween.addControlPoint$2(0, 0.5);
+    this.tween.addControlPoint$2(1, 1);
+    this.tween.ondelta = new $.Program_doDie_closure(this);
+    this.tween.onend = new $.Program_doDie_closure0(this, preview);
+  },
   doHatch$3: function(cmd, param, preview) {
-    var t1, t2, t3;
+    var t1, t2, t3, newsize;
     t1 = {};
     t1.baby_0 = null;
     t2 = this.frog;
@@ -4746,11 +5000,11 @@ Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
     this.tween.duration = 15;
     this.tween.onstart = new $.Program_doHatch_closure(this, cmd);
     this.tween.onend = new $.Program_doHatch_closure0(t1, this, preview);
-    this.tween.addControlPoint$2(0.05, 0);
-    t3 = this.tween;
-    t2 = this.frog.size;
+    t3 = this.frog.size;
     $.get$Turtle_rand();
-    t3.addControlPoint$2($.$sub$n($.$add$ns(t2, Math.random() * 0.2), 0.1), 1);
+    newsize = $.max(0.1, $.$sub$n($.$add$ns(t3, Math.random() * 0.2), 0.1));
+    this.tween.addControlPoint$2(0.05, 0);
+    this.tween.addControlPoint$2(newsize, 1);
     this.tween.ondelta = new $.Program_doHatch_closure1(t1);
   },
   Program$copy$2: function(other, owner) {
@@ -4772,26 +5026,30 @@ Program$copy: function(other, owner) {
 
 Program_doPause_closure: {"": "Closure;",
   call$0: function() {
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doPause_closure0: {"": "Closure;this_0",
   call$0: function() {
     $.reset$0$x(this.this_0.get$frog());
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doMove_closure: {"": "Closure;box_0,cmd_1,s_2",
   call$0: function() {
     $.Sounds_playSound(this.cmd_1);
     this.box_0.target_0.label = this.s_2;
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doMove_closure0: {"": "Closure;this_3,preview_4",
   call$0: function() {
     this.this_3.doPause$1(this.preview_4);
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doMove_closure1: {"": "Closure;box_0,preview_5",
@@ -4800,7 +5058,8 @@ Program_doMove_closure1: {"": "Closure;box_0,preview_5",
     t1.target_0.forward$1(value);
     if (!this.preview_5)
       t1.target_0;
-  }
+  },
+  "+call:1:0": 0
 },
 
 Program_doTurn_closure: {"": "Closure;box_0,s_1",
@@ -4808,25 +5067,24 @@ Program_doTurn_closure: {"": "Closure;box_0,s_1",
     var t1 = this.s_1;
     this.box_0.target_0.label = t1;
     return t1;
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doTurn_closure0: {"": "Closure;box_0",
   call$1: function(value) {
-    var t1, t2;
-    t1 = this.box_0.target_0;
-    t2 = t1.heading;
-    if (typeof value !== "number")
-      throw value.$div();
-    t1.heading = t2 - value / 180 * 3.141592653589793;
+    var t1 = this.box_0.target_0;
+    t1.heading = t1.heading - $.$div$n(value, 180) * 3.141592653589793;
     return;
-  }
+  },
+  "+call:1:0": 0
 },
 
 Program_doTurn_closure1: {"": "Closure;this_2,preview_3",
   call$0: function() {
     this.this_2.doPause$1(this.preview_3);
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doSound_closure: {"": "Closure;this_0,cmd_1",
@@ -4837,7 +5095,8 @@ Program_doSound_closure: {"": "Closure;this_0,cmd_1",
     t2 = this.this_0;
     $.set$label$x(t2.get$frog(), t1);
     t2.get$frog().set$_radius(0.5);
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doSound_closure0: {"": "Closure;this_2,preview_3",
@@ -4845,7 +5104,8 @@ Program_doSound_closure0: {"": "Closure;this_2,preview_3",
     var t1 = this.this_2;
     t1.get$frog().set$_radius(-1);
     t1.doPause$1(this.preview_3);
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doSound_closure1: {"": "Closure;this_4",
@@ -4858,7 +5118,8 @@ Program_doSound_closure1: {"": "Closure;this_4",
     t2 += value;
     t1.set$_radius(t2);
     return t2;
-  }
+  },
+  "+call:1:0": 0
 },
 
 Program_doEat_closure: {"": "Closure;this_0,cmd_1",
@@ -4866,7 +5127,8 @@ Program_doEat_closure: {"": "Closure;this_0,cmd_1",
     var t1 = this.this_0;
     $.set$label$x(t1.get$frog(), this.cmd_1);
     t1.get$frog().set$_tongue(0);
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doEat_closure0: {"": "Closure;this_2,preview_3",
@@ -4882,7 +5144,8 @@ Program_doEat_closure0: {"": "Closure;this_2,preview_3",
       t1.get$frog().eatFly$0();
     if (t1.get$frog().get$_tongue() === 1)
       $.Sounds_playSound("swoosh");
-  }
+  },
+  "+call:1:0": 0
 },
 
 Program_doEat_closure1: {"": "Closure;this_4,preview_5",
@@ -4893,7 +5156,8 @@ Program_doEat_closure1: {"": "Closure;this_4,preview_5",
       t1.get$frog().set$prey(null);
     }
     t1.doPause$1(this.preview_5);
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doRepeat_closure: {"": "Closure;this_0,cmd_1,param_2",
@@ -4903,13 +5167,15 @@ Program_doRepeat_closure: {"": "Closure;this_0,cmd_1,param_2",
     t2 = $.S(this.cmd_1) + " " + $.S(this.param_2);
     $.set$label$x(t1, t2);
     return t2;
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doRepeat_closure0: {"": "Closure;this_3,preview_4",
   call$0: function() {
     this.this_3.doPause$1(this.preview_4);
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doIf_closure: {"": "Closure;this_0,cmd_1,param_2",
@@ -4919,13 +5185,15 @@ Program_doIf_closure: {"": "Closure;this_0,cmd_1,param_2",
     t2 = $.S(this.cmd_1) + " " + $.S(this.param_2);
     $.set$label$x(t1, t2);
     return t2;
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doIf_closure0: {"": "Closure;this_3,preview_4",
   call$0: function() {
     this.this_3.doPause$1(this.preview_4);
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doWait_closure: {"": "Closure;this_0",
@@ -4933,7 +5201,30 @@ Program_doWait_closure: {"": "Closure;this_0",
     var t1 = this.this_0;
     $.set$label$x(t1.get$frog(), null);
     t1.get$frog().set$_vision(0);
-  }
+  },
+  "+call:0:0": 0
+},
+
+Program_doDie_closure: {"": "Closure;this_0",
+  call$1: function(value) {
+    var t1, t2;
+    t1 = this.this_0.get$frog();
+    t2 = t1.get$opacity();
+    if (typeof value !== "number")
+      throw $.iae(value);
+    t2 += value;
+    t1.set$opacity(t2);
+    return t2;
+  },
+  "+call:1:0": 0
+},
+
+Program_doDie_closure0: {"": "Closure;this_1,preview_2",
+  call$0: function() {
+    if (!this.preview_2)
+      this.this_1.get$frog().set$dead(true);
+  },
+  "+call:0:0": 0
 },
 
 Program_doHatch_closure: {"": "Closure;this_1,cmd_2",
@@ -4941,19 +5232,17 @@ Program_doHatch_closure: {"": "Closure;this_1,cmd_2",
     var t1 = this.cmd_2;
     $.set$label$x(this.this_1.get$frog(), t1);
     return t1;
-  }
+  },
+  "+call:0:0": 0
 },
 
 Program_doHatch_closure0: {"": "Closure;box_0,this_3,preview_4",
   call$0: function() {
-    var t1, t2;
     this.this_3.doPause$1(this.preview_4);
-    t1 = this.box_0;
-    t2 = t1.baby_0.program;
-    t2.play$0(t2);
-    t1 = t1.baby_0.program;
-    t1.skip$0(t1);
-  }
+    var t1 = this.box_0.baby_0.program;
+    t1.play$0(t1);
+  },
+  "+call:0:0": 0
 },
 
 Program_doHatch_closure1: {"": "Closure;box_0",
@@ -4963,7 +5252,8 @@ Program_doHatch_closure1: {"": "Closure;box_0",
     t2 = $.$add$ns(t1.size, value);
     t1.size = t2;
     return t2;
-  }
+  },
+  "+call:1:0": 0
 },
 
 TouchManager: {"": "Object;touchables,touch_bindings,mdown,parent,xform,iform",
@@ -5113,48 +5403,55 @@ TouchManager: {"": "Object;touchables,touch_bindings,mdown,parent,xform,iform",
 TouchManager_registerEvents_closure: {"": "Closure;this_0",
   call$1: function(e) {
     return this.this_0._mouseDown$1(e);
-  }
+  },
+  "+call:1:0": 0
 },
 
 TouchManager_registerEvents_closure0: {"": "Closure;this_1",
   call$1: function(e) {
     return this.this_1._mouseUp$1(e);
-  }
+  },
+  "+call:1:0": 0
 },
 
 TouchManager_registerEvents_closure1: {"": "Closure;this_2",
   call$1: function(e) {
     return this.this_2._mouseMove$1(e);
-  }
+  },
+  "+call:1:0": 0
 },
 
 TouchManager_registerEvents_closure2: {"": "Closure;this_3",
   call$1: function(e) {
     return this.this_3._touchDown$1(e);
-  }
+  },
+  "+call:1:0": 0
 },
 
 TouchManager_registerEvents_closure3: {"": "Closure;this_4",
   call$1: function(e) {
     return this.this_4._touchDrag$1(e);
-  }
+  },
+  "+call:1:0": 0
 },
 
 TouchManager_registerEvents_closure4: {"": "Closure;this_5",
   call$1: function(e) {
     return this.this_5._touchUp$1(e);
-  }
+  },
+  "+call:1:0": 0
 },
 
 TouchManager_registerEvents_closure5: {"": "Closure;",
   call$1: function(e) {
     return $.preventDefault$0$x(e);
-  }
+  },
+  "+call:1:0": 0
 },
 
 Touchable: {"": "Object;"},
 
-Contact: {"": "Object;id,tagId,touchX,touchY,tag,up,down,drag,finger",
+Contact: {"": "Object;id,tagId,touchX<,touchY<,tag,up,down,drag,finger",
   Contact$fromMouse$1: function(mouse) {
     var t1, t2;
     this.id = -1;
@@ -5266,7 +5563,7 @@ Turtle: {"": "Object;x*,y*,size*,heading@,opacity@,dead@,img>,variables<",
     this.dead = true;
   },
   overlapsPoint$3: function(tx, ty, tw) {
-    var t1, t2, t3, t4, t5, t6, dist;
+    var t1, t2, t3, t4, t5, t6, t7, dist;
     if (typeof tx !== "number")
       return this.overlapsPoint$3$bailout(1, tx, ty, tw);
     if (typeof ty !== "number")
@@ -5278,20 +5575,20 @@ Turtle: {"": "Object;x*,y*,size*,heading@,opacity@,dead@,img>,variables<",
       t2 = this.img;
       t3 = $.getInterceptor$x(t2);
       t4 = t3.get$width(t2);
+      if (t4 !== (t4 | 0))
+        return this.overlapsPoint$3$bailout(3, tx, ty, 0, t1, t3, t4, t2);
       t5 = this.size;
-      if (typeof t4 !== "number")
-        throw t4.$mul();
       if (typeof t5 !== "number")
-        throw $.iae(t5);
+        return this.overlapsPoint$3$bailout(4, tx, ty, 0, t1, t3, t4, t2, t5);
       t4 = t4 * t5 / 2;
       if (tx > t1 - t4) {
         t6 = this.y;
         if (typeof t6 !== "number")
-          return this.overlapsPoint$3$bailout(3, tx, ty, 0, t6, t3, C.JSNumber_methods, t2);
-        t2 = t3.get$height(t2);
-        if (typeof t2 !== "number")
-          throw t2.$mul();
-        t5 = t2 * t5 / 2;
+          return this.overlapsPoint$3$bailout(5, tx, ty, 0, t6, t3, 0, t2, 0, C.JSNumber_methods);
+        t7 = t3.get$height(t2);
+        if (t7 !== (t7 | 0))
+          return this.overlapsPoint$3$bailout(6, tx, ty, 0, t6, t3, t7, t2, 0, C.JSNumber_methods);
+        t5 = t7 * t5 / 2;
         t1 = ty > t6 - t5 && tx < t1 + t4 && ty < t6 + t5;
       } else
         t1 = false;
@@ -5299,31 +5596,30 @@ Turtle: {"": "Object;x*,y*,size*,heading@,opacity@,dead@,img>,variables<",
     } else {
       t1 = this.x;
       if (typeof t1 !== "number")
-        return this.overlapsPoint$3$bailout(6, tx, ty, tw, t1);
+        return this.overlapsPoint$3$bailout(14, tx, ty, tw, t1);
       t2 = this.y;
       if (typeof t2 !== "number")
-        return this.overlapsPoint$3$bailout(7, tx, ty, tw, t1, 0, 0, t2);
+        return this.overlapsPoint$3$bailout(15, tx, ty, tw, t1, 0, 0, t2);
       t1 -= tx;
       t2 -= ty;
       t2 = t1 * t1 + t2 * t2;
       dist = Math.sqrt(t2);
       t1 = $.get$width$x(this.img);
+      if (t1 !== (t1 | 0))
+        return this.overlapsPoint$3$bailout(16, 0, 0, tw, t1, 0, 0, 0, 0, 0, 0, dist);
       t2 = this.size;
-      if (typeof t1 !== "number")
-        throw t1.$mul();
       if (typeof t2 !== "number")
-        throw $.iae(t2);
+        return this.overlapsPoint$3$bailout(17, 0, 0, tw, t1, 0, 0, t2, 0, 0, 0, dist);
       return dist < t1 * t2 / 2 + tw / 2;
     }
   },
-  overlapsPoint$3$bailout: function(state0, tx, ty, tw, t1, t3, t6, t2, t7) {
+  overlapsPoint$3$bailout: function(state0, tx, ty, tw, t1, t3, t4, t2, t5, t6, t7, dist) {
     switch (state0) {
       case 0:
       case 1:
         state0 = 0;
       default:
-        var t4, t5, dist;
-        if (state0 === 5 || state0 === 4 || state0 === 3 || state0 === 2 || state0 === 0 && tw <= 0)
+        if (state0 === 13 || state0 === 12 || state0 === 11 || state0 === 10 || state0 === 9 || state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 2 || state0 === 0 && tw <= 0)
           switch (state0) {
             case 0:
               t1 = this.x;
@@ -5332,53 +5628,53 @@ Turtle: {"": "Object;x*,y*,size*,heading@,opacity@,dead@,img>,variables<",
               t2 = this.img;
               t3 = $.getInterceptor$x(t2);
               t4 = t3.get$width(t2);
+            case 3:
+              state0 = 0;
               t5 = this.size;
-              if (typeof t4 !== "number")
-                throw t4.$mul();
-              if (typeof t5 !== "number")
-                throw $.iae(t5);
+            case 4:
+              state0 = 0;
               t6 = $.getInterceptor$n(tx);
             default:
-              if (state0 === 5 || state0 === 4 || state0 === 3 || state0 === 0 && t6.$gt(tx, $.$sub$n(t1, t4 * t5 / 2)))
+              if (state0 === 13 || state0 === 12 || state0 === 11 || state0 === 10 || state0 === 9 || state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 0 && t6.$gt(tx, $.$sub$n(t1, $.$mul$n(t4, t5) / 2)))
                 switch (state0) {
                   case 0:
                     t1 = this.y;
-                  case 3:
+                  case 5:
                     state0 = 0;
                     t4 = t3.get$height(t2);
+                  case 6:
+                    state0 = 0;
                     t5 = this.size;
-                    if (typeof t4 !== "number")
-                      throw t4.$mul();
-                    if (typeof t5 !== "number")
-                      throw $.iae(t5);
+                  case 7:
+                    state0 = 0;
                     t7 = $.getInterceptor$n(ty);
                   default:
-                    if (state0 === 5 || state0 === 4 || state0 === 0 && t7.$gt(ty, $.$sub$n(t1, t4 * t5 / 2)))
+                    if (state0 === 13 || state0 === 12 || state0 === 11 || state0 === 10 || state0 === 9 || state0 === 8 || state0 === 0 && t7.$gt(ty, $.$sub$n(t1, $.$mul$n(t4, t5) / 2)))
                       switch (state0) {
                         case 0:
                           t1 = this.x;
-                        case 4:
+                        case 8:
                           state0 = 0;
                           t4 = t3.get$width(t2);
+                        case 9:
+                          state0 = 0;
                           t5 = this.size;
-                          if (typeof t4 !== "number")
-                            throw t4.$mul();
-                          if (typeof t5 !== "number")
-                            throw $.iae(t5);
-                        case 5:
-                          if (state0 === 5 || state0 === 0 && t6.$lt(tx, $.$add$ns(t1, t4 * t5 / 2)))
+                        case 10:
+                          state0 = 0;
+                        default:
+                          if (state0 === 13 || state0 === 12 || state0 === 11 || state0 === 0 && t6.$lt(tx, $.$add$ns(t1, $.$mul$n(t4, t5) / 2)))
                             switch (state0) {
                               case 0:
                                 t1 = this.y;
-                              case 5:
+                              case 11:
                                 state0 = 0;
                                 t2 = t3.get$height(t2);
+                              case 12:
+                                state0 = 0;
                                 t3 = this.size;
-                                if (typeof t2 !== "number")
-                                  throw t2.$mul();
-                                if (typeof t3 !== "number")
-                                  throw $.iae(t3);
-                                t3 = t7.$lt(ty, $.$add$ns(t1, t2 * t3 / 2));
+                              case 13:
+                                state0 = 0;
+                                t3 = t7.$lt(ty, $.$add$ns(t1, $.$mul$n(t2, t3) / 2));
                                 t1 = t3;
                             }
                           else
@@ -5395,10 +5691,10 @@ Turtle: {"": "Object;x*,y*,size*,heading@,opacity@,dead@,img>,variables<",
           switch (state0) {
             case 0:
               t1 = this.x;
-            case 6:
+            case 14:
               state0 = 0;
               t2 = this.y;
-            case 7:
+            case 15:
               state0 = 0;
               t3 = $.getInterceptor$n(t1);
               t4 = $.getInterceptor$n(t2);
@@ -5407,12 +5703,12 @@ Turtle: {"": "Object;x*,y*,size*,heading@,opacity@,dead@,img>,variables<",
                 $.throwExpression(new $.ArgumentError(t2));
               dist = Math.sqrt(t2);
               t1 = $.get$width$x(this.img);
+            case 16:
+              state0 = 0;
               t2 = this.size;
-              if (typeof t1 !== "number")
-                throw t1.$mul();
-              if (typeof t2 !== "number")
-                throw $.iae(t2);
-              return dist < t1 * t2 / 2 + tw / 2;
+            case 17:
+              state0 = 0;
+              return dist < $.$mul$n(t1, t2) / 2 + tw / 2;
           }
     }
   },
@@ -5465,39 +5761,55 @@ Turtle: {"": "Object;x*,y*,size*,heading@,opacity@,dead@,img>,variables<",
   get$width: function(_) {
     var t1, t2;
     t1 = $.get$width$x(this.img);
+    if (t1 !== (t1 | 0))
+      return this.get$width$bailout(1, t1);
     t2 = this.size;
-    if (typeof t1 !== "number")
-      throw t1.$mul();
     if (typeof t2 !== "number")
-      throw $.iae(t2);
+      return this.get$width$bailout(2, t1, t2);
     return t1 * t2;
+  },
+  get$width$bailout: function(state0, t1, t2) {
+    switch (state0) {
+      case 0:
+        t1 = $.get$width$x(this.img);
+      case 1:
+        state0 = 0;
+        t2 = this.size;
+      case 2:
+        state0 = 0;
+        return $.$mul$n(t1, t2);
+    }
   },
   get$height: function(_) {
     var t1, t2;
     t1 = $.get$height$x(this.img);
+    if (t1 !== (t1 | 0))
+      return this.get$height$bailout(1, t1);
     t2 = this.size;
-    if (typeof t1 !== "number")
-      throw t1.$mul();
     if (typeof t2 !== "number")
-      throw $.iae(t2);
+      return this.get$height$bailout(2, t1, t2);
     return t1 * t2;
   },
+  get$height$bailout: function(state0, t1, t2) {
+    switch (state0) {
+      case 0:
+        t1 = $.get$height$x(this.img);
+      case 1:
+        state0 = 0;
+        t2 = this.size;
+      case 2:
+        state0 = 0;
+        return $.$mul$n(t1, t2);
+    }
+  },
   get$radius: function() {
-    var t1, t2, t3, t4;
+    var t1, t2, t3, t4, t5;
     t1 = this.img;
     t2 = $.getInterceptor$x(t1);
-    t3 = t2.get$width(t1);
-    t4 = this.size;
-    if (typeof t3 !== "number")
-      throw t3.$mul();
-    if (typeof t4 !== "number")
-      throw $.iae(t4);
-    t3 *= t4;
-    t1 = t2.get$height(t1);
-    if (typeof t1 !== "number")
-      throw t1.$mul();
-    t4 = t1 * t4;
-    return t3 < t4 ? t3 / 2 : t4 / 2;
+    t3 = $.$mul$n(t2.get$width(t1), this.size);
+    t4 = $.$mul$n(t2.get$height(t1), this.size);
+    t5 = this.size;
+    return t3 < t4 ? $.$mul$n(t2.get$width(t1), t5) / 2 : $.$mul$n(t2.get$height(t1), t5) / 2;
   },
   angleBetween$1: function(b) {
     var t1, t2, t3, theta;
@@ -5572,35 +5884,10 @@ Turtle: {"": "Object;x*,y*,size*,heading@,opacity@,dead@,img>,variables<",
     t1.restore$0(ctx);
   },
   erase$1: function(ctx) {
-    var t1, t2, t3, t4, t5, t6;
-    t1 = this.x;
-    t2 = this.img;
-    t3 = $.getInterceptor$x(t2);
-    t4 = t3.get$width(t2);
-    t5 = this.size;
-    if (typeof t4 !== "number")
-      throw t4.$mul();
-    if (typeof t5 !== "number")
-      throw $.iae(t5);
-    t5 = $.$sub$n(t1, t4 * t5 / 2);
-    t4 = this.y;
-    t1 = t3.get$height(t2);
-    t6 = this.size;
-    if (typeof t1 !== "number")
-      throw t1.$mul();
-    if (typeof t6 !== "number")
-      throw $.iae(t6);
-    t6 = $.$sub$n(t4, t1 * t6 / 2);
-    t1 = t3.get$width(t2);
-    t4 = this.size;
-    if (typeof t1 !== "number")
-      throw t1.$mul();
-    if (typeof t4 !== "number")
-      throw $.iae(t4);
-    t2 = t3.get$height(t2);
-    if (typeof t2 !== "number")
-      throw t2.$mul();
-    $.clearRect$4$x(ctx, t5, t6, t1 * t4, t2 * t4);
+    var t1, t2;
+    t1 = this.img;
+    t2 = $.getInterceptor$x(t1);
+    $.clearRect$4$x(ctx, $.$sub$n(this.x, $.$mul$n(t2.get$width(t1), this.size) / 2), $.$sub$n(this.y, $.$mul$n(t2.get$height(t1), this.size) / 2), $.$mul$n(t2.get$width(t1), this.size), $.$mul$n(t2.get$height(t1), this.size));
   }
 },
 
@@ -5760,7 +6047,8 @@ Tween: {"": "Object;segments,delay,duration,count,$function,running<,repeat,onti
 Tween_addControlPoint_closure: {"": "Closure;",
   call$2: function(a, b) {
     return a.get$time() - b.get$time();
-  }
+  },
+  "+call:2:0": 0
 },
 
 ControlPoint: {"": "Object;value>,time<"}},
@@ -5882,6 +6170,11 @@ PlainJavaScriptObject: {"": "JavaScriptObject;"},
 UnknownJavaScriptObject: {"": "JavaScriptObject;"},
 
 JSArray: {"": "List/Interceptor;",
+  add$1: function(receiver, value) {
+    if (!!receiver.fixed$length)
+      $.throwExpression(new $.UnsupportedError("add"));
+    receiver.push(value);
+  },
   removeAt$1: function(receiver, index) {
     if (index < 0 || index >= receiver.length)
       throw $.wrapException(new $.RangeError("value " + index));
@@ -5899,6 +6192,11 @@ JSArray: {"": "List/Interceptor;",
         return true;
       }
     return false;
+  },
+  addAll$1: function(receiver, collection) {
+    var t1;
+    for (t1 = new $.ListIterator(collection, collection.length, 0, null); t1.moveNext$0();)
+      this.add$1(receiver, t1._liblib0$_current);
   },
   forEach$1: function(receiver, f) {
     return $.IterableMixinWorkaround_forEach(receiver, f);
@@ -5925,6 +6223,15 @@ JSArray: {"": "List/Interceptor;",
   },
   get$length: function(receiver) {
     return receiver.length;
+  },
+  set$length: function(receiver, newLength) {
+    if (typeof newLength !== "number" || Math.floor(newLength) !== newLength)
+      throw $.wrapException(new $.ArgumentError(newLength));
+    if (newLength < 0)
+      throw $.wrapException(new $.RangeError("value " + $.S(newLength)));
+    if (!!receiver.fixed$length)
+      $.throwExpression(new $.UnsupportedError("set length"));
+    receiver.length = newLength;
   },
   $index: function(receiver, index) {
     if (typeof index !== "number" || Math.floor(index) !== index)
@@ -6035,6 +6342,11 @@ JSNumber: {"": "num/Interceptor;",
       throw $.wrapException(new $.ArgumentError(other));
     return receiver - other;
   },
+  $div: function(receiver, other) {
+    if (typeof other !== "number")
+      throw $.wrapException(new $.ArgumentError(other));
+    return receiver / other;
+  },
   $mul: function(receiver, other) {
     if (typeof other !== "number")
       throw $.wrapException(new $.ArgumentError(other));
@@ -6054,6 +6366,13 @@ JSNumber: {"": "num/Interceptor;",
   $tdiv: function(receiver, other) {
     return this.toInt$0(receiver / other);
   },
+  $shl: function(receiver, other) {
+    if (other < 0)
+      throw $.wrapException(new $.ArgumentError(other));
+    if (other > 31)
+      return 0;
+    return receiver << other >>> 0;
+  },
   $shr: function(receiver, other) {
     if (other < 0)
       throw $.wrapException(new $.ArgumentError(other));
@@ -6067,8 +6386,6 @@ JSNumber: {"": "num/Interceptor;",
     return receiver >> other >>> 0;
   },
   $and: function(receiver, other) {
-    if (typeof other !== "number")
-      throw $.wrapException(new $.ArgumentError(other));
     return (receiver & other) >>> 0;
   },
   $lt: function(receiver, other) {
@@ -6170,25 +6487,31 @@ JSString: {"": "String/Interceptor;",
     var endIndex;
     if (index < 0 || index > receiver.length)
       throw $.wrapException(new $.RangeError("value " + index + " not in range 0.." + receiver.length));
-    endIndex = index + pattern.length;
-    if (endIndex > receiver.length)
-      return false;
-    return pattern == receiver.substring(index, endIndex);
-    return this.matchAsPrefix$2(pattern, receiver, index) != null;
+    if (typeof pattern === "string") {
+      endIndex = index + pattern.length;
+      if (endIndex > receiver.length)
+        return false;
+      return pattern == receiver.substring(index, endIndex);
+    }
+    return $.matchAsPrefix$2$s(pattern, receiver, index) != null;
   },
   startsWith$1: function($receiver, pattern) {
     return this.startsWith$2($receiver, pattern, 0);
   },
   substring$2: function(receiver, startIndex, endIndex) {
+    var t1;
+    if (typeof startIndex !== "number")
+      $.throwExpression(new $.ArgumentError(startIndex));
     endIndex = receiver.length;
     if (typeof endIndex !== "number")
       $.throwExpression(new $.ArgumentError(endIndex));
-    if (startIndex < 0)
-      throw $.wrapException(new $.RangeError("value " + startIndex));
+    t1 = $.getInterceptor$n(startIndex);
+    if (t1.$lt(startIndex, 0))
+      throw $.wrapException(new $.RangeError("value " + $.S(startIndex)));
+    if (t1.$gt(startIndex, endIndex))
+      throw $.wrapException(new $.RangeError("value " + $.S(startIndex)));
     if (endIndex == null)
-      throw $.iae(endIndex);
-    if (startIndex > endIndex)
-      throw $.wrapException(new $.RangeError("value " + startIndex));
+      throw endIndex.$gt();
     if (endIndex > receiver.length)
       throw $.wrapException(new $.RangeError("value " + endIndex));
     return receiver.substring(startIndex, endIndex);
@@ -6596,7 +6919,8 @@ _EventLoop__runHelper_next: {"": "Closure;this_0",
     t2 = t1._zone;
     t2._openCallbacks = t2._openCallbacks + 1;
     t1._timer = $._createTimer(C.Duration_0, t1.get$_run());
-  }
+  },
+  "+call:0:0": 0
 },
 
 _IsolateEvent: {"": "Object;isolate,fn,message",
@@ -6610,7 +6934,8 @@ _MainManagerStub: {"": "Object;"},
 IsolateNatives__processWorkerMessage_closure: {"": "Closure;entryPoint_0,replyTo_1",
   call$0: function() {
     $.IsolateNatives__startIsolate(this.entryPoint_0, this.replyTo_1);
-  }
+  },
+  "+call:0:0": 0
 },
 
 _BaseSendPort: {"": "Object;_isolateId<",
@@ -6627,6 +6952,7 @@ _BaseSendPort: {"": "Object;_isolateId<",
     port._liblib4$_callback = new $._BaseSendPort_call_closure(completer, port);
     return completer.future;
   },
+  "+call:1:0": 0,
   $isSendPort: true
 },
 
@@ -6640,7 +6966,8 @@ _BaseSendPort_call_closure: {"": "Closure;completer_0,port_1",
       t1.completeError$1(value);
     else
       t1.complete$1(t1, value);
-  }
+  },
+  "+call:2:0": 0
 },
 
 _NativeJsSendPort: {"": "_BaseSendPort;_receivePort<,_isolateId",
@@ -6684,7 +7011,8 @@ _NativeJsSendPort_send_closure: {"": "Closure;this_1,message_2,replyTo_3",
     t4 = "receive " + $.S(msg);
     t3.enqueue$3;
     t3.events._add$1(new $._IsolateEvent(isolate, new $._NativeJsSendPort_send__closure(t1, t2, shouldSerialize), t4));
-  }
+  },
+  "+call:0:0": 0
 },
 
 _NativeJsSendPort_send__closure: {"": "Closure;box_0,this_4,shouldSerialize_5",
@@ -6700,7 +7028,8 @@ _NativeJsSendPort_send__closure: {"": "Closure;box_0,this_4,shouldSerialize_5",
       t2 = this.box_0;
       t1.get$_receivePort()._liblib4$_callback$2(t2.msg_0, t2.reply_1);
     }
-  }
+  },
+  "+call:0:0": 0
 },
 
 _WorkerSendPort: {"": "_BaseSendPort;_workerId<,_receivePortId,_isolateId",
@@ -6719,16 +7048,12 @@ _WorkerSendPort: {"": "_BaseSendPort;_workerId<,_receivePortId,_isolateId",
   },
   get$hashCode: function(_) {
     var t1, t2, t3;
-    t1 = this._workerId;
-    if (typeof t1 !== "number")
-      throw t1.$shl();
-    t2 = this._isolateId;
-    if (typeof t2 !== "number")
-      throw t2.$shl();
+    t1 = $.$shl$n(this._workerId, 16);
+    t2 = $.$shl$n(this._isolateId, 8);
     t3 = this._receivePortId;
     if (typeof t3 !== "number")
       throw $.iae(t3);
-    return (t1 << 16 ^ t2 << 8 ^ t3) >>> 0;
+    return (t1 ^ t2 ^ t3) >>> 0;
   },
   $is_WorkerSendPort: true,
   $isSendPort: true
@@ -6750,7 +7075,8 @@ _WorkerSendPort_send_closure: {"": "Closure;this_0,message_1,replyTo_2",
       if (manager != null)
         manager.postMessage(workerMessage);
     }
-  }
+  },
+  "+call:0:0": 0
 },
 
 ReceivePortImpl: {"": "Object;_id<,_liblib4$_callback<",
@@ -6776,7 +7102,8 @@ ReceivePortImpl$: function() {
 _waitForPendingPorts_closure: {"": "Closure;callback_0",
   call$1: function(_) {
     return this.callback_0.call$0();
-  }
+  },
+  "+call:1:0": 0
 },
 
 _PendingSendPortFinder: {"": "_MessageTraverser;ports,_visited",
@@ -6819,13 +7146,15 @@ _PendingSendPortFinder$: function() {
 _PendingSendPortFinder_visitList_closure: {"": "Closure;this_0",
   call$1: function(e) {
     return this.this_0._dispatch$1(e);
-  }
+  },
+  "+call:1:0": 0
 },
 
 _PendingSendPortFinder_visitMap_closure: {"": "Closure;this_0",
   call$1: function(e) {
     return this.this_0._dispatch$1(e);
-  }
+  },
+  "+call:1:0": 0
 },
 
 _JsSerializer: {"": "_Serializer;_nextFreeRefId,_visited",
@@ -7013,7 +7342,8 @@ _Copier_visitMap_closure: {"": "Closure;box_0,this_1",
   call$2: function(key, val) {
     var t1 = this.this_1;
     $.$indexSet$ax(this.box_0.copy_0, t1._dispatch$1(key), t1._dispatch$1(val));
-  }
+  },
+  "+call:2:0": 0
 },
 
 _Serializer: {"": "_MessageTraverser;_nextFreeRefId,_visited",
@@ -7227,7 +7557,8 @@ TimerImpl_internalCallback: {"": "Closure;this_0,callback_1",
   call$0: function() {
     this.this_0.set$_handle(null);
     this.callback_1.call$0();
-  }
+  },
+  "+call:0:0": 0
 },
 
 TimerImpl_internalCallback0: {"": "Closure;this_2,callback_3",
@@ -7236,13 +7567,15 @@ TimerImpl_internalCallback0: {"": "Closure;this_2,callback_3",
     var t1 = $globalState.topEventLoop;
     t1.activeTimerCount = t1.activeTimerCount - 1;
     this.callback_3.call$0();
-  }
+  },
+  "+call:0:0": 0
 },
 
 TimerImpl$periodic_closure: {"": "Closure;this_0,callback_1",
   call$0: function() {
     this.callback_1.call$1(this.this_0);
-  }
+  },
+  "+call:0:0": 0
 }}],
 ["_js_helper", "dart:_js_helper", , {
 isJsIndexable: function(object, record) {
@@ -7423,6 +7756,50 @@ Primitives_setProperty: function(object, key, value) {
   if (object == null || typeof object === "boolean" || typeof object === "number" || typeof object === "string")
     throw $.wrapException(new $.ArgumentError(object));
   object[key] = value;
+},
+
+Primitives_applyFunction: function($function, positionalArguments, namedArguments) {
+  var t1, buffer, $arguments, allNamedArguments, t2, listOfNamedArguments, selectorName, jsFunction;
+  t1 = {};
+  t1.argumentCount_0 = 0;
+  buffer = $.StringBuffer$("");
+  $arguments = [];
+  t1.argumentCount_0 = $.$add$ns(t1.argumentCount_0, positionalArguments.length);
+  C.JSArray_methods.addAll$1($arguments, positionalArguments);
+  if ("call$catchAll" in $function) {
+    allNamedArguments = $function.call$catchAll();
+    if (namedArguments != null) {
+      namedArguments.get$isEmpty;
+      t2 = namedArguments._liblib1$_length !== 0;
+    } else
+      t2 = false;
+    if (t2)
+      namedArguments.forEach$1(namedArguments, new $.Primitives_applyFunction_closure(allNamedArguments));
+    listOfNamedArguments = Object.getOwnPropertyNames(allNamedArguments);
+    t2 = $.getInterceptor$asx(listOfNamedArguments);
+    t1.argumentCount_0 = $.$add$ns(t1.argumentCount_0, t2.get$length(listOfNamedArguments));
+    t2.forEach$1(listOfNamedArguments, new $.Primitives_applyFunction_closure0(buffer, $arguments, allNamedArguments));
+  } else {
+    if (namedArguments != null) {
+      namedArguments.get$isEmpty;
+      t2 = namedArguments._liblib1$_length !== 0;
+    } else
+      t2 = false;
+    if (t2)
+      namedArguments.forEach$1(namedArguments, new $.Primitives_applyFunction_closure1(t1, buffer, $arguments));
+  }
+  selectorName = "call$" + $.S(t1.argumentCount_0) + $.S(buffer);
+  jsFunction = $function[selectorName];
+  if (jsFunction == null) {
+    if (namedArguments == null)
+      t1 = null;
+    else {
+      namedArguments.get$keys;
+      t1 = $.List_List$from(new $.LinkedHashMapKeyIterable(namedArguments), true);
+    }
+    return $function.noSuchMethod$1($function, new $.JSInvocationMirror(C.Symbol_call, selectorName, 0, $arguments, t1, null));
+  }
+  return jsFunction.apply($function, $arguments);
 },
 
 iae: function(argument) {
@@ -7833,6 +8210,88 @@ stringContainsUnchecked: function(receiver, other, startIndex) {
   return !$.$eq(C.JSString_methods.indexOf$2(receiver, other, startIndex), -1);
 },
 
+JSInvocationMirror: {"": "Object;_liblib$_memberName,_internalName,_kind,_arguments,_namedArgumentNames,_namedIndices",
+  get$memberName: function() {
+    var $name, t1, unmangledName;
+    return this._liblib$_memberName;
+    $name = this._liblib$_memberName;
+    t1 = $.get$mangledNames();
+    unmangledName = t1.$index(t1, $name);
+    if (unmangledName != null) {
+      t1 = $.split$1$s(unmangledName, ":");
+      if (0 >= t1.length)
+        throw $.ioore(0);
+      $name = t1[0];
+    }
+    this._liblib$_memberName = new $.Symbol($name);
+    return this._liblib$_memberName;
+  },
+  get$positionalArguments: function() {
+    var list, t1, argumentCount, index;
+    if (this._kind === 1)
+      return;
+    list = [];
+    t1 = this._arguments;
+    argumentCount = t1.length - this._namedArgumentNames.length;
+    for (index = 0; index < argumentCount; ++index) {
+      if (index >= t1.length)
+        throw $.ioore(index);
+      list.push(t1[index]);
+    }
+    return list;
+  },
+  get$namedArguments: function() {
+    var map, t1, namedArgumentCount, t2, namedArgumentsStartIndex, i, t3, t4;
+    if (this._kind !== 0)
+      return;
+    map = new $.HashMap(0, null, null, null, null);
+    t1 = this._namedArgumentNames;
+    namedArgumentCount = t1.length;
+    t2 = this._arguments;
+    namedArgumentsStartIndex = t2.length - namedArgumentCount;
+    for (i = 0; i < namedArgumentCount; ++i) {
+      if (i >= t1.length)
+        throw $.ioore(i);
+      t3 = t1[i];
+      t4 = namedArgumentsStartIndex + i;
+      if (t4 < 0 || t4 >= t2.length)
+        throw $.ioore(t4);
+      map.$indexSet(map, new $.Symbol(t3), t2[t4]);
+    }
+    return map;
+  },
+  static: {
+"": "JSInvocationMirror_METHOD,JSInvocationMirror_GETTER,JSInvocationMirror_SETTER",
+}
+
+},
+
+Primitives_applyFunction_closure: {"": "Closure;allNamedArguments_1",
+  call$2: function(key, argument) {
+    this.allNamedArguments_1[key] = argument;
+  },
+  "+call:2:0": 0
+},
+
+Primitives_applyFunction_closure0: {"": "Closure;buffer_2,arguments_3,allNamedArguments_4",
+  call$1: function($name) {
+    this.buffer_2.write$1("$" + $.S($name));
+    this.arguments_3.push(this.allNamedArguments_4[$name]);
+  },
+  "+call:1:0": 0
+},
+
+Primitives_applyFunction_closure1: {"": "Closure;box_0,buffer_5,arguments_6",
+  call$2: function($name, argument) {
+    var t1;
+    this.buffer_5.write$1("$" + $.S($name));
+    this.arguments_6.push(argument);
+    t1 = this.box_0;
+    t1.argumentCount_0 = $.$add$ns(t1.argumentCount_0, 1);
+  },
+  "+call:2:0": 0
+},
+
 TypeErrorDecoder: {"": "Object;_pattern,_arguments,_argumentsExpr,_expr,_method,_receiver",
   matchTypeError$1: function(message) {
     var match, result, t1;
@@ -7984,7 +8443,8 @@ unwrapException_saveStackTrace: {"": "Closure;ex_0",
       if (error.$thrownJsError == null)
         error.$thrownJsError = this.ex_0;
     return error;
-  }
+  },
+  "+call:1:0": 0
 },
 
 _StackTrace: {"": "Object;_exception,_trace",
@@ -8004,19 +8464,22 @@ _StackTrace: {"": "Object;_exception,_trace",
 invokeClosure_closure: {"": "Closure;closure_0",
   call$0: function() {
     return this.closure_0.call$0();
-  }
+  },
+  "+call:0:0": 0
 },
 
 invokeClosure_closure0: {"": "Closure;closure_1,arg1_2",
   call$0: function() {
     return this.closure_1.call$1(this.arg1_2);
-  }
+  },
+  "+call:0:0": 0
 },
 
 invokeClosure_closure1: {"": "Closure;closure_3,arg1_4,arg2_5",
   call$0: function() {
     return this.closure_3.call$2(this.arg1_4, this.arg2_5);
-  }
+  },
+  "+call:0:0": 0
 },
 
 Closure: {"": "Object;",
@@ -8093,10 +8556,156 @@ TypeImpl: {"": "Object;_typeName,_unmangledName",
 applyExperimentalFixup_newGetTagDartFunction: {"": "Closure;newGetTagJSFunction_0",
   call$1: function(object) {
     return this.newGetTagJSFunction_0(object);
+  },
+  "+call:1:0": 0
+},
+
+JSSyntaxRegExp: {"": "Object;_nativeRegExp,_nativeGlobalRegExp,_nativeAnchoredRegExp",
+  get$_nativeGlobalVersion: function() {
+    var t1 = this._nativeGlobalRegExp;
+    if (t1 != null)
+      return t1;
+    t1 = this._nativeRegExp;
+    t1 = $.JSSyntaxRegExp_makeNative(t1.source, t1.multiline, !t1.ignoreCase, true);
+    this._nativeGlobalRegExp = t1;
+    return t1;
+  },
+  get$_nativeAnchoredVersion: function() {
+    var t1 = this._nativeAnchoredRegExp;
+    if (t1 != null)
+      return t1;
+    t1 = this._nativeRegExp;
+    t1 = $.JSSyntaxRegExp_makeNative(t1.source + "|()", t1.multiline, !t1.ignoreCase, true);
+    this._nativeAnchoredRegExp = t1;
+    return t1;
+  },
+  _execGlobal$2: function(string, start) {
+    var regexp, match;
+    regexp = this.get$_nativeGlobalVersion();
+    regexp.lastIndex = start;
+    match = regexp.exec(string);
+    if (match == null)
+      return;
+    return $._MatchImplementation$(this, match);
+  },
+  _execAnchored$2: function(string, start) {
+    var regexp, match, t1, t2;
+    regexp = this.get$_nativeAnchoredVersion();
+    regexp.lastIndex = start;
+    match = regexp.exec(string);
+    if (match == null)
+      return;
+    t1 = match.length;
+    t2 = t1 - 1;
+    if (t2 < 0)
+      throw $.ioore(t2);
+    if (match[t2] != null)
+      return;
+    $.set$length$asx(match, t2);
+    return $._MatchImplementation$(this, match);
+  },
+  matchAsPrefix$2: function(_, string, start) {
+    if (start < 0 || start > string.length)
+      throw $.wrapException(new $.RangeError("value " + start + " not in range 0.." + string.length));
+    return this._execAnchored$2(string, start);
+  },
+  static: {
+JSSyntaxRegExp_makeNative: function(pattern, multiLine, caseSensitive, global) {
+  var m, i, g, regexp, errorMessage;
+  m = multiLine ? "m" : "";
+  i = caseSensitive ? "" : "i";
+  g = global ? "g" : "";
+  regexp = (function() {try {return new RegExp(pattern, m + i + g);} catch (e) {return e;}})();
+  if (regexp instanceof RegExp)
+    return regexp;
+  errorMessage = String(regexp);
+  throw $.wrapException(new $.FormatException("Illegal RegExp pattern: " + pattern + ", " + errorMessage));
+}}
+
+},
+
+_MatchImplementation: {"": "Object;pattern,_match",
+  get$start: function(_) {
+    return this._match.index;
+  },
+  get$end: function() {
+    var t1, t2;
+    t1 = this._match;
+    t2 = t1.index;
+    if (0 >= t1.length)
+      throw $.ioore(0);
+    t1 = $.get$length$asx(t1[0]);
+    if (typeof t1 !== "number")
+      throw $.iae(t1);
+    return t2 + t1;
+  },
+  $index: function(_, index) {
+    var t1 = this._match;
+    if (index >>> 0 !== index || index >= t1.length)
+      throw $.ioore(index);
+    return t1[index];
+  },
+  _MatchImplementation$2: function(pattern, _match) {
+  },
+  static: {
+_MatchImplementation$: function(pattern, _match) {
+  var t1 = new $._MatchImplementation(pattern, _match);
+  t1._MatchImplementation$2(pattern, _match);
+  return t1;
+}}
+
+},
+
+_AllMatchesIterable: {"": "IterableBase;_re,_string",
+  get$iterator: function(_) {
+    return new $._AllMatchesIterator(this._re, this._string, null);
+  }
+},
+
+_AllMatchesIterator: {"": "Object;_regExp,_string,_liblib$_current",
+  get$current: function() {
+    return this._liblib$_current;
+  },
+  moveNext$0: function() {
+    var t1, t2, index;
+    if (this._string == null)
+      return false;
+    t1 = this._liblib$_current;
+    if (t1 != null) {
+      t1.get$end;
+      t1 = t1._match;
+      t2 = t1.index;
+      if (0 >= t1.length)
+        throw $.ioore(0);
+      t1 = $.get$length$asx(t1[0]);
+      if (typeof t1 !== "number")
+        throw $.iae(t1);
+      index = t2 + t1;
+      t1 = this._liblib$_current;
+      t1.get$start;
+      if (t1._match.index === index)
+        ++index;
+    } else
+      index = 0;
+    this._liblib$_current = this._regExp._execGlobal$2(this._string, index);
+    if (this._liblib$_current == null) {
+      this._string = null;
+      return false;
+    }
+    return true;
   }
 },
 
 StringMatch: {"": "Object;start>,str,pattern",
+  get$end: function() {
+    var t1 = this.start;
+    if (typeof t1 !== "number")
+      return this.get$end$bailout(1, t1);
+    return t1 + this.pattern.length;
+  },
+  get$end$bailout: function(state0, t1) {
+    return $.$add$ns(t1, this.pattern.length);
+  },
   $index: function(_, g) {
     if (typeof g !== "number")
       return this.$$index$bailout(1, g);
@@ -8112,43 +8721,61 @@ StringMatch: {"": "Object;start>,str,pattern",
 }}],
 ["dart._collection.dev", "dart:_collection-dev", , {
 Arrays_copy: function(src, srcStart, dst, dstStart, count) {
-  var i, j, t1, t2, t3, t4;
+  var i, j, t1, t2, t3;
   if (typeof dst !== "object" || dst === null || (dst.constructor !== Array || !!dst.immutable$list) && !$.isJsIndexable(dst, dst[$.dispatchPropertyName]))
     return $.Arrays_copy$bailout(1, src, srcStart, dst, dstStart, count);
-  if (srcStart < dstStart)
-    for (i = srcStart + count - 1, j = dstStart + count - 1, t1 = src.length, t2 = dst.length; i >= srcStart; --i, --j) {
-      if (i < 0 || i >= t1)
-        throw $.ioore(i);
-      t3 = src[i];
-      if (j < 0 || j >= t2)
+  if (typeof dstStart !== "number")
+    throw $.iae(dstStart);
+  if (srcStart < dstStart) {
+    if (typeof count !== "number")
+      throw $.iae(count);
+    i = srcStart + count - 1;
+    j = dstStart + count - 1;
+    t1 = $.getInterceptor$asx(src);
+    for (; i >= srcStart; --i, --j) {
+      t2 = t1.$index(src, i);
+      if (j >>> 0 !== j || j >= dst.length)
+        throw $.ioore(j);
+      dst[j] = t2;
+    }
+  } else {
+    if (typeof count !== "number")
+      throw $.iae(count);
+    t1 = srcStart + count;
+    t2 = $.getInterceptor$asx(src);
+    j = dstStart;
+    i = srcStart;
+    for (; i < t1; ++i, ++j) {
+      t3 = t2.$index(src, i);
+      if (j >>> 0 !== j || j >= dst.length)
         throw $.ioore(j);
       dst[j] = t3;
     }
-  else
-    for (t1 = srcStart + count, t2 = src.length, t3 = dst.length, j = dstStart, i = srcStart; i < t1; ++i, ++j) {
-      if (i < 0 || i >= t2)
-        throw $.ioore(i);
-      t4 = src[i];
-      if (j < 0 || j >= t3)
-        throw $.ioore(j);
-      dst[j] = t4;
-    }
+  }
 },
 
 Arrays_copy$bailout: function(state0, src, srcStart, dst, dstStart, count) {
-  var i, j, t1;
-  if (srcStart < dstStart)
-    for (i = srcStart + count - 1, j = dstStart + count - 1; i >= srcStart; --i, --j) {
-      if (i < 0 || i >= src.length)
-        throw $.ioore(i);
-      C.JSArray_methods.$indexSet(dst, j, src[i]);
-    }
-  else
-    for (t1 = srcStart + count, j = dstStart, i = srcStart; i < t1; ++i, ++j) {
-      if (i < 0 || i >= src.length)
-        throw $.ioore(i);
-      C.JSArray_methods.$indexSet(dst, j, src[i]);
-    }
+  var i, j, t1, t2;
+  if (typeof dstStart !== "number")
+    throw $.iae(dstStart);
+  if (srcStart < dstStart) {
+    if (typeof count !== "number")
+      throw $.iae(count);
+    i = srcStart + count - 1;
+    j = dstStart + count - 1;
+    t1 = $.getInterceptor$asx(src);
+    for (; i >= srcStart; --i, --j)
+      C.JSArray_methods.$indexSet(dst, j, t1.$index(src, i));
+  } else {
+    if (typeof count !== "number")
+      throw $.iae(count);
+    t1 = srcStart + count;
+    t2 = $.getInterceptor$asx(src);
+    j = dstStart;
+    i = srcStart;
+    for (; i < t1; ++i, ++j)
+      C.JSArray_methods.$indexSet(dst, j, t2.$index(src, i));
+  }
 },
 
 Arrays_indexOf: function(a, element, startIndex, endIndex) {
@@ -8201,28 +8828,31 @@ IterableMixinWorkaround_sortList: function(list, compare) {
 },
 
 IterableMixinWorkaround__rangeCheck: function(list, start, end) {
-  var t1;
-  if (start < 0 || start > list.length) {
+  var t1 = $.getInterceptor$n(start);
+  if (t1.$lt(start, 0) || t1.$gt(start, list.length)) {
     t1 = list.length;
-    throw $.wrapException(new $.RangeError("value " + start + " not in range 0.." + t1));
+    throw $.wrapException(new $.RangeError("value " + $.S(start) + " not in range 0.." + t1));
   }
-  if (end < start || end > list.length) {
+  t1 = $.getInterceptor$n(end);
+  if (t1.$lt(end, start) || t1.$gt(end, list.length)) {
     t1 = list.length;
-    throw $.wrapException(new $.RangeError("value " + end + " not in range " + start + ".." + t1));
+    throw $.wrapException(new $.RangeError("value " + $.S(end) + " not in range " + $.S(start) + ".." + t1));
   }
 },
 
 IterableMixinWorkaround_setRangeList: function(list, start, end, from, skipCount) {
   var $length, otherStart, otherList;
   $.IterableMixinWorkaround__rangeCheck(list, start, end);
-  $length = end - start;
-  if ($length === 0)
+  $length = $.$sub$n(end, start);
+  if ($.$eq($length, 0))
     return;
   if (skipCount < 0)
     throw $.wrapException(new $.ArgumentError(skipCount));
   otherStart = skipCount;
   otherList = from;
-  if (otherStart + $length > otherList.length)
+  if (typeof $length !== "number")
+    throw $.iae($length);
+  if (otherStart + $length > $.get$length$asx(otherList))
     throw $.wrapException(new $.StateError("Not enough elements"));
   $.Arrays_copy(otherList, otherStart, list, start, $length);
 },
@@ -9024,8 +9654,53 @@ SkipIterator: {"": "Iterator;_iterator,_skipCount",
   }
 },
 
-FixedLengthListMixin: {"": "Object;"}}],
+FixedLengthListMixin: {"": "Object;"},
+
+Symbol: {"": "Object;_name<",
+  $eq: function(_, other) {
+    if (other == null)
+      return false;
+    return typeof other === "object" && other !== null && !!$.getInterceptor(other).$isSymbol && $.$eq(this._name, other._name);
+  },
+  get$hashCode: function(_) {
+    var t1 = $.get$hashCode$(this._name);
+    if (typeof t1 !== "number")
+      throw $.iae(t1);
+    return 536870911 & 664597 * t1;
+  },
+  toString$0: function(_) {
+    return "Symbol(\"" + $.S(this._name) + "\")";
+  },
+  $isSymbol: true,
+  static: {
+"": "Symbol_validationPattern",
+}
+
+}}],
 ["dart._js_names", "dart:_js_names", , {
+computeMangledNames: function(jsMangledNames, isGlobal) {
+  var keys, result, t1, t2, key, value, t3;
+  keys = (function(victim, hasOwnProperty) {
+  var result = [];
+  for (var key in victim) {
+    if (hasOwnProperty.call(victim, key)) result.push(key);
+  }
+  return result;
+})(jsMangledNames, Object.prototype.hasOwnProperty);
+  result = $.makeLiteralMap([]);
+  for (t1 = $.get$iterator$ax(keys), t2 = !isGlobal; t1.moveNext$0();) {
+    key = t1.get$current();
+    value = jsMangledNames[key];
+    result.$indexSet(result, key, value);
+    if (t2) {
+      t3 = $.getInterceptor$s(key);
+      if (t3.startsWith$1(key, "get$"))
+        result.$indexSet(result, "set$" + t3.substring$1(key, 4), value + "=");
+    }
+  }
+  return result;
+},
+
 unmangleGlobalNameIfPreservedAnyways: function($name) {
   return init.mangledGlobalNames[$name];
 }}],
@@ -9171,7 +9846,7 @@ _FutureListenerWrapper: {"": "Object;future,_nextListener@",
     this.future._setErrorUnchecked$1(error);
   },
   _inSameErrorZone$1: function(otherZone) {
-    return $.$eq(this.future._zone.get$_errorZone(), otherZone.get$_errorZone());
+    return this.future._zone.get$_errorZone() === otherZone.get$_errorZone();
   }
 },
 
@@ -9221,7 +9896,7 @@ _FutureImpl: {"": "Object;_state@,_zone<,_resultOrListeners<",
     return this.catchError$2$test(f, null);
   },
   _inSameErrorZone$1: function(otherZone) {
-    return $.$eq(this._zone.get$_errorZone(), otherZone.get$_errorZone());
+    return this._zone.get$_errorZone() === otherZone.get$_errorZone();
   },
   _setValue$1: function(value) {
     if (this._state !== 0)
@@ -9417,7 +10092,8 @@ _FutureImpl__FutureImpl$wait_handleError: {"": "Closure;box_0",
       t1.values_1 = null;
       t1.completer_0.completeError$1(error);
     }
-  }
+  },
+  "+call:1:0": 0
 },
 
 _FutureImpl__FutureImpl$wait_closure: {"": "Closure;box_0,pos_1",
@@ -9436,19 +10112,22 @@ _FutureImpl__FutureImpl$wait_closure: {"": "Closure;box_0,pos_1",
       t2 = t1.completer_0;
       t2.complete$1(t2, t1.values_1);
     }
-  }
+  },
+  "+call:1:0": 0
 },
 
 _FutureImpl__asyncSetValue_closure: {"": "Closure;this_0,value_1",
   call$0: function() {
     this.this_0._setValueUnchecked$1(this.value_1);
-  }
+  },
+  "+call:0:0": 0
 },
 
 _FutureImpl__asyncSetError_closure: {"": "Closure;this_0,error_1",
   call$0: function() {
     this.this_0._setErrorUnchecked$1(this.error_1);
-  }
+  },
+  "+call:0:0": 0
 },
 
 _FutureImpl__scheduleUnhandledError_closure: {"": "Closure;this_0",
@@ -9461,7 +10140,8 @@ _FutureImpl__scheduleUnhandledError_closure: {"": "Closure;this_0",
       error = t1.get$_resultOrListeners();
       t1.get$_zone().handleUncaughtError$1(error);
     }
-  }
+  },
+  "+call:0:0": 0
 },
 
 _FutureImpl__addListener_closure: {"": "Closure;box_0,this_1",
@@ -9475,7 +10155,8 @@ _FutureImpl__addListener_closure: {"": "Closure;box_0,this_1",
       t1.listener_0._sendValue$1(value);
     else
       t1.listener_0._sendError$1(value);
-  }
+  },
+  "+call:0:0": 0
 },
 
 _TransformFuture: {"": "_FutureImpl;_nextListener@",
@@ -9500,13 +10181,15 @@ _TransformFuture: {"": "_FutureImpl;_nextListener@",
 _TransformFuture__sendValue_closure: {"": "Closure;this_0,value_1",
   call$0: function() {
     return this.this_0._zonedSendValue$1(this.value_1);
-  }
+  },
+  "+call:0:0": 0
 },
 
 _TransformFuture__sendError_closure: {"": "Closure;this_0,error_1",
   call$0: function() {
     return this.this_0._zonedSendError$1(this.error_1);
-  }
+  },
+  "+call:0:0": 0
 },
 
 _ThenFuture: {"": "_TransformFuture;_onValue,_nextListener,_state,_zone,_resultOrListeners",
@@ -9668,7 +10351,8 @@ _WhenFuture__zonedSendValue_closure: {"": "Closure;this_0,value_1",
     if (t1.get$_state() !== 0)
       $.throwExpression(new $.StateError("Future already completed"));
     t1._setValueUnchecked$1(this.value_1);
-  }
+  },
+  "+call:1:0": 0
 },
 
 _WhenFuture__zonedSendError_closure: {"": "Closure;box_0,this_1",
@@ -9679,7 +10363,8 @@ _WhenFuture__zonedSendError_closure: {"": "Closure;box_0,this_1",
     if (t1.get$_state() !== 0)
       $.throwExpression(new $.StateError("Future already completed"));
     t1._setErrorUnchecked$1(t2);
-  }
+  },
+  "+call:1:0": 0
 },
 
 Stream: {"": "Object;",
@@ -9704,18 +10389,21 @@ Stream: {"": "Object;",
 Stream_forEach_closure: {"": "Closure;box_0,this_1,action_2,future_3",
   call$1: function(element) {
     $._runUserCode(new $.Stream_forEach__closure(this.action_2, element), new $.Stream_forEach__closure0(), $._cancelAndError(this.box_0.subscription_0, this.future_3));
-  }
+  },
+  "+call:1:0": 0
 },
 
 Stream_forEach__closure: {"": "Closure;action_4,element_5",
   call$0: function() {
     return this.action_4.call$1(this.element_5);
-  }
+  },
+  "+call:0:0": 0
 },
 
 Stream_forEach__closure0: {"": "Closure;",
   call$1: function(_) {
-  }
+  },
+  "+call:1:0": 0
 },
 
 Stream_forEach_closure0: {"": "Closure;future_6",
@@ -9724,14 +10412,16 @@ Stream_forEach_closure0: {"": "Closure;future_6",
     if (t1._state !== 0)
       $.throwExpression(new $.StateError("Future already completed"));
     t1._setValueUnchecked$1(null);
-  }
+  },
+  "+call:0:0": 0
 },
 
 Stream_length_closure: {"": "Closure;box_0",
   call$1: function(_) {
     var t1 = this.box_0;
     t1.count_0 = $.$add$ns(t1.count_0, 1);
-  }
+  },
+  "+call:1:0": 0
 },
 
 Stream_length_closure0: {"": "Closure;box_0,future_1",
@@ -9742,7 +10432,8 @@ Stream_length_closure0: {"": "Closure;box_0,future_1",
     if (t1._state !== 0)
       $.throwExpression(new $.StateError("Future already completed"));
     t1._setValueUnchecked$1(t2);
-  }
+  },
+  "+call:0:0": 0
 },
 
 StreamSubscription: {"": "Object;"},
@@ -9903,7 +10594,7 @@ _BufferingStreamSubscription: {"": "Object;_liblib5$_onData,_onError,_onDone,_zo
     this._state = (t1 | 16) >>> 0;
     t2 = this._zone;
     t3 = $.get$_Zone__current();
-    if (!$.$eq(t2.get$_errorZone(), t3.get$_errorZone()))
+    if (t2.get$_errorZone() !== t3.get$_errorZone())
       $.get$_Zone__current().handleUncaughtError$1(error);
     else
       t2._runInZone$2(new $._BufferingStreamSubscription__sendError_closure(this, error), true);
@@ -9975,13 +10666,15 @@ _BufferingStreamSubscription: {"": "Object;_liblib5$_onData,_onError,_onDone,_zo
 _BufferingStreamSubscription__sendData_closure: {"": "Closure;this_0,data_1",
   call$0: function() {
     return this.this_0._liblib5$_onData$1(this.data_1);
-  }
+  },
+  "+call:0:0": 0
 },
 
 _BufferingStreamSubscription__sendError_closure: {"": "Closure;this_0,error_1",
   call$0: function() {
     return this.this_0._onError$1(this.error_1);
-  }
+  },
+  "+call:0:0": 0
 },
 
 _DelayedEvent: {"": "Object;next@"},
@@ -10033,7 +10726,8 @@ _PendingEvents_schedule_closure: {"": "Closure;this_0,dispatch_1",
     if (oldState === 3)
       return;
     t1.handleNext$1(this.dispatch_1);
-  }
+  },
+  "+call:0:0": 0
 },
 
 _StreamImplEvents: {"": "_PendingEvents;firstPendingEvent,lastPendingEvent,_state",
@@ -10064,7 +10758,8 @@ _cancelAndError_closure: {"": "Closure;subscription_0,future_1",
     if (t1._state !== 0)
       $.throwExpression(new $.StateError("Future already completed"));
     t1._setErrorUnchecked$1(error);
-  }
+  },
+  "+call:1:0": 0
 },
 
 _ForwardingStream: {"": "Stream;",
@@ -10175,11 +10870,8 @@ _MapStream: {"": "_ForwardingStream;_transform,_source",
 
 _SkipStream: {"": "_ForwardingStream;_remaining,_source",
   _handleData$2: function(inputEvent, sink) {
-    var t1 = this._remaining;
-    if (typeof t1 !== "number")
-      throw t1.$gt();
-    if (t1 > 0) {
-      this._remaining = t1 - 1;
+    if ($.$gt$n(this._remaining, 0)) {
+      this._remaining = $.$sub$n(this._remaining, 1);
       return;
     }
     return sink._liblib5$_add$1(inputEvent);
@@ -10257,7 +10949,8 @@ _DefaultZone_handleUncaughtError_closure: {"": "Closure;error_0",
     if (trace != null)
       $.Primitives_printString("Stack Trace:\n" + $.S(trace) + "\n");
     throw $.wrapException(t1);
-  }
+  },
+  "+call:0:0": 0
 },
 
 _DefaultZone_runAsync_closure: {"": "Closure;f_0,zone_1",
@@ -10265,7 +10958,8 @@ _DefaultZone_runAsync_closure: {"": "Closure;f_0,zone_1",
     var t1 = this.zone_1;
     t1._openCallbacks = t1._openCallbacks - 1;
     t1._runInZone$2(this.f_0, true);
-  }
+  },
+  "+call:0:0": 0
 },
 
 _ZoneTimer: {"": "Object;_zone<,_callback,_timer",
@@ -10298,7 +10992,8 @@ _PeriodicZoneTimer__run_closure: {"": "Closure;this_0",
   call$0: function() {
     var t1 = this.this_0;
     t1._callback$1(t1);
-  }
+  },
+  "+call:0:0": 0
 }}],
 ["dart.collection", "dart:collection", , {
 Maps_mapToString: function(m) {
@@ -10330,7 +11025,8 @@ Maps_mapToString: function(m) {
 HashMap_values_closure: {"": "Closure;this_0",
   call$1: function(each) {
     return $.$index$asx(this.this_0, each);
-  }
+  },
+  "+call:1:0": 0
 },
 
 HashMapKeyIterable: {"": "IterableBase;_map",
@@ -10378,10 +11074,11 @@ HashMapKeyIterator: {"": "Object;_map,_keys,_offset,_liblib1$_current",
 LinkedHashMap_values_closure: {"": "Closure;this_0",
   call$1: function(each) {
     return $.$index$asx(this.this_0, each);
-  }
+  },
+  "+call:1:0": 0
 },
 
-LinkedHashMapCell: {"": "Object;_key<,_value@,_next?,_previous"},
+LinkedHashMapCell: {"": "Object;_key<,_value@,_next@,_previous"},
 
 LinkedHashMapKeyIterable: {"": "IterableBase;_map",
   get$length: function(_) {
@@ -10399,10 +11096,10 @@ LinkedHashMapKeyIterable: {"": "IterableBase;_map",
     cell = t1._first;
     modifications = t1._modifications;
     for (; cell != null;) {
-      f.call$1(cell._key);
+      f.call$1(cell.get$_key());
       if (modifications !== t1._modifications)
         throw $.wrapException(new $.ConcurrentModificationError(t1));
-      cell = cell._next;
+      cell = cell.get$_next();
     }
   }
 },
@@ -10421,8 +11118,8 @@ LinkedHashMapKeyIterator: {"": "Object;_map,_modifications,_cell,_liblib1$_curre
         this._liblib1$_current = null;
         return false;
       } else {
-        this._liblib1$_current = t1._key;
-        this._cell = this._cell._next;
+        this._liblib1$_current = t1.get$_key();
+        this._cell = this._cell.get$_next();
         return true;
       }
     }
@@ -10797,10 +11494,10 @@ LinkedHashMap: {"": "Object;_liblib1$_length,_strings,_nums,_rest,_first,_last,_
     cell = this._first;
     modifications = this._modifications;
     for (; cell != null;) {
-      action.call$2(cell._key, cell._value);
+      action.call$2(cell.get$_key(), cell.get$_value());
       if (modifications !== this._modifications)
         throw $.wrapException(new $.ConcurrentModificationError(this));
-      cell = cell._next;
+      cell = cell.get$_next();
     }
   },
   get$keys: function() {
@@ -10912,7 +11609,8 @@ Maps_mapToString_closure: {"": "Closure;box_0,result_1",
     t1.write$1(k);
     t1.write$1(": ");
     t1.write$1(v);
-  }
+  },
+  "+call:2:0": 0
 },
 
 ListQueue: {"": "IterableBase;_table,_head,_tail,_modificationCount",
@@ -10932,7 +11630,13 @@ ListQueue: {"": "IterableBase;_table,_head,_tail,_modificationCount",
     }
   },
   get$length: function(_) {
-    return (this._tail - this._head & this._table.length - 1) >>> 0;
+    var t1 = this._tail;
+    if (typeof t1 !== "number")
+      return this.get$length$bailout1(1, t1);
+    return (t1 - this._head & this._table.length - 1) >>> 0;
+  },
+  get$length$bailout1: function(state0, t1) {
+    return $.$and$n($.$sub$n(t1, this._head), this._table.length - 1);
   },
   toString$0: function(_) {
     return $.IterableMixinWorkaround_toStringIterable(this, "{", "}");
@@ -10952,14 +11656,13 @@ ListQueue: {"": "IterableBase;_table,_head,_tail,_modificationCount",
     return result;
   },
   _add$1: function(element) {
-    var t1, t2, t3;
+    var t1, t2;
     t1 = this._table;
     t2 = this._tail;
-    t3 = t1.length;
-    if (t2 < 0 || t2 >= t3)
+    if (t2 >>> 0 !== t2 || t2 >= t1.length)
       throw $.ioore(t2);
     t1[t2] = element;
-    this._tail = (t2 + 1 & t3 - 1) >>> 0;
+    this._tail = $.$and$n(t2 + 1, this._table.length - 1);
     if (this._head === this._tail)
       this._grow$0();
     this._modificationCount = this._modificationCount + 1;
@@ -10979,16 +11682,12 @@ ListQueue: {"": "IterableBase;_table,_head,_tail,_modificationCount",
     this._table = newTable;
   },
   ListQueue$1: function(initialCapacity) {
-    var t1;
     if (true)
       initialCapacity = 8;
     else {
-      t1 = C.JSNull_methods.$sub(initialCapacity, 1);
       if (typeof initialCapacity !== "number")
-        throw initialCapacity.$and();
-      if (typeof t1 !== "number")
-        throw $.iae(t1);
-      if (C.JSNull_methods.$and(initialCapacity, t1) !== 0)
+        throw initialCapacity.$sub();
+      if ((initialCapacity & initialCapacity - 1) >>> 0 !== 0)
         initialCapacity = $.ListQueue__nextPowerOf2(initialCapacity);
     }
     this._table = $.List_List(initialCapacity);
@@ -11003,7 +11702,9 @@ ListQueue$: function(initialCapacity) {
 
 ListQueue__nextPowerOf2: function(number) {
   var nextNumber;
-  number = C.JSNull_methods.$shl(number, 2) - 1;
+  if (number == null)
+    throw number.$shl();
+  number = (number << 2 >>> 0) - 1;
   for (; true; number = nextNumber) {
     nextNumber = (number & number - 1) >>> 0;
     if (nextNumber === 0)
@@ -11041,6 +11742,23 @@ _ListQueueIterator$: function(queue) {
 
 }}],
 ["dart.core", "dart:core", , {
+_symbolMapToStringMap: function(map) {
+  var result;
+  if (map == null)
+    return;
+  result = new $.HashMap(0, null, null, null, null);
+  map.forEach$1(map, new $._symbolMapToStringMap_closure(result));
+  return result;
+},
+
+Function__toMangledNames: function(namedArguments) {
+  var result;
+  return;
+  result = $.makeLiteralMap([]);
+  C.JSNull_methods.forEach$1(namedArguments, new $.Function__toMangledNames_closure(result));
+  return result;
+},
+
 Comparable_compare: function(a, b) {
   return $.compareTo$1$ns(a, b);
 },
@@ -11081,6 +11799,22 @@ List_List$from: function(other, growable) {
   return fixedList;
 },
 
+_symbolMapToStringMap_closure: {"": "Closure;result_0",
+  call$2: function(key, value) {
+    var t1 = this.result_0;
+    t1.$indexSet(t1, key.get$_name(), value);
+  },
+  "+call:2:0": 0
+},
+
+Function__toMangledNames_closure: {"": "Closure;result_0",
+  call$2: function(symbol, value) {
+    var t1 = this.result_0;
+    t1.$indexSet(t1, symbol.get$_name(), value);
+  },
+  "+call:2:0": 0
+},
+
 NoSuchMethodError_toString_closure: {"": "Closure;box_0",
   call$2: function(key, value) {
     var t1 = this.box_0;
@@ -11090,7 +11824,8 @@ NoSuchMethodError_toString_closure: {"": "Closure;box_0",
     t1.sb_0.write$1(": ");
     t1.sb_0.write$1($.Error_safeToString(value));
     t1.i_1 = $.$add$ns(t1.i_1, 1);
-  }
+  },
+  "+call:2:0": 0
 },
 
 DateTime: {"": "Object;millisecondsSinceEpoch<,isUtc",
@@ -11142,7 +11877,8 @@ DateTime_toString_fourDigits: {"": "Closure;",
     if (absN >= 10)
       return sign + "00" + $.S(absN);
     return sign + "000" + $.S(absN);
-  }
+  },
+  "+call:1:0": 0
 },
 
 DateTime_toString_threeDigits: {"": "Closure;",
@@ -11153,7 +11889,8 @@ DateTime_toString_threeDigits: {"": "Closure;",
     if (t1.$ge(n, 10))
       return "0" + $.S(n);
     return "00" + $.S(n);
-  }
+  },
+  "+call:1:0": 0
 },
 
 DateTime_toString_twoDigits: {"": "Closure;",
@@ -11161,7 +11898,8 @@ DateTime_toString_twoDigits: {"": "Closure;",
     if ($.$ge$n(n, 10))
       return $.S(n);
     return "0" + $.S(n);
-  }
+  },
+  "+call:1:0": 0
 },
 
 Duration: {"": "Object;_duration<",
@@ -11240,7 +11978,8 @@ Duration_toString_sixDigits: {"": "Closure;",
     if (t1.$gt(n, 10))
       return "0000" + $.S(n);
     return "00000" + $.S(n);
-  }
+  },
+  "+call:1:0": 0
 },
 
 Duration_toString_twoDigits: {"": "Closure;",
@@ -11248,7 +11987,8 @@ Duration_toString_twoDigits: {"": "Closure;",
     if ($.$ge$n(n, 10))
       return $.S(n);
     return "0" + $.S(n);
-  }
+  },
+  "+call:1:0": 0
 },
 
 Error: {"": "Object;", $isError: true, static: {
@@ -11334,52 +12074,28 @@ AbstractClassInstantiationError: {"": "Error;_className",
 
 NoSuchMethodError: {"": "Error;_liblib2$_receiver,_memberName,_liblib2$_arguments,_namedArguments,_existingArgumentNames",
   toString$0: function(_) {
-    var t1, t2, t3, t4, t5, actualParameters, i, str, formalParameters;
+    var t1, t2, t3, t4;
     t1 = {};
     t1.sb_0 = $.StringBuffer$("");
     t1.i_1 = 0;
     t2 = this._liblib2$_arguments;
     if (t2 != null)
-      for (t3 = $.getInterceptor$asx(t2); $.$lt$n(t1.i_1, t3.get$length(t2)); t1.i_1 = $.$add$ns(t1.i_1, 1)) {
+      for (; $.$lt$n(t1.i_1, t2.length); t1.i_1 = $.$add$ns(t1.i_1, 1)) {
         if ($.$gt$n(t1.i_1, 0)) {
-          t4 = t1.sb_0;
-          t4._contents = t4._contents + ", ";
+          t3 = t1.sb_0;
+          t3._contents = t3._contents + ", ";
         }
-        t4 = t1.sb_0;
-        t5 = $.Error_safeToString(t3.$index(t2, t1.i_1));
-        t4._contents = t4._contents + t5;
+        t3 = t1.sb_0;
+        t4 = t1.i_1;
+        if (t4 >>> 0 !== t4 || t4 >= t2.length)
+          throw $.ioore(t4);
+        t4 = $.Error_safeToString(t2[t4]);
+        t3._contents = t3._contents + t4;
       }
     t2 = this._namedArguments;
     if (t2 != null)
-      $.forEach$1$ax(t2, new $.NoSuchMethodError_toString_closure(t1));
-    t2 = this._existingArgumentNames;
-    if (t2 == null)
-      return "NoSuchMethodError : method not found: '" + $.S(this._memberName) + "'\nReceiver: " + $.Error_safeToString(this._liblib2$_receiver) + "\nArguments: [" + $.S(t1.sb_0) + "]";
-    else {
-      actualParameters = t1.sb_0._contents;
-      t1.sb_0 = $.StringBuffer$("");
-      t3 = $.getInterceptor$asx(t2);
-      i = 0;
-      while (true) {
-        t4 = t3.get$length(t2);
-        if (typeof t4 !== "number")
-          throw $.iae(t4);
-        if (!(i < t4))
-          break;
-        if (i > 0) {
-          t4 = t1.sb_0;
-          t4._contents = t4._contents + ", ";
-        }
-        t4 = t1.sb_0;
-        str = t3.$index(t2, i);
-        str = typeof str === "string" ? str : $.S(str);
-        t4._contents = t4._contents + str;
-        ++i;
-      }
-      formalParameters = t1.sb_0._contents;
-      t1 = this._memberName;
-      return "NoSuchMethodError: incorrect number of arguments passed to method named '" + $.S(t1) + "'\nReceiver: " + $.Error_safeToString(this._liblib2$_receiver) + "\nTried calling: " + $.S(t1) + "(" + actualParameters + ")\nFound: " + $.S(t1) + "(" + formalParameters + ")";
-    }
+      t2.forEach$1(t2, new $.NoSuchMethodError_toString_closure(t1));
+    return "NoSuchMethodError : method not found: '" + $.S(this._memberName) + "'\nReceiver: " + $.Error_safeToString(this._liblib2$_receiver) + "\nArguments: [" + $.S(t1.sb_0) + "]";
   }
 },
 
@@ -11430,6 +12146,13 @@ _ExceptionImplementation: {"": "Object;message",
     if (t1 == null)
       return "Exception";
     return "Exception: " + $.S(t1);
+  },
+  $isException: true
+},
+
+FormatException: {"": "Object;message",
+  toString$0: function(_) {
+    return "FormatException: " + this.message;
   },
   $isException: true
 },
@@ -11491,6 +12214,9 @@ Object: {"": ";",
   },
   toString$0: function(_) {
     return $.Primitives_objectToString(this);
+  },
+  noSuchMethod$1: function(_, invocation) {
+    throw $.wrapException(new $.NoSuchMethodError(this, invocation.get$memberName()._name, invocation.get$positionalArguments(), $._symbolMapToStringMap(invocation.get$namedArguments()), null));
   }
 },
 
@@ -11541,7 +12267,9 @@ StringBuffer$: function($content) {
   return t1;
 }}
 
-}}],
+},
+
+Symbol0: {"": "Object;"}}],
 ["dart.dom.html", "dart:html", , {
 AudioElement_AudioElement: function(src) {
   return new Audio();
@@ -11603,13 +12331,10 @@ _EventStreamSubscription: {"": "StreamSubscription;_pauseCount,_target,_eventTyp
     this._onData = null;
   },
   pause$1: function(_, resumeSignal) {
-    var t1;
     if (this._target == null)
       return;
     this._pauseCount = this._pauseCount + 1;
-    t1 = this._onData;
-    if (t1 != null)
-      $.$$dom_removeEventListener$3$x(this._target, this._eventType, t1, this._useCapture);
+    this._unlisten$0();
   },
   pause$0: function($receiver) {
     return this.pause$1($receiver, null);
@@ -12373,7 +13098,7 @@ min: function(a, b) {
     if (typeof a === "number")
       if (a === 0)
         return (a + b) * a * b;
-    if (a === 0 && C.JSDouble_methods.get$isNegative(b) || isNaN(b))
+    if (a === 0 && C.JSDouble_methods.get$isNegative(b) || C.JSDouble_methods.get$isNaN(b))
       return b;
     return a;
   }
@@ -12402,10 +13127,18 @@ max: function(a, b) {
 _Random: {"": "Object;",
   nextInt$1: function(max) {
     if (typeof max !== "number")
-      throw max.$lt();
+      return this.nextInt$1$bailout(1, max);
     if (max < 0)
       throw $.wrapException(new $.ArgumentError("negative max: " + $.S(max)));
     if (max > 4294967295)
+      max = 4294967295;
+    return Math.random() * max >>> 0;
+  },
+  nextInt$1$bailout: function(state0, max) {
+    var t1 = $.getInterceptor$n(max);
+    if (t1.$lt(max, 0))
+      throw $.wrapException(new $.ArgumentError("negative max: " + $.S(max)));
+    if (t1.$gt(max, 4294967295))
       max = 4294967295;
     return Math.random() * max >>> 0;
   }
@@ -13027,8 +13760,8 @@ Isolate.makeConstantList = function(list) {
   return list;
 };
 C.List_empty = Isolate.makeConstantList([]);
+C.Symbol_call = new $.Symbol("call");
 C.Window_methods = $.Window.prototype;
-$.BLOCK_ORIENTATION = 1;
 $.Block_BLOCK_ID = 0;
 $.dispatchPropertyName = null;
 $.lazyPort = null;
@@ -13052,6 +13785,16 @@ $.$add$ns = function(receiver, a0) {
   if (typeof receiver == "number" && typeof a0 == "number")
     return receiver + a0;
   return $.getInterceptor$ns(receiver).$add(receiver, a0);
+};
+$.$and$n = function(receiver, a0) {
+  if (typeof receiver == "number" && typeof a0 == "number")
+    return (receiver & a0) >>> 0;
+  return $.getInterceptor$n(receiver).$and(receiver, a0);
+};
+$.$div$n = function(receiver, a0) {
+  if (typeof receiver == "number" && typeof a0 == "number")
+    return receiver / a0;
+  return $.getInterceptor$n(receiver).$div(receiver, a0);
 };
 $.$eq = function(receiver, a0) {
   if (receiver == null)
@@ -13091,10 +13834,16 @@ $.$lt$n = function(receiver, a0) {
     return receiver < a0;
   return $.getInterceptor$n(receiver).$lt(receiver, a0);
 };
+$.$mod$n = function(receiver, a0) {
+  return $.getInterceptor$n(receiver).$mod(receiver, a0);
+};
 $.$mul$n = function(receiver, a0) {
   if (typeof receiver == "number" && typeof a0 == "number")
     return receiver * a0;
   return $.getInterceptor$n(receiver).$mul(receiver, a0);
+};
+$.$shl$n = function(receiver, a0) {
+  return $.getInterceptor$n(receiver).$shl(receiver, a0);
 };
 $.$sub$n = function(receiver, a0) {
   if (typeof receiver == "number" && typeof a0 == "number")
@@ -13158,6 +13907,9 @@ $.get$search$x = function(receiver) {
 $.get$src$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$src(receiver);
 };
+$.get$start$x = function(receiver) {
+  return $.getInterceptor$x(receiver).get$start(receiver);
+};
 $.get$topLeft$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$topLeft(receiver);
 };
@@ -13181,6 +13933,9 @@ $.getImageData$4$x = function(receiver, a0, a1, a2, a3) {
 };
 $.indexOf$1$asx = function(receiver, a0) {
   return $.getInterceptor$asx(receiver).indexOf$1(receiver, a0);
+};
+$.matchAsPrefix$2$s = function(receiver, a0, a1) {
+  return $.getInterceptor$s(receiver).matchAsPrefix$2(receiver, a0, a1);
 };
 $.play$0$x = function(receiver) {
   return $.getInterceptor$x(receiver).play$0(receiver);
@@ -13208,6 +13963,9 @@ $.set$index$x = function(receiver, value) {
 };
 $.set$label$x = function(receiver, value) {
   return $.getInterceptor$x(receiver).set$label(receiver, value);
+};
+$.set$length$asx = function(receiver, value) {
+  return $.getInterceptor$asx(receiver).set$length(receiver, value);
 };
 $.set$src$x = function(receiver, value) {
   return $.getInterceptor$x(receiver).set$src(receiver, value);
@@ -13299,6 +14057,9 @@ Isolate.$lazy($, "getTypeNameOf", "getTypeNameOf", "get$getTypeNameOf", function
 });
 Isolate.$lazy($, "_toStringList", "IterableMixinWorkaround__toStringList", "get$IterableMixinWorkaround__toStringList", function() {
   return $.List_List(null);
+});
+Isolate.$lazy($, "mangledNames", "mangledNames", "get$mangledNames", function() {
+  return $.computeMangledNames(init.mangledNames, false);
 });
 Isolate.$lazy($, "_stackTraceExpando", "_stackTraceExpando", "get$_stackTraceExpando", function() {
   return new $.Expando("asynchronous error");
