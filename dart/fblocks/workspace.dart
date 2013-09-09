@@ -371,6 +371,11 @@ class CodeWorkspace extends TouchManager {
     block.color = '#b67196';
     menu.addBlock(block);
     
+    // DIE block
+    block = new Block(this, 'die');
+    block.color = '#b67196';
+    menu.addBlock(block);
+    
     // IF block
     menu.addBlock(new IfBlock(this));
     
