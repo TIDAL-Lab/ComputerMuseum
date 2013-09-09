@@ -28,5 +28,12 @@
    <canvas id="workspace2" width="1920" height="1080"></canvas>
    <script src="dart/main.dart" type="application/dart"></script>
    <script src="dart.js"></script>
+   <script type="text/javascript">
+      window.oncontextmenu = function(event) {
+         event.preventDefault();
+         event.stopPropagation();
+         return false;
+      };
+   </script>
 </body>
 </html>
