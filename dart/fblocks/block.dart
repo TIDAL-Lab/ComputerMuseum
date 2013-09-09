@@ -83,7 +83,8 @@ class Block implements Touchable {
   /* Flag used to make blocks in the menu slightly smaller */
   bool inMenu = false;
   
-  bool wasInMenu = true, wasInProgram = false;
+  /* Has this been added to the program yet? */
+  bool inserted = false;
   
   
   Block(this.workspace, this.text) {
@@ -137,11 +138,9 @@ class Block implements Touchable {
   num get targetX {
     if (_targetX != null) return _targetX;
     num tx = hasPrev ? prev.connectorX : x;
-    if (BLOCK_ORIENTATION == VERTICAL && hasPrev && prev.candidate != null) {
-      if (prev.candidate is BeginBlock) {
-        tx += BLOCK_MARGIN;
-      }
-    }
+    //if (BLOCK_ORIENTATION == VERTICAL && hasPrev && prev.candidate != null) {
+      //if (prev.candidate is BeginBlock)  tx += BLOCK_MARGIN;
+    //}
     return tx;
   }
 
@@ -271,23 +270,32 @@ class Block implements Touchable {
  * Draw the block
  */
   void draw(CanvasRenderingContext2D ctx) {
-    if (workspace.isOverMenu(this) && dragging && wasInMenu) {
+    _drawMenuArrow(ctx);
+    _resize(ctx);
+    _drawOutline(ctx);
+    _drawLabel(ctx);
+    _drawParam(ctx);
+  }
+  
+  
+  void _resize(CanvasRenderingContext2D ctx) {
+    if (param != null && inserted) {
+      double cw = param.getDisplayWidth(ctx) + param.centerX - 14;
+      _width = max(cw, BLOCK_WIDTH);
+    }
+  }
+  
+  
+  void _drawMenuArrow(CanvasRenderingContext2D ctx) {
+    if (workspace.isOverMenu(this) && dragging && !inserted) {
       ctx.fillStyle = 'orange';
       ctx.strokeStyle = 'orange';
       drawLineArrow(ctx, centerX, centerY, centerX, centerY - height, 18);
     }
-    
-    //-------------------------------------------
-    // expand width if the parameter value is long
-    //-------------------------------------------
-    if (param != null && !wasInMenu) {
-      double cw = param.getDisplayWidth(ctx) + param.centerX - 14;
-      _width = max(cw, BLOCK_WIDTH);
-    }
-    
-    //-------------------------------------------
-    // draw block outline
-    //-------------------------------------------
+  }
+
+
+  void _drawOutline(CanvasRenderingContext2D ctx) {  
     _outline(ctx, x, y, width, height);
     ctx.save();
     {
@@ -298,10 +306,10 @@ class Block implements Touchable {
       ctx.stroke();
     }
     ctx.restore();
-
-    //-------------------------------------------
-    // draw text label       
-    //-------------------------------------------
+  }
+  
+  
+  void _drawLabel(CanvasRenderingContext2D ctx) {
     var lines = text.split('\n');
     ctx.fillStyle = textColor;
     ctx.font = '200 11pt sans-serif';
@@ -309,47 +317,41 @@ class Block implements Touchable {
     ctx.textBaseline = 'middle';
     double tx = x + 12;
     double ty = centerY;
+
     if (lines.length == 1) {
       ctx.fillText(text, tx, ty);
     } else {
       ctx.fillText(lines[0], tx, ty - 7);
       ctx.fillText(lines[1], tx, ty + 7);
     }
-    
-    //-------------------------------------------
-    // draw parameter
-    //-------------------------------------------
-    if (param != null && !wasInMenu) {
-      param.draw(ctx);
-    }
   }
   
   
+  void _drawParam(CanvasRenderingContext2D ctx) {
+    if (param != null && inserted) {
+      param.draw(ctx);
+    }
+  }
+
+  
   void _outline(CanvasRenderingContext2D ctx, num x, num y, num w, num h) {
     
-    num r0 = (prev == null || prev is BeginBlock) ? 14 : 2;
-    num r1 = (next == null || next is EndBlock) ? 14 : 2;
-    num r2 = 2;
+    num r0 = (prev == null || (prev is ControlBlock && !(prev is EndBlock))) ? 14 : 2;
+    num r1 = (next == null || (next is ControlBlock && !(next is BeginBlock))) ? 14 : 2;
     num n = 20;
     
     ctx.beginPath();
     ctx.moveTo(x + r0, y);
-    if (!(this is StartBlock)) {
-      ctx.lineTo(x + n, y);
-      ctx.lineTo(x + n + 5, y + 4);
-      ctx.lineTo(x + n + 10, y + 4);
-      ctx.lineTo(x + n + 15, y);
-    }
-    ctx.lineTo(x + w - r2, y);
-    ctx.quadraticCurveTo(x + w, y, x + w, y + r2);
-    ctx.lineTo(x + w, y + h - r2);
-    ctx.quadraticCurveTo(x + w, y + h, x + w - r2, y + h);
-    if (!(this is EndProgramBlock)) {
-      ctx.lineTo(x + n + 15, y + h);
-      ctx.lineTo(x + n + 10, y + h + 4);
-      ctx.lineTo(x + n + 5, y + h + 4);
-      ctx.lineTo(x + n, y + h);
-    }
+    ctx.lineTo(x + n, y);
+    ctx.lineTo(x + n + 5, y + 4);
+    ctx.lineTo(x + n + 10, y + 4);
+    ctx.lineTo(x + n + 15, y);
+    ctx.lineTo(x + w, y);
+    ctx.lineTo(x + w, y + h);
+    ctx.lineTo(x + n + 15, y + h);
+    ctx.lineTo(x + n + 10, y + h + 4);
+    ctx.lineTo(x + n + 5, y + h + 4);
+    ctx.lineTo(x + n, y + h);
     ctx.lineTo(x + r1, y + h);
     ctx.quadraticCurveTo(x, y + h, x, y + h - r1);
     ctx.lineTo(x, y + r0);
@@ -367,7 +369,7 @@ class Block implements Touchable {
   
   bool touchDown(Contact c) {
     dragging = true;
-    wasInProgram = isInProgram;
+    bool wasInProgram = isInProgram;
     _lastX = c.touchX;
     _lastY = c.touchY;
     
@@ -387,17 +389,17 @@ class Block implements Touchable {
     if (workspace.snapTogether(this)) {
       Sounds.playSound("click");
       workspace.preview(this);
-    } else if (wasInMenu && workspace.isOverMenu(this)) {
+      inserted = true;
+    } else if (!inserted && workspace.isOverMenu(this)) {
       workspace.snapToEnd(this);
       Sounds.playSound("click");
       workspace.preview(this);
-    } else if (workspace.isOffscreen(this) || workspace.isOverMenu(this) || wasInProgram) {
+      inserted = true;
+    } else if (workspace.isOffscreen(this) || workspace.isOverMenu(this) || inserted) {
       workspace.removeBlock(this);
       Sounds.playSound("crunch");
     }
     dragging = false;
-    wasInMenu = false;
-    workspace.draw();
   }
   
   
@@ -405,7 +407,6 @@ class Block implements Touchable {
     move(c.touchX - _lastX, c.touchY - _lastY);
     _lastX = c.touchX;
     _lastY = c.touchY;
-    //workspace.draw();
   }
   
   
