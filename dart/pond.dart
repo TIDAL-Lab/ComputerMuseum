@@ -46,6 +46,17 @@ class FrogPond extends TouchManager {
   /* List of frogs */  
   List<Turtle> frogs = new List<Frog>();
   
+  /*
+   * Play state
+   *   -2 : play backward 2x
+   *   -1 : play backward normal speed
+   *   0  : paused
+   *   1  : play forward normal speed
+   *   2  : play forward 2x
+   *   4  : play forward 4x ....
+   */
+  int play_state = 1; 
+  
   /* Master timeout to restart exhibit after 80 seconds of inactivity */
   int _countdown = 0;
   
@@ -302,6 +313,18 @@ class FrogPond extends TouchManager {
   }
   
   
+  void fastForwardProgram(CodeWorkspace workspace) {
+    if (play_state <= 0) {
+      play_state = 1;
+    } else if (play_state < 64) {
+      play_state *= 2;
+    } else {
+      play_state = 1;
+    }
+    drawForeground();
+  }
+  
+  
 /**
  * Are all programs paused?
  */
@@ -453,7 +476,7 @@ class FrogPond extends TouchManager {
     flies.forEach((fly) => fly.erase(layer2));
     
     bool refresh = false;
-    for (int i=0; i<1; i++) {
+    for (int i=0; i<play_state; i++) {
       if (animate()) refresh = true;
     }
     if (refresh) drawForeground();
@@ -520,6 +543,14 @@ class FrogPond extends TouchManager {
     gems.forEach((gem) => gem.draw(ctx));
     
     frogs.forEach((frog) => frog.draw(ctx));
+    
+    if (play_state > 1) {
+      ctx.font = "20px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.fillStyle = "white";
+      ctx.fillText("Speedup: x${play_state}", width / 2, 15);
+    }
     
     for (CodeWorkspace workspace in workspaces) {
       Frog target = getFocalFrog(workspace.name);
