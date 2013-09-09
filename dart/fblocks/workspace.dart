@@ -285,8 +285,6 @@ class CodeWorkspace extends TouchManager {
     
     if (status.animate()) refresh = true;
     
-    if (bug.animate()) refresh = true;
-    
     return refresh;
   }
   
@@ -308,6 +306,16 @@ class CodeWorkspace extends TouchManager {
       ctx.restore();
     }
     bug.target = frog.program.curr;
+  }
+  
+  
+  void drawBug(CanvasRenderingContext2D ctx) {
+    ctx.save();
+    {
+      xform.transformContext(ctx);
+      bug.draw(ctx);
+    }
+    ctx.restore();
   }
   
   
@@ -333,11 +341,6 @@ class CodeWorkspace extends TouchManager {
       for (Block block in blocks) {
         block.draw(ctx);
       }
-      
-      //------------------------------------------------
-      // draw the trace bug
-      //------------------------------------------------
-      bug.draw(ctx);
     }
     ctx.restore();
   }
