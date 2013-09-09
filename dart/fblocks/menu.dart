@@ -57,7 +57,7 @@ class Menu implements Touchable {
     buttons.add(new Button(x + 130, y + h/2 - 15, "images/toolbar/restart.png", () {
       workspace.restartProgram(); }));
     buttons.add(new Button(x + 165, y + h/2 - 15, "images/toolbar/fastforward.png", () {
-      print("fastforward"); }));
+      workspace.fastForwardProgram(); }));
     buttons.add(new Button(x + 200, y + h/2 - 15, "images/toolbar/trash.png", () {
       workspace.removeAllBlocks(); }));
   }
