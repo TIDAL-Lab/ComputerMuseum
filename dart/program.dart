@@ -424,8 +424,10 @@ class Program {
       baby.program.play();
       baby.program.skip();
     });
+    double newsize = frog.size + Turtle.rand.nextDouble() * 0.2 - 0.1;
+    newsize = max(0.1, newsize);
     tween.addControlPoint(0.05, 0);
-    tween.addControlPoint(frog.size + Turtle.rand.nextDouble() * 0.2 - 0.1, 1.0);
+    tween.addControlPoint(newsize, 1.0);
     tween.ondelta = ((value) => baby.size += value);
   }
 }  
