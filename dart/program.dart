@@ -184,7 +184,7 @@ class Program {
     frog.reset();
     if (cmd == "hop") {
       doMove(cmd, param, preview);
-    } else if (cmd == "left" || cmd == "right") {
+    } else if (cmd == "turn") {
       doTurn(cmd, param, preview);
     } else if (cmd == "chirp") {
       doSound(cmd, param, preview);
@@ -264,10 +264,7 @@ class Program {
     if (param is num) {
       angle = param;
     } else if (param.toString() == 'random') {
-      angle = Turtle.rand.nextInt(90).toDouble();
-    }
-    if (cmd == 'right') {
-      angle *= -1;
+      angle = Turtle.rand.nextInt(180).toDouble() - 90.0;
     }
     Frog target = frog;
     if (preview) {
