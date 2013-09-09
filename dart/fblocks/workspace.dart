@@ -119,6 +119,14 @@ class CodeWorkspace extends TouchManager {
   
   
 /**
+ * Speeds up program execution
+ */
+  void fastForwardProgram() {
+    pond.fastForwardProgram(this);
+  }
+  
+  
+/**
  * Erase a program
  */
   void removeAllBlocks() {
@@ -234,7 +242,7 @@ class CodeWorkspace extends TouchManager {
       }
       block = block.next;
     }
-    if (result == null && target.wasInMenu) {
+    if (result == null && !target.inserted) {
       return start.end.prev;
     } else if (target.y > start.end.y) {
       return null;
