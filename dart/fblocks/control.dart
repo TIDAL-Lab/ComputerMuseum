@@ -28,6 +28,7 @@ part of ComputerHistory;
  */
 class ControlBlock extends Block {
 
+
   /* Reference to the first block of the control structure */  
   BeginBlock begin = null;
   
@@ -50,7 +51,7 @@ class ControlBlock extends Block {
     if (candidate != null) {
       ty -= (max(candidate.height, 25) + BLOCK_SPACE);
     }
-    if (candidate == null && cnext != null && cnext == next) {
+    else if (cnext != null && cnext == next) {
       ty -= 25;
     }
     return ty;
@@ -328,10 +329,7 @@ class EndBlock extends ControlBlock {
     return "${tab}}\n";
   }
 
-  
-  void draw(CanvasRenderingContext2D ctx) { }
 
-  
   bool checkSyntax(Block before) {
     if (before is EndProgramBlock) return false;
     int nest = 0;
