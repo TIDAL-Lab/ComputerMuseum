@@ -29,6 +29,8 @@ class RepeatBlock extends BeginBlock {
     param = new Parameter(this);
     param.centerX = width - 7;
     param.values = [ 'forever', 2, 3, 4, 5, 'near-water?', 'see-gem?' ];
+    end = new EndBlock(workspace, this);
+    _addClause(end);
   }
   
   

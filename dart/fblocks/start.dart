@@ -36,10 +36,9 @@ class StartBlock extends BeginBlock {
     color = 'green';
     end = new EndProgramBlock(workspace, this);
     end.y = y + height + BLOCK_MARGIN + 20;
-    end.prev = this;
-    next = end;
+    _addClause(end);
     workspace.addBlock(end);
-    wasInMenu = false;
+    inserted = true;
     _width = BLOCK_WIDTH + BLOCK_MARGIN;
     _play = new Button(x + 65, y + height / 2 - 15, "images/toolbar/play.png", () {
       workspace.playProgram(); });
@@ -157,7 +156,7 @@ class EndProgramBlock extends EndBlock {
   
   EndProgramBlock(CodeWorkspace workspace, StartBlock begin) : super(workspace, begin) {
     _width = (BLOCK_WIDTH + BLOCK_MARGIN).toDouble();
-    wasInMenu = false;
+    inserted = true;
   }
   
   

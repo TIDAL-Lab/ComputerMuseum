@@ -29,6 +29,8 @@ class IfBlock extends BeginBlock {
     param = new Parameter(this);
     param.centerX = width - 35;
     param.values = [ 'see-gem?', 'near-water?', 'not see-gem?', 'not near-water?', 'random?' ];
+    end = new EndBlock(workspace, this);
+    _addClause(end);
   }
   
   
