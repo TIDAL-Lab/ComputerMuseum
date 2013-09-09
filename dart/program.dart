@@ -379,7 +379,7 @@ class Program {
  * For waits we use a tight loop
  */
   void doWait(String cmd, var param, bool preview) {
-    if (param.toString() == 'fly') {
+    if (param == 'fly') {
       frog._vision = 10.0;
       frog.label = "$cmd $param";
       if (preview) {
@@ -397,7 +397,7 @@ class Program {
 /**
  * Kill this frog
  */
-  void doDie(String cmd, vara param, bool preview) {
+  void doDie(String cmd, var param, bool preview) {
     tween = new Tween();
     tween.function = TWEEN_DECAY;
     tween.delay = 0;
@@ -440,7 +440,7 @@ class Program {
     tween.onend = (() {
       doPause(preview);
       baby.program.play();
-      baby.program.skip();
+      //baby.program.skip();
     });
     double newsize = frog.size + Turtle.rand.nextDouble() * 0.2 - 0.1;
     newsize = max(0.1, newsize);
