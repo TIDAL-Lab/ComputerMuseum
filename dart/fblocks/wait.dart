@@ -23,13 +23,18 @@
 part of ComputerHistory;
 
   
-class WaitBlock extends Block {
+class WaitBlock extends BeginBlock {
 
+  TimeoutBlock timeout;
   
   WaitBlock(CodeWorkspace workspace) : super(workspace, 'wait\nfor') {
-    color = '#c92';
     param = new Parameter(this);
     param.values = [ 'fly', 'sound' ];
+    timeout = new TimeoutBlock(workspace, this);
+    _addClause(timeout);
+    end = new EndBlock(workspace, this);
+    _addClause(end);
+    
   }
 
   
@@ -42,6 +47,49 @@ class WaitBlock extends Block {
   
   
   Block step(Program program) {
-    return (program.getSensorValue(param.value)) ? next : this;
+    var v = timeout.param.value;
+    int t = (v is int) ? v * 20 : Turtle.rand.nextInt(6000);
+
+    if (!program.hasVariable("timeout")) {
+      program["timeout"] = t;
+    }
+    
+    if (program.getSensorValue(param.value)) {
+      program.removeVariable("timeout");
+      return next;
+    }
+    
+    else if (program["timeout"] <= 0) {
+      program.removeVariable("timeout");
+      program["do-timeout${timeout.id}"] = true;
+      return timeout;
+    }
+    
+    else {
+      program["timeout"] --;
+      return this;
+    }
+  }
+}
+
+
+class TimeoutBlock extends ControlBlock {
+  
+  TimeoutBlock(CodeWorkspace workspace, BeginBlock begin) : super(workspace, begin, 'timeout') {
+    param = new Parameter(this);
+    param.values = [ 10, 50, 100, 150, 200, 'random' ];
+    param.centerX = width - 12;
+    param.index = 5;
+  }
+  
+  
+  Block step(Program program) {
+    String v = "do-timeout${id}";
+    if (program.hasVariable(v)) {
+      program.removeVariable(v);
+      return next;
+    } else {
+      return begin.end;
+    }
   }
 }
