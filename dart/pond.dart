@@ -516,6 +516,10 @@ class FrogPond extends TouchManager {
     for (int i=0; i<frogs.length; i++) {
       if (frogs[i].animate()) refresh = true;
     }
+
+    for (CodeWorkspace workspace in workspaces) {    
+      if (workspace.bug.animate()) refresh = true;
+    }
     
     return refresh;
   }
@@ -560,6 +564,7 @@ class FrogPond extends TouchManager {
         } else {
           workspace.traceExecution(ctx, target);
         }
+        workspace.drawBug(ctx);
       }
     }
   }
