@@ -111,7 +111,7 @@ abstract class Turtle {
       return (tx > x - width/2 && ty > y - height/2 && tx < x + width/2 && ty < y + height/2);
     } else {
       num dist = distance(tx, ty, x, y);
-      return dist < (width/2 + tw/2);
+      return dist < (radius + tw/2);
     }
   }
   
