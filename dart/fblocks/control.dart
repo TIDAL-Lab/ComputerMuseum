@@ -43,23 +43,42 @@ class ControlBlock extends Block {
     color = '#c92';  // yellow-orange color
     this.begin = begin;
   }
+
   
-  
-  num get targetY {
-    if (_targetY != null) return _targetY;
-    num ty = hasNext ? next.targetY - height - BLOCK_SPACE : y;
-    if (candidate != null) {
-      ty -= (max(candidate.height, 25) + BLOCK_SPACE);
+  num get targetX {
+    if (!dragging && cprev != null && cprev.isInProgram) {
+      return super.targetX - BLOCK_MARGIN;
+    } else {
+      return super.targetX;
     }
-    else if (cnext != null && cnext == next) {
-      ty -= 25;
-    }
-    return ty;
   }
   
   
-  void draw(CanvasRenderingContext2D ctx) { }
+  num get targetY {
+    if (candidate == null && cnext != null && cnext == next) {
+      return super.targetY - 25;
+    } else {
+      return super.targetY;
+    }
+  }
 
+  
+  num get connectorX {
+    if (!dragging && cnext != null) {
+      return targetX + BLOCK_MARGIN;
+    } else {
+      return targetX;
+    }
+  }
+ 
+  
+  void draw(CanvasRenderingContext2D ctx) {
+    _resize(ctx);
+    _drawMenuArrow(ctx);
+     _drawLabel(ctx);
+    _drawParam(ctx);
+  }  
+  
   
 /**
  * Make sure blocks are properly nested
@@ -67,50 +86,78 @@ class ControlBlock extends Block {
   bool checkSyntax(Block before) {
     
     // if there's a previous clause, make sure it's before this block
-    if (cprev != null) {
+    if (inserted && cprev != null) {
+      int nest = 0;
       Block p = before;
-      while (p != cprev) {
+      while (true) {
         if (p == null) {
           return false;
-        } else {
-          p = p.prev;
+        } else if (p == cprev) {
+          if (nest != 0) {
+            return false;
+          } else {
+            break;
+          }
+        } else if (p is EndBlock) {
+          nest--;
+        } else if (p is BeginBlock) {
+          nest++;
         }
+        p = p.prev;
       }
     }
     
     // if there's a next clause, make sure it's after this block
-    if (cnext != null) {
+    if (inserted && cnext != null) {
+      int nest = 0;
       Block a = before.next;
-      while (a != cnext) {
+      while (true) {
         if (a == null) {
           return false;
-        } else {
-          a = a.next;
+        } else if (a == cnext) {
+          if (nest != 0) {
+            return false;
+          } else {
+            break;
+          }
+        } else if (a is EndBlock) {
+          nest--;
+        } else if (a is BeginBlock) {
+          nest++;
         }
+        a = a.next;
       }
     }
 
-    // make sure block is properly nested    
-    Block after = before.next;
-    int nest = 0;
-    
-    while (after != null) {
-      if (after == cnext) {
-        return (nest == 0);
-      } else if (after is EndBlock) {
-        nest--;
-      } else if (after is BeginBlock) {
-        nest++;
-      }
-      after = after.next;
-    }
-    return false;
+    return true;
   }
   
   
+  void touchUp(Contact c) {
+    bool wasInProgram = inserted;
+    super.touchUp(c);
+    if (inserted && !wasInProgram) {
+      begin.addAllBlocks();
+    } else if (!isInProgram) {
+      begin.removeAllBlocks();
+      workspace.draw();
+    }
+  }
+
+  
   bool touchDown(Contact c) {
+    if (cnext != null && next == cnext && cprev != null && prev == cprev) return false;
+    
     super.touchDown(c);
-    if (inserted && begin != null) workspace.moveToTop(begin);
+    
+    // move all connected control blocks to the top
+    if (inserted && begin != null) {
+      ControlBlock b = begin;
+      while (b != null) {
+        workspace.moveToTop(b);
+        b = b.cnext;
+      }
+    }
     return true;
   }
   
@@ -120,8 +167,8 @@ class ControlBlock extends Block {
       super.touchDrag(c);
       return;
     }
-    double miny = (cprev != null) ? cprev.y + cprev.height + 25 : 0;
-    double maxy = (cnext != null) ? cnext.y - height - 25 : workspace.start.end.y - height;
+    double miny = (cprev != null) ? cprev.y + cprev.height : 0;
+    double maxy = (cnext != null) ? cnext.y - height : workspace.start.end.y - height;
     
     double ty = y + (c.touchY - _lastY);
     double dx = (this is BeginBlock) ? (c.touchX - _lastX) : 0.0;
@@ -151,30 +198,19 @@ class BeginBlock extends ControlBlock {
   /* Every control squence in a program must have an end block */
   EndBlock end;
   
-  BeginBlock(CodeWorkspace workspace, String text) : super(workspace, null, text);
+  BeginBlock(CodeWorkspace workspace, String text) : super(workspace, null, text) {
+    begin = this;
+  }
   
-  num get connectorX => targetX + BLOCK_MARGIN;
-  
-  
+
   void draw(CanvasRenderingContext2D ctx) {
     _resize(ctx);
     _drawMenuArrow(ctx);
     _drawOutline(ctx);
     _drawLabel(ctx);
     _drawParam(ctx);
-    if (inserted) {
-      ControlBlock b = cnext;
-      while (b != null) {
-        b.x = x;
-        b._resize(ctx);
-        b._drawLabel(ctx);
-        b._drawParam(ctx);
-        b.x += BLOCK_MARGIN;
-        b = b.cnext;
-      }
-    }
   }
-  
+
   
   void _addClause(ControlBlock clause) {
     ControlBlock c = this;
@@ -196,7 +232,7 @@ class BeginBlock extends ControlBlock {
     return end.next;
   }
 
-  
+
   void _subpath(CanvasRenderingContext2D ctx, ControlBlock b) {
     num x0 = x;
     num x1 = x0 + b.width;
@@ -264,37 +300,33 @@ class BeginBlock extends ControlBlock {
   }
   
   
-  void touchUp(Contact c) {
-    bool wasInProgram = inserted;
-    super.touchUp(c);
-    if (inserted && !wasInProgram) {
-      next.prev = end;
-      end.next = next;
-      next = cnext;
-      cnext.prev = this;
-      ControlBlock b = cnext;
-      while (b != null) {
-        b.x = x;
-        b.y = y + height;
-        workspace.addBlock(b);
-        b.inserted = true;
-        b = b.cnext;
-      }
-    }
-    else if (!isInProgram) {
-      ControlBlock b = this;
-      while (b != null) {
-        if (b.hasPrev) b.prev.next = b.next;
-        if (b.hasNext) b.next.prev = b.prev;
-        b.prev = null;
-        b.next = null;
-        workspace.removeBlock(b);
-        b = b.cnext;
-      }
-      cnext = null;
-      workspace.draw();
+  void addAllBlocks() {
+    next.prev = end;
+    end.next = next;
+    next = cnext;
+    cnext.prev = this;
+    ControlBlock b = cnext;
+    while (b != null) {
+      b.x = x;
+      b.y = y + height;
+      workspace.addBlock(b);
+      b.inserted = true;
+      b = b.cnext;
     }
   }
+  
+  
+  void removeAllBlocks() {
+    ControlBlock b = this;
+    while (b != null) {
+      if (b.hasPrev) b.prev.next = b.next;
+      if (b.hasNext) b.next.prev = b.prev;
+      b.prev = null;
+      b.next = null;
+      workspace.removeBlock(b);
+      b = b.cnext;
+    }
+  }  
 }
 
 
@@ -305,9 +337,6 @@ class EndBlock extends ControlBlock {
   }
   
   
-  num get connectorX => (begin.isInProgram) ? targetX - BLOCK_MARGIN : targetX;
-
-  
   Block step(Program program) {
     if (begin != null) {
       return begin._endStep(program);
@@ -315,35 +344,4 @@ class EndBlock extends ControlBlock {
       return next;
     }
   }
-
-  
-  void eval(Program program) {
-    var pval = (param == null) ? null : param.value;
-    program.doCommand("end ${begin.text}", pval);
-  }
-  
-  
-  String compile(int indent) {
-    String tab = "";
-    for (int i=0; i<indent - 1; i++) tab += "  ";
-    return "${tab}}\n";
-  }
-
-
-  bool checkSyntax(Block before) {
-    if (before is EndProgramBlock) return false;
-    int nest = 0;
-    while (before != null) {
-      if (before == begin) {
-        return (nest == 0);
-      } else if (before is EndBlock) {
-        nest++;
-      } else if (before is BeginBlock) {
-        nest--;
-      }
-      before = before.prev;
-    }
-    return false;
-  }  
-
 }
