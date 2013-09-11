@@ -23,7 +23,7 @@
 part of ComputerHistory;
 
 
-class CodeWorkspace extends TouchManager {
+class CodeWorkspace extends TouchLayer {
   
   /* reference to the frog pond */
   FrogPond pond;
@@ -64,8 +64,6 @@ class CodeWorkspace extends TouchManager {
     CanvasElement canvas = document.query("#${name}");
     ctx = canvas.getContext('2d');
 
-    registerEvents(document.documentElement);
-    
     // menu bar
     menu = new Menu(this, 0, height - BLOCK_HEIGHT * 1.85, width, BLOCK_HEIGHT * 1.85);
     _initMenu();
