@@ -26,12 +26,14 @@ part of ComputerHistory;
 // Maximum number of frogs of a given color
 const MAX_FROGS = 40;
 
-class FrogPond extends TouchManager {
+class FrogPond extends TouchLayer {
   
   CanvasElement canvas;
   CanvasRenderingContext2D layer0;  // lily pads
   CanvasRenderingContext2D layer1;  // frogs / gems
   CanvasRenderingContext2D layer2;  // flies
+  
+  TouchManager tmanager = new TouchManager();
   
   List<CodeWorkspace> workspaces = new List<CodeWorkspace>();
   
@@ -76,7 +78,8 @@ class FrogPond extends TouchManager {
     width = canvas.width;
     height = canvas.height;
     
-    registerEvents(document.documentElement);
+    tmanager.registerEvents(document.documentElement);
+    tmanager.addTouchLayer(this);
     
     pond.src = "images/pond.png";
     pond.onLoad.listen((event) {
@@ -101,11 +104,13 @@ class FrogPond extends TouchManager {
     CodeWorkspace workspace = new CodeWorkspace(this, height, width, "workspace1", "blue");
     workspace.transform(cos(PI / -2), sin(PI / -2), -sin(PI / -2), cos(PI / -2), 0, height);
     workspaces.add(workspace);
+    tmanager.addTouchLayer(workspace);
     addHomeFrog(workspace);
 
     workspace = new CodeWorkspace(this, height, width, "workspace2", "green");
     workspace.transform(cos(PI/2), sin(PI/2), -sin(PI/2),cos(PI/2), width, 0);
     workspaces.add(workspace);
+    tmanager.addTouchLayer(workspace);
     addHomeFrog(workspace);
 
     /*
