@@ -48,6 +48,9 @@ class FrogPond extends TouchLayer {
   /* List of frogs */  
   List<Turtle> frogs = new List<Frog>();
   
+  /* List of lilypads */
+  List<LilyPad> pads = new List<LilyPad>();
+  
   /*
    * Play state
    *   -2 : play backward 2x
@@ -81,11 +84,13 @@ class FrogPond extends TouchLayer {
     tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(this);
     
+/*    
     pond.src = "images/pond.png";
     pond.onLoad.listen((event) {
       layer0.clearRect(0, 0, width, height);
       layer0.drawImage(pond, 0, 0);
     });
+*/
 /*    
     pond.src = "images/lilypad.png";
     pond.onLoad.listen((event) {
@@ -99,6 +104,19 @@ class FrogPond extends TouchLayer {
     for (int i=0; i<12; i++) {
       addFly();
     }
+  
+    
+    addLilyPad(300, height/2, 0.6);
+    addLilyPad(370, 100, 0.6);
+    addLilyPad(1620, height/2, 0.6);
+    addLilyPad(550, 790, 0.8);
+    addLilyPad(630, 370, 0.9);
+    addLilyPad(940, 650, 0.8);
+    addLilyPad(1000, 250, 0.8);
+    addLilyPad(1300, height/2, 0.8);
+    addLilyPad(1400, 130, 0.6);
+    addLilyPad(1300, height - 130, 0.6);
+    addLilyPad(900, height - 130, 0.6);
     
 
     CodeWorkspace workspace = new CodeWorkspace(this, height, width, "workspace1", "blue");
@@ -370,6 +388,20 @@ class FrogPond extends TouchLayer {
   }
   
   
+  void addLilyPad([num lx = null, num ly = null, num ls = null]) {
+    LilyPad pad = new LilyPad(this);
+    if (lx == null) lx = Turtle.rand.nextInt(width).toDouble();
+    if (ly == null) ly = Turtle.rand.nextInt(height).toDouble();
+    if (ls == null) ls = 0.6 + Turtle.rand.nextDouble() * 0.4;
+    pad.x = lx;
+    pad.y = ly;
+    pad.size = ls;
+    pad.refresh = true;
+    pads.add(pad);
+    addTouchable(pad);
+  }
+
+  
 /**
  * Adds a new random fly to the pond
  */
@@ -496,6 +528,21 @@ class FrogPond extends TouchLayer {
         workspace.draw();
       }
     }
+    
+    refresh = false;
+    for (LilyPad pad in pads) {
+      if (pad.refresh) {
+        refresh = true;
+        pad.refresh = false;
+      }
+    }
+    
+    if (refresh) {
+      layer0.clearRect(0, 0, width, height);
+      for (LilyPad pad in pads) {
+        pad.draw(layer0);
+      }
+    }
   }
   
   
@@ -534,11 +581,10 @@ class FrogPond extends TouchLayer {
  * Returns true if the given point is in the water
  */
   bool inWater(num x, num y) {
-    ImageData imd = layer0.getImageData(x.toInt(), y.toInt(), 1, 1);
-    int r = imd.data[0];
-    int g = imd.data[1];
-    int b = imd.data[2];
-    return (g == 0); // value of background water texture is all zero since it's from CSS
+    for (LilyPad pad in pads) {
+      if (pad.overlapsPoint(x, y)) return false;
+    }
+    return true;
   }
   
   
