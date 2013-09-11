@@ -24,27 +24,50 @@ part of ComputerHistory;
 
 
 class TouchManager {
-
-  /* A list of touchable objects on the screen */
-  List<Touchable> touchables = new List<Touchable>();
-   
-  /* Bindings from event IDs to touchable objects */
-  Map<int, Touchable> touch_bindings = new Map<int, Touchable>();
-   
+  
   /* Is the mouse currently down */
   bool mdown = false;
   
   /* Element that receives touch or mouse events */
   Element parent = null;
   
-  /* Transformation matrices */
-  Matrix2D xform = new Matrix2D();
-  Matrix2D iform = new Matrix2D();
-
+  /* A list of touch layers */
+  List<TouchLayer> layers = new List<TouchLayer>();
    
+  /* Bindings from event IDs to touchable objects */
+  Map<int, TouchBinding> touch_bindings = new Map<int, TouchBinding>();
+   
+  
   TouchManager();
+  
+/*
+ * Add a touch layer to the list
+ */
+  void addTouchLayer(TouchLayer layer) {
+    layers.add(layer);
+  }
    
 
+/*
+ * Remove a touch layer from the master list
+ */
+  void removeTouchLayer(TouchLayer layer) {
+    layers.remove(layer);
+  }
+   
+   
+/*
+ * See which layer wants to handle this touch
+ */
+  TouchBinding findTouchTarget(Contact tp) {
+    for (int i=layers.length - 1; i >= 0; i--) {
+      Touchable t = layers[i].findTouchTarget(tp);
+      if (t != null) return new TouchBinding(layers[i], t);
+    }
+    return null;
+  }
+  
+  
 /*
  * The main class must call this method to enable mouse and touch input
  */ 
@@ -56,7 +79,6 @@ class TouchManager {
       element.onMouseDown.listen((e) => _mouseDown(e));
       element.onMouseUp.listen((e) => _mouseUp(e));
       element.onMouseMove.listen((e) => _mouseMove(e));
-    //element.onMouseOut.listen((e) => _mouseExit(e));
     }
 
     element.onTouchStart.listen((e) => _touchDown(e));
@@ -66,8 +88,117 @@ class TouchManager {
     // Prevent screen from dragging on ipad
     document.onTouchMove.listen((e) => e.preventDefault());
   }
+
   
+/*
+ * Convert mouseUp to touchUp events
+ */
+  void _mouseUp(MouseEvent evt) {
+    TouchBinding target = touch_bindings[-1];
+    if (target != null) {
+      Contact c = new Contact.fromMouse(evt);
+      target.touchUp(c);
+    }
+    touch_bindings[-1] = null;
+    mdown = false;
+  }
   
+   
+/*
+ * Convert mouseDown to touchDown events
+ */
+  void _mouseDown(MouseEvent evt) {
+    Contact t = new Contact.fromMouse(evt);
+    TouchBinding target = findTouchTarget(t);
+    if (target != null) {
+      if (target.touchDown(t)) {
+        touch_bindings[-1] = target;
+      }
+    }
+    mdown = true;
+  }
+   
+   
+/*
+ * Convert mouseMove to touchDrag events
+ */
+  void _mouseMove(MouseEvent evt) {
+    if (mdown) {
+      Contact t = new Contact.fromMouse(evt);
+      TouchBinding target = touch_bindings[-1];
+      if (target != null) {
+        target.touchDrag(t);
+      } else {
+        target = findTouchTarget(t);
+        if (target != null) {
+          target.touchSlide(t);
+        }
+      }
+    }
+  }
+   
+   
+  void _touchDown(var tframe) {
+    for (Touch touch in tframe.changedTouches) {
+      Contact t = new Contact.fromTouch(touch, parent);
+      TouchBinding target = findTouchTarget(t);
+      if (target != null) {
+        if (target.touchDown(t)) {
+          touch_bindings[t.id] = target;
+        }
+      }
+    }
+  }
+   
+   
+  void _touchUp(var tframe) {
+    for (Touch touch in tframe.changedTouches) {
+      Contact t = new Contact.fromTouch(touch, parent);
+      TouchBinding target = touch_bindings[t.id];
+      if (target != null) {
+        target.touchUp(t);
+        touch_bindings[t.id] = null;
+      }
+    }
+    if (tframe.touches.length == 0) {
+      touch_bindings.clear();
+    }
+  }
+   
+   
+  void _touchDrag(var tframe) {
+    for (Touch touch in tframe.changedTouches) {
+      Contact t = new Contact.fromTouch(touch, parent);
+      TouchBinding target = touch_bindings[t.id];
+      if (target != null) {
+        target.touchDrag(t);
+      } else {
+        target = findTouchTarget(t);
+        if (target != null) {
+          target.touchSlide(t);
+        }
+      }
+    }
+  }
+}
+
+
+class TouchLayer {
+
+  /* A list of touchable objects on this layer */
+  List<Touchable> touchables = new List<Touchable>();
+   
+  /* Bindings from event IDs to touchable objects */
+  Map<int, Touchable> touch_bindings = new Map<int, Touchable>();
+   
+  /* Transformation matrices */
+  Matrix2D xform = new Matrix2D();
+  Matrix2D iform = new Matrix2D();
+
+   
+  TouchLayer();
+   
+
   void transform(num m11, num m12, num m21, num m22, num dx, num dy) {
     xform.setTransform(m11, m12, m21, m22, dx, dy);
     iform = xform.invert();
@@ -94,12 +225,19 @@ class TouchManager {
  * Find a touchable object that intersects with the given touch event
  */
   Touchable findTouchTarget(Contact tp) {
+    Contact c = new Contact.copy(tp);
+    iform.transformContact(c);
     for (int i=touchables.length - 1; i >= 0; i--) {
-      if (touchables[i].containsTouch(tp)) {
+      if (touchables[i].containsTouch(c)) {
         return touchables[i];
       }
     }
     return null;
+  }
+  
+  
+  void transformContact(Contact c) {
+    iform.transformContact(c);
   }
   
   
@@ -126,118 +264,39 @@ class TouchManager {
   num worldToObjectY(num x, num y) {
     return iform.transformY(x, y);
   }
-  
+}
+
 
 /*
- * Convert mouseUp to touchUp events
+ * Internal object used to keep track of mappings from touch ID numbers to
+ * touchable objects.
  */
-  void _mouseUp(MouseEvent evt) {
-    Touchable target = touch_bindings[-1];
-    if (target != null) {
-      Contact c = new Contact.fromMouse(evt);
-      iform.transformContact(c);
-      target.touchUp(c);
-    }
-    touch_bindings[-1] = null;
-    mdown = false;
-  }
+class TouchBinding {
+  
+  TouchLayer layer;
+  Touchable touchable;
+  
+  TouchBinding(this.layer, this.touchable);
   
   
-/*
- * Convert mouseOut to touchExit event
- */
-  void _mouseExit(MouseEvent evt) {
-    Touchable target = touch_bindings[-1];
-    if (target != null) {
-      Contact c = new Contact.fromMouse(evt);
-      iform.transformContact(c);
-      target.touchUp(c);
-    }
-    touch_bindings[-1] = null;
-    mdown = false;
+  bool touchDown(Contact c) {
+    layer.transformContact(c);
+    return touchable.touchDown(c);
   }
-   
-   
-/*
- * Convert mouseDown to touchDown events
- */
-  void _mouseDown(MouseEvent evt) {
-    Contact t = new Contact.fromMouse(evt);
-    iform.transformContact(t);
-    Touchable target = findTouchTarget(t);
-    if (target != null) {
-      if (target.touchDown(t)) {
-        touch_bindings[-1] = target;
-      }
-    }
-    mdown = true;
+  
+  void touchUp(Contact c) {
+    layer.transformContact(c);
+    touchable.touchUp(c);
   }
-   
-   
-/*
- * Convert mouseMove to touchDrag events
- */
-  void _mouseMove(MouseEvent evt) {
-    if (mdown) {
-      Contact t = new Contact.fromMouse(evt);
-      iform.transformContact(t);
-      Touchable target = touch_bindings[-1];
-      if (target != null) {
-        target.touchDrag(t);
-      } else {
-        target = findTouchTarget(t);
-        if (target != null) {
-          target.touchSlide(t);
-        }
-      }
-    }
+  
+  void touchDrag(Contact c) {
+    layer.transformContact(c);
+    touchable.touchDrag(c);
   }
-   
-   
-  void _touchDown(var tframe) {
-    for (Touch touch in tframe.changedTouches) {
-      Contact t = new Contact.fromTouch(touch, parent);
-      iform.transformContact(t);
-      Touchable target = findTouchTarget(t);
-      if (target != null) {
-        if (target.touchDown(t)) {
-          touch_bindings[t.id] = target;
-        }
-      }
-    }
-  }
-   
-   
-  void _touchUp(var tframe) {
-    for (Touch touch in tframe.changedTouches) {
-      Contact t = new Contact.fromTouch(touch, parent);
-      iform.transformContact(t);
-      Touchable target = touch_bindings[t.id];
-      if (target != null) {
-        target.touchUp(t);
-        touch_bindings[t.id] = null;
-      }
-    }
-    if (tframe.touches.length == 0) {
-      touch_bindings.clear();
-    }
-  }
-   
-   
-  void _touchDrag(var tframe) {
-    for (Touch touch in tframe.changedTouches) {
-      Contact t = new Contact.fromTouch(touch, parent);
-      iform.transformContact(t);
-      Touchable target = touch_bindings[t.id];
-      if (target != null) {
-        target.touchDrag(t);
-      } else {
-        target = findTouchTarget(t);
-        if (target != null) {
-          target.touchSlide(t);
-        }
-      }
-    }
+  
+  void touchSlide(Contact c) {
+    layer.transformContact(c);
+    touchable.touchSlide(c);
   }
 }
 
@@ -261,7 +320,6 @@ abstract class Touchable {
    
   // This gets fired when an unbound touch events slides over an object
   void touchSlide(Contact event);
-
 }
 
 
@@ -300,5 +358,17 @@ class Contact {
     touchX = touch.page.x.toDouble() - left;
     touchY = touch.page.y.toDouble() - top;
     finger = true;
+  }
+  
+  
+  Contact.copy(Contact c) {
+    id = c.id;
+    tagId = c.tagId;
+    touchX = c.touchX;
+    touchY = c.touchY;
+    up = c.up;
+    down = c.down;
+    drag = c.drag;
+    finger = c.finger;
   }
 }
