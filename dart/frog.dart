@@ -29,12 +29,12 @@ class Frog extends Turtle implements Touchable {
   FrogPond pond;
 
   /* size of the sound wave emanating from the frog */
-  double _radius = -1.0;
+  double _sound = -1.0;
   
   /* length of the tongue coming out of the frog */
   double _tongue = 0.0;
   
-  /* angle extent +/- of vision cone */
+  /* angular extent +/- of vision cone */
   double _vision = -1.0;
 
   /* name of the command being executed */
@@ -43,10 +43,10 @@ class Frog extends Turtle implements Touchable {
   /* saved state of this frog (for previewing) */
   Frog ghost = null;
   
-  /* this frogs control program */
+  /* this frog's control program */
   Program program;
   
-  /* Fly captured by frog for eating */
+  /* fly captured by frog for eating */
   Fly prey = null;
   
   
@@ -73,7 +73,7 @@ class Frog extends Turtle implements Touchable {
   void reset() {
     opacity = 1.0;
     ghost = null;
-    _radius = -1.0;
+    _sound = -1.0;
     _vision = -1.0;
     _tongue = 0.0;
     label = null;
@@ -81,7 +81,8 @@ class Frog extends Turtle implements Touchable {
   
   
   bool animate() {
-    bool refresh = false;
+    bool refresh = _refresh;
+    _refresh = false;
     if (tween.isTweening()) {
       tween.animate();
       refresh = true;
@@ -95,7 +96,6 @@ class Frog extends Turtle implements Touchable {
  * Push other frogs out of the way
  */
   void push(num distance) {
-    /*
     for (Frog frog in pond.getFrogsHere(this)) {
       double angle = angleBetween(frog);
       if (angle.abs() < 90.0) {
@@ -111,7 +111,6 @@ class Frog extends Turtle implements Touchable {
         }
       }
     }
-    */
   }
   
   
@@ -123,7 +122,38 @@ class Frog extends Turtle implements Touchable {
     tween.ondelta = ((value) => opacity += value );
     tween.addControlPoint(1.0, 0.0);
     tween.addControlPoint(0.0, 0.5);
-    tween.addControlPoint(1.0, 1.0);
+    tween.addControlPoint(1.0, 1.0);    
+  }
+  
+  
+  double _saveX, _saveY, _saveH;
+  void flyTo(num tx, num ty, [num th = 0.0]) {
+    _saveX = x;
+    _saveY = y;
+    _saveH = heading;
+    double deltaX = (tx.toDouble() - x);
+    double deltaY = (ty.toDouble() - y);
+    double deltaH = (th.toDouble() - heading);
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.duration = 10;
+    tween.addControlPoint(0, 0);
+    tween.addControlPoint(1, 1);
+    tween.ondelta = ((value) {
+      x += value * deltaX;
+      y += value * deltaY;
+      heading += value * deltaH;
+    });
+  }
+  
+  
+  void flyBack() {
+    if (_saveX != null && _saveY != null && _saveH != null) {
+      flyTo(_saveX, _saveY, _saveH);
+      _saveX = null;
+      _saveY = null;
+      _saveH = null;
+    }
   }
   
   
@@ -229,16 +259,15 @@ class Frog extends Turtle implements Touchable {
     //---------------------------------------------
     // draw sound wave
     //---------------------------------------------
-    if (_radius > 0) {
-      num alpha = 1 - (_radius / 175.0);
+    if (_sound > 0) {
+      num alpha = 1 - (_sound / 175.0);
       ctx.strokeStyle = "rgba(255, 255, 255, $alpha)";
       ctx.lineWidth = 4;
       ctx.beginPath();
-      ctx.arc(0, 0, _radius, 0, PI * 2, true);
+      ctx.arc(0, 0, _sound, 0, PI * 2, true);
       ctx.stroke();
     }
-
-    
+   
     //---------------------------------------------
     // draw vision cone
     //---------------------------------------------
@@ -265,7 +294,6 @@ class Frog extends Turtle implements Touchable {
       ctx.lineTo(0, _tongue * height * -1.5);
       ctx.stroke();
     }
-
     
     //---------------------------------------------
     // draw frog image
@@ -274,14 +302,35 @@ class Frog extends Turtle implements Touchable {
     num ih = height;
     ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
   }
-  
 
+  double _lastX = 0.0, _lastY = 0.0;
+  bool _refresh = false;
+
+  
   bool containsTouch(Contact c) {
     return overlapsPoint(c.touchX, c.touchY);
   }
   
-  bool touchDown(Contact c) { return true; }
-  void touchUp(Contact c) { }
-  void touchDrag(Contact c) { }
+  
+  bool touchDown(Contact c) {
+    _lastX = c.touchX;
+    _lastY = c.touchY;
+    return true;
+  }
+
+  
+  void touchUp(Contact c) {
+    pond.census();
+  }
+  
+  
+  void touchDrag(Contact c) {
+    move(c.touchX - _lastX, c.touchY - _lastY);
+    _lastX = c.touchX;
+    _lastY = c.touchY;
+    _refresh = true;
+  }
+  
+    
   void touchSlide(Contact c) { }
 }
