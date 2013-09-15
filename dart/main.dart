@@ -25,6 +25,7 @@ library ComputerHistory;
 import 'dart:collection';
 import 'dart:html';
 import 'dart:math';
+import 'dart:json' as json;
 import 'dart:async';
 import 'dart:web_audio';
 
@@ -53,6 +54,25 @@ part 'fblocks/wait.dart';
 part 'fblocks/workspace.dart';
 
 
+const CONFIG_JSON = '''
+{
+  "auto-repeat" : true,
+  "fast-forward" : false
+}
+''';
+
+var CONFIG;
+
+
+bool getConfigFlag(String name) {
+  if (CONFIG != null && CONFIG[name] is bool) {
+    return CONFIG[name];
+  } else {
+    return false;
+  }
+}
+
+
 void main() {
 
   Sounds.loadSound("hop");
@@ -70,6 +90,9 @@ void main() {
   Sounds.loadSound("swoosh");
   Sounds.loadSound("gulp");
   
+  // parse configuration settings
+  CONFIG = json.parse(CONFIG_JSON);
+  
+  // create frog pond
   FrogPond pond = new FrogPond();
 }
-
