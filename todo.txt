@@ -1,0 +1,13 @@
+TODO:
+
+credits
+redo parameter selection
+hear sound
+code visualization
+what happens when you touch a frog?
+customize frogs?
+drag EndBlocks too!
+touch frog to change focal frog
+no way to run programs once they go past the top of the screen.
+CRASH -- possibly related to push?
+make the bug a frog shape instead of an arrow

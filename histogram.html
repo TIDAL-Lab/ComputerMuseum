@@ -1,0 +1,21 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+   <title>Histogram</title>
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">   
+</head>
+<body style="margin: 0; padding: 0;">
+   <canvas id="plot" width="300" height="300" style="border: none; margin: 0; padding: 0;"></canvas>
+   <script src="dart/plots/histogram.dart" type="application/dart"></script>
+   <script src="dart.js"></script>
+   <script type="text/javascript">
+      window.oncontextmenu = function(event) {
+         event.preventDefault();
+         event.stopPropagation();
+         return false;
+      };
+   </script>
+</body>
+</html>
