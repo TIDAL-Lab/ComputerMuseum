@@ -160,6 +160,10 @@ Sounds_playSound: function($name) {
   }
 },
 
+isFlagSet: function($name) {
+  return $.$gt$n($.indexOf$1$asx($.get$search$x(C.Window_methods.get$location(window)), $name + "=true"), 0);
+},
+
 roundRect: function(ctx, x, y, w, h, r) {
   var t1, t2, t3, t4, t5;
   t1 = $.getInterceptor$x(ctx);
@@ -299,6 +303,34 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     t1 = this.next;
     if (t1 != null)
       t1.moveChain$2(deltaX, deltaY);
+  },
+  move$2: function(deltaX, deltaY) {
+    var t1;
+    if (typeof deltaY !== "number")
+      return this.move$2$bailout(1, deltaX, deltaY);
+    t1 = this.x;
+    if (typeof deltaX !== "number")
+      throw $.iae(deltaX);
+    this.x = t1 + deltaX;
+    t1 = this.y;
+    if (typeof t1 !== "number")
+      return this.move$2$bailout(2, 0, deltaY, t1);
+    this.y = t1 + deltaY;
+  },
+  move$2$bailout: function(state0, deltaX, deltaY, t1) {
+    switch (state0) {
+      case 0:
+      case 1:
+        state0 = 0;
+        t1 = this.x;
+        if (typeof deltaX !== "number")
+          throw $.iae(deltaX);
+        this.x = t1 + deltaX;
+        t1 = this.y;
+      case 2:
+        state0 = 0;
+        this.y = $.$add$ns(t1, deltaY);
+    }
   },
   overlaps$1: function(other) {
     var t1, t2, t3, t4, t5;
@@ -542,7 +574,7 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     t3.restore$0(ctx);
   },
   _drawLabel$1: function(ctx) {
-    var lines, t1, tx, t2, ty;
+    var lines, t1, tx, ty, t2;
     lines = $.split$1$s(this.text, "\n");
     t1 = $.getInterceptor$x(ctx);
     t1.set$fillStyle(ctx, this.textColor);
@@ -550,24 +582,7 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     t1.set$textAlign(ctx, "left");
     t1.set$textBaseline(ctx, "middle");
     tx = this.x + 12;
-    t2 = this.y;
-    if (typeof t2 !== "number")
-      return this._drawLabel$1$bailout(1, ctx, t1, lines, tx, t2);
-    ty = t2 + this._height / 2;
-    t2 = lines.length;
-    if (t2 === 1)
-      t1.fillText$3(ctx, this.text, tx, ty);
-    else {
-      if (0 >= t2)
-        throw $.ioore(0);
-      t1.fillText$3(ctx, lines[0], tx, ty - 7);
-      if (1 >= lines.length)
-        throw $.ioore(1);
-      t1.fillText$3(ctx, lines[1], tx, ty + 7);
-    }
-  },
-  _drawLabel$1$bailout: function(state0, ctx, t1, lines, tx, t2) {
-    var ty = $.$add$ns(t2, this._height / 2);
+    ty = $.$add$ns(this.y, this._height / 2);
     t2 = lines.length;
     if (t2 === 1)
       t1.fillText$3(ctx, this.text, tx, ty);
@@ -706,8 +721,8 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
     var wasInProgram, t1;
     this.dragging = true;
     wasInProgram = this.get$isInProgram();
-    this._lastX = c.touchX;
-    this._lastY = c.touchY;
+    this._lastX = c.get$touchX();
+    this._lastY = c.get$touchY();
     t1 = this.prev;
     if (t1 != null)
       t1.next = this.next;
@@ -742,15 +757,15 @@ Block: {"": "Object;workspace<,id,x*,y*,_width,_height,_targetX,_targetY,text,co
   },
   touchDrag$1: function(c) {
     var t1, t2, t3;
-    t1 = $.$sub$n(c.touchX, this._lastX);
-    t2 = $.$sub$n(c.touchY, this._lastY);
+    t1 = $.$sub$n(c.get$touchX(), this._lastX);
+    t2 = $.$sub$n(c.get$touchY(), this._lastY);
     t3 = this.x;
     if (typeof t1 !== "number")
       throw $.iae(t1);
     this.x = t3 + t1;
     this.y = $.$add$ns(this.y, t2);
-    this._lastX = c.touchX;
-    this._lastY = c.touchY;
+    this._lastX = c.get$touchX();
+    this._lastY = c.get$touchY();
   },
   touchSlide$1: function(c) {
   },
@@ -1070,17 +1085,21 @@ TraceBug$: function(start) {
 },
 
 ControlBlock: {"": "Block;begin,cnext,cprev,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,inserted",
+  get$targetX: function(_) {
+    var t1;
+    if (!this.dragging) {
+      t1 = this.cprev;
+      t1 = t1 != null && t1.get$isInProgram();
+    } else
+      t1 = false;
+    if (t1)
+      return $.$sub$n($.Block.prototype.get$targetX.call(this, this), 10);
+    else
+      return $.Block.prototype.get$targetX.call(this, this);
+  },
   get$targetY: function(_) {
-    var t1, ty, t2;
-    t1 = this._targetY;
-    if (t1 != null)
-      return t1;
-    t1 = this.next;
-    ty = t1 != null ? $.$sub$n($.$sub$n(t1.get$targetY(t1), this._height), 0) : this.y;
-    t1 = this.candidate;
-    if (t1 != null)
-      ty = $.$sub$n(ty, $.$add$ns($.max($.get$height$x(t1), 25), 0));
-    else {
+    var t1, t2;
+    if (this.candidate == null) {
       t1 = this.cnext;
       if (t1 != null) {
         t2 = this.next;
@@ -1088,47 +1107,101 @@ ControlBlock: {"": "Block;begin,cnext,cprev,workspace,id,x,y,_width,_height,_tar
         t1 = t2;
       } else
         t1 = false;
-      if (t1)
-        ty = $.$sub$n(ty, 25);
-    }
-    return ty;
+    } else
+      t1 = false;
+    if (t1)
+      return $.$sub$n($.Block.prototype.get$targetY.call(this, this), 25);
+    else
+      return $.Block.prototype.get$targetY.call(this, this);
+  },
+  get$connectorX: function() {
+    if (!this.dragging && this.cnext != null)
+      return $.$add$ns(this.get$targetX(this), 10);
+    else
+      return this.get$targetX(this);
   },
   draw$1: function(ctx) {
+    var t1;
+    this._resize$1(ctx);
+    this._drawMenuArrow$1(ctx);
+    this._drawLabel$1(ctx);
+    t1 = this.param;
+    if (t1 != null && this.inserted)
+      t1.draw$1(ctx);
   },
   checkSyntax$1: function(before) {
-    var t1, p, a, after, nest;
-    t1 = this.cprev;
-    if (t1 != null)
-      for (p = before; p == null ? t1 != null : p !== t1;)
+    var t1, t2, p, nest, a;
+    t1 = this.inserted;
+    if (t1 && this.cprev != null)
+      for (t2 = this.cprev, p = before, nest = 0; true;) {
         if (p == null)
           return false;
-        else
-          p = p.prev;
-    t1 = this.cnext;
-    if (t1 != null) {
+        else if (p == null ? t2 == null : p === t2)
+          if (nest !== 0)
+            return false;
+          else
+            break;
+        else if (typeof p === "object" && p !== null && !!$.getInterceptor(p).$isEndBlock)
+          --nest;
+        else if (typeof p === "object" && p !== null && !!$.getInterceptor(p).$isBeginBlock)
+          ++nest;
+        p = p.prev;
+      }
+    if (t1 && this.cnext != null) {
       a = before.next;
-      for (; a == null ? t1 != null : a !== t1;)
+      for (t1 = this.cnext, nest = 0; true;) {
         if (a == null)
           return false;
-        else
-          a = a.next;
+        else if (a == null ? t1 == null : a === t1)
+          if (nest !== 0)
+            return false;
+          else
+            break;
+        else if (typeof a === "object" && a !== null && !!$.getInterceptor(a).$isEndBlock)
+          --nest;
+        else if (typeof a === "object" && a !== null && !!$.getInterceptor(a).$isBeginBlock)
+          ++nest;
+        a = a.next;
+      }
     }
-    after = before.next;
-    for (nest = 0; after != null;) {
-      if (after == null ? t1 == null : after === t1)
-        return nest === 0;
-      else if (typeof after === "object" && after !== null && !!$.getInterceptor(after).$isEndBlock)
-        --nest;
-      else if (typeof after === "object" && after !== null && !!$.getInterceptor(after).$isBeginBlock)
-        ++nest;
-      after = after.next;
+    return true;
+  },
+  touchUp$1: function(c) {
+    var wasInProgram = this.inserted;
+    $.Block.prototype.touchUp$1.call(this, c);
+    if (this.inserted && !wasInProgram)
+      this.begin.addAllBlocks$0();
+    else if (!this.get$isInProgram()) {
+      this.begin.removeAllBlocks$0();
+      this.workspace.draw$0();
     }
-    return false;
   },
   touchDown$1: function(c) {
+    var t1, t2, b;
+    t1 = this.cnext;
+    if (t1 != null) {
+      t2 = this.next;
+      if (t2 == null ? t1 == null : t2 === t1) {
+        t1 = this.cprev;
+        if (t1 != null) {
+          t2 = this.prev;
+          t1 = t2 == null ? t1 == null : t2 === t1;
+        } else
+          t1 = false;
+      } else
+        t1 = false;
+    } else
+      t1 = false;
+    if (t1)
+      return false;
     $.Block.prototype.touchDown$1.call(this, c);
-    if (this.inserted && this.begin != null)
-      this.workspace.moveToTop$1(this.begin);
+    if (this.inserted && this.begin != null) {
+      b = this.begin;
+      for (t1 = this.workspace; b != null;) {
+        t1.moveToTop$1(b);
+        b = b.cnext;
+      }
+    }
     return true;
   },
   touchDrag$1: function(c) {
@@ -1141,13 +1214,13 @@ ControlBlock: {"": "Block;begin,cnext,cprev,workspace,id,x,y,_width,_height,_tar
     if (t1 != null) {
       t2 = t1.y;
       t1.get$height;
-      miny = $.$add$ns($.$add$ns(t2, t1._height), 25);
+      miny = $.$add$ns(t2, t1._height);
     } else
       miny = 0;
     t1 = this.cnext;
-    maxy = t1 != null ? $.$sub$n($.$sub$n(t1.y, this._height), 25) : $.$sub$n($.get$y$x($.get$start$x(this.workspace).get$end()), this._height);
-    ty = $.$add$ns(this.y, $.$sub$n(c.touchY, this._lastY));
-    dx = !!$.getInterceptor(this).$isBeginBlock ? $.$sub$n(c.touchX, this._lastX) : 0;
+    maxy = t1 != null ? $.$sub$n(t1.y, this._height) : $.$sub$n($.get$y$x($.get$start$x(this.workspace).get$end()), this._height);
+    ty = $.$add$ns(this.y, $.$sub$n(c.get$touchY(), this._lastY));
+    dx = !!$.getInterceptor(this).$isBeginBlock ? $.$sub$n(c.get$touchX(), this._lastX) : 0;
     t1 = $.getInterceptor$n(ty);
     if (t1.$lt(ty, miny)) {
       t1 = $.$sub$n(miny, this.y);
@@ -1156,7 +1229,7 @@ ControlBlock: {"": "Block;begin,cnext,cprev,workspace,id,x,y,_width,_height,_tar
         throw $.iae(dx);
       this.x = t2 + dx;
       this.y = $.$add$ns(this.y, t1);
-      this._lastX = c.touchX;
+      this._lastX = c.get$touchX();
       this._lastY = this.y;
     } else if (t1.$gt(ty, maxy)) {
       t1 = $.$sub$n(maxy, this.y);
@@ -1165,28 +1238,25 @@ ControlBlock: {"": "Block;begin,cnext,cprev,workspace,id,x,y,_width,_height,_tar
         throw $.iae(dx);
       this.x = t2 + dx;
       this.y = $.$add$ns(this.y, t1);
-      this._lastX = c.touchX;
+      this._lastX = c.get$touchX();
       this._lastY = this.y;
     } else {
-      t1 = $.$sub$n(c.touchY, this._lastY);
+      t1 = $.$sub$n(c.get$touchY(), this._lastY);
       t2 = this.x;
       if (typeof dx !== "number")
         throw $.iae(dx);
       this.x = t2 + dx;
       this.y = $.$add$ns(this.y, t1);
-      this._lastX = c.touchX;
-      this._lastY = c.touchY;
+      this._lastX = c.get$touchX();
+      this._lastY = c.get$touchY();
     }
   },
   $isControlBlock: true
 },
 
 BeginBlock: {"": "ControlBlock;end<,begin,cnext,cprev,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,inserted",
-  get$connectorX: function() {
-    return $.$add$ns(this.get$targetX(this), 10);
-  },
   draw$1: function(ctx) {
-    var t1, b;
+    var t1;
     this._resize$1(ctx);
     this._drawMenuArrow$1(ctx);
     this._drawOutline$1(ctx);
@@ -1194,20 +1264,6 @@ BeginBlock: {"": "ControlBlock;end<,begin,cnext,cprev,workspace,id,x,y,_width,_h
     t1 = this.param;
     if (t1 != null && this.inserted)
       t1.draw$1(ctx);
-    if (this.inserted) {
-      b = this.cnext;
-      for (; b != null;) {
-        b.x = this.x;
-        b._resize$1(ctx);
-        b._drawLabel$1(ctx);
-        b._drawParam$1;
-        t1 = b.param;
-        if (t1 != null && b.inserted)
-          t1.draw$1(ctx);
-        b.x = b.x + 10;
-        b = b.cnext;
-      }
-    }
   },
   _addClause$1: function(clause) {
     var c, c0;
@@ -1379,76 +1435,48 @@ BeginBlock: {"": "ControlBlock;end<,begin,cnext,cprev,workspace,id,x,y,_width,_h
       t2.closePath$0(ctx);
     }
   },
-  touchUp$1: function(c) {
-    var wasInProgram, b, t1, t2;
-    wasInProgram = this.inserted;
-    $.Block.prototype.touchUp$1.call(this, c);
-    if (this.inserted && !wasInProgram) {
-      this.next.prev = this.end;
-      this.end.next = this.next;
-      this.next = this.cnext;
-      this.cnext.prev = this;
-      b = this.cnext;
-      for (t1 = this.workspace; b != null;) {
-        b.x = this.x;
-        b.y = $.$add$ns(this.y, this._height);
-        t1.addBlock$1(b);
-        b.inserted = true;
-        b = b.cnext;
-      }
-    } else if (!this.get$isInProgram()) {
-      for (t1 = this.workspace, b = this; b != null;) {
-        b.get$hasPrev;
-        t2 = b.prev;
-        if (t2 != null)
-          t2.next = b.next;
-        b.get$hasNext;
-        t2 = b.next;
-        if (t2 != null)
-          t2.prev = b.prev;
-        b.prev = null;
-        b.next = null;
-        t1.removeBlock$1(b);
-        b = b.cnext;
-      }
-      this.cnext = null;
-      t1.draw$0();
+  addAllBlocks$0: function() {
+    var b, t1;
+    this.next.prev = this.end;
+    this.end.next = this.next;
+    this.next = this.cnext;
+    this.cnext.prev = this;
+    b = this.cnext;
+    for (t1 = this.workspace; b != null;) {
+      b.x = this.x;
+      b.y = $.$add$ns(this.y, this._height);
+      t1.addBlock$1(b);
+      b.inserted = true;
+      b = b.cnext;
+    }
+  },
+  removeAllBlocks$0: function() {
+    var t1, b, t2;
+    for (t1 = this.workspace, b = this; b != null;) {
+      b.get$hasPrev;
+      t2 = b.prev;
+      if (t2 != null)
+        t2.next = b.next;
+      b.get$hasNext;
+      t2 = b.next;
+      if (t2 != null)
+        t2.prev = b.prev;
+      b.prev = null;
+      b.next = null;
+      t1.removeBlock$1(b);
+      b = b.cnext;
     }
   },
   $isBeginBlock: true
 },
 
 EndBlock: {"": "ControlBlock;begin,cnext,cprev,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,inserted",
-  get$connectorX: function() {
-    return this.begin.get$isInProgram() ? $.$sub$n(this.get$targetX(this), 10) : this.get$targetX(this);
-  },
   step$1: function(_, program) {
     var t1 = this.begin;
     if (t1 != null)
       return t1._endStep$1(program);
     else
       return this.next;
-  },
-  eval$1: function(program) {
-    var t1, pval;
-    t1 = this.param;
-    pval = t1 == null ? null : $.get$value$x(t1);
-    program.doCommand$2("end " + $.S(this.begin.text), pval);
-  },
-  checkSyntax$1: function(before) {
-    var t1, nest;
-    if (typeof before === "object" && before !== null && !!$.getInterceptor(before).$isEndProgramBlock)
-      return false;
-    for (t1 = this.begin, nest = 0; before != null;) {
-      if (before == null ? t1 == null : before === t1)
-        return nest === 0;
-      else if (typeof before === "object" && before !== null && !!$.getInterceptor(before).$isEndBlock)
-        ++nest;
-      else if (typeof before === "object" && before !== null && !!$.getInterceptor(before).$isBeginBlock)
-        --nest;
-      before = before.prev;
-    }
-    return false;
   },
   $isEndBlock: true
 },
@@ -1484,6 +1512,7 @@ IfBlock$: function(workspace) {
   t1.Block$2(workspace, "if");
   t1.color = "#c92";
   t1.begin = null;
+  t1.begin = t1;
   t1.IfBlock$1(workspace);
   return t1;
 }}
@@ -2446,10 +2475,10 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
     this.block.workspace.draw$0();
   },
   touchDown$1: function(c) {
-    this.downX = c.touchX;
-    this.downY = c.touchY;
-    this.lastX = c.touchX;
-    this.lastY = c.touchY;
+    this.downX = c.get$touchX();
+    this.downY = c.get$touchY();
+    this.lastX = c.get$touchX();
+    this.lastY = c.get$touchY();
     this.downIndex = this._liblib3$_index;
     this.dragging = true;
     this.block.workspace.draw$0();
@@ -2459,8 +2488,8 @@ Parameter: {"": "Object;centerX@,centerY,width>,height>,downX,downY,lastX,lastY,
     var t1, oldIndex, newIndex;
     t1 = this.dragging ? this._getDragIndexY$0() : this._liblib3$_index;
     oldIndex = C.JSNumber_methods.$mod(t1, this.values.length);
-    this.lastX = c.touchX;
-    this.lastY = c.touchY;
+    this.lastX = c.get$touchX();
+    this.lastY = c.get$touchY();
     t1 = this.dragging ? this._getDragIndexY$0() : this._liblib3$_index;
     newIndex = C.JSNumber_methods.$mod(t1, this.values.length);
     if (oldIndex !== newIndex && newIndex === C.JSNumber_methods.toInt$0(Math.floor(newIndex))) {
@@ -2558,6 +2587,7 @@ RepeatBlock$: function(workspace) {
   t1.Block$2(workspace, "repeat");
   t1.color = "#c92";
   t1.begin = null;
+  t1.begin = t1;
   t1.RepeatBlock$1(workspace);
   return t1;
 }}
@@ -2671,19 +2701,19 @@ StartBlock: {"": "BeginBlock;_play,_pause,_liblib3$_target,end,begin,cnext,cprev
       t1.over = true;
       t1.visible;
     }
-    this._lastX = c.touchX;
-    this._lastY = c.touchY;
+    this._lastX = c.get$touchX();
+    this._lastY = c.get$touchY();
     this.workspace.draw$0();
     return true;
   },
   touchDrag$1: function(c) {
     var t1 = this._liblib3$_target;
     if (t1 == null)
-      this.moveChain$2($.$sub$n(c.touchX, this._lastX), $.$sub$n(c.touchY, this._lastY));
+      this.moveChain$2($.$sub$n(c.get$touchX(), this._lastX), $.$sub$n(c.get$touchY(), this._lastY));
     else
       t1.touchDrag$1(c);
-    this._lastX = c.touchX;
-    this._lastY = c.touchY;
+    this._lastX = c.get$touchX();
+    this._lastY = c.get$touchY();
     this.workspace.draw$0();
   },
   touchUp$1: function(c) {
@@ -2725,6 +2755,7 @@ StartBlock$: function(workspace) {
   t1.Block$2(workspace, "start");
   t1.color = "#c92";
   t1.begin = null;
+  t1.begin = t1;
   t1.StartBlock$1(workspace);
   return t1;
 }}
@@ -2748,6 +2779,9 @@ StartBlock_closure0: {"": "Closure;workspace_1",
 },
 
 EndProgramBlock: {"": "EndBlock;begin,cnext,cprev,workspace,id,x,y,_width,_height,_targetX,_targetY,text,color,textColor,dragging,candidate,next,prev,param,_lastX,_lastY,inMenu,inserted",
+  step$1: function(_, program) {
+    return $.isFlagSet("evolution") ? this.begin : null;
+  },
   touchDown$1: function(c) {
     return false;
   },
@@ -3123,6 +3157,7 @@ WaitBlock$: function(workspace) {
   t1.Block$2(workspace, "wait\nfor");
   t1.color = "#c92";
   t1.begin = null;
+  t1.begin = t1;
   t1.WaitBlock$1(workspace);
   return t1;
 }}
@@ -3162,7 +3197,7 @@ TimeoutBlock$: function(workspace, begin) {
 
 },
 
-CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start>,name>,color<,bug<,running<,ctx,touchables,touch_bindings,mdown,parent,xform,iform",
+CodeWorkspace: {"": "TouchLayer;pond<,width>,height>,blocks,menu,status>,start>,name>,color<,bug<,running<,ctx,touchables,touch_bindings,xform,iform",
   stopProgram$0: function() {
     this.pond.stopProgram$1(this);
   },
@@ -3225,8 +3260,21 @@ CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start
       C.JSArray_methods.remove$1(t1, t2);
   },
   moveToTop$1: function(block) {
-    this.removeBlock$1(block);
-    this.addBlock$1(block);
+    var t1, t2, t3;
+    t1 = this.blocks;
+    C.JSArray_methods.remove$1(t1, block);
+    t2 = this.touchables;
+    C.JSArray_methods.remove$1(t2, block);
+    block.get$hasParam;
+    t3 = block.param;
+    if (t3 != null)
+      C.JSArray_methods.remove$1(t2, t3);
+    t1.push(block);
+    t2.push(block);
+    block.get$hasParam;
+    t1 = block.param;
+    if (t1 != null)
+      t2.push(t1);
   },
   isOffscreen$1: function(block) {
     var t1, t2, t3;
@@ -3474,54 +3522,51 @@ CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start
     $.restore$0$x(t3);
   },
   _initMenu$0: function() {
-    var block, t1, t2;
-    block = $.Block$(this, "hop");
-    block.param = $.Parameter$(block);
-    $.set$values$x(block.param, [1, 2, 3, 4]);
+    var t1, t2, block;
     t1 = this.menu;
-    t1.addBlock$1;
-    t1.blocks.push(block);
-    t1 = this.menu;
-    t2 = $.Block$(this, "chirp");
+    t2 = $.Block$(this, "hop");
     t1.addBlock$1;
     t1.blocks.push(t2);
     t2 = this.menu;
-    t1 = $.Block$(this, "eat");
+    t1 = $.Block$(this, "chirp");
     t2.addBlock$1;
     t2.blocks.push(t1);
+    t1 = this.menu;
+    t2 = $.Block$(this, "eat");
+    t1.addBlock$1;
+    t1.blocks.push(t2);
     block = $.Block$(this, "turn");
     block.param = $.Parameter$(block);
     $.set$values$x(block.param, [-90, -75, -60, -45, -30, -15, "random", 15, 30, 45, 60, 75, 90]);
     $.set$index$x(block.param, 6);
-    t1 = this.menu;
-    t1.addBlock$1;
-    t1.blocks.push(block);
+    t2 = this.menu;
+    t2.addBlock$1;
+    t2.blocks.push(block);
     block = $.Block$(this, "hatch");
     block.color = "#b67196";
-    t1 = this.menu;
-    t1.addBlock$1;
-    t1.blocks.push(block);
+    t2 = this.menu;
+    t2.addBlock$1;
+    t2.blocks.push(block);
     block = $.Block$(this, "die");
     block.color = "#b67196";
-    t1 = this.menu;
-    t1.addBlock$1;
-    t1.blocks.push(block);
-    t1 = this.menu;
-    t2 = $.IfBlock$(this);
-    t1.addBlock$1;
-    t1.blocks.push(t2);
     t2 = this.menu;
-    t1 = $.RepeatBlock$(this);
+    t2.addBlock$1;
+    t2.blocks.push(block);
+    t2 = this.menu;
+    t1 = $.IfBlock$(this);
     t2.addBlock$1;
     t2.blocks.push(t1);
     t1 = this.menu;
-    t2 = $.WaitBlock$(this);
+    t2 = $.RepeatBlock$(this);
     t1.addBlock$1;
     t1.blocks.push(t2);
+    t2 = this.menu;
+    t1 = $.WaitBlock$(this);
+    t2.addBlock$1;
+    t2.blocks.push(t1);
   },
   CodeWorkspace$5: function(pond, width, height, $name, color) {
     this.ctx = $.getContext$1$x(document.querySelector("#" + this.name), "2d");
-    this.registerEvents$1(document.documentElement);
     this.menu = $.Menu$(this, 0, $.$sub$n(this.height, 74), this.width, 74);
     this._initMenu$0();
     this.touchables.push(this.menu);
@@ -3533,7 +3578,7 @@ CodeWorkspace: {"": "TouchManager;pond<,width>,height>,blocks,menu,status>,start
   },
   static: {
 CodeWorkspace$: function(pond, width, height, $name, color) {
-  var t1 = new $.CodeWorkspace(pond, width, height, $.List_List(null), null, null, null, $name, color, null, false, null, $.List_List(null), new $.HashMap(0, null, null, null, null), false, null, new $.Matrix2D([1, 0, 0, 0, 1, 0, 0, 0, 1]), new $.Matrix2D([1, 0, 0, 0, 1, 0, 0, 0, 1]));
+  var t1 = new $.CodeWorkspace(pond, width, height, $.List_List(null), null, null, null, $name, color, null, false, null, $.List_List(null), new $.HashMap(0, null, null, null, null), new $.Matrix2D([1, 0, 0, 0, 1, 0, 0, 0, 1]), new $.Matrix2D([1, 0, 0, 0, 1, 0, 0, 0, 1]));
   t1.CodeWorkspace$5(pond, width, height, $name, color);
   return t1;
 }}
@@ -3614,12 +3659,12 @@ Fly$: function(pond, x, y) {
 
 },
 
-Frog: {"": "Turtle;pond<,_radius@,_tongue@,_vision?,label*,ghost<,program<,prey@,x,y,size,heading,opacity,dead,tween,img,variables,_width,_height",
+Frog: {"": "Turtle;pond<,_sound@,_tongue@,_vision?,label*,ghost<,program<,prey@,_saveX<,_saveY,_saveH,_lastX,_lastY,_refresh,x,y,size,heading,opacity,dead,tween,img,variables,_width,_height",
   hatch$0: function() {
     var t1, clone;
     t1 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
     t1.segments = [];
-    clone = new $.Frog(this.pond, -1, 0, -1, null, null, null, null, 0, 0, 1, 0, 1, false, t1, $.ImageElement_ImageElement(null, null, null), new $.HashMap(0, null, null, null, null), 0, 0);
+    clone = new $.Frog(this.pond, -1, 0, -1, null, null, null, null, null, null, null, 0, 0, false, 0, 0, 1, 0, 1, false, t1, $.ImageElement_ImageElement(null, null, null), new $.HashMap(0, null, null, null, null), 0, 0);
     t1 = $.get$Turtle_rand().nextInt$1(365);
     clone.heading = clone.heading - -t1 / 180 * 3.141592653589793;
     $.set$src$x(clone.img, "images/bluefrog.png");
@@ -3645,20 +3690,73 @@ Frog: {"": "Turtle;pond<,_radius@,_tongue@,_vision?,label*,ghost<,program<,prey@
   reset$0: function(_) {
     this.opacity = 1;
     this.ghost = null;
-    this._radius = -1;
+    this._sound = -1;
     this._vision = -1;
     this._tongue = 0;
     this.label = null;
   },
   animate$0: function() {
-    var t1, refresh;
+    var refresh, t1;
+    refresh = this._refresh;
+    this._refresh = false;
     t1 = this.tween;
     if (t1.isTweening$0()) {
       t1.animate$0();
       refresh = true;
-    } else
-      refresh = false;
+    }
     return this.program.animate$0() ? true : refresh;
+  },
+  push$1: function(distance) {
+    var t1, t2, frog, angle, t3, t4, t5;
+    if (typeof distance !== "number")
+      return this.push$1$bailout(1, distance);
+    for (t1 = this.pond, t2 = t1.getFrogsHere$1(this), t2 = new $.HashSetIterator(t2, t2._computeElements$0(), 0, null); t2.moveNext$0();) {
+      frog = t2._liblib1$_current;
+      angle = this.angleBetween$1(frog);
+      if (Math.abs(angle) < 90) {
+        angle = angle / -180 * 3.141592653589793 + this.heading;
+        t3 = Math.sin(angle);
+        t4 = Math.cos(angle);
+        t5 = $.getInterceptor$x(frog);
+        t5.set$x(frog, $.$add$ns(t5.get$x(frog), distance * t3));
+        t5.set$y(frog, $.$sub$n(t5.get$y(frog), distance * t4));
+        if (t1.inWater$2(t5.get$x(frog), t5.get$y(frog))) {
+          t3 = $.get$Sounds_sounds();
+          if (t3.$index(t3, "splash") != null) {
+            t3 = $.get$Sounds_sounds();
+            $.set$volume$x(t3.$index(t3, "splash"), 0.6);
+            t3 = $.get$Sounds_sounds();
+            $.play$0$x(t3.$index(t3, "splash"));
+          }
+          frog.die$0();
+        }
+      }
+    }
+  },
+  push$1$bailout: function(state0, distance) {
+    var t1, t2, t3, frog, angle, dx, dy, t4;
+    for (t1 = this.pond, t2 = t1.getFrogsHere$1(this), t2 = new $.HashSetIterator(t2, t2._computeElements$0(), 0, null), t3 = $.getInterceptor$n(distance); t2.moveNext$0();) {
+      frog = t2._liblib1$_current;
+      angle = this.angleBetween$1(frog);
+      if (Math.abs(angle) < 90) {
+        angle = angle / -180 * 3.141592653589793 + this.heading;
+        dx = t3.$mul(distance, Math.sin(angle));
+        dy = t3.$mul(distance, Math.cos(angle));
+        t4 = $.getInterceptor$x(frog);
+        t4.set$x(frog, $.$add$ns(t4.get$x(frog), dx));
+        t4.set$y(frog, $.$sub$n(t4.get$y(frog), dy));
+        if (t1.inWater$2(t4.get$x(frog), t4.get$y(frog))) {
+          t4 = $.get$Sounds_sounds();
+          if (t4.$index(t4, "splash") != null) {
+            t4 = $.get$Sounds_sounds();
+            $.set$volume$x(t4.$index(t4, "splash"), 0.6);
+            t4 = $.get$Sounds_sounds();
+            $.play$0$x(t4.$index(t4, "splash"));
+          }
+          frog.die$0();
+        }
+      }
+    }
   },
   pulse$0: function() {
     var t1 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
@@ -3671,6 +3769,41 @@ Frog: {"": "Turtle;pond<,_radius@,_tongue@,_vision?,label*,ghost<,program<,prey@
     this.tween.addControlPoint$2(1, 0);
     this.tween.addControlPoint$2(0, 0.5);
     this.tween.addControlPoint$2(1, 1);
+  },
+  flyTo$3: function(tx, ty, th) {
+    var t1, t2, t3, t4, t5, t6;
+    this._saveX = this.x;
+    this._saveY = this.y;
+    this._saveH = this.heading;
+    t1 = $.toDouble$0$n(tx);
+    t2 = this.x;
+    if (typeof t2 !== "number")
+      throw $.iae(t2);
+    t3 = $.toDouble$0$n(ty);
+    t4 = this.y;
+    if (typeof t4 !== "number")
+      throw $.iae(t4);
+    th.toDouble$0;
+    t5 = this.heading;
+    if (th == null)
+      throw th.$sub();
+    t6 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
+    t6.segments = [];
+    this.tween = t6;
+    this.tween.$function = 1;
+    this.tween.duration = 10;
+    this.tween.addControlPoint$2(0, 0);
+    this.tween.addControlPoint$2(1, 1);
+    this.tween.ondelta = new $.Frog_flyTo_closure(this, t1 - t2, t3 - t4, th - t5);
+  },
+  flyBack$0: function() {
+    var t1 = this._saveX;
+    if (t1 != null && this._saveY != null && this._saveH != null) {
+      this.flyTo$3(t1, this._saveY, this._saveH);
+      this._saveX = null;
+      this._saveY = null;
+      this._saveH = null;
+    }
   },
   nearWater$0: function() {
     var t1, wet, i, t2, t3;
@@ -3757,13 +3890,13 @@ Frog: {"": "Turtle;pond<,_radius@,_tongue@,_vision?,label*,ghost<,program<,prey@
   },
   _drawLocal$1: function(ctx) {
     var t1, t2, theta, iw, ih;
-    t1 = this._radius;
+    t1 = this._sound;
     if (t1 > 0) {
       t2 = $.getInterceptor$x(ctx);
       t2.set$strokeStyle(ctx, "rgba(255, 255, 255, " + $.S(1 - t1 / 175) + ")");
       t2.set$lineWidth(ctx, 4);
       t2.beginPath$0(ctx);
-      t2.arc$6(ctx, 0, 0, this._radius, 0, 6.283185307179586, true);
+      t2.arc$6(ctx, 0, 0, this._sound, 0, 6.283185307179586, true);
       t2.stroke$0(ctx);
     }
     t1 = this._vision;
@@ -3794,14 +3927,65 @@ Frog: {"": "Turtle;pond<,_radius@,_tongue@,_vision?,label*,ghost<,program<,prey@
     $.drawImageScaled$5$x(ctx, t1, -iw / 2, -ih / 2, iw, ih);
   },
   containsTouch$1: function(c) {
-    return this.overlapsPoint$2(c.get$touchX(), c.get$touchY());
+    var t1, t2, t3, t4;
+    t1 = c.get$touchX();
+    if (typeof t1 !== "number")
+      return this.containsTouch$1$bailout(1, c, t1);
+    t2 = c.get$touchY();
+    if (typeof t2 !== "number")
+      return this.containsTouch$1$bailout(2, 0, t1, t2);
+    t3 = this.x;
+    if (typeof t3 !== "number")
+      return this.containsTouch$1$bailout(3, 0, t1, t2, t3);
+    t4 = this.y;
+    if (typeof t4 !== "number")
+      return this.containsTouch$1$bailout(4, 0, t1, t2, t3, t4);
+    t1 = t3 - t1;
+    t2 = t4 - t2;
+    t2 = t1 * t1 + t2 * t2;
+    return Math.sqrt(t2) < this.get$radius() + 0;
+  },
+  containsTouch$1$bailout: function(state0, c, t1, t2, t3, t4) {
+    switch (state0) {
+      case 0:
+        t1 = c.get$touchX();
+      case 1:
+        state0 = 0;
+        t2 = c.get$touchY();
+      case 2:
+        state0 = 0;
+        t3 = this.x;
+      case 3:
+        state0 = 0;
+        t4 = this.y;
+      case 4:
+        var t5, t6;
+        state0 = 0;
+        t5 = $.getInterceptor$n(t3);
+        t6 = $.getInterceptor$n(t4);
+        t2 = $.$add$ns($.$mul$n(t5.$sub(t3, t1), t5.$sub(t3, t1)), $.$mul$n(t6.$sub(t4, t2), t6.$sub(t4, t2)));
+        if (typeof t2 !== "number")
+          $.throwExpression(new $.ArgumentError(t2));
+        return Math.sqrt(t2) < this.get$radius() + 0;
+    }
   },
   touchDown$1: function(c) {
+    this._lastX = c.get$touchX();
+    this._lastY = c.get$touchY();
     return true;
   },
   touchUp$1: function(c) {
+    this.pond.census$0();
   },
   touchDrag$1: function(c) {
+    var t1, t2;
+    t1 = $.$sub$n(c.get$touchX(), this._lastX);
+    t2 = $.$sub$n(c.get$touchY(), this._lastY);
+    this.x = $.$add$ns(this.x, t1);
+    this.y = $.$add$ns(this.y, t2);
+    this._lastX = c.get$touchX();
+    this._lastY = c.get$touchY();
+    this._refresh = true;
   },
   touchSlide$1: function(c) {
   }
@@ -3817,6 +4001,23 @@ Frog_pulse_closure: {"": "Closure;this_0",
     t2 += value;
     t1.set$opacity(t2);
     return t2;
+  },
+  "+call:1:0": 0
+},
+
+Frog_flyTo_closure: {"": "Closure;this_0,deltaX_1,deltaY_2,deltaH_3",
+  call$1: function(value) {
+    var t1, t2, t3;
+    t1 = this.this_0;
+    t2 = $.getInterceptor$x(t1);
+    t3 = $.getInterceptor$n(value);
+    t2.set$x(t1, $.$add$ns(t2.get$x(t1), t3.$mul(value, this.deltaX_1)));
+    t2.set$y(t1, $.$add$ns(t2.get$y(t1), t3.$mul(value, this.deltaY_2)));
+    t2 = t1.get$heading();
+    t3 = t3.$mul(value, this.deltaH_3);
+    if (typeof t3 !== "number")
+      throw $.iae(t3);
+    t1.set$heading(t2 + t3);
   },
   "+call:1:0": 0
 },
@@ -3957,6 +4158,173 @@ Gem_flyTo_closure1: {"": "Closure;this_2",
   "+call:1:0": 0
 },
 
+LilyPad: {"": "Turtle;pond<,_lastX,_lastY,refresh@,x,y,size,heading,opacity,dead,tween,img,variables,_width,_height",
+  animate$0: function() {
+    return this.refresh;
+  },
+  _drawLocal$1: function(ctx) {
+    var t1, t2, iw, ih;
+    t1 = this.img;
+    t2 = $.getInterceptor$x(t1);
+    iw = $.$mul$n(t2.get$width(t1), this.size);
+    ih = $.$mul$n(t2.get$height(t1), this.size);
+    $.drawImageScaled$5$x(ctx, t1, -iw / 2, -ih / 2, iw, ih);
+  },
+  move$2: function(dx, dy) {
+    var t1, frogs;
+    if (typeof dx !== "number")
+      return this.move$2$bailout1(1, dx, dy);
+    if (typeof dy !== "number")
+      return this.move$2$bailout1(1, dx, dy);
+    t1 = this.x;
+    if (typeof t1 !== "number")
+      return this.move$2$bailout1(2, dx, dy, t1);
+    this.x = t1 + dx;
+    t1 = this.y;
+    if (typeof t1 !== "number")
+      return this.move$2$bailout1(3, dx, dy, t1);
+    this.y = t1 + dy;
+    frogs = this.pond.getFrogsHere$1(this);
+    frogs.forEach$1(frogs, new $.LilyPad_move_closure(dx, dy));
+  },
+  move$2$bailout1: function(state0, dx, dy, t1) {
+    switch (state0) {
+      case 0:
+      case 1:
+        state0 = 0;
+        t1 = this.x;
+      case 2:
+        state0 = 0;
+        this.x = $.$add$ns(t1, dx);
+        t1 = this.y;
+      case 3:
+        var frogs;
+        state0 = 0;
+        this.y = $.$add$ns(t1, dy);
+        frogs = this.pond.getFrogsHere$1(this);
+        frogs.forEach$1(frogs, new $.LilyPad_move_closure(dx, dy));
+    }
+  },
+  containsTouch$1: function(c) {
+    var t1, t2, t3, t4, dist, t5;
+    t1 = c.get$touchX();
+    if (typeof t1 !== "number")
+      return this.containsTouch$1$bailout(1, c, t1);
+    t2 = c.get$touchY();
+    if (typeof t2 !== "number")
+      return this.containsTouch$1$bailout(2, 0, t1, t2);
+    t3 = this.x;
+    if (typeof t3 !== "number")
+      return this.containsTouch$1$bailout(3, 0, t1, t2, t3);
+    t4 = this.y;
+    if (typeof t4 !== "number")
+      return this.containsTouch$1$bailout(4, 0, t1, t2, t3, t4);
+    t1 = t3 - t1;
+    t2 = t4 - t2;
+    t2 = t1 * t1 + t2 * t2;
+    dist = Math.sqrt(t2);
+    t1 = this.img;
+    t2 = $.getInterceptor$x(t1);
+    t3 = t2.get$width(t1);
+    if (t3 !== (t3 | 0))
+      return this.containsTouch$1$bailout(5, 0, t1, t2, t3, 0, dist);
+    t4 = this.size;
+    if (typeof t4 !== "number")
+      return this.containsTouch$1$bailout(6, 0, t1, t2, t3, t4, dist);
+    t3 *= t4;
+    t5 = t2.get$height(t1);
+    if (t5 !== (t5 | 0))
+      return this.containsTouch$1$bailout(7, 0, t1, t2, t5, t3, dist);
+    t4 = t5 * t4;
+    return dist < (t3 < t4 ? t3 / 2 : t4 / 2);
+  },
+  containsTouch$1$bailout: function(state0, c, t1, t2, t3, t4, dist, t5) {
+    switch (state0) {
+      case 0:
+        t1 = c.get$touchX();
+      case 1:
+        state0 = 0;
+        t2 = c.get$touchY();
+      case 2:
+        state0 = 0;
+        t3 = this.x;
+      case 3:
+        state0 = 0;
+        t4 = this.y;
+      case 4:
+        state0 = 0;
+        t5 = $.getInterceptor$n(t3);
+        t6 = $.getInterceptor$n(t4);
+        t2 = $.$add$ns($.$mul$n(t5.$sub(t3, t1), t5.$sub(t3, t1)), $.$mul$n(t6.$sub(t4, t2), t6.$sub(t4, t2)));
+        if (typeof t2 !== "number")
+          $.throwExpression(new $.ArgumentError(t2));
+        dist = Math.sqrt(t2);
+        t1 = this.img;
+        t2 = $.getInterceptor$x(t1);
+        t3 = t2.get$width(t1);
+      case 5:
+        state0 = 0;
+        t4 = this.size;
+      case 6:
+        state0 = 0;
+        t4 = $.$mul$n(t3, t4);
+        t3 = t2.get$height(t1);
+      case 7:
+        state0 = 0;
+        t5 = this.size;
+      case 8:
+        state0 = 0;
+        t5 = t4 < $.$mul$n(t3, t5);
+        t3 = this.size;
+      case 9:
+        state0 = 0;
+      default:
+        var t6;
+        if (state0 === 10 || state0 === 0 && t5)
+          switch (state0) {
+            case 0:
+              t1 = t2.get$width(t1);
+            case 10:
+              state0 = 0;
+              t3 = $.$mul$n(t1, t3) / 2;
+              t1 = t3;
+          }
+        else
+          switch (state0) {
+            case 0:
+              t1 = t2.get$height(t1);
+            case 11:
+              state0 = 0;
+              t3 = $.$mul$n(t1, t3) / 2;
+              t1 = t3;
+          }
+        return dist < t1;
+    }
+  },
+  touchDown$1: function(c) {
+    this._lastX = c.get$touchX();
+    this._lastY = c.get$touchY();
+    return true;
+  },
+  touchUp$1: function(c) {
+  },
+  touchDrag$1: function(c) {
+    this.move$2($.$sub$n(c.get$touchX(), this._lastX), $.$sub$n(c.get$touchY(), this._lastY));
+    this._lastX = c.get$touchX();
+    this._lastY = c.get$touchY();
+    this.refresh = true;
+  },
+  touchSlide$1: function(c) {
+  }
+},
+
+LilyPad_move_closure: {"": "Closure;dx_0,dy_1",
+  call$1: function(frog) {
+    return frog.move$2(this.dx_0, this.dy_1);
+  },
+  "+call:1:0": 0
+},
+
 Matrix2D: {"": "Object;xform",
   invert$0: function() {
     var i, m, det, invDet, t1;
@@ -3997,82 +4365,12 @@ Matrix2D: {"": "Object;xform",
     t1[8] = 1;
   },
   transformContact$1: function(c) {
-    var t1, t2, t3, t4, t5, t6, tx;
-    t1 = c.touchX;
-    if (typeof t1 !== "number")
-      return this.transformContact$1$bailout(1, c, t1);
-    t2 = this.xform;
-    t3 = t2[0];
-    if (typeof t3 !== "number")
-      return this.transformContact$1$bailout(2, c, t1, t2, t3);
-    t3 = t1 * t3;
-    t4 = c.touchY;
-    if (typeof t4 !== "number")
-      return this.transformContact$1$bailout(3, c, t4, t2, t3);
-    t5 = t2[1];
-    if (typeof t5 !== "number")
-      return this.transformContact$1$bailout(4, c, t4, t2, t3, t5);
-    t6 = t2[2];
-    if (typeof t6 !== "number")
-      throw $.iae(t6);
-    tx = t3 + t4 * t5 + t6;
-    t6 = t2[3];
-    if (typeof t6 !== "number")
-      return this.transformContact$1$bailout(6, c, t1, t2, 0, t6, tx);
-    t6 = t1 * t6;
-    t1 = t2[4];
-    if (typeof t1 !== "number")
-      return this.transformContact$1$bailout(8, c, t4, t2, t1, t6, tx);
-    t2 = t2[5];
-    if (typeof t2 !== "number")
-      throw $.iae(t2);
-    c.touchX = tx;
-    c.touchY = t6 + t4 * t1 + t2;
-  },
-  transformContact$1$bailout: function(state0, c, t1, t2, t3, t4, tx) {
-    switch (state0) {
-      case 0:
-        t1 = c.touchX;
-      case 1:
-        state0 = 0;
-        t2 = this.xform;
-        t3 = t2[0];
-      case 2:
-        state0 = 0;
-        t3 = $.$mul$n(t1, t3);
-        t1 = c.touchY;
-      case 3:
-        state0 = 0;
-        t4 = t2[1];
-      case 4:
-        state0 = 0;
-        t4 = $.$add$ns(t3, $.$mul$n(t1, t4));
-        t1 = t2[2];
-        if (typeof t1 !== "number")
-          throw $.iae(t1);
-        tx = $.$add$ns(t4, t1);
-        t1 = c.touchX;
-      case 5:
-        state0 = 0;
-        t4 = t2[3];
-      case 6:
-        state0 = 0;
-        t4 = $.$mul$n(t1, t4);
-        t1 = c.touchY;
-      case 7:
-        state0 = 0;
-        t3 = t2[4];
-      case 8:
-        var ty;
-        state0 = 0;
-        t3 = $.$add$ns(t4, $.$mul$n(t1, t3));
-        t2 = t2[5];
-        if (typeof t2 !== "number")
-          throw $.iae(t2);
-        ty = $.$add$ns(t3, t2);
-        c.touchX = tx;
-        c.touchY = ty;
-    }
+    var t1, tx, ty;
+    t1 = this.xform;
+    tx = $.$add$ns($.$add$ns($.$mul$n(c.get$touchX(), t1[0]), $.$mul$n(c.get$touchY(), t1[1])), t1[2]);
+    ty = $.$add$ns($.$add$ns($.$mul$n(c.get$touchX(), t1[3]), $.$mul$n(c.get$touchY(), t1[4])), t1[5]);
+    c.set$touchX(tx);
+    c.set$touchY(ty);
   },
   transformX$2: function(x, y) {
     var t1 = this.xform;
@@ -4084,12 +4382,133 @@ Matrix2D: {"": "Object;xform",
   }
 },
 
-FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2<,workspaces,width>,height>,gems<,flies<,frogs,play_state,_countdown@,pond<,touchables,touch_bindings,mdown,parent,xform,iform",
+FrogPond: {"": "TouchLayer;canvas,layer0,layer1,layer2<,tmanager,workspaces,width>,height>,gems<,flies<,frogs,pads,play_state,_countdown@,pond<,touchables,touch_bindings,xform,iform",
+  addRandomFrog$1: function(workspace) {
+    var i, t1, max, x, y, frog, t2, t3, t4, milliseconds;
+    for (i = 0; i < 20; ++i) {
+      $.get$Turtle_rand();
+      t1 = this.width;
+      if (t1 !== (t1 | 0))
+        return this.addRandomFrog$1$bailout(1, workspace, i, t1);
+      max = t1 - 200;
+      if (max < 0)
+        $.throwExpression(new $.ArgumentError("negative max: " + max));
+      if (max > 4294967295)
+        max = 4294967295;
+      x = (Math.random() * max >>> 0) + 100;
+      $.get$Turtle_rand();
+      t1 = this.height;
+      if (t1 !== (t1 | 0))
+        return this.addRandomFrog$1$bailout(2, workspace, i, t1, x);
+      max = t1 - 300;
+      if (max < 0)
+        $.throwExpression(new $.ArgumentError("negative max: " + max));
+      if (max > 4294967295)
+        max = 4294967295;
+      y = (Math.random() * max >>> 0) + 150;
+      if (!this.inWater$2(x, y)) {
+        t1 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
+        t1.segments = [];
+        frog = new $.Frog(this, -1, 0, -1, null, null, null, null, null, null, null, 0, 0, false, 0, 0, 1, 0, 1, false, t1, $.ImageElement_ImageElement(null, null, null), new $.HashMap(0, null, null, null, null), 0, 0);
+        $.get$Turtle_rand();
+        max = 365;
+        t1 = Math.random() * max >>> 0;
+        frog.heading = frog.heading - -t1 / 180 * 3.141592653589793;
+        t1 = frog.img;
+        t2 = $.getInterceptor$x(t1);
+        t2.set$src(t1, "images/bluefrog.png");
+        t3 = frog.variables;
+        t3.$indexSet(t3, "workspace", workspace.name);
+        frog.x = x;
+        frog.y = y;
+        t3 = workspace.start;
+        t4 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
+        t4.segments = [];
+        frog.program = new $.Program(frog, t3, null, false, new $.HashMap(0, null, null, null, null), t4);
+        t2.set$src(t1, "images/" + workspace.color + "frog.png");
+        this.frogs.push(frog);
+        this.touchables.push(frog);
+        return;
+      }
+    }
+    t1 = new $._ZoneTimer($.get$_Zone__current(), new $.FrogPond_addRandomFrog_closure(this, workspace), null);
+    t2 = t1._zone;
+    t2._openCallbacks = t2._openCallbacks + 1;
+    t2 = t1.get$_run();
+    milliseconds = C.JSNumber_methods.$tdiv(C.Duration_2000000._duration, 1000);
+    t1._timer = $.TimerImpl$(milliseconds < 0 ? 0 : milliseconds, t2);
+  },
+  addRandomFrog$1$bailout: function(state0, workspace, i, t1, x) {
+    switch (state0) {
+      case 0:
+        i = 0;
+      default:
+        var max, y, frog, t2, t3, t4, milliseconds;
+        L0:
+          while (true)
+            switch (state0) {
+              case 0:
+                if (!(i < 20))
+                  break L0;
+                $.get$Turtle_rand();
+                t1 = this.width;
+              case 1:
+                state0 = 0;
+                max = $.$sub$n(t1, 200);
+                if (max < 0)
+                  $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
+                if (max > 4294967295)
+                  max = 4294967295;
+                x = (Math.random() * max >>> 0) + 100;
+                $.get$Turtle_rand();
+                t1 = this.height;
+              case 2:
+                state0 = 0;
+                max = $.$sub$n(t1, 300);
+                if (max < 0)
+                  $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
+                if (max > 4294967295)
+                  max = 4294967295;
+                y = (Math.random() * max >>> 0) + 150;
+                if (!this.inWater$2(x, y)) {
+                  t1 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
+                  t1.segments = [];
+                  frog = new $.Frog(this, -1, 0, -1, null, null, null, null, null, null, null, 0, 0, false, 0, 0, 1, 0, 1, false, t1, $.ImageElement_ImageElement(null, null, null), new $.HashMap(0, null, null, null, null), 0, 0);
+                  $.get$Turtle_rand();
+                  max = 365;
+                  t1 = Math.random() * max >>> 0;
+                  frog.heading = frog.heading - -t1 / 180 * 3.141592653589793;
+                  t1 = frog.img;
+                  t2 = $.getInterceptor$x(t1);
+                  t2.set$src(t1, "images/bluefrog.png");
+                  t3 = frog.variables;
+                  t3.$indexSet(t3, "workspace", workspace.name);
+                  frog.x = x;
+                  frog.y = y;
+                  t3 = workspace.start;
+                  t4 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
+                  t4.segments = [];
+                  frog.program = new $.Program(frog, t3, null, false, new $.HashMap(0, null, null, null, null), t4);
+                  t2.set$src(t1, "images/" + workspace.color + "frog.png");
+                  this.frogs.push(frog);
+                  this.touchables.push(frog);
+                  return;
+                }
+                ++i;
+            }
+        t1 = new $._ZoneTimer($.get$_Zone__current(), new $.FrogPond_addRandomFrog_closure(this, workspace), null);
+        t2 = t1._zone;
+        t2._openCallbacks = t2._openCallbacks + 1;
+        t2 = t1.get$_run();
+        milliseconds = C.JSNumber_methods.$tdiv(C.Duration_2000000._duration, 1000);
+        t1._timer = $.TimerImpl$(milliseconds < 0 ? 0 : milliseconds, t2);
+    }
+  },
   addHomeFrog$1: function(workspace) {
     var t1, frog, t2, t3, t4, fx, fy;
     t1 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
     t1.segments = [];
-    frog = new $.Frog(this, -1, 0, -1, null, null, null, null, 0, 0, 1, 0, 1, false, t1, $.ImageElement_ImageElement(null, null, null), new $.HashMap(0, null, null, null, null), 0, 0);
+    frog = new $.Frog(this, -1, 0, -1, null, null, null, null, null, null, null, 0, 0, false, 0, 0, 1, 0, 1, false, t1, $.ImageElement_ImageElement(null, null, null), new $.HashMap(0, null, null, null, null), 0, 0);
     t1 = $.get$Turtle_rand().nextInt$1(365);
     frog.heading = frog.heading - -t1 / 180 * 3.141592653589793;
     t1 = frog.img;
@@ -4150,6 +4569,16 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2<,workspaces,width>,hei
     }
     return count > 0;
   },
+  getFrogsHere$1: function(turtle) {
+    var aset, t1, f;
+    aset = new $.HashSet(0, null, null, null, null);
+    for (t1 = this.frogs, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();) {
+      f = t1._liblib0$_current;
+      if (!$.$eq(f, turtle) && f.overlapsTurtle$1(turtle))
+        aset.add$1(aset, f);
+    }
+    return aset;
+  },
   getFrogHere$2: function(x, y) {
     var t1, frog;
     for (t1 = this.frogs, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();) {
@@ -4158,6 +4587,24 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2<,workspaces,width>,hei
         return frog;
     }
     return;
+  },
+  census$0: function() {
+    var t1, cutoff, fx, fy, frog;
+    t1 = this.frogs;
+    $.IterableMixinWorkaround_sortList(t1, new $.FrogPond_census_closure());
+    for (t1 = new $.ListIterator(t1, t1.length, 0, null), cutoff = 0.48, fx = 0, fy = 0; t1.moveNext$0();) {
+      frog = t1._liblib0$_current;
+      if ($.$gt$n($.get$size$x(frog), cutoff)) {
+        fx += 90;
+        cutoff += 0.38;
+        fy = 0;
+      }
+      if (frog.get$_saveX() != null)
+        frog.flyBack$0();
+      else
+        frog.flyTo$3(fx + 300, $.$sub$n(this.height, 220) - fy, 0);
+      fy += 20;
+    }
   },
   previewBlock$3: function(workspace, cmd, param) {
     var t1, frog;
@@ -4168,7 +4615,7 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2<,workspaces,width>,hei
     }
   },
   playProgram$1: function(workspace) {
-    var t1, t2, frog, t3, t4;
+    var t1, t2, frog, t3;
     t1 = workspace.name;
     if (this.getFrogCount$1(t1) === 0)
       this.addHomeFrog$1(workspace);
@@ -4177,8 +4624,7 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2<,workspaces,width>,hei
       if ($.$eq($.$index$asx(frog, "workspace"), t1)) {
         t3 = frog.get$program();
         t3.play$0;
-        t4 = t3.curr;
-        if (t4 == null || typeof t4 === "object" && t4 !== null && !!$.getInterceptor(t4).$isEndProgramBlock) {
+        if (t3.curr == null) {
           t3.curr = t3.start;
           t3.running = false;
         }
@@ -4188,6 +4634,7 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2<,workspaces,width>,hei
   },
   pauseProgram$1: function(workspace) {
     var t1, t2, frog, t3;
+    this.play_state = 1;
     for (t1 = this.frogs, t1 = new $.ListIterator(t1, t1.length, 0, null), t2 = workspace.name; t1.moveNext$0();) {
       frog = t1._liblib0$_current;
       if ($.$eq($.$index$asx(frog, "workspace"), t2)) {
@@ -4235,16 +4682,26 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2<,workspaces,width>,hei
       if ($.$eq($.$index$asx(frog, "workspace"), workspaceName)) {
         t2 = frog.get$program();
         t2.get$isRunning;
-        if (t2.running) {
-          t2 = t2.curr;
-          t2 = t2 != null && (typeof t2 !== "object" || t2 === null || !$.getInterceptor(t2).$isEndProgramBlock);
-        } else
-          t2 = false;
-        if (t2)
+        if (t2.running && t2.curr != null)
           running = true;
       }
     }
     return running;
+  },
+  addLilyPad$3: function(lx, ly, ls) {
+    var t1, pad;
+    t1 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
+    t1.segments = [];
+    pad = new $.LilyPad(this, null, null, false, 0, 0, 1, 0, 1, false, t1, $.ImageElement_ImageElement(null, null, null), new $.HashMap(0, null, null, null, null), 0, 0);
+    t1 = $.get$Turtle_rand().nextInt$1(365);
+    pad.heading = pad.heading - -t1 / 180 * 3.141592653589793;
+    $.set$src$x(pad.img, "images/lilypad.png");
+    pad.x = lx;
+    pad.y = ly;
+    pad.size = ls;
+    pad.refresh = true;
+    this.pads.push(pad);
+    this.touchables.push(pad);
   },
   removeDeadFlies$0: function() {
     var t1, i;
@@ -4458,10 +4915,22 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2<,workspaces,width>,hei
     }
   },
   tick$1: function(timer) {
-    var t1, refresh, i, workspace;
+    var t1, t2, t3, refresh, pad, i, workspace;
     t1 = this.flies;
     $.IterableMixinWorkaround_forEach(t1, new $.FrogPond_tick_closure(this));
-    for (refresh = false, i = 0; i < this.play_state; ++i)
+    for (t2 = this.pads, t3 = new $.ListIterator(t2, t2.length, 0, null), refresh = false; t3.moveNext$0();) {
+      pad = t3._liblib0$_current;
+      if (pad.get$refresh()) {
+        pad.set$refresh(false);
+        refresh = true;
+      }
+    }
+    if (refresh) {
+      $.clearRect$4$x(this.layer0, 0, 0, this.width, this.height);
+      for (t2 = new $.ListIterator(t2, t2.length, 0, null); t2.moveNext$0();)
+        t2._liblib0$_current.draw$1(this.layer0);
+    }
+    for (i = 0; i < this.play_state; ++i)
       if (this.animate$0())
         refresh = true;
     if (refresh)
@@ -4496,19 +4965,11 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2<,workspaces,width>,hei
     return refresh;
   },
   inWater$2: function(x, y) {
-    var imd, t1, g;
-    imd = $.getImageData$4$x(this.layer0, $.toInt$0$nx(x), $.toInt$0$nx(y), 1, 1);
-    t1 = $.getInterceptor$x(imd);
-    $.$index$asx(t1.get$data(imd), 0);
-    g = $.$index$asx(t1.get$data(imd), 1);
-    if (typeof g !== "number")
-      return this.inWater$2$bailout(1, imd, g, t1);
-    $.$index$asx(t1.get$data(imd), 2);
-    return g === 0;
-  },
-  inWater$2$bailout: function(state0, imd, g, t1) {
-    $.$index$asx(t1.get$data(imd), 2);
-    return $.$eq(g, 0);
+    var t1;
+    for (t1 = this.pads, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();)
+      if (t1._liblib0$_current.overlapsPoint$2(x, y))
+        return false;
+    return true;
   },
   drawForeground$0: function() {
     var ctx, t1, workspace, target, t2;
@@ -4538,7 +4999,7 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2<,workspaces,width>,hei
     }
   },
   FrogPond$0: function() {
-    var t1, t2, i, max, t3, t4, t5, workspace;
+    var t1, t2, i, max, t3, t4, t5, t6, workspace;
     this.canvas = document.querySelector("#pond");
     this.layer0 = $.getContext$1$x(this.canvas, "2d");
     this.canvas = document.querySelector("#frogs");
@@ -4547,69 +5008,100 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2<,workspaces,width>,hei
     this.layer2 = $.getContext$1$x(this.canvas, "2d");
     this.width = $.get$width$x(this.canvas);
     this.height = $.get$height$x(this.canvas);
-    this.registerEvents$1(document.documentElement);
-    t1 = this.pond;
-    t2 = $.getInterceptor$x(t1);
-    t2.set$src(t1, "images/pond.png");
-    t1 = t2.get$onLoad(t1);
-    new $._EventStreamSubscription(0, t1._target, t1._eventType, new $.FrogPond_closure(this), t1._useCapture)._tryResume$0();
-    this.addGem$0();
-    for (t1 = this.flies, i = 0; i < 12; ++i) {
+    t1 = this.tmanager;
+    t1.registerEvents$1(document.documentElement);
+    t1 = t1.layers;
+    t1.push(this);
+    if (!$.isFlagSet("evolution"))
+      this.addGem$0();
+    for (t2 = this.flies, i = 0; i < 12; ++i) {
       $.get$Turtle_rand();
       max = this.width;
-      t2 = $.getInterceptor$n(max);
-      if (t2.$lt(max, 0))
-        $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
-      if (t2.$gt(max, 4294967295))
-        max = 4294967295;
-      t2 = Math.random() * max >>> 0;
-      $.get$Turtle_rand();
-      max = this.height;
       t3 = $.getInterceptor$n(max);
       if (t3.$lt(max, 0))
         $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
       if (t3.$gt(max, 4294967295))
         max = 4294967295;
       t3 = Math.random() * max >>> 0;
-      t4 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
-      t4.segments = [];
-      t4 = new $.Fly(3, 0, this, 0, 0, 1, 0, 1, false, t4, $.ImageElement_ImageElement(null, null, null), new $.HashMap(0, null, null, null, null), 0, 0);
+      $.get$Turtle_rand();
+      max = this.height;
+      t4 = $.getInterceptor$n(max);
+      if (t4.$lt(max, 0))
+        $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
+      if (t4.$gt(max, 4294967295))
+        max = 4294967295;
+      t4 = Math.random() * max >>> 0;
+      t5 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
+      t5.segments = [];
+      t5 = new $.Fly(3, 0, this, 0, 0, 1, 0, 1, false, t5, $.ImageElement_ImageElement(null, null, null), new $.HashMap(0, null, null, null, null), 0, 0);
       $.get$Turtle_rand();
       max = 365;
-      t5 = Math.random() * max >>> 0;
-      t4.heading = t4.heading - -t5 / 180 * 3.141592653589793;
-      $.set$src$x(t4.img, "images/dragonfly.png");
-      t4.x = t2;
-      t4.y = t3;
-      t1.push(t4);
+      t6 = Math.random() * max >>> 0;
+      t5.heading = t5.heading - -t6 / 180 * 3.141592653589793;
+      $.set$src$x(t5.img, "images/dragonfly.png");
+      t5.x = t3;
+      t5.y = t4;
+      t2.push(t5);
     }
-    workspace = $.CodeWorkspace$(this, this.height, this.width, "workspace1", "blue");
-    t1 = Math.cos(-1.5707963267948966);
-    t2 = Math.sin(-1.5707963267948966);
-    t3 = Math.sin(-1.5707963267948966);
-    t4 = workspace.xform;
-    t4.setTransform$6(t4, t1, t2, -t3, Math.cos(-1.5707963267948966), 0, this.height);
-    workspace.iform = t4.invert$0();
-    t4 = this.workspaces;
-    t4.push(workspace);
-    this.addHomeFrog$1(workspace);
-    workspace = $.CodeWorkspace$(this, this.height, this.width, "workspace2", "green");
-    t1 = Math.cos(1.5707963267948966);
-    t2 = Math.sin(1.5707963267948966);
-    t3 = Math.sin(1.5707963267948966);
-    t5 = workspace.xform;
-    t5.setTransform$6(t5, t1, t2, -t3, Math.cos(1.5707963267948966), this.width, 0);
-    workspace.iform = t5.invert$0();
-    t4.push(workspace);
-    this.addHomeFrog$1(workspace);
-    t4 = this.get$tick();
-    t4 = new $._PeriodicZoneTimer($.get$_Zone__current(), t4, null);
-    t5 = t4._zone;
-    t5._openCallbacks = t5._openCallbacks + 1;
-    t4._timer = $._createPeriodicTimer(C.Duration_40000, t4.get$_run());
-    if ($.$lt$n($.indexOf$1$asx($.get$search$x(C.Window_methods.get$location(window)), "debug=true"), 0)) {
+    if ($.isFlagSet("evolution")) {
+      this.addLilyPad$3($.$div$n(this.width, 2), $.$div$n(this.height, 2), 1);
+      this.addLilyPad$3(200, 200, 0.7);
+      this.addLilyPad$3(900, 210, 0.7);
+      this.addLilyPad$3(840, 550, 0.6);
+    } else {
+      this.addLilyPad$3(300, $.$div$n(this.height, 2), 0.6);
+      this.addLilyPad$3(370, 100, 0.6);
+      this.addLilyPad$3(1620, $.$div$n(this.height, 2), 0.6);
+      this.addLilyPad$3(550, 790, 0.8);
+      this.addLilyPad$3(630, 370, 0.9);
+      this.addLilyPad$3(940, 650, 0.8);
+      this.addLilyPad$3(1000, 250, 0.8);
+      this.addLilyPad$3(1300, $.$div$n(this.height, 2), 0.8);
+      this.addLilyPad$3(1400, 130, 0.6);
+      this.addLilyPad$3(1300, $.$sub$n(this.height, 130), 0.6);
+      this.addLilyPad$3(900, $.$sub$n(this.height, 130), 0.6);
+    }
+    t2 = $.isFlagSet("evolution");
+    t3 = this.height;
+    t4 = this.width;
+    if (t2) {
+      $.MAX_FROGS = 100;
+      workspace = $.CodeWorkspace$(this, t4, t3, "workspace1", "green");
+      this.workspaces.push(workspace);
+      t1.push(workspace);
+      for (i = 0; i < 4; ++i)
+        this.addRandomFrog$1(workspace);
+    } else {
+      workspace = $.CodeWorkspace$(this, t3, t4, "workspace1", "blue");
+      t2 = Math.cos(-1.5707963267948966);
+      t3 = Math.sin(-1.5707963267948966);
+      t4 = Math.sin(-1.5707963267948966);
+      t5 = workspace.xform;
+      t5.setTransform$6(t5, t2, t3, -t4, Math.cos(-1.5707963267948966), 0, this.height);
+      workspace.iform = t5.invert$0();
+      t5 = this.workspaces;
+      t5.push(workspace);
+      t1.push(workspace);
+      this.addHomeFrog$1(workspace);
+      workspace = $.CodeWorkspace$(this, this.height, this.width, "workspace2", "green");
+      t2 = Math.cos(1.5707963267948966);
+      t3 = Math.sin(1.5707963267948966);
+      t4 = Math.sin(1.5707963267948966);
+      t6 = workspace.xform;
+      t6.setTransform$6(t6, t2, t3, -t4, Math.cos(1.5707963267948966), this.width, 0);
+      workspace.iform = t6.invert$0();
+      t5.push(workspace);
+      t1.push(workspace);
+      this.addHomeFrog$1(workspace);
+    }
+    t1 = this.get$tick();
+    t1 = new $._PeriodicZoneTimer($.get$_Zone__current(), t1, null);
+    t2 = t1._zone;
+    t2._openCallbacks = t2._openCallbacks + 1;
+    t1._timer = $._createPeriodicTimer(C.Duration_40000, t1.get$_run());
+    if ($.isFlagSet("timeout")) {
       $.Primitives_printString("initiating master restart timer");
-      t1 = new $._PeriodicZoneTimer($.get$_Zone__current(), new $.FrogPond_closure0(this), null);
+      t1 = new $._PeriodicZoneTimer($.get$_Zone__current(), new $.FrogPond_closure(this), null);
       t2 = t1._zone;
       t2._openCallbacks = t2._openCallbacks + 1;
       t1._timer = $._createPeriodicTimer(C.Duration_10000000, t1.get$_run());
@@ -4617,17 +5109,17 @@ FrogPond: {"": "TouchManager;canvas,layer0<,layer1,layer2<,workspaces,width>,hei
       t1.get$onMouseDown;
       C.EventStreamProvider_mousedown.forElement$2$useCapture;
       t1 = new $._ElementEventStreamImpl(t1, C.EventStreamProvider_mousedown._eventType, false);
-      new $._EventStreamSubscription(0, t1._target, t1._eventType, new $.FrogPond_closure1(this), t1._useCapture)._tryResume$0();
+      new $._EventStreamSubscription(0, t1._target, t1._eventType, new $.FrogPond_closure0(this), t1._useCapture)._tryResume$0();
       t1 = document.documentElement;
       t1.get$onTouchStart;
       C.EventStreamProvider_touchstart.forElement$2$useCapture;
       t1 = new $._ElementEventStreamImpl(t1, C.EventStreamProvider_touchstart._eventType, false);
-      new $._EventStreamSubscription(0, t1._target, t1._eventType, new $.FrogPond_closure2(this), t1._useCapture)._tryResume$0();
+      new $._EventStreamSubscription(0, t1._target, t1._eventType, new $.FrogPond_closure1(this), t1._useCapture)._tryResume$0();
     }
   },
   static: {
 FrogPond$: function() {
-  var t1 = new $.FrogPond(null, null, null, null, $.List_List(null), null, null, $.List_List(null), $.List_List(null), $.List_List(null), 1, 0, $.ImageElement_ImageElement(null, null, null), $.List_List(null), new $.HashMap(0, null, null, null, null), false, null, new $.Matrix2D([1, 0, 0, 0, 1, 0, 0, 0, 1]), new $.Matrix2D([1, 0, 0, 0, 1, 0, 0, 0, 1]));
+  var t1 = new $.FrogPond(null, null, null, null, new $.TouchManager(false, null, $.List_List(null), new $.HashMap(0, null, null, null, null)), $.List_List(null), null, null, $.List_List(null), $.List_List(null), $.List_List(null), $.List_List(null), 1, 0, $.ImageElement_ImageElement(null, null, null), $.List_List(null), new $.HashMap(0, null, null, null, null), new $.Matrix2D([1, 0, 0, 0, 1, 0, 0, 0, 1]), new $.Matrix2D([1, 0, 0, 0, 1, 0, 0, 0, 1]));
   t1.FrogPond$0();
   return t1;
 }}
@@ -4635,22 +5127,19 @@ FrogPond$: function() {
 },
 
 FrogPond_closure: {"": "Closure;this_0",
-  call$1: function($event) {
-    var t1, t2;
-    t1 = this.this_0;
-    t2 = $.getInterceptor$x(t1);
-    $.clearRect$4$x(t1.get$layer0(), 0, 0, t2.get$width(t1), t2.get$height(t1));
-    $.drawImage$3$x(t1.get$layer0(), t1.get$pond(), 0, 0);
+  call$1: function(timer) {
+    var t1 = this.this_0;
+    t1.set$_countdown(t1.get$_countdown() + 10);
+    if (t1.get$_countdown() >= 80)
+      $.reload$0$x(C.Window_methods.get$location(window));
   },
   "+call:1:0": 0
 },
 
 FrogPond_closure0: {"": "Closure;this_1",
-  call$1: function(timer) {
-    var t1 = this.this_1;
-    t1.set$_countdown(t1.get$_countdown() + 10);
-    if (t1.get$_countdown() >= 80)
-      $.reload$0$x(C.Window_methods.get$location(window));
+  call$1: function(e) {
+    this.this_1.set$_countdown(0);
+    return 0;
   },
   "+call:1:0": 0
 },
@@ -4663,12 +5152,18 @@ FrogPond_closure1: {"": "Closure;this_2",
   "+call:1:0": 0
 },
 
-FrogPond_closure2: {"": "Closure;this_3",
-  call$1: function(e) {
-    this.this_3.set$_countdown(0);
-    return 0;
+FrogPond_addRandomFrog_closure: {"": "Closure;this_0,workspace_1",
+  call$0: function() {
+    return this.this_0.addRandomFrog$1(this.workspace_1);
   },
-  "+call:1:0": 0
+  "+call:0:0": 0
+},
+
+FrogPond_census_closure: {"": "Closure;",
+  call$2: function(a, b) {
+    return $.toInt$0$nx($.$sub$n($.$mul$n($.get$size$x(a), 100), $.$mul$n($.get$size$x(b), 100)));
+  },
+  "+call:2:0": 0
 },
 
 FrogPond_captureGem_closure: {"": "Closure;this_0",
@@ -4715,25 +5210,14 @@ FrogPond_drawForeground_closure0: {"": "Closure;ctx_1",
 
 Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
   animate$0: function() {
-    var t1, t2;
-    t1 = this.tween;
+    var t1 = this.tween;
     if (t1.isTweening$0()) {
       t1.animate$0();
       return true;
     } else {
       t1 = this.running;
-      if (t1) {
-        t2 = this.curr;
-        t2 = t2 != null && (typeof t2 !== "object" || t2 === null || !$.getInterceptor(t2).$isEndProgramBlock);
-      } else
-        t2 = false;
-      if (t2) {
-        if (t1) {
-          t1 = this.curr;
-          t1 = t1 != null && (typeof t1 !== "object" || t1 === null || !$.getInterceptor(t1).$isEndProgramBlock);
-        } else
-          t1 = false;
-        if (t1) {
+      if (t1 && this.curr != null) {
+        if (t1 && this.curr != null) {
           this.curr = $.step$1$x(this.curr, this);
           this.curr.eval$1(this);
         }
@@ -4753,8 +5237,7 @@ Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
     t1.$indexSet(t1, key, value);
   },
   play$0: function(_) {
-    var t1 = this.curr;
-    if (t1 == null || typeof t1 === "object" && t1 !== null && !!$.getInterceptor(t1).$isEndProgramBlock) {
+    if (this.curr == null) {
       this.curr = this.start;
       this.running = false;
     }
@@ -4857,7 +5340,7 @@ Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
     $length = $.Turtle.prototype.get$radius.call(this.frog) * 0.75;
     if (typeof param === "number")
       $length *= param;
-    s = $.S(cmd) + " " + $.S(param);
+    s = $.S(cmd);
     t2 = new $.Tween(null, 0, 0, 0, 0, true, 1, null, null, null, null);
     t2.segments = [];
     this.tween = t2;
@@ -4972,7 +5455,7 @@ Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
     t1.baby_0 = null;
     t2 = this.frog;
     t3 = t2.variables;
-    if (t2.pond.getFrogCount$1(t3.$index(t3, "workspace")) < 40)
+    if (t2.pond.getFrogCount$1(t3.$index(t3, "workspace")) < $.MAX_FROGS)
       t1.baby_0 = this.frog.hatch$0();
     t2 = t1.baby_0;
     if (t2 == null)
@@ -5002,7 +5485,7 @@ Program: {"": "Object;frog<,start>,curr,running<,variables<,tween",
     this.tween.onend = new $.Program_doHatch_closure0(t1, this, preview);
     t3 = this.frog.size;
     $.get$Turtle_rand();
-    newsize = $.max(0.1, $.$sub$n($.$add$ns(t3, Math.random() * 0.2), 0.1));
+    newsize = $.min(2, $.max(0.1, $.$sub$n($.$add$ns(t3, Math.random() * 0.2), 0.1)));
     this.tween.addControlPoint$2(0.05, 0);
     this.tween.addControlPoint$2(newsize, 1);
     this.tween.ondelta = new $.Program_doHatch_closure1(t1);
@@ -5057,7 +5540,7 @@ Program_doMove_closure1: {"": "Closure;box_0,preview_5",
     var t1 = this.box_0;
     t1.target_0.forward$1(value);
     if (!this.preview_5)
-      t1.target_0;
+      t1.target_0.push$1(value);
   },
   "+call:1:0": 0
 },
@@ -5094,7 +5577,7 @@ Program_doSound_closure: {"": "Closure;this_0,cmd_1",
     $.Sounds_playSound(t1);
     t2 = this.this_0;
     $.set$label$x(t2.get$frog(), t1);
-    t2.get$frog().set$_radius(0.5);
+    t2.get$frog().set$_sound(0.5);
   },
   "+call:0:0": 0
 },
@@ -5102,7 +5585,7 @@ Program_doSound_closure: {"": "Closure;this_0,cmd_1",
 Program_doSound_closure0: {"": "Closure;this_2,preview_3",
   call$0: function() {
     var t1 = this.this_2;
-    t1.get$frog().set$_radius(-1);
+    t1.get$frog().set$_sound(-1);
     t1.doPause$1(this.preview_3);
   },
   "+call:0:0": 0
@@ -5112,11 +5595,11 @@ Program_doSound_closure1: {"": "Closure;this_4",
   call$1: function(value) {
     var t1, t2;
     t1 = this.this_4.get$frog();
-    t2 = t1.get$_radius();
+    t2 = t1.get$_sound();
     if (typeof value !== "number")
       throw $.iae(value);
     t2 += value;
-    t1.set$_radius(t2);
+    t1.set$_sound(t2);
     return t2;
   },
   "+call:1:0": 0
@@ -5240,7 +5723,12 @@ Program_doHatch_closure0: {"": "Closure;box_0,this_3,preview_4",
   call$0: function() {
     this.this_3.doPause$1(this.preview_4);
     var t1 = this.box_0.baby_0.program;
-    t1.play$0(t1);
+    t1.play$0;
+    if (t1.curr == null) {
+      t1.curr = t1.start;
+      t1.running = false;
+    }
+    t1.running = true;
   },
   "+call:0:0": 0
 },
@@ -5256,7 +5744,21 @@ Program_doHatch_closure1: {"": "Closure;box_0",
   "+call:1:0": 0
 },
 
-TouchManager: {"": "Object;touchables,touch_bindings,mdown,parent,xform,iform",
+TouchManager: {"": "Object;mdown,parent,layers,touch_bindings",
+  findTouchTarget$1: function(tp) {
+    var t1, i, t;
+    for (t1 = this.layers, i = t1.length - 1; i >= 0; --i) {
+      if (i >= t1.length)
+        throw $.ioore(i);
+      t = t1[i].findTouchTarget$1(tp);
+      if (t != null) {
+        if (i >= t1.length)
+          throw $.ioore(i);
+        return new $.TouchBinding(t1[i], t);
+      }
+    }
+    return;
+  },
   registerEvents$1: function(element) {
     var t1, t2;
     this.parent = element;
@@ -5293,68 +5795,44 @@ TouchManager: {"": "Object;touchables,touch_bindings,mdown,parent,xform,iform",
     t1 = new $._EventStream(t2, t1, false);
     new $._EventStreamSubscription(0, t1._target, t1._eventType, new $.TouchManager_registerEvents_closure5(), t1._useCapture)._tryResume$0();
   },
-  findTouchTarget$1: function(tp) {
-    var t1, i;
-    for (t1 = this.touchables, i = t1.length - 1; i >= 0; --i) {
-      if (i >= t1.length)
-        throw $.ioore(i);
-      if (t1[i].containsTouch$1(tp)) {
-        if (i >= t1.length)
-          throw $.ioore(i);
-        return t1[i];
-      }
-    }
-    return;
-  },
-  objectToWorldX$2: function(x, y) {
-    return this.xform.transformX$2(x, y);
-  },
-  objectToWorldY$2: function(x, y) {
-    return this.xform.transformY$2(x, y);
-  },
-  objectToWorldTheta$1: function(theta) {
-    var t1 = this.xform.xform[3];
-    if (typeof t1 !== "number")
-      $.throwExpression(new $.ArgumentError(t1));
-    return theta + Math.asin(t1);
-  },
   _mouseUp$1: function(evt) {
-    var t1, target, c;
+    var t1, target;
     t1 = this.touch_bindings;
     target = t1.$index(t1, -1);
-    if (target != null) {
-      c = $.Contact$fromMouse(evt);
-      this.iform.transformContact$1(c);
-      target.touchUp$1(c);
-    }
+    if (target != null)
+      target.touchUp$1($.Contact$fromMouse(evt));
     t1.$indexSet(t1, -1, null);
     this.mdown = false;
   },
   _mouseDown$1: function(evt) {
     var t, target, t1;
     t = $.Contact$fromMouse(evt);
-    this.iform.transformContact$1(t);
     target = this.findTouchTarget$1(t);
-    if (target != null)
-      if (target.touchDown$1(t)) {
+    if (target != null) {
+      target.touchDown$1;
+      target.layer.transformContact$1(t);
+      if (target.touchable.touchDown$1(t) === true) {
         t1 = this.touch_bindings;
         t1.$indexSet(t1, -1, target);
       }
+    }
     this.mdown = true;
   },
   _mouseMove$1: function(evt) {
     var t, t1, target;
     if (this.mdown) {
       t = $.Contact$fromMouse(evt);
-      this.iform.transformContact$1(t);
       t1 = this.touch_bindings;
       target = t1.$index(t1, -1);
       if (target != null)
         target.touchDrag$1(t);
       else {
         target = this.findTouchTarget$1(t);
-        if (target != null)
-          target.touchSlide$1(t);
+        if (target != null) {
+          target.touchSlide$1;
+          target.layer.transformContact$1(t);
+          target.touchable.touchSlide$1(t);
+        }
       }
     }
   },
@@ -5362,18 +5840,19 @@ TouchManager: {"": "Object;touchables,touch_bindings,mdown,parent,xform,iform",
     var t1, t2, t, target;
     for (t1 = $.get$iterator$ax($.get$changedTouches$x(tframe)), t2 = this.touch_bindings; t1.moveNext$0();) {
       t = $.Contact$fromTouch(t1._current, this.parent);
-      this.iform.transformContact$1(t);
       target = this.findTouchTarget$1(t);
-      if (target != null)
-        if (target.touchDown$1(t))
+      if (target != null) {
+        target.touchDown$1;
+        target.layer.transformContact$1(t);
+        if (target.touchable.touchDown$1(t) === true)
           t2.$indexSet(t2, t.id, target);
+      }
     }
   },
   _touchUp$1: function(tframe) {
     var t1, t2, t3, t, target;
     for (t1 = $.getInterceptor$x(tframe), t2 = $.get$iterator$ax(t1.get$changedTouches(tframe)), t3 = this.touch_bindings; t2.moveNext$0();) {
       t = $.Contact$fromTouch(t2._current, this.parent);
-      this.iform.transformContact$1(t);
       target = t3.$index(t3, t.id);
       if (target != null) {
         target.touchUp$1(t);
@@ -5387,14 +5866,16 @@ TouchManager: {"": "Object;touchables,touch_bindings,mdown,parent,xform,iform",
     var t1, t2, t, target;
     for (t1 = $.get$iterator$ax($.get$changedTouches$x(tframe)), t2 = this.touch_bindings; t1.moveNext$0();) {
       t = $.Contact$fromTouch(t1._current, this.parent);
-      this.iform.transformContact$1(t);
       target = t2.$index(t2, t.id);
       if (target != null)
         target.touchDrag$1(t);
       else {
         target = this.findTouchTarget$1(t);
-        if (target != null)
-          target.touchSlide$1(t);
+        if (target != null) {
+          target.touchSlide$1;
+          target.layer.transformContact$1(t);
+          target.touchable.touchSlide$1(t);
+        }
       }
     }
   }
@@ -5449,9 +5930,61 @@ TouchManager_registerEvents_closure5: {"": "Closure;",
   "+call:1:0": 0
 },
 
+TouchLayer: {"": "Object;touchables,touch_bindings,xform,iform",
+  findTouchTarget$1: function(tp) {
+    var c, t1, i;
+    c = $.Contact$copy(tp);
+    this.iform.transformContact$1(c);
+    for (t1 = this.touchables, i = t1.length - 1; i >= 0; --i) {
+      if (i >= t1.length)
+        throw $.ioore(i);
+      if (t1[i].containsTouch$1(c)) {
+        if (i >= t1.length)
+          throw $.ioore(i);
+        return t1[i];
+      }
+    }
+    return;
+  },
+  transformContact$1: function(c) {
+    this.iform.transformContact$1(c);
+  },
+  objectToWorldX$2: function(x, y) {
+    return this.xform.transformX$2(x, y);
+  },
+  objectToWorldY$2: function(x, y) {
+    return this.xform.transformY$2(x, y);
+  },
+  objectToWorldTheta$1: function(theta) {
+    var t1 = this.xform.xform[3];
+    if (typeof t1 !== "number")
+      $.throwExpression(new $.ArgumentError(t1));
+    return theta + Math.asin(t1);
+  }
+},
+
+TouchBinding: {"": "Object;layer,touchable",
+  touchDown$1: function(c) {
+    this.layer.transformContact$1(c);
+    return this.touchable.touchDown$1(c);
+  },
+  touchUp$1: function(c) {
+    this.layer.transformContact$1(c);
+    this.touchable.touchUp$1(c);
+  },
+  touchDrag$1: function(c) {
+    this.layer.transformContact$1(c);
+    this.touchable.touchDrag$1(c);
+  },
+  touchSlide$1: function(c) {
+    this.layer.transformContact$1(c);
+    this.touchable.touchSlide$1(c);
+  }
+},
+
 Touchable: {"": "Object;"},
 
-Contact: {"": "Object;id,tagId,touchX<,touchY<,tag,up,down,drag,finger",
+Contact: {"": "Object;id,tagId,touchX@,touchY@,tag,up,down,drag,finger",
   Contact$fromMouse$1: function(mouse) {
     var t1, t2;
     this.id = -1;
@@ -5461,6 +5994,16 @@ Contact: {"": "Object;id,tagId,touchX<,touchY<,tag,up,down,drag,finger",
     t1 = t1.get$offset(mouse);
     this.touchY = $.toDouble$0$n(t1.get$y(t1));
     this.finger = true;
+  },
+  Contact$copy$1: function(c) {
+    this.id = c.id;
+    this.tagId = c.tagId;
+    this.touchX = c.touchX;
+    this.touchY = c.touchY;
+    this.up = c.up;
+    this.down = c.down;
+    this.drag = c.drag;
+    this.finger = c.finger;
   },
   Contact$fromTouch$2: function(touch, $parent) {
     var left, $top, box, t1, t2;
@@ -5506,6 +6049,12 @@ Contact$fromTouch: function(touch, $parent) {
   var t1 = new $.Contact(null, -1, 0, 0, false, false, false, false, false);
   t1.Contact$fromTouch$2(touch, $parent);
   return t1;
+},
+
+Contact$copy: function(c) {
+  var t1 = new $.Contact(null, -1, 0, 0, false, false, false, false, false);
+  t1.Contact$copy$1(c);
+  return t1;
 }}
 
 },
@@ -5523,6 +6072,36 @@ Turtle: {"": "Object;x*,y*,size*,heading@,opacity@,dead@,img>,variables<",
     for (t2 = new $.HashMapKeyIterable(other.get$variables())._map, t2 = new $.HashMapKeyIterator(t2, t2._computeKeys$0(), 0, null), t3 = this.variables; t2.moveNext$0();) {
       key = t2._liblib1$_current;
       t3.$indexSet(t3, key, t1.$index(other, key));
+    }
+  },
+  move$2: function(dx, dy) {
+    var t1;
+    if (typeof dx !== "number")
+      return this.move$2$bailout(1, dx, dy);
+    if (typeof dy !== "number")
+      return this.move$2$bailout(1, dx, dy);
+    t1 = this.x;
+    if (typeof t1 !== "number")
+      return this.move$2$bailout(2, dx, dy, t1);
+    this.x = t1 + dx;
+    t1 = this.y;
+    if (typeof t1 !== "number")
+      return this.move$2$bailout(3, 0, dy, t1);
+    this.y = t1 + dy;
+  },
+  move$2$bailout: function(state0, dx, dy, t1) {
+    switch (state0) {
+      case 0:
+      case 1:
+        state0 = 0;
+        t1 = this.x;
+      case 2:
+        state0 = 0;
+        this.x = $.$add$ns(t1, dx);
+        t1 = this.y;
+      case 3:
+        state0 = 0;
+        this.y = $.$add$ns(t1, dy);
     }
   },
   forward$1: function(distance) {
@@ -5563,153 +6142,40 @@ Turtle: {"": "Object;x*,y*,size*,heading@,opacity@,dead@,img>,variables<",
     this.dead = true;
   },
   overlapsPoint$3: function(tx, ty, tw) {
-    var t1, t2, t3, t4, t5, t6, t7, dist;
+    var t1, t2;
     if (typeof tx !== "number")
       return this.overlapsPoint$3$bailout(1, tx, ty, tw);
     if (typeof ty !== "number")
       return this.overlapsPoint$3$bailout(1, tx, ty, tw);
-    if (tw <= 0) {
-      t1 = this.x;
-      if (typeof t1 !== "number")
-        return this.overlapsPoint$3$bailout(2, tx, ty, 0, t1);
-      t2 = this.img;
-      t3 = $.getInterceptor$x(t2);
-      t4 = t3.get$width(t2);
-      if (t4 !== (t4 | 0))
-        return this.overlapsPoint$3$bailout(3, tx, ty, 0, t1, t3, t4, t2);
-      t5 = this.size;
-      if (typeof t5 !== "number")
-        return this.overlapsPoint$3$bailout(4, tx, ty, 0, t1, t3, t4, t2, t5);
-      t4 = t4 * t5 / 2;
-      if (tx > t1 - t4) {
-        t6 = this.y;
-        if (typeof t6 !== "number")
-          return this.overlapsPoint$3$bailout(5, tx, ty, 0, t6, t3, 0, t2, 0, C.JSNumber_methods);
-        t7 = t3.get$height(t2);
-        if (t7 !== (t7 | 0))
-          return this.overlapsPoint$3$bailout(6, tx, ty, 0, t6, t3, t7, t2, 0, C.JSNumber_methods);
-        t5 = t7 * t5 / 2;
-        t1 = ty > t6 - t5 && tx < t1 + t4 && ty < t6 + t5;
-      } else
-        t1 = false;
-      return t1;
-    } else {
-      t1 = this.x;
-      if (typeof t1 !== "number")
-        return this.overlapsPoint$3$bailout(14, tx, ty, tw, t1);
-      t2 = this.y;
-      if (typeof t2 !== "number")
-        return this.overlapsPoint$3$bailout(15, tx, ty, tw, t1, 0, 0, t2);
-      t1 -= tx;
-      t2 -= ty;
-      t2 = t1 * t1 + t2 * t2;
-      dist = Math.sqrt(t2);
-      t1 = $.get$width$x(this.img);
-      if (t1 !== (t1 | 0))
-        return this.overlapsPoint$3$bailout(16, 0, 0, tw, t1, 0, 0, 0, 0, 0, 0, dist);
-      t2 = this.size;
-      if (typeof t2 !== "number")
-        return this.overlapsPoint$3$bailout(17, 0, 0, tw, t1, 0, 0, t2, 0, 0, 0, dist);
-      return dist < t1 * t2 / 2 + tw / 2;
-    }
+    t1 = this.x;
+    if (typeof t1 !== "number")
+      return this.overlapsPoint$3$bailout(2, tx, ty, tw, t1);
+    t2 = this.y;
+    if (typeof t2 !== "number")
+      return this.overlapsPoint$3$bailout(3, tx, ty, tw, t1, t2);
+    t1 -= tx;
+    t2 -= ty;
+    t2 = t1 * t1 + t2 * t2;
+    return Math.sqrt(t2) < this.get$radius() + tw / 2;
   },
-  overlapsPoint$3$bailout: function(state0, tx, ty, tw, t1, t3, t4, t2, t5, t6, t7, dist) {
+  overlapsPoint$3$bailout: function(state0, tx, ty, tw, t1, t2) {
     switch (state0) {
       case 0:
       case 1:
         state0 = 0;
-      default:
-        if (state0 === 13 || state0 === 12 || state0 === 11 || state0 === 10 || state0 === 9 || state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 2 || state0 === 0 && tw <= 0)
-          switch (state0) {
-            case 0:
-              t1 = this.x;
-            case 2:
-              state0 = 0;
-              t2 = this.img;
-              t3 = $.getInterceptor$x(t2);
-              t4 = t3.get$width(t2);
-            case 3:
-              state0 = 0;
-              t5 = this.size;
-            case 4:
-              state0 = 0;
-              t6 = $.getInterceptor$n(tx);
-            default:
-              if (state0 === 13 || state0 === 12 || state0 === 11 || state0 === 10 || state0 === 9 || state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 0 && t6.$gt(tx, $.$sub$n(t1, $.$mul$n(t4, t5) / 2)))
-                switch (state0) {
-                  case 0:
-                    t1 = this.y;
-                  case 5:
-                    state0 = 0;
-                    t4 = t3.get$height(t2);
-                  case 6:
-                    state0 = 0;
-                    t5 = this.size;
-                  case 7:
-                    state0 = 0;
-                    t7 = $.getInterceptor$n(ty);
-                  default:
-                    if (state0 === 13 || state0 === 12 || state0 === 11 || state0 === 10 || state0 === 9 || state0 === 8 || state0 === 0 && t7.$gt(ty, $.$sub$n(t1, $.$mul$n(t4, t5) / 2)))
-                      switch (state0) {
-                        case 0:
-                          t1 = this.x;
-                        case 8:
-                          state0 = 0;
-                          t4 = t3.get$width(t2);
-                        case 9:
-                          state0 = 0;
-                          t5 = this.size;
-                        case 10:
-                          state0 = 0;
-                        default:
-                          if (state0 === 13 || state0 === 12 || state0 === 11 || state0 === 0 && t6.$lt(tx, $.$add$ns(t1, $.$mul$n(t4, t5) / 2)))
-                            switch (state0) {
-                              case 0:
-                                t1 = this.y;
-                              case 11:
-                                state0 = 0;
-                                t2 = t3.get$height(t2);
-                              case 12:
-                                state0 = 0;
-                                t3 = this.size;
-                              case 13:
-                                state0 = 0;
-                                t3 = t7.$lt(ty, $.$add$ns(t1, $.$mul$n(t2, t3) / 2));
-                                t1 = t3;
-                            }
-                          else
-                            t1 = false;
-                      }
-                    else
-                      t1 = false;
-                }
-              else
-                t1 = false;
-              return t1;
-          }
-        else
-          switch (state0) {
-            case 0:
-              t1 = this.x;
-            case 14:
-              state0 = 0;
-              t2 = this.y;
-            case 15:
-              state0 = 0;
-              t3 = $.getInterceptor$n(t1);
-              t4 = $.getInterceptor$n(t2);
-              t2 = $.$add$ns($.$mul$n(t3.$sub(t1, tx), t3.$sub(t1, tx)), $.$mul$n(t4.$sub(t2, ty), t4.$sub(t2, ty)));
-              if (typeof t2 !== "number")
-                $.throwExpression(new $.ArgumentError(t2));
-              dist = Math.sqrt(t2);
-              t1 = $.get$width$x(this.img);
-            case 16:
-              state0 = 0;
-              t2 = this.size;
-            case 17:
-              state0 = 0;
-              return dist < $.$mul$n(t1, t2) / 2 + tw / 2;
-          }
+        t1 = this.x;
+      case 2:
+        state0 = 0;
+        t2 = this.y;
+      case 3:
+        var t3, t4;
+        state0 = 0;
+        t3 = $.getInterceptor$n(t1);
+        t4 = $.getInterceptor$n(t2);
+        t2 = $.$add$ns($.$mul$n(t3.$sub(t1, tx), t3.$sub(t1, tx)), $.$mul$n(t4.$sub(t2, ty), t4.$sub(t2, ty)));
+        if (typeof t2 !== "number")
+          $.throwExpression(new $.ArgumentError(t2));
+        return Math.sqrt(t2) < this.get$radius() + tw / 2;
     }
   },
   overlapsPoint$2: function(tx, ty) {
@@ -5732,7 +6198,7 @@ Turtle: {"": "Object;x*,y*,size*,heading@,opacity@,dead@,img>,variables<",
     t1 = t3 - t1;
     t2 = t4 - t2;
     t2 = t1 * t1 + t2 * t2;
-    return Math.sqrt(t2) < this.get$radius() + $.Turtle.prototype.get$radius.call(other) * 0.75;
+    return Math.sqrt(t2) < this.get$radius() + other.get$radius();
   },
   overlapsTurtle$1$bailout: function(state0, other, t1, t2, t3, t4) {
     switch (state0) {
@@ -5755,7 +6221,7 @@ Turtle: {"": "Object;x*,y*,size*,heading@,opacity@,dead@,img>,variables<",
         t2 = $.$add$ns($.$mul$n(t5.$sub(t3, t1), t5.$sub(t3, t1)), $.$mul$n(t6.$sub(t4, t2), t6.$sub(t4, t2)));
         if (typeof t2 !== "number")
           $.throwExpression(new $.ArgumentError(t2));
-        return Math.sqrt(t2) < this.get$radius() + $.Turtle.prototype.get$radius.call(other) * 0.75;
+        return Math.sqrt(t2) < this.get$radius() + other.get$radius();
     }
   },
   get$width: function(_) {
@@ -7304,6 +7770,25 @@ _Copier: {"": "_MessageTraverser;_visited",
     return x;
   },
   visitList$1: function(list) {
+    var t1, copy, len, i;
+    if (typeof list !== "string" && (typeof list !== "object" || list === null || list.constructor !== Array && !$.isJsIndexable(list, list[$.dispatchPropertyName])))
+      return this.visitList$1$bailout1(1, list);
+    t1 = this._visited;
+    copy = t1.$index(t1, list);
+    if (copy != null)
+      return copy;
+    len = list.length;
+    copy = $.List_List(len);
+    t1 = this._visited;
+    t1.$indexSet(t1, list, copy);
+    for (i = 0; i < len; ++i) {
+      if (i >= list.length)
+        throw $.ioore(i);
+      copy[i] = this._dispatch$1(list[i]);
+    }
+    return copy;
+  },
+  visitList$1$bailout1: function(state0, list) {
     var t1, copy, len, t2, i;
     t1 = this._visited;
     copy = t1.$index(t1, list);
@@ -7375,6 +7860,19 @@ _Serializer: {"": "_MessageTraverser;_nextFreeRefId,_visited",
     return ["map", id, this._serializeList$1($.List_List$from(map.get$keys(), true)), this._serializeList$1($.List_List$from(map.get$values(map), true))];
   },
   _serializeList$1: function(list) {
+    var len, result, i;
+    if (typeof list !== "string" && (typeof list !== "object" || list === null || list.constructor !== Array && !$.isJsIndexable(list, list[$.dispatchPropertyName])))
+      return this._serializeList$1$bailout(1, list);
+    len = list.length;
+    result = $.List_List(len);
+    for (i = 0; i < len; ++i) {
+      if (i >= list.length)
+        throw $.ioore(i);
+      result[i] = this._dispatch$1(list[i]);
+    }
+    return result;
+  },
+  _serializeList$1$bailout: function(state0, list) {
     var t1, len, result, i, t2;
     t1 = $.getInterceptor$asx(list);
     len = t1.get$length(list);
@@ -7454,27 +7952,30 @@ _Deserializer: {"": "Object;_deserialized",
     return dartList;
   },
   _deserializeMap$1: function(x) {
-    var result, t1, id, t2, keys, values, len, i;
+    var result, t1, id, t2, keys, values, len, i, key;
     result = new $.HashMap(0, null, null, null, null);
     t1 = $.getInterceptor$asx(x);
     id = t1.$index(x, 1);
     t2 = this._deserialized;
     t2.$indexSet(t2, id, result);
     keys = t1.$index(x, 2);
+    if (typeof keys !== "string" && (typeof keys !== "object" || keys === null || keys.constructor !== Array && !$.isJsIndexable(keys, keys[$.dispatchPropertyName])))
+      return this._deserializeMap$1$bailout(1, x, result, keys, t1);
     values = t1.$index(x, 3);
-    t1 = $.getInterceptor$asx(keys);
-    len = t1.get$length(keys);
-    if (typeof len !== "number")
-      throw $.iae(len);
-    if (len !== (len | 0))
-      return this._deserializeMap$1$bailout(1, values, t1, len, result, keys);
-    t2 = $.getInterceptor$asx(values);
-    i = 0;
-    for (; i < len; ++i)
-      result.$indexSet(result, this._deserializeHelper$1(t1.$index(keys, i)), this._deserializeHelper$1(t2.$index(values, i)));
+    if (typeof values !== "string" && (typeof values !== "object" || values === null || values.constructor !== Array && !$.isJsIndexable(values, values[$.dispatchPropertyName])))
+      return this._deserializeMap$1$bailout(2, 0, result, keys, 0, values);
+    len = keys.length;
+    for (i = 0; i < len; ++i) {
+      if (i >= keys.length)
+        throw $.ioore(i);
+      key = this._deserializeHelper$1(keys[i]);
+      if (i >= values.length)
+        throw $.ioore(i);
+      result.$indexSet(result, key, this._deserializeHelper$1(values[i]));
+    }
     return result;
   },
-  _deserializeMap$1$bailout: function(state0, values, t1, len, result, keys) {
+  _deserializeMap$1$bailout: function(state0, x, result, keys, t1, values) {
     switch (state0) {
       case 0:
         result = new $.HashMap(0, null, null, null, null);
@@ -7483,14 +7984,16 @@ _Deserializer: {"": "Object;_deserialized",
         t2 = this._deserialized;
         t2.$indexSet(t2, id, result);
         keys = t1.$index(x, 2);
+      case 1:
+        state0 = 0;
         values = t1.$index(x, 3);
+      case 2:
+        var id, t2, len, i;
+        state0 = 0;
         t1 = $.getInterceptor$asx(keys);
         len = t1.get$length(keys);
         if (typeof len !== "number")
           throw $.iae(len);
-      case 1:
-        var id, t2, i;
-        state0 = 0;
         t2 = $.getInterceptor$asx(values);
         i = 0;
         for (; i < len; ++i)
@@ -7509,6 +8012,15 @@ _Deserializer_isPrimitive: function(x) {
 },
 
 TimerImpl: {"": "Object;_once,_inEventLoop,_handle?",
+  TimerImpl$periodic$2: function(milliseconds, callback) {
+    var t1;
+    if ($.get$globalThis().setTimeout != null) {
+      t1 = $globalState.topEventLoop;
+      t1.activeTimerCount = t1.activeTimerCount + 1;
+      this._handle = $.get$globalThis().setInterval($.convertDartClosureToJS(new $.TimerImpl$periodic_closure(this, callback), 0), milliseconds);
+    } else
+      throw $.wrapException(new $.UnsupportedError("Periodic timer."));
+  },
   TimerImpl$2: function(milliseconds, callback) {
     var t1, t2;
     if (milliseconds === 0)
@@ -7528,15 +8040,6 @@ TimerImpl: {"": "Object;_once,_inEventLoop,_handle?",
       this._handle = $.get$globalThis().setTimeout($.convertDartClosureToJS(new $.TimerImpl_internalCallback0(this, callback), 0), milliseconds);
     } else
       throw $.wrapException(new $.UnsupportedError("Timer greater than 0."));
-  },
-  TimerImpl$periodic$2: function(milliseconds, callback) {
-    var t1;
-    if ($.get$globalThis().setTimeout != null) {
-      t1 = $globalState.topEventLoop;
-      t1.activeTimerCount = t1.activeTimerCount + 1;
-      this._handle = $.get$globalThis().setInterval($.convertDartClosureToJS(new $.TimerImpl$periodic_closure(this, callback), 0), milliseconds);
-    } else
-      throw $.wrapException(new $.UnsupportedError("Periodic timer."));
   },
   static: {
 TimerImpl$: function(milliseconds, callback) {
@@ -7710,40 +8213,6 @@ Primitives_stringFromCharCodes: function(charCodes) {
       return $.Primitives_stringFromCodePoints(charCodes);
   }
   return $.Primitives__fromCharCodeApply(charCodes);
-},
-
-Primitives_lazyAsJsDate: function(receiver) {
-  if (receiver.date === void 0)
-    receiver.date = new Date(receiver.millisecondsSinceEpoch);
-  return receiver.date;
-},
-
-Primitives_getYear: function(receiver) {
-  return receiver.isUtc ? $.Primitives_lazyAsJsDate(receiver).getUTCFullYear() + 0 : $.Primitives_lazyAsJsDate(receiver).getFullYear() + 0;
-},
-
-Primitives_getMonth: function(receiver) {
-  return receiver.isUtc ? $.Primitives_lazyAsJsDate(receiver).getUTCMonth() + 1 : $.Primitives_lazyAsJsDate(receiver).getMonth() + 1;
-},
-
-Primitives_getDay: function(receiver) {
-  return receiver.isUtc ? $.Primitives_lazyAsJsDate(receiver).getUTCDate() + 0 : $.Primitives_lazyAsJsDate(receiver).getDate() + 0;
-},
-
-Primitives_getHours: function(receiver) {
-  return receiver.isUtc ? $.Primitives_lazyAsJsDate(receiver).getUTCHours() + 0 : $.Primitives_lazyAsJsDate(receiver).getHours() + 0;
-},
-
-Primitives_getMinutes: function(receiver) {
-  return receiver.isUtc ? $.Primitives_lazyAsJsDate(receiver).getUTCMinutes() + 0 : $.Primitives_lazyAsJsDate(receiver).getMinutes() + 0;
-},
-
-Primitives_getSeconds: function(receiver) {
-  return receiver.isUtc ? $.Primitives_lazyAsJsDate(receiver).getUTCSeconds() + 0 : $.Primitives_lazyAsJsDate(receiver).getSeconds() + 0;
-},
-
-Primitives_getMilliseconds: function(receiver) {
-  return receiver.isUtc ? $.Primitives_lazyAsJsDate(receiver).getUTCMilliseconds() + 0 : $.Primitives_lazyAsJsDate(receiver).getMilliseconds() + 0;
 },
 
 Primitives_getProperty: function(object, key) {
@@ -8721,7 +9190,9 @@ StringMatch: {"": "Object;start>,str,pattern",
 }}],
 ["dart._collection.dev", "dart:_collection-dev", , {
 Arrays_copy: function(src, srcStart, dst, dstStart, count) {
-  var i, j, t1, t2, t3;
+  var i, j, t1, t2, t3, t4;
+  if (typeof src !== "string" && (typeof src !== "object" || src === null || src.constructor !== Array && !$.isJsIndexable(src, src[$.dispatchPropertyName])))
+    return $.Arrays_copy$bailout(1, src, srcStart, dst, dstStart, count);
   if (typeof dst !== "object" || dst === null || (dst.constructor !== Array || !!dst.immutable$list) && !$.isJsIndexable(dst, dst[$.dispatchPropertyName]))
     return $.Arrays_copy$bailout(1, src, srcStart, dst, dstStart, count);
   if (typeof dstStart !== "number")
@@ -8731,25 +9202,31 @@ Arrays_copy: function(src, srcStart, dst, dstStart, count) {
       throw $.iae(count);
     i = srcStart + count - 1;
     j = dstStart + count - 1;
-    t1 = $.getInterceptor$asx(src);
+    t1 = src.length;
+    t2 = dst.length;
     for (; i >= srcStart; --i, --j) {
-      t2 = t1.$index(src, i);
-      if (j >>> 0 !== j || j >= dst.length)
+      if (i >>> 0 !== i || i >= t1)
+        throw $.ioore(i);
+      t3 = src[i];
+      if (j >>> 0 !== j || j >= t2)
         throw $.ioore(j);
-      dst[j] = t2;
+      dst[j] = t3;
     }
   } else {
     if (typeof count !== "number")
       throw $.iae(count);
     t1 = srcStart + count;
-    t2 = $.getInterceptor$asx(src);
+    t2 = src.length;
+    t3 = dst.length;
     j = dstStart;
     i = srcStart;
     for (; i < t1; ++i, ++j) {
-      t3 = t2.$index(src, i);
-      if (j >>> 0 !== j || j >= dst.length)
+      if (i >>> 0 !== i || i >= t2)
+        throw $.ioore(i);
+      t4 = src[i];
+      if (j >>> 0 !== j || j >= t3)
         throw $.ioore(j);
-      dst[j] = t3;
+      dst[j] = t4;
     }
   }
 },
@@ -11126,6 +11603,28 @@ LinkedHashMapKeyIterator: {"": "Object;_map,_modifications,_cell,_liblib1$_curre
   }
 },
 
+HashSetIterator: {"": "Object;_set,_elements,_offset,_liblib1$_current",
+  get$current: function() {
+    return this._liblib1$_current;
+  },
+  moveNext$0: function() {
+    var elements, offset, t1;
+    elements = this._elements;
+    offset = this._offset;
+    t1 = this._set;
+    if (elements !== t1._elements)
+      throw $.wrapException(new $.ConcurrentModificationError(t1));
+    else if (offset >= elements.length) {
+      this._liblib1$_current = null;
+      return false;
+    } else {
+      this._liblib1$_current = elements[offset];
+      this._offset = offset + 1;
+      return true;
+    }
+  }
+},
+
 HashMap: {"": "Object;_liblib1$_length,_strings,_nums,_rest,_keys",
   get$length: function(_) {
     return this._liblib1$_length;
@@ -11369,6 +11868,125 @@ HashMap__findBucketIndex: function(bucket, key) {
 
 },
 
+_HashSetBase: {"": "IterableBase;",
+  toString$0: function(_) {
+    return $.IterableMixinWorkaround_toStringIterable(this, "{", "}");
+  }
+},
+
+HashSet: {"": "_HashSetBase;_liblib1$_length,_strings,_nums,_rest,_elements",
+  get$iterator: function(_) {
+    return new $.HashSetIterator(this, this._computeElements$0(), 0, null);
+  },
+  get$length: function(_) {
+    return this._liblib1$_length;
+  },
+  add$1: function(_, element) {
+    var strings, table, nums, rest, hash, bucket;
+    if (typeof element === "string" && element !== "__proto__") {
+      strings = this._strings;
+      if (strings == null) {
+        table = Object.create(null);
+        table["<non-identifier-key>"] = table;
+        delete table["<non-identifier-key>"];
+        this._strings = table;
+        strings = table;
+      }
+      this._addHashTableEntry$2(strings, element);
+    } else if (typeof element === "number" && (element & 0x3ffffff) === element) {
+      nums = this._nums;
+      if (nums == null) {
+        table = Object.create(null);
+        table["<non-identifier-key>"] = table;
+        delete table["<non-identifier-key>"];
+        this._nums = table;
+        nums = table;
+      }
+      this._addHashTableEntry$2(nums, element);
+    } else {
+      rest = this._rest;
+      if (rest == null) {
+        table = Object.create(null);
+        table["<non-identifier-key>"] = table;
+        delete table["<non-identifier-key>"];
+        this._rest = table;
+        rest = table;
+      }
+      hash = $.get$hashCode$(element) & 0x3ffffff;
+      bucket = rest[hash];
+      if (bucket == null)
+        rest[hash] = [element];
+      else {
+        if ($.HashSet__findBucketIndex(bucket, element) >= 0)
+          return;
+        bucket.push(element);
+      }
+      this._liblib1$_length = this._liblib1$_length + 1;
+      this._elements = null;
+    }
+  },
+  _computeElements$0: function() {
+    var t1, result, strings, names, entries, index, i, nums, rest, bucket, $length, i0;
+    t1 = this._elements;
+    if (t1 != null)
+      return t1;
+    result = $.List_List(this._liblib1$_length);
+    strings = this._strings;
+    if (strings != null) {
+      names = Object.getOwnPropertyNames(strings);
+      entries = names.length;
+      for (index = 0, i = 0; i < entries; ++i) {
+        result[index] = names[i];
+        ++index;
+      }
+    } else
+      index = 0;
+    nums = this._nums;
+    if (nums != null) {
+      names = Object.getOwnPropertyNames(nums);
+      entries = names.length;
+      for (i = 0; i < entries; ++i) {
+        result[index] = +names[i];
+        ++index;
+      }
+    }
+    rest = this._rest;
+    if (rest != null) {
+      names = Object.getOwnPropertyNames(rest);
+      entries = names.length;
+      for (i = 0; i < entries; ++i) {
+        bucket = rest[names[i]];
+        $length = bucket.length;
+        for (i0 = 0; i0 < $length; ++i0) {
+          result[index] = bucket[i0];
+          ++index;
+        }
+      }
+    }
+    this._elements = result;
+    return result;
+  },
+  _addHashTableEntry$2: function(table, element) {
+    if (table[element] != null)
+      return;
+    table[element] = 0;
+    this._liblib1$_length = this._liblib1$_length + 1;
+    this._elements = null;
+  },
+  static: {
+HashSet__findBucketIndex: function(bucket, element) {
+  var $length, i;
+  if (bucket == null)
+    return -1;
+  $length = bucket.length;
+  for (i = 0; i < $length; ++i)
+    if ($.$eq(bucket[i], element))
+      return i;
+  return -1;
+}}
+
+},
+
 IterableBase: {"": "Object;",
   forEach$1: function(_, f) {
     var t1;
@@ -11552,6 +12170,19 @@ ListMixin: {"": "Object;",
   },
   forEach$1: function(receiver, action) {
     var $length, i;
+    if (typeof receiver !== "string" && (typeof receiver !== "object" || receiver === null || receiver.constructor !== Array && !$.isJsIndexable(receiver, receiver[$.dispatchPropertyName])))
+      return this.forEach$1$bailout(1, action, receiver);
+    $length = receiver.length;
+    for (i = 0; i < $length; ++i) {
+      if (i >= receiver.length)
+        throw $.ioore(i);
+      action.call$1(receiver[i]);
+      if ($length !== receiver.length)
+        throw $.wrapException(new $.ConcurrentModificationError(receiver));
+    }
+  },
+  forEach$1$bailout: function(state0, action, receiver) {
+    var $length, i;
     $length = this.get$length(receiver);
     for (i = 0; i < $length; ++i) {
       action.call$1(this.$index(receiver, i));
@@ -11560,6 +12191,20 @@ ListMixin: {"": "Object;",
     }
   },
   indexOf$2: function(receiver, element, startIndex) {
+    var t1, i;
+    if (typeof receiver !== "string" && (typeof receiver !== "object" || receiver === null || receiver.constructor !== Array && !$.isJsIndexable(receiver, receiver[$.dispatchPropertyName])))
+      return this.indexOf$2$bailout(1, startIndex, receiver);
+    t1 = receiver.length;
+    if (startIndex >= t1)
+      return -1;
+    if (startIndex < 0)
+      startIndex = 0;
+    for (i = startIndex; i < t1; ++i)
+      if (i < 0)
+        throw $.ioore(i);
+    return -1;
+  },
+  indexOf$2$bailout: function(state0, startIndex, receiver) {
     var i;
     if (startIndex >= this.get$length(receiver))
       return -1;
@@ -11828,80 +12473,6 @@ NoSuchMethodError_toString_closure: {"": "Closure;box_0",
   "+call:2:0": 0
 },
 
-DateTime: {"": "Object;millisecondsSinceEpoch<,isUtc",
-  $eq: function(_, other) {
-    if (other == null)
-      return false;
-    if (typeof other !== "object" || other === null || !$.getInterceptor(other).$isDateTime)
-      return false;
-    return $.$eq(this.millisecondsSinceEpoch, other.millisecondsSinceEpoch) && this.isUtc === other.isUtc;
-  },
-  compareTo$1: function(_, other) {
-    return $.compareTo$1$ns(this.millisecondsSinceEpoch, other.get$millisecondsSinceEpoch());
-  },
-  get$hashCode: function(_) {
-    return this.millisecondsSinceEpoch;
-  },
-  toString$0: function(_) {
-    var t1, y, m, d, h, min, sec, ms;
-    t1 = new $.DateTime_toString_twoDigits();
-    y = new $.DateTime_toString_fourDigits().call$1($.Primitives_getYear(this));
-    m = t1.call$1($.Primitives_getMonth(this));
-    d = t1.call$1($.Primitives_getDay(this));
-    h = t1.call$1($.Primitives_getHours(this));
-    min = t1.call$1($.Primitives_getMinutes(this));
-    sec = t1.call$1($.Primitives_getSeconds(this));
-    ms = new $.DateTime_toString_threeDigits().call$1($.Primitives_getMilliseconds(this));
-    if (this.isUtc)
-      return $.S(y) + "-" + $.S(m) + "-" + $.S(d) + " " + $.S(h) + ":" + $.S(min) + ":" + $.S(sec) + "." + $.S(ms) + "Z";
-    else
-      return $.S(y) + "-" + $.S(m) + "-" + $.S(d) + " " + $.S(h) + ":" + $.S(min) + ":" + $.S(sec) + "." + $.S(ms);
-  },
-  $isDateTime: true,
-  static: {
-"": "DateTime_MONDAY,DateTime_TUESDAY,DateTime_WEDNESDAY,DateTime_THURSDAY,DateTime_FRIDAY,DateTime_SATURDAY,DateTime_SUNDAY,DateTime_DAYS_PER_WEEK,DateTime_JANUARY,DateTime_FEBRUARY,DateTime_MARCH,DateTime_APRIL,DateTime_MAY,DateTime_JUNE,DateTime_JULY,DateTime_AUGUST,DateTime_SEPTEMBER,DateTime_OCTOBER,DateTime_NOVEMBER,DateTime_DECEMBER,DateTime_MONTHS_PER_YEAR,DateTime__MAX_MILLISECONDS_SINCE_EPOCH",
-}
-
-},
-
-DateTime_toString_fourDigits: {"": "Closure;",
-  call$1: function(n) {
-    var t1, absN, sign;
-    t1 = $.getInterceptor$n(n);
-    absN = t1.abs$0(n);
-    sign = t1.$lt(n, 0) ? "-" : "";
-    if (absN >= 1000)
-      return $.S(n);
-    if (absN >= 100)
-      return sign + "0" + $.S(absN);
-    if (absN >= 10)
-      return sign + "00" + $.S(absN);
-    return sign + "000" + $.S(absN);
-  },
-  "+call:1:0": 0
-},
-
-DateTime_toString_threeDigits: {"": "Closure;",
-  call$1: function(n) {
-    var t1 = $.getInterceptor$n(n);
-    if (t1.$ge(n, 100))
-      return $.S(n);
-    if (t1.$ge(n, 10))
-      return "0" + $.S(n);
-    return "00" + $.S(n);
-  },
-  "+call:1:0": 0
-},
-
-DateTime_toString_twoDigits: {"": "Closure;",
-  call$1: function(n) {
-    if ($.$ge$n(n, 10))
-      return $.S(n);
-    return "0" + $.S(n);
-  },
-  "+call:1:0": 0
-},
-
 Duration: {"": "Object;_duration<",
   $add: function(_, other) {
     return new $.Duration(0 + (this._duration + other.get$_duration()));
@@ -11910,9 +12481,16 @@ Duration: {"": "Object;_duration<",
     return new $.Duration(0 + (this._duration - other.get$_duration()));
   },
   $mul: function(_, factor) {
+    var t1, truncated;
     if (typeof factor !== "number")
       throw $.iae(factor);
-    return $.Duration$(0, 0, C.JSNumber_methods.toInt$0(C.JSNumber_methods.roundToDouble$0(this._duration * factor)), 0, 0, 0);
+    t1 = C.JSNumber_methods.roundToDouble$0(this._duration * factor);
+    if (isNaN(t1))
+      $.throwExpression(new $.UnsupportedError("NaN"));
+    if (t1 == Infinity || t1 == -Infinity)
+      $.throwExpression(new $.UnsupportedError("Infinity"));
+    truncated = t1 < 0 ? Math.ceil(t1) : Math.floor(t1);
+    return new $.Duration(0 + (truncated == -0.0 ? 0 : truncated));
   },
   $tdiv: function(_, quotient) {
     if (quotient === 0)
@@ -12103,13 +12681,6 @@ UnsupportedError: {"": "Error;message",
   toString$0: function(_) {
     return "Unsupported operation: " + this.message;
   }
-},
-
-UnimplementedError: {"": "Error;message",
-  toString$0: function(_) {
-    return "UnimplementedError: " + this.message;
-  },
-  $isError: true
 },
 
 StateError: {"": "Error;message",
@@ -12461,7 +13032,32 @@ Point: {"": "Object;x>,y>",
     }
   },
   $mul: function(_, factor) {
-    return new $.Point($.$mul$n(this.x, factor), $.$mul$n(this.y, factor));
+    var t1, t2;
+    if (typeof factor !== "number")
+      return this.$$mul$bailout(1, factor);
+    t1 = this.x;
+    if (typeof t1 !== "number")
+      return this.$$mul$bailout(2, factor, t1);
+    t1 *= factor;
+    t2 = this.y;
+    if (typeof t2 !== "number")
+      return this.$$mul$bailout(3, factor, t1, t2);
+    return new $.Point(t1, t2 * factor);
+  },
+  $$mul$bailout: function(state0, factor, t1, t2) {
+    switch (state0) {
+      case 0:
+      case 1:
+        state0 = 0;
+        t1 = this.x;
+      case 2:
+        state0 = 0;
+        t1 = $.$mul$n(t1, factor);
+        t2 = this.y;
+      case 3:
+        state0 = 0;
+        return new $.Point(t1, $.$mul$n(t2, factor));
+    }
   },
   toInt$0: function(_) {
     return new $.Point($.toInt$0$nx(this.x), $.toInt$0$nx(this.y));
@@ -12591,8 +13187,6 @@ AnchorElement: {"": "HtmlElement;name=,search=",
 
 AreaElement: {"": "HtmlElement;search="},
 
-Blob: {"": "Interceptor;size="},
-
 BodyElement: {"": "HtmlElement;",
   get$onLoad: function(receiver) {
     C.EventStreamProvider_load.forElement$2$useCapture;
@@ -12646,9 +13240,6 @@ CanvasRenderingContext2D: {"": "CanvasRenderingContext;fillStyle},font},globalAl
   },
   fillText$3: function($receiver, text, x, y) {
     return $receiver.fillText(text, x, y);
-  },
-  getImageData$4: function(receiver, sx, sy, sw, sh) {
-    return $.convertNativeToDart_ImageData(receiver.getImageData(sx, sy, sw, sh));
   },
   lineTo$2: function(receiver, x, y) {
     return receiver.lineTo(x, y);
@@ -12765,8 +13356,6 @@ EventTarget: {"": "Interceptor;",
 
 FieldSetElement: {"": "HtmlElement;name="},
 
-File: {"": "Blob;name="},
-
 FormElement: {"": "HtmlElement;length=,name=",
   reset$0: function(receiver) {
     return receiver.reset();
@@ -12774,8 +13363,6 @@ FormElement: {"": "HtmlElement;length=,name=",
 },
 
 IFrameElement: {"": "HtmlElement;height=,name=,src%,width="},
-
-ImageData: {"": "Interceptor;data=,height=,width=", $isImageData: true, $asImageData: null},
 
 ImageElement: {"": "HtmlElement;height=,src%,width=,x=,y="},
 
@@ -13098,7 +13685,7 @@ min: function(a, b) {
     if (typeof a === "number")
       if (a === 0)
         return (a + b) * a * b;
-    if (a === 0 && C.JSDouble_methods.get$isNegative(b) || C.JSDouble_methods.get$isNaN(b))
+    if (a === 0 && C.JSDouble_methods.get$isNegative(b) || isNaN(b))
       return b;
     return a;
   }
@@ -13144,66 +13731,9 @@ _Random: {"": "Object;",
   }
 }}],
 ["dart.typed_data", "dart:typed_data", , {
-Endianness: {"": "Object;_littleEndian", static: {
-"": "Endianness_BIG_ENDIAN,Endianness_LITTLE_ENDIAN,Endianness_HOST_ENDIAN",
-}
-},
-
 TypedData_ListMixin: {"": "TypedData+ListMixin;", $isList: true, $asList: null},
 
 TypedData_ListMixin_FixedLengthListMixin: {"": "TypedData_ListMixin+FixedLengthListMixin;", $asList: null},
-
-TypedData_ListMixin0: {"": "TypedData+ListMixin;", $isList: true, $asList: null},
-
-TypedData_ListMixin_FixedLengthListMixin0: {"": "TypedData_ListMixin0+FixedLengthListMixin;", $asList: null},
-
-TypedData_ListMixin1: {"": "TypedData+ListMixin;", $isList: true, $asList: null},
-
-TypedData_ListMixin_FixedLengthListMixin1: {"": "TypedData_ListMixin1+FixedLengthListMixin;", $asList: null},
-
-TypedData_ListMixin2: {"": "TypedData+ListMixin;", $isList: true, $asList: null},
-
-TypedData_ListMixin_FixedLengthListMixin2: {"": "TypedData_ListMixin2+FixedLengthListMixin;", $asList: null},
-
-TypedData_ListMixin3: {"": "TypedData+ListMixin;", $isList: true, $asList: null},
-
-TypedData_ListMixin_FixedLengthListMixin3: {"": "TypedData_ListMixin3+FixedLengthListMixin;", $asList: null},
-
-TypedData_ListMixin4: {"": "TypedData+ListMixin;", $isList: true, $asList: null},
-
-TypedData_ListMixin_FixedLengthListMixin4: {"": "TypedData_ListMixin4+FixedLengthListMixin;", $asList: null},
-
-TypedData_ListMixin5: {"": "TypedData+ListMixin;", $isList: true, $asList: null},
-
-TypedData_ListMixin_FixedLengthListMixin5: {"": "TypedData_ListMixin5+FixedLengthListMixin;", $asList: null},
-
-TypedData_ListMixin6: {"": "TypedData+ListMixin;", $isList: true, $asList: null},
-
-TypedData_ListMixin_FixedLengthListMixin6: {"": "TypedData_ListMixin6+FixedLengthListMixin;", $asList: null},
-
-Int64List: {"": "TypedData;", $isList: true,
-  $asList: function() {
-    return [$.JSInt];
-  },
-  $isJavaScriptIndexingBehavior: true,
-  $asJavaScriptIndexingBehavior: null,
-  static: {
-"": "Int64List_BYTES_PER_ELEMENT",
-}
-
-},
-
-Uint64List: {"": "TypedData;", $isList: true,
-  $asList: function() {
-    return [$.JSInt];
-  },
-  $isJavaScriptIndexingBehavior: true,
-  $asJavaScriptIndexingBehavior: null,
-  static: {
-"": "Uint64List_BYTES_PER_ELEMENT",
-}
-
-},
 
 TypedData: {"": "Interceptor;",
   _invalidIndex$2: function(receiver, index, $length) {
@@ -13213,300 +13743,6 @@ TypedData: {"": "Interceptor;",
     else
       throw $.wrapException(new $.ArgumentError("Invalid list index " + $.S(index)));
   }
-},
-
-Float32List: {"": "TypedData_ListMixin_FixedLengthListMixin;",
-  get$length: function(receiver) {
-    return receiver.length;
-  },
-  $index: function(receiver, index) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$index$bailout(1, index, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $$index$bailout: function(state0, index, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $indexSet: function(receiver, index, value) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$indexSet$bailout(1, index, value, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $$indexSet$bailout: function(state0, index, value, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $asList: function() {
-    return [$.JSDouble];
-  },
-  $asJavaScriptIndexingBehavior: null,
-  $isList: true,
-  $isJavaScriptIndexingBehavior: true
-},
-
-Float64List: {"": "TypedData_ListMixin_FixedLengthListMixin0;",
-  get$length: function(receiver) {
-    return receiver.length;
-  },
-  $index: function(receiver, index) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$index$bailout(1, index, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $$index$bailout: function(state0, index, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $indexSet: function(receiver, index, value) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$indexSet$bailout(1, index, value, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $$indexSet$bailout: function(state0, index, value, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $asList: function() {
-    return [$.JSDouble];
-  },
-  $asJavaScriptIndexingBehavior: null,
-  $isList: true,
-  $isJavaScriptIndexingBehavior: true
-},
-
-Int16List: {"": "TypedData_ListMixin_FixedLengthListMixin1;",
-  get$length: function(receiver) {
-    return receiver.length;
-  },
-  $index: function(receiver, index) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$index$bailout(1, index, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $$index$bailout: function(state0, index, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $indexSet: function(receiver, index, value) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$indexSet$bailout(1, index, value, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $$indexSet$bailout: function(state0, index, value, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $asList: function() {
-    return [$.JSInt];
-  },
-  $asJavaScriptIndexingBehavior: null,
-  $isList: true,
-  $isJavaScriptIndexingBehavior: true
-},
-
-Int32List: {"": "TypedData_ListMixin_FixedLengthListMixin2;",
-  get$length: function(receiver) {
-    return receiver.length;
-  },
-  $index: function(receiver, index) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$index$bailout(1, index, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $$index$bailout: function(state0, index, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $indexSet: function(receiver, index, value) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$indexSet$bailout(1, index, value, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $$indexSet$bailout: function(state0, index, value, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $asList: function() {
-    return [$.JSInt];
-  },
-  $asJavaScriptIndexingBehavior: null,
-  $isList: true,
-  $isJavaScriptIndexingBehavior: true
-},
-
-Int8List: {"": "TypedData_ListMixin_FixedLengthListMixin3;",
-  get$length: function(receiver) {
-    return receiver.length;
-  },
-  $index: function(receiver, index) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$index$bailout(1, index, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $$index$bailout: function(state0, index, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $indexSet: function(receiver, index, value) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$indexSet$bailout(1, index, value, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $$indexSet$bailout: function(state0, index, value, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $asList: function() {
-    return [$.JSInt];
-  },
-  $asJavaScriptIndexingBehavior: null,
-  $isList: true,
-  $isJavaScriptIndexingBehavior: true
-},
-
-Uint16List: {"": "TypedData_ListMixin_FixedLengthListMixin4;",
-  get$length: function(receiver) {
-    return receiver.length;
-  },
-  $index: function(receiver, index) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$index$bailout(1, index, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $$index$bailout: function(state0, index, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $indexSet: function(receiver, index, value) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$indexSet$bailout(1, index, value, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $$indexSet$bailout: function(state0, index, value, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $asList: function() {
-    return [$.JSInt];
-  },
-  $asJavaScriptIndexingBehavior: null,
-  $isList: true,
-  $isJavaScriptIndexingBehavior: true
-},
-
-Uint32List: {"": "TypedData_ListMixin_FixedLengthListMixin5;",
-  get$length: function(receiver) {
-    return receiver.length;
-  },
-  $index: function(receiver, index) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$index$bailout(1, index, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $$index$bailout: function(state0, index, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    return receiver[index];
-  },
-  $indexSet: function(receiver, index, value) {
-    var t1;
-    if (typeof index !== "number")
-      return this.$$indexSet$bailout(1, index, value, receiver);
-    t1 = receiver.length;
-    if (index >>> 0 != index || index >= t1)
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $$indexSet$bailout: function(state0, index, value, receiver) {
-    var t1 = receiver.length;
-    if (index >>> 0 != index || $.$ge$n(index, t1))
-      this._invalidIndex$2(receiver, index, t1);
-    receiver[index] = value;
-  },
-  $asList: function() {
-    return [$.JSInt];
-  },
-  $asJavaScriptIndexingBehavior: null,
-  $isList: true,
-  $isJavaScriptIndexingBehavior: true
 },
 
 Uint8ClampedList: {"": "Uint8List;",
@@ -13542,7 +13778,7 @@ Uint8ClampedList: {"": "Uint8List;",
   }
 },
 
-Uint8List: {"": "TypedData_ListMixin_FixedLengthListMixin6;",
+Uint8List: {"": "TypedData_ListMixin_FixedLengthListMixin;",
   get$length: function(receiver) {
     return receiver.length;
   },
@@ -13584,12 +13820,6 @@ Uint8List: {"": "TypedData_ListMixin_FixedLengthListMixin6;",
   $isJavaScriptIndexingBehavior: true
 }}],
 ["html_common", "dart:html_common", , {
-convertNativeToDart_ImageData: function(nativeImageData) {
-  if (typeof nativeImageData === "object" && nativeImageData !== null && !!$.getInterceptor(nativeImageData).$isImageData)
-    return nativeImageData;
-  return new $._TypedImageData(nativeImageData.data, nativeImageData.height, nativeImageData.width);
-},
-
 JenkinsSmiHash_combine: function(hash, value) {
   if (typeof value !== "number")
     throw $.iae(value);
@@ -13602,9 +13832,7 @@ JenkinsSmiHash_finish: function(hash) {
   hash = 536870911 & hash + ((67108863 & hash) << 3 >>> 0);
   hash = (hash ^ C.JSInt_methods.$shr(hash, 11)) >>> 0;
   return 536870911 & hash + ((16383 & hash) << 15 >>> 0);
-},
-
-_TypedImageData: {"": "Object;data>,height>,width>", $isImageData: true, $asImageData: null}}],
+}}],
 ["metadata", "/Applications/dart/dart-sdk/lib/html/html_common/metadata.dart", , {
 SupportedBrowser: {"": "Object;browserName,minimumVersion", static: {
 "": "SupportedBrowser_CHROME,SupportedBrowser_FIREFOX,SupportedBrowser_IE,SupportedBrowser_OPERA,SupportedBrowser_SAFARI",
@@ -13738,6 +13966,7 @@ C.C__DelayedDone = new $._DelayedDone();
 C.C__Random = new $._Random();
 C.Duration_0 = new $.Duration(0);
 C.Duration_10000000 = new $.Duration(10000000);
+C.Duration_2000000 = new $.Duration(2000000);
 C.Duration_3000000 = new $.Duration(3000000);
 C.Duration_40000 = new $.Duration(40000);
 C.Duration_4000000 = new $.Duration(4000000);
@@ -13763,6 +13992,7 @@ C.List_empty = Isolate.makeConstantList([]);
 C.Symbol_call = new $.Symbol("call");
 C.Window_methods = $.Window.prototype;
 $.Block_BLOCK_ID = 0;
+$.MAX_FROGS = 40;
 $.dispatchPropertyName = null;
 $.lazyPort = null;
 $.ReceivePortImpl__nextFreeId = 1;
@@ -13871,9 +14101,6 @@ $.compareTo$1$ns = function(receiver, a0) {
 $.contains$2$asx = function(receiver, a0, a1) {
   return $.getInterceptor$asx(receiver).contains$2(receiver, a0, a1);
 };
-$.drawImage$3$x = function(receiver, a0, a1, a2) {
-  return $.getInterceptor$x(receiver).drawImage$3(receiver, a0, a1, a2);
-};
 $.drawImageScaled$5$x = function(receiver, a0, a1, a2, a3, a4) {
   return $.getInterceptor$x(receiver).drawImageScaled$5(receiver, a0, a1, a2, a3, a4);
 };
@@ -13904,6 +14131,9 @@ $.get$name$x = function(receiver) {
 $.get$search$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$search(receiver);
 };
+$.get$size$x = function(receiver) {
+  return $.getInterceptor$x(receiver).get$size(receiver);
+};
 $.get$src$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$src(receiver);
 };
@@ -13927,9 +14157,6 @@ $.getBoundingClientRect$0$x = function(receiver) {
 };
 $.getContext$1$x = function(receiver, a0) {
   return $.getInterceptor$x(receiver).getContext$1(receiver, a0);
-};
-$.getImageData$4$x = function(receiver, a0, a1, a2, a3) {
-  return $.getInterceptor$x(receiver).getImageData$4(receiver, a0, a1, a2, a3);
 };
 $.indexOf$1$asx = function(receiver, a0) {
   return $.getInterceptor$asx(receiver).indexOf$1(receiver, a0);
@@ -14077,7 +14304,7 @@ Isolate.$lazy($, "_toStringList", "Maps__toStringList", "get$Maps__toStringList"
   return $.List_List(null);
 });
 // Native classes
-$.defineNativeMethods("ArrayBuffer|CanvasGradient|CanvasPattern|FileError|MediaError|MediaKeyError|Navigator|PositionError|RTCIceCandidate|SQLError|SVGAnimatedInteger|SVGAnimatedLength|SVGAnimatedLengthList|SVGAnimatedNumber|SVGAnimatedNumberList|SVGAnimatedString|SVGAnimatedTransformList|Touch|mozRTCIceCandidate", $.Interceptor);
+$.defineNativeMethods("CanvasGradient|CanvasPattern|FileError|MediaError|MediaKeyError|Navigator|PositionError|RTCIceCandidate|SQLError|SVGAnimatedInteger|SVGAnimatedLength|SVGAnimatedLengthList|SVGAnimatedNumber|SVGAnimatedNumberList|SVGAnimatedString|SVGAnimatedTransformList|Touch|mozRTCIceCandidate", $.Interceptor);
 
 $.defineNativeMethods("HTMLBRElement|HTMLBaseElement|HTMLContentElement|HTMLDListElement|HTMLDataListElement|HTMLDetailsElement|HTMLDialogElement|HTMLDivElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLLabelElement|HTMLLegendElement|HTMLLinkElement|HTMLMenuElement|HTMLModElement|HTMLParagraphElement|HTMLPreElement|HTMLQuoteElement|HTMLShadowElement|HTMLSpanElement|HTMLStyleElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableDataCellElement|HTMLTableElement|HTMLTableHeaderCellElement|HTMLTableRowElement|HTMLTableSectionElement|HTMLTemplateElement|HTMLTitleElement|HTMLUListElement|HTMLUnknownElement", $.HtmlElement);
 
@@ -14086,8 +14313,6 @@ $.defineNativeMethodsNonleaf("HTMLElement", $.HtmlElement);
 $.defineNativeMethods("HTMLAnchorElement", $.AnchorElement);
 
 $.defineNativeMethods("HTMLAreaElement", $.AreaElement);
-
-$.defineNativeMethodsNonleaf("Blob", $.Blob);
 
 $.defineNativeMethods("HTMLBodyElement", $.BodyElement);
 
@@ -14121,13 +14346,9 @@ $.defineNativeMethodsNonleaf("EventTarget", $.EventTarget);
 
 $.defineNativeMethods("HTMLFieldSetElement", $.FieldSetElement);
 
-$.defineNativeMethods("File", $.File);
-
 $.defineNativeMethods("HTMLFormElement", $.FormElement);
 
 $.defineNativeMethods("HTMLIFrameElement", $.IFrameElement);
-
-$.defineNativeMethods("ImageData", $.ImageData);
 
 $.defineNativeMethods("HTMLImageElement", $.ImageElement);
 
@@ -14275,23 +14496,7 @@ $.defineNativeMethods("SVGAltGlyphElement|SVGTSpanElement|SVGTextElement|SVGText
 
 $.defineNativeMethods("SVGUseElement", $.UseElement);
 
-$.defineNativeMethods("DataView", $.TypedData);
-
-$.defineNativeMethodsExtended("ArrayBufferView", $.TypedData, [$.TypedData_ListMixin, $.TypedData_ListMixin_FixedLengthListMixin, $.TypedData_ListMixin0, $.TypedData_ListMixin_FixedLengthListMixin0, $.TypedData_ListMixin1, $.TypedData_ListMixin_FixedLengthListMixin1, $.TypedData_ListMixin2, $.TypedData_ListMixin_FixedLengthListMixin2, $.TypedData_ListMixin3, $.TypedData_ListMixin_FixedLengthListMixin3, $.TypedData_ListMixin4, $.TypedData_ListMixin_FixedLengthListMixin4, $.TypedData_ListMixin5, $.TypedData_ListMixin_FixedLengthListMixin5, $.TypedData_ListMixin6, $.TypedData_ListMixin_FixedLengthListMixin6, $.Int64List, $.Uint64List]);
-
-$.defineNativeMethods("Float32Array", $.Float32List);
-
-$.defineNativeMethods("Float64Array", $.Float64List);
-
-$.defineNativeMethods("Int16Array", $.Int16List);
-
-$.defineNativeMethods("Int32Array", $.Int32List);
-
-$.defineNativeMethods("Int8Array", $.Int8List);
-
-$.defineNativeMethods("Uint16Array", $.Uint16List);
-
-$.defineNativeMethods("Uint32Array", $.Uint32List);
+$.defineNativeMethodsExtended("ArrayBufferView", $.TypedData, [$.TypedData_ListMixin, $.TypedData_ListMixin_FixedLengthListMixin]);
 
 $.defineNativeMethods("CanvasPixelArray|Uint8ClampedArray", $.Uint8ClampedList);
 
