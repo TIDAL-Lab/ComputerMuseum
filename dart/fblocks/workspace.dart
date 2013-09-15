@@ -349,10 +349,7 @@ class CodeWorkspace extends TouchLayer {
     Parameter param;
     
     // HOP block
-    block = new Block(this, 'hop');
-    block.param = new Parameter(block);
-    block.param.values = [ 1, 2, 3, 4 ];
-    menu.addBlock(block);
+    menu.addBlock(new Block(this, 'hop'));
     
     // CHIRP block
     menu.addBlock(new Block(this, 'chirp'));
