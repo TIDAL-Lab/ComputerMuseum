@@ -39,7 +39,7 @@ class LilyPad extends Turtle implements Touchable {
   
   
   bool animate() {
-    return false;
+    return refresh;
   }
 
   
@@ -47,16 +47,18 @@ class LilyPad extends Turtle implements Touchable {
     num iw = width;
     num ih = height;
     ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-    ctx.beginPath();
-    ctx.arc(0, 0, radius, 0, PI * 2, true);
-    ctx.fill();
+    //ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+    //ctx.beginPath();
+    //ctx.arc(0, 0, radius, 0, PI * 2, true);
+    //ctx.fill();
   }
   
   
   void move(num dx, num dy) {
     x += dx;
     y += dy;
+    Set<Frog> frogs = pond.getFrogsHere(this);
+    frogs.forEach((frog) => frog.move(dx, dy));
   }
   
 
