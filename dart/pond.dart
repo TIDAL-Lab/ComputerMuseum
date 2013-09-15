@@ -466,7 +466,7 @@ class FrogPond extends TouchLayer {
     // first find the workspace
     for (CodeWorkspace workspace in workspaces) {
       if (workspace.name == frog["workspace"]) {
-        workspace.status.captureFly();
+        workspace.captureFly();
         fly.die();
         addFly();
       }
@@ -524,7 +524,7 @@ class FrogPond extends TouchLayer {
     // first find the workspace
     for (CodeWorkspace workspace in workspaces) {
       if (workspace.name == frog["workspace"]) {
-        workspace.status.captureGem(gem);
+        workspace.captureGem(gem);
         gem.die();
         new Timer(const Duration(milliseconds : 3000), () { addGem(); });
       }
