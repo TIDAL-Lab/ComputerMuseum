@@ -70,7 +70,7 @@ class CodeWorkspace extends TouchLayer {
     addTouchable(menu);
     
     // status area
-    status = new StatusInfo(this, width - 150, height - 100, 150, 100);
+    //status = new StatusInfo(this, width - 150, height - 100, 150, 100);
     
     // start block
     start = new StartBlock(this);
@@ -281,7 +281,7 @@ class CodeWorkspace extends TouchLayer {
       if (block.animate()) refresh = true;
     }
     
-    if (status.animate()) refresh = true;
+    if (status != null && status.animate()) refresh = true;
     
     return refresh;
   }
@@ -317,6 +317,19 @@ class CodeWorkspace extends TouchLayer {
   }
   
   
+  void captureGem(Gem g) {
+    if (status != null) status.captureGem(g);
+  }
+  
+  
+  void captureFly() {
+    if (status != null) {
+      status.fly_count++;
+      draw();
+    }
+  }  
+  
+  
   void draw() {
     ctx.save();
     {
@@ -331,7 +344,7 @@ class CodeWorkspace extends TouchLayer {
       menu.draw(ctx);
       
       // draw the status bar
-      status.draw(ctx);
+      if (status != null) status.draw(ctx);
   
       //------------------------------------------------
       // draw blocks themselves
