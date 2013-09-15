@@ -24,7 +24,7 @@ part of ComputerHistory;
 
 
 // Maximum number of frogs of a given color
-const MAX_FROGS = 40;
+int MAX_FROGS = 40;
 
 class FrogPond extends TouchLayer {
   
@@ -46,7 +46,7 @@ class FrogPond extends TouchLayer {
   List<Fly> flies = new List<Fly>();
   
   /* List of frogs */  
-  List<Turtle> frogs = new List<Frog>();
+  List<Frog> frogs = new List<Frog>();
   
   /* List of lilypads */
   List<LilyPad> pads = new List<LilyPad>();
@@ -84,65 +84,62 @@ class FrogPond extends TouchLayer {
     tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(this);
     
-/*    
-    pond.src = "images/pond.png";
-    pond.onLoad.listen((event) {
-      layer0.clearRect(0, 0, width, height);
-      layer0.drawImage(pond, 0, 0);
-    });
-*/
-/*    
-    pond.src = "images/lilypad.png";
-    pond.onLoad.listen((event) {
-      layer0.clearRect(0, 0, width, height);
-      layer0.drawImage(pond, width / 2 - pond.width / 2, 0);
-    });
-*/
 
-    addGem();
+    if (!isFlagSet("evolution")) {
+      addGem();
+    }
     
     for (int i=0; i<12; i++) {
       addFly();
     }
   
     
-    addLilyPad(300, height/2, 0.6);
-    addLilyPad(370, 100, 0.6);
-    addLilyPad(1620, height/2, 0.6);
-    addLilyPad(550, 790, 0.8);
-    addLilyPad(630, 370, 0.9);
-    addLilyPad(940, 650, 0.8);
-    addLilyPad(1000, 250, 0.8);
-    addLilyPad(1300, height/2, 0.8);
-    addLilyPad(1400, 130, 0.6);
-    addLilyPad(1300, height - 130, 0.6);
-    addLilyPad(900, height - 130, 0.6);
+    if (isFlagSet("evolution")) {
+      addLilyPad(width/2, height/2, 1.0);
+      addLilyPad(200, 200, 0.7);
+      addLilyPad(900, 210, 0.7);
+      addLilyPad(840, 550, 0.6);
+    } else {
+      addLilyPad(300, height/2, 0.6);
+      addLilyPad(370, 100, 0.6);
+      addLilyPad(1620, height/2, 0.6);
+      addLilyPad(550, 790, 0.8);
+      addLilyPad(630, 370, 0.9);
+      addLilyPad(940, 650, 0.8);
+      addLilyPad(1000, 250, 0.8);
+      addLilyPad(1300, height/2, 0.8);
+      addLilyPad(1400, 130, 0.6);
+      addLilyPad(1300, height - 130, 0.6);
+      addLilyPad(900, height - 130, 0.6);
+    }
     
 
-    CodeWorkspace workspace = new CodeWorkspace(this, height, width, "workspace1", "blue");
-    workspace.transform(cos(PI / -2), sin(PI / -2), -sin(PI / -2), cos(PI / -2), 0, height);
-    workspaces.add(workspace);
-    tmanager.addTouchLayer(workspace);
-    addHomeFrog(workspace);
-
-    workspace = new CodeWorkspace(this, height, width, "workspace2", "green");
-    workspace.transform(cos(PI/2), sin(PI/2), -sin(PI/2),cos(PI/2), width, 0);
-    workspaces.add(workspace);
-    tmanager.addTouchLayer(workspace);
-    addHomeFrog(workspace);
-
-    /*
-    CodeWorkspace workspace = new CodeWorkspace(this, width, height, "workspace1", "blue");
-    workspaces.add(workspace);
-    for (int i=0; i<3; i++) {
-      addRandomFrog(workspace);
+    if (isFlagSet("evolution")) {
+      MAX_FROGS = 100;
+      CodeWorkspace workspace = new CodeWorkspace(this, width, height, "workspace1", "green");
+      workspaces.add(workspace);
+      tmanager.addTouchLayer(workspace);
+      for (int i=0; i<4; i++) {
+        addRandomFrog(workspace);
+      }
+    } else {
+      CodeWorkspace workspace = new CodeWorkspace(this, height, width, "workspace1", "blue");
+      workspace.transform(cos(PI / -2), sin(PI / -2), -sin(PI / -2), cos(PI / -2), 0, height);
+      workspaces.add(workspace);
+      tmanager.addTouchLayer(workspace);
+      addHomeFrog(workspace);
+  
+      workspace = new CodeWorkspace(this, height, width, "workspace2", "green");
+      workspace.transform(cos(PI/2), sin(PI/2), -sin(PI/2),cos(PI/2), width, 0);
+      workspaces.add(workspace);
+      tmanager.addTouchLayer(workspace);
+      addHomeFrog(workspace);
     }
-    */
 
     new Timer.periodic(const Duration(milliseconds : 40), tick);
     
     // master timeout
-    if (window.location.search.indexOf("debug=true") < 0) {
+    if (isFlagSet("timeout")) {
       print("initiating master restart timer");
       new Timer.periodic(const Duration(seconds : 10), (timer) {
         _countdown += 10;
@@ -263,10 +260,10 @@ class FrogPond extends TouchLayer {
 /**
  * Returns all frogs at the given location (not including the original frog)
  */
-  Set<Frog> getFrogsHere(Frog frog) {
+  Set<Frog> getFrogsHere(Turtle turtle) {
     Set<Frog> aset = new HashSet<Frog>();
     for (Frog f in frogs) {
-      if (f != frog && f.overlapsTurtle(frog)) {
+      if (f != turtle && f.overlapsTurtle(turtle)) {
         aset.add(f);
       }
     }
@@ -282,6 +279,34 @@ class FrogPond extends TouchLayer {
       if (frog.overlapsPoint(x, y)) return frog;
     }
     return null;
+  }
+  
+  
+/**
+ * Show frog histogram
+ */
+  void census() {
+    frogs.sort((Frog a, Frog b) => (a.size * 100 - b.size * 100).toInt());
+    
+    double range = 2.0 - 0.1;
+    double interval = range / 5.0;  // eight bins
+    double cutoff = 0.1 + interval;
+    double fx = 0.0, fy = 0.0;
+    
+    for (Frog frog in frogs) {
+
+      if (frog.size > cutoff) {
+        fx += 90.0;
+        fy = 0.0;
+        cutoff += interval;
+      }
+      if (frog._saveX != null) {
+        frog.flyBack();
+      } else {
+        frog.flyTo(fx + 300.0, height - 220.0 - fy, 0);
+      }
+      fy += 20;
+    }
   }
   
   
@@ -309,6 +334,7 @@ class FrogPond extends TouchLayer {
   
   
   void pauseProgram(CodeWorkspace workspace) {
+    play_state = 1;
     for (Frog frog in frogs) {
       if (frog["workspace"] == workspace.name) {
         frog.program.pause();
@@ -512,7 +538,22 @@ class FrogPond extends TouchLayer {
   void tick(Timer timer) {
     flies.forEach((fly) => fly.erase(layer2));
     
+    // animate lilypad movement
     bool refresh = false;
+    for (LilyPad pad in pads) {
+      if (pad.refresh) {
+        refresh = true;
+        pad.refresh = false;
+      }
+    }
+    
+    if (refresh) {
+      layer0.clearRect(0, 0, width, height);
+      for (LilyPad pad in pads) {
+        pad.draw(layer0);
+      }
+    }
+    
     for (int i=0; i<play_state; i++) {
       if (animate()) refresh = true;
     }
@@ -529,20 +570,6 @@ class FrogPond extends TouchLayer {
       }
     }
     
-    refresh = false;
-    for (LilyPad pad in pads) {
-      if (pad.refresh) {
-        refresh = true;
-        pad.refresh = false;
-      }
-    }
-    
-    if (refresh) {
-      layer0.clearRect(0, 0, width, height);
-      for (LilyPad pad in pads) {
-        pad.draw(layer0);
-      }
-    }
   }
   
   
