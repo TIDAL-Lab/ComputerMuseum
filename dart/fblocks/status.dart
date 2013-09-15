@@ -77,12 +77,6 @@ class StatusInfo {
   }
   
   
-  void captureFly() {
-    fly_count++;
-    workspace.draw();
-  }
-  
-  
   void draw(CanvasRenderingContext2D ctx) {
     ctx.save();
     {
