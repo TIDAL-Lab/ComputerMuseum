@@ -158,7 +158,12 @@ class EndProgramBlock extends EndBlock {
     _width = (BLOCK_WIDTH + BLOCK_MARGIN).toDouble();
     inserted = true;
   }
+
   
+  Block step(Program program) {
+    return isFlagSet("evolution") ? begin : null;
+  }  
+
   
   bool touchDown(Contact c) {
     return false;
