@@ -23,6 +23,11 @@
 part of ComputerHistory;
 
 
+bool isFlagSet(String name) {
+  return window.location.search.indexOf("${name}=true") > 0;
+}
+
+
 void roundRect(CanvasRenderingContext2D ctx, num x, num y, num w, num h, num r) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
