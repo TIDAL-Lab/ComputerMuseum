@@ -75,6 +75,12 @@ abstract class Turtle {
       variables[key] = other[key];
     }
   }
+  
+  
+  void move(num dx, num dy) {
+    x += dx;
+    y += dy;
+  }
 
   
   void forward(double distance) {
@@ -107,12 +113,8 @@ abstract class Turtle {
 
   
   bool overlapsPoint(num tx, num ty, [ num tw = 0.0 ]) {
-    if (tw <= 0) {
-      return (tx > x - width/2 && ty > y - height/2 && tx < x + width/2 && ty < y + height/2);
-    } else {
-      num dist = distance(tx, ty, x, y);
-      return dist < (radius + tw/2);
-    }
+    num dist = distance(tx, ty, x, y);
+    return dist < (radius + tw/2);
   }
   
   
