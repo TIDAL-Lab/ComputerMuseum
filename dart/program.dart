@@ -117,9 +117,7 @@ class Program {
   
   
   void play() {
-    if (curr == null || isFinished) {
-      restart();
-    }
+    if (isFinished) restart();
     running = true;
   }
   
@@ -130,17 +128,17 @@ class Program {
   
   
   bool get isRunning {
-    return (running && curr != null && !isFinished);
+    return (running && curr != null);
   }
   
   
   bool get isPaused {
-    return (!running && curr != null && !isFinished);
+    return (!running && curr != null);
   }
   
   
   bool get isFinished {
-    return (curr is EndProgramBlock);
+    return (curr == null);
   }
   
   
@@ -242,7 +240,7 @@ class Program {
     double length = frog.radius;
     if (param is num) length *= param;
 
-    String s = "$cmd ${param}";
+    String s = "$cmd";
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.delay = 0;
@@ -296,17 +294,17 @@ class Program {
     tween.onstart = (() {
       Sounds.playSound(cmd);
       frog.label = cmd;
-      frog._radius = 0.5;
+      frog._sound = 0.5;
     });
     tween.onend = (() {
-      frog._radius = -1.0;
+      frog._sound = -1.0;
       doPause(preview);
     });
     tween.addControlPoint(0, 0);
     tween.addControlPoint(175, 1);
     tween.duration = 25;
     tween.delay = 0;
-    tween.ondelta = ((value) => frog._radius += value);
+    tween.ondelta = ((value) => frog._sound += value);
   }
   
   
@@ -443,7 +441,7 @@ class Program {
       //baby.program.skip();
     });
     double newsize = frog.size + Turtle.rand.nextDouble() * 0.2 - 0.1;
-    newsize = max(0.1, newsize);
+    newsize = min(2.0, max(0.1, newsize));
     tween.addControlPoint(0.05, 0);
     tween.addControlPoint(newsize, 1.0);
     tween.ondelta = ((value) => baby.size += value);
