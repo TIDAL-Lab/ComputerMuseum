@@ -25,7 +25,6 @@ library ComputerHistory;
 import 'dart:collection';
 import 'dart:html';
 import 'dart:math';
-import 'dart:json' as json;
 import 'dart:async';
 import 'dart:web_audio';
 
@@ -54,24 +53,14 @@ part 'fblocks/wait.dart';
 part 'fblocks/workspace.dart';
 
 
-const CONFIG_JSON = '''
-{
-  "auto-repeat" : true,
-  "fast-forward" : false
-}
-''';
+bool SHOW_FASTFORWARD = false;
+bool SHOW_TURN_BLOCK = false;
+bool SHOW_DIE_BLOCK = false;
+bool SHOW_PREVIEW = false;
+bool SHOW_WAIT_TIMEOUT = false;
 
-var CONFIG;
-
-
-bool getConfigFlag(String name) {
-  if (CONFIG != null && CONFIG[name] is bool) {
-    return CONFIG[name];
-  } else {
-    return false;
-  }
-}
-
+// Maximum number of frogs of a given color
+int MAX_FROGS = 40;
 
 void main() {
 
@@ -89,9 +78,6 @@ void main() {
   Sounds.loadSound("turn");
   Sounds.loadSound("swoosh");
   Sounds.loadSound("gulp");
-  
-  // parse configuration settings
-  CONFIG = json.parse(CONFIG_JSON);
   
   // create frog pond
   FrogPond pond = new FrogPond();
