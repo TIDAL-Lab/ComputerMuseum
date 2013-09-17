@@ -182,7 +182,7 @@ class Program {
     frog.reset();
     if (cmd == "hop") {
       doMove(cmd, param, preview);
-    } else if (cmd == "turn") {
+    } else if (cmd == "turn" || cmd == "left" || cmd == "right") {
       doTurn(cmd, param, preview);
     } else if (cmd == "chirp") {
       doSound(cmd, param, preview);
@@ -260,11 +260,14 @@ class Program {
  * Turn the frog left or right
  */
   void doTurn(String cmd, var param, bool preview) {
-    num angle = 30;
+    num angle = 60;
     if (param is num) {
       angle = param;
     } else if (param.toString() == 'random') {
       angle = Turtle.rand.nextInt(180).toDouble() - 90.0;
+    }
+    if (cmd == 'left') {
+      angle *= -1;
     }
     Frog target = frog;
     if (preview) {
@@ -272,7 +275,8 @@ class Program {
       target.opacity = 0.5;
       frog.ghost = target;
     }
-    String s = "$cmd ${param}";
+    String s = "$cmd";
+    if (param != null) s = "$cmd $param";
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.delay = 0;
@@ -377,7 +381,7 @@ class Program {
  * For waits we use a tight loop
  */
   void doWait(String cmd, var param, bool preview) {
-    if (param == 'fly') {
+    //if (param == 'fly') {
       frog._vision = 10.0;
       frog.label = "$cmd $param";
       if (preview) {
@@ -388,7 +392,7 @@ class Program {
           frog._vision = 0.0;
         });
       }
-    }
+    //}
   }
   
   
