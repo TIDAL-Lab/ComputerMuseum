@@ -320,15 +320,17 @@ class Frog extends Turtle implements Touchable {
 
   
   void touchUp(Contact c) {
-    pond.census();
+    //pond.census();
   }
   
   
   void touchDrag(Contact c) {
+    /*
     move(c.touchX - _lastX, c.touchY - _lastY);
     _lastX = c.touchX;
     _lastY = c.touchY;
     _refresh = true;
+    */
   }
   
     
