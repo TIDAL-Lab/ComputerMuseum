@@ -45,20 +45,31 @@ class Menu implements Touchable {
   
   Menu(this.workspace, this.x, this.y, this.w, this.h) {
     frog.src = "images/${workspace.color}frog.png";
-    play = new Button(x + 95, y + h/2 - 15, "images/toolbar/play.png", () {
+    
+    int bx = x + 95;
+    int bspace = SHOW_FASTFORWARD ? 35 : 43;
+    play = new Button(bx, y + h/2 - 15, "images/toolbar/play.png", () {
       workspace.playProgram(); });
     
-    pause = new Button(x + 95, y + h/2 - 15, "images/toolbar/pause.png", () {
+    pause = new Button(bx, y + h/2 - 15, "images/toolbar/pause.png", () {
       workspace.pauseProgram(); });
     pause.visible = false;
     
     buttons.add(play);
     buttons.add(pause);
-    buttons.add(new Button(x + 130, y + h/2 - 15, "images/toolbar/restart.png", () {
+    
+    bx += bspace;
+    buttons.add(new Button(bx, y + h/2 - 15, "images/toolbar/restart.png", () {
       workspace.restartProgram(); }));
-    buttons.add(new Button(x + 165, y + h/2 - 15, "images/toolbar/fastforward.png", () {
-      workspace.fastForwardProgram(); }));
-    buttons.add(new Button(x + 200, y + h/2 - 15, "images/toolbar/trash.png", () {
+    
+    if (SHOW_FASTFORWARD) {
+      bx += bspace;
+      buttons.add(new Button(bx, y + h/2 - 15, "images/toolbar/fastforward.png", () {
+        workspace.fastForwardProgram(); }));
+    }
+    
+    bx += bspace;
+    buttons.add(new Button(bx, y + h/2 - 15, "images/toolbar/trash.png", () {
       workspace.removeAllBlocks(); }));
   }
   
@@ -94,8 +105,8 @@ class Menu implements Touchable {
       ctx.lineWidth = 3;
       
       ctx.beginPath();
-      ctx.moveTo(x + 250, y + h);
-      ctx.bezierCurveTo(x + 270, y - 50, x + 160, y + 10, x - 6, y - 5);
+      ctx.moveTo(x + 230, y + h);
+      ctx.bezierCurveTo(x + 250, y - 50, x + 160, y + 10, x - 6, y - 5);
       ctx.lineTo(x - 6, y + h);
       ctx.fill();
       ctx.stroke();
@@ -119,7 +130,7 @@ class Menu implements Touchable {
       //---------------------------------------------
       // programming blocks
       //---------------------------------------------
-      ix += 260;
+      ix += 235;
       iy = y + h/2;
       
       for (Block block in blocks) {
