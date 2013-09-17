@@ -23,9 +23,6 @@
 part of ComputerHistory;
 
 
-// Maximum number of frogs of a given color
-int MAX_FROGS = 40;
-
 class FrogPond extends TouchLayer {
   
   CanvasElement canvas;
