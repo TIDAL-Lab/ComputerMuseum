@@ -70,7 +70,7 @@ class CodeWorkspace extends TouchLayer {
     addTouchable(menu);
     
     // status area
-    //status = new StatusInfo(this, width - 150, height - 100, 150, 100);
+    status = new StatusInfo(this, width - 150, height - 100, 150, 100);
     
     // start block
     start = new StartBlock(this);
@@ -146,10 +146,12 @@ class CodeWorkspace extends TouchLayer {
  * Preview a block for all frogs
  */
   void preview(Block block) {
-    var pvalue = null;
-    if (block.hasParam) pvalue = block.param.value;
-    pond.pauseProgram(this);
-    pond.previewBlock(name, block.text, pvalue);
+    if (SHOW_PREVIEW) {
+      var pvalue = null;
+      if (block.hasParam) pvalue = block.param.value;
+      pond.pauseProgram(this);
+      pond.previewBlock(name, block.text, pvalue);
+    }
   }
 
 
@@ -371,11 +373,17 @@ class CodeWorkspace extends TouchLayer {
     menu.addBlock(new Block(this, 'eat'));
     
     // TURN block
-    block = new Block(this, 'turn');
-    block.param = new Parameter(block);
-    block.param.values = [ -90, -75, -60, -45, -30, -15, 'random', 15, 30, 45, 60, 75, 90 ];
-    block.param.index = 6;
-    menu.addBlock(block);
+    if (SHOW_TURN_BLOCK) {
+      block = new Block(this, 'turn');
+      block.param = new Parameter(block);
+      block.param.values = [ -90, -75, -60, -45, -30, -15, 'random', 15, 30, 45, 60, 75, 90 ];
+      block.param.index = 6;
+      menu.addBlock(block);
+    }
+    else {
+      menu.addBlock(new Block(this, 'left'));
+      menu.addBlock(new Block(this, 'right'));
+    }
     
     // HATCH block
     block = new Block(this, 'hatch');
@@ -383,9 +391,11 @@ class CodeWorkspace extends TouchLayer {
     menu.addBlock(block);
     
     // DIE block
-    block = new Block(this, 'die');
-    block.color = '#b67196';
-    menu.addBlock(block);
+    if (SHOW_DIE_BLOCK) {
+      block = new Block(this, 'die');
+      block.color = '#b67196';
+      menu.addBlock(block);
+    }
     
     // IF block
     menu.addBlock(new IfBlock(this));
