@@ -266,7 +266,7 @@ class Program {
     } else if (param.toString() == 'random') {
       angle = Turtle.rand.nextInt(180).toDouble() - 90.0;
     }
-    if (cmd == 'left') {
+    if (cmd == 'right') {
       angle *= -1;
     }
     Frog target = frog;
