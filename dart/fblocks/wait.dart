@@ -27,14 +27,15 @@ class WaitBlock extends BeginBlock {
 
   TimeoutBlock timeout;
   
-  WaitBlock(CodeWorkspace workspace) : super(workspace, 'wait\nfor') {
-    param = new Parameter(this);
-    param.values = [ 'fly', 'sound' ];
-    timeout = new TimeoutBlock(workspace, this);
-    _addClause(timeout);
+  WaitBlock(CodeWorkspace workspace) : super(workspace, 'wait for\nfly') {
+    //param = new Parameter(this);
+    //param.values = [ 'fly', 'sound' ];
+    if (SHOW_WAIT_TIMEOUT) {
+      timeout = new TimeoutBlock(workspace, this);
+      _addClause(timeout);
+    }
     end = new EndBlock(workspace, this);
     _addClause(end);
-    
   }
 
   
@@ -47,27 +48,37 @@ class WaitBlock extends BeginBlock {
   
   
   Block step(Program program) {
-    var v = timeout.param.value;
-    int t = (v is int) ? v * 20 : Turtle.rand.nextInt(6000);
+    if (timeout == null) {
+      
+      if (program.getSensorValue("fly")) {
+        return next;
+      } else {
+        return this;
+      }
+    } else {
+      
+      var v = timeout.param.value;
+      int t = (v is int) ? v * 20 : Turtle.rand.nextInt(6000);
 
-    if (!program.hasVariable("timeout")) {
-      program["timeout"] = t;
-    }
+      if (!program.hasVariable("timeout")) {
+        program["timeout"] = t;
+      }
     
-    if (program.getSensorValue(param.value)) {
-      program.removeVariable("timeout");
-      return next;
-    }
-    
-    else if (program["timeout"] <= 0) {
-      program.removeVariable("timeout");
-      program["do-timeout${timeout.id}"] = true;
-      return timeout;
-    }
-    
-    else {
-      program["timeout"] --;
-      return this;
+      if (program.getSensorValue(param.value)) {
+        program.removeVariable("timeout");
+        return next;
+      }
+      
+      else if (program["timeout"] <= 0) {
+        program.removeVariable("timeout");
+        program["do-timeout${timeout.id}"] = true;
+        return timeout;
+      }
+      
+      else {
+        program["timeout"] --;
+        return this;
+      }
     }
   }
 }
