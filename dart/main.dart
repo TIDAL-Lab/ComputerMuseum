@@ -28,6 +28,7 @@ import 'dart:math';
 import 'dart:async';
 import 'dart:web_audio';
 
+part 'beetle.dart';
 part 'fly.dart';
 part 'frog.dart';
 part 'gem.dart';
@@ -58,9 +59,15 @@ bool SHOW_TURN_BLOCK = false;
 bool SHOW_DIE_BLOCK = false;
 bool SHOW_PREVIEW = false;
 bool SHOW_WAIT_TIMEOUT = false;
+bool AUTO_REPEAT = false;
+bool FROG_SIZE_VARIATION = false;
+bool DRAG_LILYPADS = true;
 
 // Maximum number of frogs of a given color
-int MAX_FROGS = 40;
+int MAX_FLIES = 0;
+int MAX_FROGS = 5;
+int MAX_BEETLES = 5;
+int MAX_GEMS = 0;
 
 void main() {
 
