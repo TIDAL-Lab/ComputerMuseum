@@ -82,13 +82,11 @@ class FrogPond extends TouchLayer {
     tmanager.addTouchLayer(this);
     
 
-    if (!isFlagSet("evolution")) {
-      addGem();
-    }
+    for (int i=0; i<MAX_GEMS; i++) addGem();
     
-    for (int i=0; i<12; i++) {
-      addFly();
-    }
+    for (int i=0; i<MAX_FLIES; i++) addFly();
+    
+    for (int i=0; i<MAX_BEETLES; i++) addBeetle();
   
     
     if (isFlagSet("evolution")) {
@@ -179,7 +177,7 @@ class FrogPond extends TouchLayer {
     Frog frog = new Frog(this);
     frog["workspace"] = workspace.name;
     double fx = workspace.width / 2;
-    double fy = workspace.height - 300.0;
+    double fy = workspace.height - 290.0;
     frog.x = workspace.objectToWorldX(fx, fy);
     frog.y = workspace.objectToWorldY(fx, fy);
     frog.heading = workspace.objectToWorldTheta(0);
@@ -429,9 +427,15 @@ class FrogPond extends TouchLayer {
  * Adds a new random fly to the pond
  */
   void addFly() {
-    flies.add(new Fly(this,
-                      Turtle.rand.nextInt(width).toDouble(),
-                      Turtle.rand.nextInt(height).toDouble()));
+    if (flies.length < MAX_FLIES) flies.add(new Fly(this));
+  }
+  
+  
+/**
+ * Adds a new random beetle to the pond
+ */
+  void addBeetle() {
+    if (flies.length < MAX_BEETLES) flies.add(new Beetle(this));
   }
   
   
@@ -443,8 +447,8 @@ class FrogPond extends TouchLayer {
       if (flies[i].dead) flies.removeAt(i);
     }
   }
-
-
+  
+  
 /**
  * Returns the fly at the given location
  */
@@ -549,6 +553,7 @@ class FrogPond extends TouchLayer {
       for (LilyPad pad in pads) {
         pad.draw(layer0);
       }
+      drawGrid(layer0);
     }
     
     for (int i=0; i<play_state; i++) {
@@ -609,6 +614,50 @@ class FrogPond extends TouchLayer {
       if (pad.overlapsPoint(x, y)) return false;
     }
     return true;
+  }
+  
+  
+  void drawGrid(CanvasRenderingContext2D ctx) {
+    double HSPACE = 150.0;
+    double VSPACE = HSPACE * sin(PI / 3);
+    ctx.save();
+    ctx.globalAlpha = 0.05;
+    ctx.fillStyle = 'white';
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 4;
+    
+    double sx = 145.0;
+    double sy = 20.0;
+    
+    for (int j=0; j<9; j++) {
+      sx = (j % 2 == 0) ? 136.0 : 211.0;
+      
+      for (int i=0; i<12; i++) {
+        if (!inWater(sx, sy)) {
+          ctx.beginPath();
+          ctx.arc(sx, sy, 10, 0, PI * 2, true);
+          //ctx.fill();
+
+          ctx.beginPath();
+          if (!inWater(sx + HSPACE, sy)) {
+            ctx.moveTo(sx, sy);
+            ctx.lineTo(sx + HSPACE, sy);
+          }
+          if (!inWater(sx + HSPACE/2, sy + VSPACE)) {
+            ctx.moveTo(sx, sy);
+            ctx.lineTo(sx + HSPACE/2, sy + VSPACE);
+          }
+          if (!inWater(sx - HSPACE/2, sy + VSPACE)) {
+            ctx.moveTo(sx, sy);
+            ctx.lineTo(sx - HSPACE/2, sy + VSPACE);
+          }
+          ctx.stroke();
+        }
+        sx += HSPACE;
+      }
+      sy += VSPACE;
+    }
+    ctx.restore();
   }
   
   
