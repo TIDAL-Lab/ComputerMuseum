@@ -58,7 +58,7 @@ class Program {
   void step() {
     if (isRunning) {
       curr = curr.step(this);
-      curr.eval(this);
+      if (curr != null) curr.eval(this);
     }
   }
   
@@ -237,7 +237,7 @@ class Program {
       frog.ghost = target;
       target.opacity = 0.3;
     }
-    double length = frog.radius;
+    double length = frog.radius * 4.0;
     if (param is num) length *= param;
 
     String s = "$cmd";
@@ -444,8 +444,11 @@ class Program {
       baby.program.play();
       //baby.program.skip();
     });
-    double newsize = frog.size + Turtle.rand.nextDouble() * 0.2 - 0.1;
-    newsize = min(2.0, max(0.1, newsize));
+    double newsize = frog.size;
+    if (FROG_SIZE_VARIATION) {
+      newsize += Turtle.rand.nextDouble() * 0.2 - 0.1;
+      newsize = min(2.0, max(0.1, newsize));
+    }
     tween.addControlPoint(0.05, 0);
     tween.addControlPoint(newsize, 1.0);
     tween.ondelta = ((value) => baby.size += value);
