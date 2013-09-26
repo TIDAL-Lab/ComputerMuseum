@@ -70,7 +70,7 @@ class LilyPad extends Turtle implements Touchable {
   bool touchDown(Contact c) {
     _lastX = c.touchX;
     _lastY = c.touchY;
-    return true;
+    return DRAG_LILYPADS;
   }
 
   
