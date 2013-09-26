@@ -32,15 +32,15 @@ class Fly extends Turtle {
   FrogPond pond;
   
   
-  Fly(this.pond, double x, double y) : super() {
+  Fly(this.pond) : super() {
     img.src = "images/dragonfly.png";
-    this.x = x;
-    this.y = y;
+    this.x = Turtle.rand.nextInt(pond.width).toDouble();
+    this.y = Turtle.rand.nextInt(pond.height).toDouble();
   }
   
   
   Fly hatch() {
-    Fly clone = new Fly(pond, x, y);
+    Fly clone = new Fly(pond);
     clone.copy(this);
     return clone;
   }
