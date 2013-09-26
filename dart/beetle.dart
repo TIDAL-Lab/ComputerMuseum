@@ -25,6 +25,8 @@ part of ComputerHistory;
 
 class Beetle extends Fly {
   
+  double _turn = 1.5;
+  
   int frame = 1;
   
   bool perched = false;
@@ -32,13 +34,14 @@ class Beetle extends Fly {
   ImageElement frame0 = new ImageElement();
   ImageElement frame1 = new ImageElement();
   ImageElement frame2 = new ImageElement();
+
+  double deltaX, deltaY;
   
   var colors = [ 'red', 'green', 'blue', 'yellow' ];
   
   String color;
   
   Beetle(FrogPond pond) : super(pond) {
-    radius = 1.5;
     color = colors[Turtle.rand.nextInt(colors.length)];
     img.src = "images/gems/beetle_${color}2.png";
     frame0.src = "images/gems/beetle_${color}0.png";
@@ -51,22 +54,33 @@ class Beetle extends Fly {
     frame++;
     if (frame > 1) frame = 0;
     
-    if (perched) {
+    if (tween.isTweening()) {
+      tween.animate();
+      return true;
+    }
+    else if (perched) {
       if (Turtle.rand.nextInt(100) > 98) {
         left(15.0);
+        return true;
       } else if (Turtle.rand.nextInt(100) > 98) {
         right(15.0);
+        return true;
+      } else {
+        return false;
       }
     } else {
       forward(6.0);
-      left(radius);
-      if (Turtle.rand.nextInt(100) > 98) {
-        radius = Turtle.rand.nextDouble() * 3.0 - 1.5;
-      } else if (Turtle.rand.nextInt(1000) > 996 && !pond.inWater(x, y)) {
+      left(_turn);
+      if (pond.onGridPoint(x, y, 8) &&
+          pond.getTurtlesHere(this, Frog).isEmpty &&
+          pond.getTurtlesHere(this, Beetle).isEmpty) {
         perched = true;
       }
+      else if (Turtle.rand.nextInt(100) > 98) {
+        _turn = Turtle.rand.nextDouble() * 3.0 - 1.5;
+      } 
+      return true;
     } 
-    return true;
   }
   
   

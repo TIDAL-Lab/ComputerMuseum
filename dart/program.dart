@@ -239,7 +239,7 @@ class Program {
     }
     double length = frog.radius * 4.0;
     if (param is num) length *= param;
-
+    bool bounce = frog.pathBlocked() && FROGS_BLOCK;
     String s = "$cmd";
     tween = new Tween();
     tween.function = TWEEN_SINE2;
@@ -248,10 +248,15 @@ class Program {
     tween.onstart = (() { Sounds.playSound(cmd); target.label = s; });
     tween.onend = (() { doPause(preview); });
     tween.addControlPoint(0, 0);
-    tween.addControlPoint(length, 1);
+    if (bounce) {
+      tween.addControlPoint(length * 0.5, 0.5);
+      tween.addControlPoint(0, 1);
+    } else {
+      tween.addControlPoint(length, 1);
+    }
     tween.ondelta = ((value) {
       target.forward(value);
-      if (!preview) target.push(value);
+      if (!preview && FROGS_PUSH) target.push(value);
     });
   }
   
@@ -432,8 +437,10 @@ class Program {
       baby.program.pause();
     }
     baby.size = 0.05;
-    baby.left(Turtle.rand.nextInt(360).toDouble());
-    baby.forward(35.0);
+    baby.heading = frog.heading;
+    baby.left(60.0 + Turtle.rand.nextInt(5) * 60.0);
+    //baby.left(Turtle.rand.nextInt(360).toDouble());
+    //baby.forward(35.0);
     tween = new Tween();
     tween.function = TWEEN_DECAY;
     tween.delay = 0;

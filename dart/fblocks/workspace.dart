@@ -70,7 +70,9 @@ class CodeWorkspace extends TouchLayer {
     addTouchable(menu);
     
     // status area
-    status = new StatusInfo(this, width - 150, height - 100, 150, 100);
+    if (SHOW_STATUS) {
+      status = new StatusInfo(this, width - 150, height - 100, 150, 100);
+    }
     
     // start block
     start = new StartBlock(this);

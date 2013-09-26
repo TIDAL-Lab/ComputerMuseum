@@ -157,6 +157,14 @@ class Frog extends Turtle implements Touchable {
   }
   
   
+  bool pathBlocked() {
+    forward(radius * 4.0);
+    bool blocked = pond.getFrogsHere(this).isNotEmpty;
+    backward(radius * 4.0);
+    return blocked;
+  }
+  
+  
   bool nearWater() {
     bool wet = false;
     for (int i=0; i<5; i++) {

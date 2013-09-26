@@ -25,7 +25,7 @@ part of ComputerHistory;
 
 class Fly extends Turtle {
   
-  double radius = 3.0;
+  double _turn = 3.0;
   
   int perch = 0;
   
@@ -58,9 +58,9 @@ class Fly extends Turtle {
   bool animate() {
     if (perch <= 0) {
       forward(4.0);
-      left(radius);
+      left(_turn);
       if (Turtle.rand.nextInt(100) > 98) {
-        radius = Turtle.rand.nextDouble() * 6.0 - 3.0;
+        _turn = Turtle.rand.nextDouble() * 6.0 - 3.0;
       } else if (Turtle.rand.nextInt(1000) > 998 && !pond.inWater(x, y)) {
         perch = Turtle.rand.nextInt(100);
       }

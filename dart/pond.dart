@@ -36,6 +36,9 @@ class FrogPond extends TouchLayer {
   
   int width, height;
   
+  /* Generic list of all turtles */
+  List<Turtle> turtles = new List<Turtle>();
+  
   /* List of gems on the screen */
   List<Gem> gems = new List<Gem>();
 
@@ -47,6 +50,9 @@ class FrogPond extends TouchLayer {
   
   /* List of lilypads */
   List<LilyPad> pads = new List<LilyPad>();
+  
+  /* List of lattice grid points */
+  List lattice = new List();
   
   /*
    * Play state
@@ -193,6 +199,7 @@ class FrogPond extends TouchLayer {
  */
   void addFrog(Frog frog) {
     frogs.add(frog);
+    turtles.add(frog);
     addTouchable(frog);
   }
   
@@ -233,6 +240,7 @@ class FrogPond extends TouchLayer {
  */
   void removeFrog(Frog frog) {
     frogs.remove(frog);
+    turtles.remove(frog);
     removeTouchable(frog);
   }
   
@@ -275,6 +283,9 @@ class FrogPond extends TouchLayer {
     }
     return null;
   }
+  
+  
+  
   
   
 /**
@@ -419,6 +430,7 @@ class FrogPond extends TouchLayer {
     pad.size = ls;
     pad.refresh = true;
     pads.add(pad);
+    turtles.add(pad);
     addTouchable(pad);
   }
 
@@ -427,7 +439,11 @@ class FrogPond extends TouchLayer {
  * Adds a new random fly to the pond
  */
   void addFly() {
-    if (flies.length < MAX_FLIES) flies.add(new Fly(this));
+    if (flies.length < MAX_FLIES) {
+      Fly fly = new Fly(this);
+      flies.add(fly);
+      turtles.add(fly);
+    }
   }
   
   
@@ -435,7 +451,11 @@ class FrogPond extends TouchLayer {
  * Adds a new random beetle to the pond
  */
   void addBeetle() {
-    if (flies.length < MAX_BEETLES) flies.add(new Beetle(this));
+    if (flies.length < MAX_BEETLES) {
+      Beetle beetle = new Beetle(this);
+      flies.add(beetle);
+      turtles.add(beetle);
+    }
   }
   
   
@@ -444,10 +464,40 @@ class FrogPond extends TouchLayer {
  */
   void removeDeadFlies() {
     for (int i=flies.length-1; i >= 0; i--) {
-      if (flies[i].dead) flies.removeAt(i);
+      if (flies[i].dead) {
+        flies.removeAt(i);
+        turtles.remove(flies[i]);
+      }
     }
   }
   
+
+/**
+ * Get turtles here, not including target
+ */
+  Set<Turtle> getTurtlesHere(Turtle target, [Type type = Turtle]) {
+    Set<Turtle> aset = new HashSet<Turtle>();
+    for (Turtle t in turtles) {
+      if (t != target && t.runtimeType == type && t.overlapsTurtle(target)) {
+        aset.add(t);
+      }
+    }
+    return aset;
+  }
+  
+  
+/**
+ * Get one turtle here, not including target
+ */
+  Turtle getTurtleHere(Turtle target, [Type type = Turtle]) {
+    Set<Turtle> aset = getTurtlesHere(target, type);
+    if (aset.isEmpty) {
+      return null;
+    } else {
+      return aset.first;
+    }
+  }
+
   
 /**
  * Returns the fly at the given location
@@ -489,6 +539,7 @@ class FrogPond extends TouchLayer {
         gem.y = y.toDouble();
         gem.size = 0.75;
         gems.add(gem);
+        turtles.add(gem);
         return;
       }
     }
@@ -502,7 +553,10 @@ class FrogPond extends TouchLayer {
  */
   void removeDeadGems() {
     for (int i=gems.length-1; i >= 0; i--) {
-      if (gems[i].dead) gems.removeAt(i);
+      if (gems[i].dead) {
+        gems.removeAt(i);
+        turtles.remove(gems[i]);
+      }
     }
   }
   
@@ -617,7 +671,16 @@ class FrogPond extends TouchLayer {
   }
   
   
+  bool onGridPoint(num x, num y, num r) {
+    for (var point in lattice) {
+      if (distance(x, y, point[0], point[1]) <= r) return true;
+    }
+    return false;
+  }
+  
+  
   void drawGrid(CanvasRenderingContext2D ctx) {
+    lattice.clear();
     double HSPACE = 150.0;
     double VSPACE = HSPACE * sin(PI / 3);
     ctx.save();
@@ -636,6 +699,7 @@ class FrogPond extends TouchLayer {
         if (!inWater(sx, sy)) {
           ctx.beginPath();
           ctx.arc(sx, sy, 10, 0, PI * 2, true);
+          lattice.add([sx, sy]);
           //ctx.fill();
 
           ctx.beginPath();
