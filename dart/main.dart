@@ -63,7 +63,7 @@ bool SHOW_WAIT_TIMEOUT = false;
 bool SHOW_STATUS = false;
 bool AUTO_REPEAT = false;
 bool FROG_SIZE_VARIATION = false;
-bool DRAG_LILYPADS = true;
+bool DRAG_LILYPADS = false;
 bool FROGS_PUSH = false;
 bool FROGS_BLOCK = true;
 
