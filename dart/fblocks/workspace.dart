@@ -387,6 +387,8 @@ class CodeWorkspace extends TouchLayer {
       menu.addBlock(new Block(this, 'right'));
     }
     
+    menu.addBlock(new Block(this, 'spin'));
+    
     // HATCH block
     block = new Block(this, 'hatch');
     block.color = '#b67196';
@@ -406,7 +408,7 @@ class CodeWorkspace extends TouchLayer {
     menu.addBlock(new RepeatBlock(this));
     
     // WAIT block
-    menu.addBlock(new WaitBlock(this));
+    if (SHOW_WAIT_BLOCK) menu.addBlock(new WaitBlock(this));
         
   }
 }
