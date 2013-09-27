@@ -35,8 +35,6 @@ class Beetle extends Fly {
   ImageElement frame1 = new ImageElement();
   ImageElement frame2 = new ImageElement();
 
-  double deltaX, deltaY;
-  
   var colors = [ 'red', 'green', 'blue', 'yellow' ];
   
   String color;
@@ -47,6 +45,11 @@ class Beetle extends Fly {
     frame0.src = "images/gems/beetle_${color}0.png";
     frame1.src = "images/gems/beetle_${color}1.png";
     frame2.src = "images/gems/beetle_${color}2.png";
+  }
+  
+  
+  void spook() {
+    perched = false;
   }
   
   
