@@ -164,14 +164,12 @@ class Program {
       return frog.nearFly();
     } else if (sensor == "near-water?") {
       return frog.nearWater();
-    } else if (sensor == "not near-water?") {
-      return !frog.nearWater();
-    } else if (sensor == "see-gem?") {
-      return frog.seeGem();
-    } else if (sensor == "not see-gem?") {
-      return !frog.seeGem();
+    } else if (sensor == "see-bug?") {
+      return frog.seeBug();
     } else if (sensor == "random?") {
-      return Turtle.rand.nextInt(100) > 50;
+      return Turtle.rand.nextBool();
+    } else if (sensor == "blocked?") {
+      return frog.isBlocked();
     } else {
       return false;
     }
@@ -186,6 +184,8 @@ class Program {
       doTurn(cmd, param, preview);
     } else if (cmd == "chirp") {
       doSound(cmd, param, preview);
+    } else if (cmd == "spin") {
+      doSpin(cmd, param, preview);
     } else if (cmd == "eat") {
       doEat(cmd, param, preview);
     } else if (cmd == "hatch") {
@@ -256,6 +256,8 @@ class Program {
     }
     tween.ondelta = ((value) {
       target.forward(value);
+      Beetle beetle = target.pond.getTurtleHere(target, Beetle);
+      if (beetle != null) beetle.spook();
       if (!preview && FROGS_PUSH) target.push(value);
     });
   }
@@ -290,6 +292,25 @@ class Program {
     tween.addControlPoint(0, 0);
     tween.addControlPoint(angle, 1);
     tween.ondelta = ((value) => target.left(value));
+    tween.onend = (() { doPause(preview); });
+  }
+  
+
+/**
+ * Spin randomly
+ */
+  void doSpin(String cmd, var param, bool preview) {
+    num angle = 60 * Turtle.rand.nextInt(40);
+    if (Turtle.rand.nextBool()) angle *= -1;
+    String s = "$cmd";
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.delay = 0;
+    tween.duration = 30;
+    tween.onstart = (() => frog.label = s);
+    tween.addControlPoint(0, 0);
+    tween.addControlPoint(angle, 1);
+    tween.ondelta = ((value) => frog.left(value));
     tween.onend = (() { doPause(preview); });
   }
   
