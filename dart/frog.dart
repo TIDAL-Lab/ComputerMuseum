@@ -63,9 +63,9 @@ class Frog extends Turtle implements Touchable {
   }
   
   
-  double get tongueX => x + sin(heading) * _tongue * height * 1.5;
+  double get tongueX => x + sin(heading) * _tongue * height * 1.8;
   
-  double get tongueY => y - cos(heading) * _tongue * height * 1.5;
+  double get tongueY => y - cos(heading) * _tongue * height * 1.8;
   
   double get radius => super.radius * 0.75;
   
@@ -167,11 +167,9 @@ class Frog extends Turtle implements Touchable {
   
   bool nearWater() {
     bool wet = false;
-    for (int i=0; i<5; i++) {
-      forward(10.0);
-      if (inWater()) wet = true;
-    }
-    backward(50.0);
+    forward(radius * 4.0);
+    if (inWater()) wet = true;
+    backward(radius * 4.0);
     return wet;
   }
   
@@ -181,11 +179,12 @@ class Frog extends Turtle implements Touchable {
   }
   
   
-  bool seeGem() {
-    for (Gem gem in pond.gems) {
-      if (angleBetween(gem).abs() < 20.0) return true;
-    }
-    return false;
+  bool seeBug() {
+    forward(radius * 4.0);
+    Beetle bug = pond.getTurtleHere(this, Beetle);
+    bool b = bug != null;
+    backward(radius * 4.0);
+    return b;
   }
   
   
@@ -205,6 +204,14 @@ class Frog extends Turtle implements Touchable {
       }
     }
     return false;
+  }
+  
+  
+  bool isBlocked() {
+    forward(radius * 4.0);
+    bool blocked = pond.getTurtleHere(this, Frog) != null;
+    backward(radius * 4.0);
+    return blocked;
   }
   
   
@@ -299,7 +306,7 @@ class Frog extends Turtle implements Touchable {
       ctx.lineWidth = 5;
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.lineTo(0, _tongue * height * -1.5);
+      ctx.lineTo(0, _tongue * height * -1.6);
       ctx.stroke();
     }
     
