@@ -48,10 +48,10 @@ class Fly extends Turtle {
   
   void forward(double distance) {
     super.forward(distance);
-    if (x < -20) x += pond.width;
-    if (y < -20) y += pond.height;
-    if (x > pond.width + 20) x -= pond.width;
-    if (y > pond.height + 20) y -= pond.height;
+    if (x < -30) x += pond.width;
+    if (y < -30) y += pond.height;
+    if (x > pond.width + 30) x -= pond.width;
+    if (y > pond.height + 30) y -= pond.height;
   }
   
   
