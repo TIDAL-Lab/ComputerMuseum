@@ -465,8 +465,8 @@ class FrogPond extends TouchLayer {
   void removeDeadFlies() {
     for (int i=flies.length-1; i >= 0; i--) {
       if (flies[i].dead) {
-        flies.removeAt(i);
         turtles.remove(flies[i]);
+        flies.removeAt(i);
       }
     }
   }
@@ -478,7 +478,7 @@ class FrogPond extends TouchLayer {
   Set<Turtle> getTurtlesHere(Turtle target, [Type type = Turtle]) {
     Set<Turtle> aset = new HashSet<Turtle>();
     for (Turtle t in turtles) {
-      if (t != target && t.runtimeType == type && t.overlapsTurtle(target)) {
+      if (t != target && t.runtimeType == type && !t.dead && t.overlapsTurtle(target)) {
         aset.add(t);
       }
     }
@@ -504,7 +504,7 @@ class FrogPond extends TouchLayer {
  */
   Fly getFlyHere(num x, num y) {
     for (Fly fly in flies) {
-      if (fly.overlapsPoint(x, y, 20)) return fly;
+      if (fly.overlapsPoint(x, y, 30)) return fly;
     }
     return null;
   }
@@ -518,8 +518,10 @@ class FrogPond extends TouchLayer {
     for (CodeWorkspace workspace in workspaces) {
       if (workspace.name == frog["workspace"]) {
         workspace.captureFly();
+        fly.erase(layer2);
         fly.die();
-        addFly();
+        //addFly();
+        addBeetle();
       }
     }
   }
@@ -591,10 +593,20 @@ class FrogPond extends TouchLayer {
  * Animate and draw
  */
   void tick(Timer timer) {
-    flies.forEach((fly) => fly.erase(layer2));
+    
+    
+    // animate flies
+    bool refresh = false;
+    for (Fly fly in flies) {
+      if (fly.animate()) refresh = true;
+    }
+    if (refresh) {
+      flies.forEach((fly) => fly.erase(layer2));
+      flies.forEach((fly) => fly.draw(layer2));
+    }
     
     // animate lilypad movement
-    bool refresh = false;
+    refresh = false;
     for (LilyPad pad in pads) {
       if (pad.refresh) {
         refresh = true;
@@ -610,11 +622,13 @@ class FrogPond extends TouchLayer {
       drawGrid(layer0);
     }
     
+    refresh = false;
     for (int i=0; i<play_state; i++) {
       if (animate()) refresh = true;
     }
-    if (refresh) drawForeground();
-    flies.forEach((fly) => fly.draw(layer2));
+    if (refresh) {
+      drawForeground();
+    }
     
     // animate code workspaces
     for (CodeWorkspace workspace in workspaces) {
@@ -640,9 +654,8 @@ class FrogPond extends TouchLayer {
     removeDeadGems();
     removeDeadFrogs();
     
-    flies.forEach((fly) => fly.animate());
-    
     // animate agents and workspaces
+    refresh = false;
     for (Gem gem in gems) {
       if (gem.animate()) refresh = true;
     }
