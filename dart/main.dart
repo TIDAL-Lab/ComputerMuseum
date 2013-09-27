@@ -57,6 +57,7 @@ part 'fblocks/workspace.dart';
 bool SHOW_FASTFORWARD = false;
 bool SHOW_TURN_BLOCK = false;
 bool SHOW_DIE_BLOCK = false;
+bool SHOW_WAIT_BLOCK = false;
 bool SHOW_PREVIEW = false;
 bool SHOW_WAIT_TIMEOUT = false;
 bool SHOW_STATUS = false;
@@ -69,7 +70,7 @@ bool FROGS_BLOCK = true;
 // Maximum number of frogs of a given color
 int MAX_FLIES = 0;
 int MAX_FROGS = 5;
-int MAX_BEETLES = 50;
+int MAX_BEETLES = 6;
 int MAX_GEMS = 0;
 
 void main() {
