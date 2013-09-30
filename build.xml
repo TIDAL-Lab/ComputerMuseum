@@ -10,7 +10,7 @@
    <property name="project.name" value="ComputerMuseum" />
    <property name="deploy.user" value="litl" />
    <property name="deploy.host" value="tidal.sesp.northwestern.edu" />
-   <property name="deploy.dir" value="/home/litl/public_html/chm_09172013" />
+   <property name="deploy.dir" value="/home/litl/public_html/chm_09262013" />
 </target>
 
 
@@ -23,6 +23,7 @@
          <include name="css/*.css" />
          <include name="**/*.dart" />
          <include name="**/*.js" />
+         <include name="**/*.js.map" />
          <include name="index.html" />
          <include name="sounds/*.wav" />
          <include name="**/*.png" />
