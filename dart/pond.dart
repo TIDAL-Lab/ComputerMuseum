@@ -139,6 +139,14 @@ class FrogPond extends TouchLayer {
 
     new Timer.periodic(const Duration(milliseconds : 40), tick);
     
+    ImageElement lilypad = new ImageElement();
+    lilypad.src = "images/lilypad.png";
+    lilypad.onLoad.listen((e) {
+      drawPond();
+      workspaces.forEach((workspace) => workspace.draw());
+      drawForeground();
+    });
+    
     // master timeout
     if (isFlagSet("timeout")) {
       print("initiating master restart timer");
@@ -615,11 +623,7 @@ class FrogPond extends TouchLayer {
     }
     
     if (refresh) {
-      layer0.clearRect(0, 0, width, height);
-      for (LilyPad pad in pads) {
-        pad.draw(layer0);
-      }
-      drawGrid(layer0);
+      drawPond();
     }
     
     refresh = false;
@@ -689,6 +693,15 @@ class FrogPond extends TouchLayer {
       if (distance(x, y, point[0], point[1]) <= r) return true;
     }
     return false;
+  }
+  
+
+  void drawPond() {
+    layer0.clearRect(0, 0, width, height);
+    for (LilyPad pad in pads) {
+      pad.draw(layer0);
+    }
+    drawGrid(layer0);
   }
   
   
