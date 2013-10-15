@@ -24,11 +24,15 @@ part of ComputerHistory;
 
   
 class IfBlock extends BeginBlock {
+  
+  ElseBlock el;
 
   IfBlock(CodeWorkspace workspace) : super(workspace, 'if') {
     param = new Parameter(this);
     param.centerX = width - 35;
-    param.values = [ 'see-gem?', 'near-water?', 'not see-gem?', 'not near-water?', 'random?' ];
+    param.values = [ 'near-water?', 'hungry?' ];
+    el = new ElseBlock(workspace, this);
+    _addClause(el);    
     end = new EndBlock(workspace, this);
     _addClause(end);
   }
@@ -49,7 +53,26 @@ class IfBlock extends BeginBlock {
   
   
   Block step(Program program) {
-    return program.getSensorValue(param.value) ? next : end.next;
+    if (program.getSensorValue(param.value)) {
+      program["if${id}"] = "if-branch";
+      return next;
+    } else {
+      program["if${id}"] = "else-branch";
+      return el;
+    }    
   }
 }
 
+
+class ElseBlock extends ControlBlock {
+  
+  ElseBlock(CodeWorkspace workspace, BeginBlock begin) : super(workspace, begin, 'else');
+  
+  Block step(Program program) {
+    if (program["if${begin.id}"] == "else-branch") {
+      return next;
+    } else {
+      return begin.end.next;
+    }
+  }
+}

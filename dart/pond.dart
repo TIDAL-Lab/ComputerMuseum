@@ -26,8 +26,8 @@ part of ComputerHistory;
 class FrogPond extends TouchLayer {
   
   CanvasElement canvas;
-  CanvasRenderingContext2D layer0;  // lily pads
-  CanvasRenderingContext2D layer1;  // frogs / gems
+  CanvasRenderingContext2D layer0;  // lilypads
+  CanvasRenderingContext2D layer1;  // frogs
   CanvasRenderingContext2D layer2;  // flies
   
   TouchManager tmanager = new TouchManager();
@@ -36,9 +36,6 @@ class FrogPond extends TouchLayer {
   
   int width, height;
   
-  /* List of gems on the screen */
-  List<Gem> gems = new List<Gem>();
-
   /* List of flies */  
   List<Fly> flies = new List<Fly>();
   
@@ -81,70 +78,29 @@ class FrogPond extends TouchLayer {
     tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(this);
     
+    addLilyPad(300, height/2, 0.6);
+    addLilyPad(370, 100, 0.6);
+    addLilyPad(1620, height/2, 0.6);
+    addLilyPad(550, 790, 0.8);
+    addLilyPad(630, 370, 0.9);
+    addLilyPad(940, 650, 0.8);
+    addLilyPad(1000, 250, 0.8);
+    addLilyPad(1300, height/2, 0.8);
+    addLilyPad(1400, 130, 0.6);
+    addLilyPad(1300, height - 130, 0.6);
+    addLilyPad(900, height - 130, 0.6);
+    
 
-    if (!isFlagSet("evolution")) {
-      addGem();
-    }
+    CodeWorkspace workspace = new CodeWorkspace(this, width, height, "workspace1", "blue");
+    tmanager.addTouchLayer(workspace);
+    workspaces.add(workspace);
     
     for (int i=0; i<12; i++) {
       addFly();
     }
-  
-    
-    if (isFlagSet("evolution")) {
-      addLilyPad(width/2, height/2, 1.0);
-      addLilyPad(200, 200, 0.7);
-      addLilyPad(900, 210, 0.7);
-      addLilyPad(840, 550, 0.6);
-    } else {
-      addLilyPad(300, height/2, 0.6);
-      addLilyPad(370, 100, 0.6);
-      addLilyPad(1620, height/2, 0.6);
-      addLilyPad(550, 790, 0.8);
-      addLilyPad(630, 370, 0.9);
-      addLilyPad(940, 650, 0.8);
-      addLilyPad(1000, 250, 0.8);
-      addLilyPad(1300, height/2, 0.8);
-      addLilyPad(1400, 130, 0.6);
-      addLilyPad(1300, height - 130, 0.6);
-      addLilyPad(900, height - 130, 0.6);
-    }
-    
-
-    if (isFlagSet("evolution")) {
-      MAX_FROGS = 100;
-      CodeWorkspace workspace = new CodeWorkspace(this, width, height, "workspace1", "green");
-      workspaces.add(workspace);
-      tmanager.addTouchLayer(workspace);
-      for (int i=0; i<4; i++) {
-        addRandomFrog(workspace);
-      }
-    } else {
-      CodeWorkspace workspace = new CodeWorkspace(this, height, width, "workspace1", "blue");
-      workspace.transform(cos(PI / -2), sin(PI / -2), -sin(PI / -2), cos(PI / -2), 0, height);
-      workspaces.add(workspace);
-      tmanager.addTouchLayer(workspace);
-      addHomeFrog(workspace);
-  
-      workspace = new CodeWorkspace(this, height, width, "workspace2", "green");
-      workspace.transform(cos(PI/2), sin(PI/2), -sin(PI/2),cos(PI/2), width, 0);
-      workspaces.add(workspace);
-      tmanager.addTouchLayer(workspace);
-      addHomeFrog(workspace);
-    }
 
     new Timer.periodic(const Duration(milliseconds : 40), tick);
-    
-    // master timeout
-    if (isFlagSet("timeout")) {
-      print("initiating master restart timer");
-      new Timer.periodic(const Duration(seconds : 10), (timer) {
-        _countdown += 10;
-        if (_countdown >= 80) window.location.reload();
-      });
-      document.documentElement.onMouseDown.listen((e) => _countdown = 0);
-      document.documentElement.onTouchStart.listen((e) => _countdown = 0);
-    }
+    new Timer.periodic(const Duration(seconds : 2), (timer) => drawPond(layer0));
   }
   
   
@@ -283,26 +239,25 @@ class FrogPond extends TouchLayer {
  * Show frog histogram
  */
   void census() {
-    frogs.sort((Frog a, Frog b) => (a.size * 100 - b.size * 100).toInt());
-    
-    double range = 2.0 - 0.1;
-    double interval = range / 5.0;  // eight bins
-    double cutoff = 0.1 + interval;
+    frogs.sort((Frog a, Frog b) => (b.size * 100 - a.size * 100).toInt());
     double fx = 0.0, fy = 0.0;
-    
+    double cx = width / 6;
+    double m = sqrt(3.0);
+    double interval = m / 4;
     for (Frog frog in frogs) {
-
-      if (frog.size > cutoff) {
-        fx += 90.0;
-        fy = 0.0;
-        cutoff += interval;
+      for (int i=1; i<=4; i++) {
+        if (frog.size < interval * i || i == 4) {
+          fx = cx * i + Turtle.rand.nextInt(150) - 75;
+          fy = height / 2 + Turtle.rand.nextInt(200 - 100);
+          break;
+        }
       }
+    
       if (frog._saveX != null) {
         frog.flyBack();
       } else {
-        frog.flyTo(fx + 300.0, height - 220.0 - fy, 0);
+        frog.flyTo(fx, fy);
       }
-      fy += 20;
     }
   }
   
@@ -332,6 +287,7 @@ class FrogPond extends TouchLayer {
   
   void pauseProgram(CodeWorkspace workspace) {
     play_state = 1;
+    Sounds.mute = false;
     for (Frog frog in frogs) {
       if (frog["workspace"] == workspace.name) {
         frog.program.pause();
@@ -355,15 +311,19 @@ class FrogPond extends TouchLayer {
         frog.die();
       }
     }
-    addHomeFrog(workspace).pulse();
+    for (int i=0; i<4; i++) {
+      addRandomFrog(workspace);
+    }
   }
   
   
   void fastForwardProgram(CodeWorkspace workspace) {
+    Sounds.mute = false;
     if (play_state <= 0) {
       play_state = 1;
     } else if (play_state < 64) {
       play_state *= 2;
+      Sounds.mute = true;
     } else {
       play_state = 1;
     }
@@ -450,7 +410,7 @@ class FrogPond extends TouchLayer {
  */
   Fly getFlyHere(num x, num y) {
     for (Fly fly in flies) {
-      if (fly.overlapsPoint(x, y, 20)) return fly;
+      if (fly.overlapsPoint(x, y, 30)) return fly;
     }
     return null;
   }
@@ -460,72 +420,8 @@ class FrogPond extends TouchLayer {
  * Capture a fly
  */
   void captureFly(Frog frog, Fly fly) {
-    // first find the workspace
-    for (CodeWorkspace workspace in workspaces) {
-      if (workspace.name == frog["workspace"]) {
-        workspace.captureFly();
-        fly.die();
-        addFly();
-      }
-    }
-  }
-  
-  
-/**
- * Adds a random gem to the pond in a place where there are no frogs... give up
- * after a few tries and try again later.
- */
-  void addGem()  {
-    for (int i=0; i<25; i++) {
-      int x = Turtle.rand.nextInt(width - 100) + 50;
-      int y = Turtle.rand.nextInt(height - 200) + 100;
-      if (!inWater(x, y) && getFrogHere(x, y) == null) {
-        Gem gem = new Gem();
-        gem.x = x.toDouble();
-        gem.y = y.toDouble();
-        gem.size = 0.75;
-        gems.add(gem);
-        return;
-      }
-    }
-    // try again in 4 seconds
-    new Timer(const Duration(milliseconds : 4000), addGem);
-  }
-
-  
-/**
- * Remove dead gems
- */
-  void removeDeadGems() {
-    for (int i=gems.length-1; i >= 0; i--) {
-      if (gems[i].dead) gems.removeAt(i);
-    }
-  }
-  
-  
-/**
- * Get any gem at this location 
- */
-  Gem getGemHere(Frog frog) {
-    for (Gem gem in gems) {
-      if (gem.overlapsTurtle(frog) && !gem.dead) return gem;
-    }
-    return null;
-  }
-  
-  
-/**
- * Capture a gem
- */
-  void captureGem(Frog frog, Gem gem) {
-    // first find the workspace
-    for (CodeWorkspace workspace in workspaces) {
-      if (workspace.name == frog["workspace"]) {
-        workspace.captureGem(gem);
-        gem.die();
-        new Timer(const Duration(milliseconds : 3000), () { addGem(); });
-      }
-    }
+    fly.die();
+    addFly();
   }
   
   
@@ -544,12 +440,8 @@ class FrogPond extends TouchLayer {
       }
     }
     
-    if (refresh) {
-      layer0.clearRect(0, 0, width, height);
-      for (LilyPad pad in pads) {
-        pad.draw(layer0);
-      }
-    }
+    if (refresh) drawPond(layer0);
+    refresh = false;
     
     for (int i=0; i<play_state; i++) {
       if (animate()) refresh = true;
@@ -566,7 +458,6 @@ class FrogPond extends TouchLayer {
         workspace.draw();
       }
     }
-    
   }
   
   
@@ -576,17 +467,11 @@ class FrogPond extends TouchLayer {
   bool animate() {
     bool refresh = false;
 
-    // remove dead frogs, flies, and gems
+    // remove dead frogs and flies
     removeDeadFlies();
-    removeDeadGems();
     removeDeadFrogs();
     
     flies.forEach((fly) => fly.animate());
-    
-    // animate agents and workspaces
-    for (Gem gem in gems) {
-      if (gem.animate()) refresh = true;
-    }
 
     // animate might add a new frog, so use a counting for loop
     for (int i=0; i<frogs.length; i++) {
@@ -612,15 +497,70 @@ class FrogPond extends TouchLayer {
   }
   
   
+  void drawHistogram(CanvasRenderingContext2D ctx) {
+    if (frogs.length <= 0) return;
+    var hist = [ 0, 0, 0, 0 ];
+    double m = sqrt(3.0);
+    double interval = m / 4;
+    for (Frog frog in frogs) {
+      for (int i=1; i<=4; i++) {
+        if (frog.size <= interval * i || i == 4) {
+          hist[i-1]++;
+          break;
+        }
+      }
+    }
+    
+    double start = 0.0;
+    double sweep = 0.0;
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 3;
+    ctx.textAlign = "left";
+    ctx.font = "200 22px sans-serif";
+    ctx.textBaseline = "bottom";
+
+    for (int i=0; i<4; i++) {
+      sweep = (hist[i] / frogs.length) * PI * 2;
+      ctx.fillStyle = "rgba(${i * 70}, ${i * 20}, ${i * 40}, 0.7)";
+      ctx.beginPath();
+      ctx.moveTo(width - 175, 175);
+      ctx.arc(width - 175, 175, 140, start, start + sweep, false);
+      start += sweep;
+      ctx.fill();
+      ctx.fillRect(width - 250, 330 + 40 * i, 30, 30);
+      ctx.fillStyle = "white";
+      ctx.strokeRect(width - 250, 330 + 40 * i, 30, 30);
+      String size = "Tiny";
+      switch (i) {
+        case 0: size = "Tiny"; break;
+        case 1: size = "Small"; break;
+        case 2: size = "Big"; break;
+        default: size = "Huge"; break;
+      }
+      ctx.fillText("$size: ${(100.0 * hist[i] / frogs.length).toInt()}%", width - 210, 360 + 40 * i );
+    }
+    ctx.beginPath();
+    ctx.arc(width - 175, 175, 140, 0, PI * 2, false);
+    ctx.stroke();
+  }
+  
+  
+  void drawPond(CanvasRenderingContext2D ctx) {
+    ctx.clearRect(0, 0, width, height);
+    for (LilyPad pad in pads) {
+      pad.draw(ctx);
+    }
+    drawHistogram(ctx);
+  }
+  
+  
 /**
- * Draws the flies, frogs, gems, and programming blocks
+ * Draws the flies, frogs, and programming blocks
  */
   void drawForeground() {
     CanvasRenderingContext2D ctx = layer1;
     ctx.clearRect(0, 0, width, height);
-    
-    gems.forEach((gem) => gem.draw(ctx));
-    
+
     frogs.forEach((frog) => frog.draw(ctx));
     
     if (play_state > 1) {

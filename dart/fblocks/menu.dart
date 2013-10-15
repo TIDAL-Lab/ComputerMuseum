@@ -105,8 +105,8 @@ class Menu implements Touchable {
       ctx.lineWidth = 3;
       
       ctx.beginPath();
-      ctx.moveTo(x + 230, y + h);
-      ctx.bezierCurveTo(x + 250, y - 50, x + 160, y + 10, x - 6, y - 5);
+      ctx.moveTo(x + 250, y + h);
+      ctx.bezierCurveTo(x + 270, y - 50, x + 160, y + 10, x - 6, y - 5);
       ctx.lineTo(x - 6, y + h);
       ctx.fill();
       ctx.stroke();
@@ -130,7 +130,7 @@ class Menu implements Touchable {
       //---------------------------------------------
       // programming blocks
       //---------------------------------------------
-      ix += 235;
+      ix += 265;
       iy = y + h/2;
       
       for (Block block in blocks) {

@@ -25,15 +25,10 @@ part of ComputerHistory;
   
 class WaitBlock extends BeginBlock {
 
-  TimeoutBlock timeout;
-  
-  WaitBlock(CodeWorkspace workspace) : super(workspace, 'wait for\nfly') {
+  WaitBlock(CodeWorkspace workspace) : super(workspace, 'wait for fly') {
     //param = new Parameter(this);
-    //param.values = [ 'fly', 'sound' ];
-    if (SHOW_WAIT_TIMEOUT) {
-      timeout = new TimeoutBlock(workspace, this);
-      _addClause(timeout);
-    }
+    //param.centerX = width - 7;
+    //param.values = [ 50, 100, 150, 200, 250, 300, 350, 400 ];
     end = new EndBlock(workspace, this);
     _addClause(end);
   }
@@ -48,59 +43,25 @@ class WaitBlock extends BeginBlock {
   
   
   Block step(Program program) {
-    if (timeout == null) {
-      
-      if (program.getSensorValue("fly")) {
-        return next;
-      } else {
-        return this;
-      }
-    } else {
-      
-      var v = timeout.param.value;
-      int t = (v is int) ? v * 20 : Turtle.rand.nextInt(6000);
+    //var v = param.value;
+    //int t = (v is int) ? v * 20 : Turtle.rand.nextInt(6000);
+    int t = 400;
 
-      if (!program.hasVariable("timeout")) {
-        program["timeout"] = t;
-      }
-    
-      if (program.getSensorValue(param.value)) {
-        program.removeVariable("timeout");
-        return next;
-      }
-      
-      else if (program["timeout"] <= 0) {
-        program.removeVariable("timeout");
-        program["do-timeout${timeout.id}"] = true;
-        return timeout;
-      }
-      
-      else {
-        program["timeout"] --;
-        return this;
-      }
+    if (!program.hasVariable("timeout")) {
+      program["timeout"] = t;
     }
-  }
-}
-
-
-class TimeoutBlock extends ControlBlock {
-  
-  TimeoutBlock(CodeWorkspace workspace, BeginBlock begin) : super(workspace, begin, 'timeout') {
-    param = new Parameter(this);
-    param.values = [ 10, 50, 100, 150, 200, 'random' ];
-    param.centerX = width - 12;
-    param.index = 5;
-  }
-  
-  
-  Block step(Program program) {
-    String v = "do-timeout${id}";
-    if (program.hasVariable(v)) {
-      program.removeVariable(v);
+    
+    if (program.getSensorValue("fly")) {
+      program.removeVariable("timeout");
       return next;
-    } else {
-      return begin.end;
+    }
+    else if (program["timeout"] <= 0) {
+      program.removeVariable("timeout");
+      return end;
+    }
+    else {
+      program["timeout"] --;
+      return this;
     }
   }
 }

@@ -164,14 +164,10 @@ class Program {
       return frog.nearFly();
     } else if (sensor == "near-water?") {
       return frog.nearWater();
-    } else if (sensor == "not near-water?") {
-      return !frog.nearWater();
-    } else if (sensor == "see-gem?") {
-      return frog.seeGem();
-    } else if (sensor == "not see-gem?") {
-      return !frog.seeGem();
-    } else if (sensor == "random?") {
-      return Turtle.rand.nextInt(100) > 50;
+    } else if (sensor == "hungry?") {
+      return frog.isHungry();
+    } else if (sensor == "flip-coin?") {
+      return Turtle.rand.nextBool();
     } else {
       return false;
     }
@@ -212,11 +208,6 @@ class Program {
       Sounds.playSound("splash");
       frog.die();
       return;
-    }
-    
-    // did we capture a gem?
-    if (!preview) {
-      frog.captureGem();
     }
     
     tween = new Tween();
@@ -260,11 +251,9 @@ class Program {
  * Turn the frog left or right
  */
   void doTurn(String cmd, var param, bool preview) {
-    num angle = 60;
+    num angle = Turtle.rand.nextInt(180).toDouble() - 90.0;
     if (param is num) {
       angle = param;
-    } else if (param.toString() == 'random') {
-      angle = Turtle.rand.nextInt(180).toDouble() - 90.0;
     }
     if (cmd == 'right') {
       angle *= -1;
@@ -383,7 +372,7 @@ class Program {
   void doWait(String cmd, var param, bool preview) {
     //if (param == 'fly') {
       frog._vision = 10.0;
-      frog.label = "$cmd $param";
+      frog.label = "$cmd";
       if (preview) {
         tween = new Tween();
         tween.duration = 40;
@@ -441,11 +430,10 @@ class Program {
     tween.onstart = (() => frog.label = cmd);
     tween.onend = (() {
       doPause(preview);
-      baby.program.play();
-      //baby.program.skip();
+      if (isRunning) baby.program.play();
     });
     double newsize = frog.size + Turtle.rand.nextDouble() * 0.2 - 0.1;
-    newsize = min(2.0, max(0.1, newsize));
+    newsize = min(3.0, max(0.1, newsize));
     tween.addControlPoint(0.05, 0);
     tween.addControlPoint(newsize, 1.0);
     tween.ondelta = ((value) => baby.size += value);

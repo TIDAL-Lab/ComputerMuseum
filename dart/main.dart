@@ -30,7 +30,6 @@ import 'dart:web_audio';
 
 part 'fly.dart';
 part 'frog.dart';
-part 'gem.dart';
 part 'lilypad.dart';
 part 'matrix.dart';
 part 'pond.dart';
@@ -48,19 +47,21 @@ part 'fblocks/menu.dart';
 part 'fblocks/parameter.dart';
 part 'fblocks/repeat.dart';
 part 'fblocks/start.dart';
-part 'fblocks/status.dart';
 part 'fblocks/wait.dart';
 part 'fblocks/workspace.dart';
 
 
-bool SHOW_FASTFORWARD = false;
-bool SHOW_TURN_BLOCK = false;
-bool SHOW_DIE_BLOCK = false;
+bool SHOW_FASTFORWARD = true;
+bool SHOW_TURN_BLOCK = true;
+bool SHOW_DIE_BLOCK = true;
 bool SHOW_PREVIEW = false;
+bool SHOW_REPEAT_BLOCK = false;
 bool SHOW_WAIT_TIMEOUT = false;
+bool AUTO_REPEAT = true;
+bool FROGS_PUSH = true;
 
 // Maximum number of frogs of a given color
-int MAX_FROGS = 40;
+int MAX_FROGS = 80;
 
 void main() {
 

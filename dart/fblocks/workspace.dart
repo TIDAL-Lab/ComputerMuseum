@@ -37,9 +37,6 @@ class CodeWorkspace extends TouchLayer {
   /* block menu */
   Menu menu;
   
-  /* status display (frog color, number of gems, number of flies) */
-  StatusInfo status;
-  
   /* fixed start block */
   StartBlock start;
   
@@ -68,9 +65,6 @@ class CodeWorkspace extends TouchLayer {
     menu = new Menu(this, 0, height - BLOCK_HEIGHT * 1.85, width, BLOCK_HEIGHT * 1.85);
     _initMenu();
     addTouchable(menu);
-    
-    // status area
-    status = new StatusInfo(this, width - 150, height - 100, 150, 100);
     
     // start block
     start = new StartBlock(this);
@@ -283,8 +277,6 @@ class CodeWorkspace extends TouchLayer {
       if (block.animate()) refresh = true;
     }
     
-    if (status != null && status.animate()) refresh = true;
-    
     return refresh;
   }
   
@@ -319,19 +311,6 @@ class CodeWorkspace extends TouchLayer {
   }
   
   
-  void captureGem(Gem g) {
-    if (status != null) status.captureGem(g);
-  }
-  
-  
-  void captureFly() {
-    if (status != null) {
-      status.fly_count++;
-      draw();
-    }
-  }  
-  
-  
   void draw() {
     ctx.save();
     {
@@ -345,9 +324,6 @@ class CodeWorkspace extends TouchLayer {
       // draw the menu
       menu.draw(ctx);
       
-      // draw the status bar
-      if (status != null) status.draw(ctx);
-  
       //------------------------------------------------
       // draw blocks themselves
       //------------------------------------------------
@@ -375,9 +351,9 @@ class CodeWorkspace extends TouchLayer {
     // TURN block
     if (SHOW_TURN_BLOCK) {
       block = new Block(this, 'turn');
-      block.param = new Parameter(block);
-      block.param.values = [ -90, -75, -60, -45, -30, -15, 'random', 15, 30, 45, 60, 75, 90 ];
-      block.param.index = 6;
+      //block.param = new Parameter(block);
+      //block.param.values = [ -90, -75, -60, -45, -30, -15, 'random', 15, 30, 45, 60, 75, 90 ];
+      //block.param.index = 6;
       menu.addBlock(block);
     }
     else {
@@ -401,7 +377,7 @@ class CodeWorkspace extends TouchLayer {
     menu.addBlock(new IfBlock(this));
     
     // REPEAT block
-    menu.addBlock(new RepeatBlock(this));
+    if (SHOW_REPEAT_BLOCK) menu.addBlock(new RepeatBlock(this));
     
     // WAIT block
     menu.addBlock(new WaitBlock(this));

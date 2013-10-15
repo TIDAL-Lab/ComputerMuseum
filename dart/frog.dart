@@ -49,6 +49,9 @@ class Frog extends Turtle implements Touchable {
   /* fly captured by frog for eating */
   Fly prey = null;
   
+  /* how long since last meal? */
+  double last_meal = 3000.0;
+  
   
   Frog(this.pond) : super() {
     img.src = "images/bluefrog.png";
@@ -85,9 +88,12 @@ class Frog extends Turtle implements Touchable {
     _refresh = false;
     if (tween.isTweening()) {
       tween.animate();
-      refresh = true;
+        refresh = true;
     }
     if (program.animate()) refresh = true;
+    if (program.isRunning) {
+      last_meal -= sqrt(size);
+    }
     return refresh;
   }
   
@@ -96,6 +102,7 @@ class Frog extends Turtle implements Touchable {
  * Push other frogs out of the way
  */
   void push(num distance) {
+    if (!FROGS_PUSH) return;
     for (Frog frog in pond.getFrogsHere(this)) {
       double angle = angleBetween(frog);
       if (angle.abs() < 90.0) {
@@ -168,24 +175,15 @@ class Frog extends Turtle implements Touchable {
   }
   
   
+  bool isHungry() {
+    return last_meal <= 0;
+  }
+  
+  
   bool inWater() {
     return pond.inWater(x, y);
   }
   
-  
-  bool seeGem() {
-    for (Gem gem in pond.gems) {
-      if (angleBetween(gem).abs() < 20.0) return true;
-    }
-    return false;
-  }
-  
-  
-  void captureGem() {
-    Gem gem = pond.getGemHere(this);
-    if (gem != null) pond.captureGem(this, gem);
-  }
-
   
   bool nearFly() {
     for (Fly fly in pond.flies) {
@@ -206,6 +204,7 @@ class Frog extends Turtle implements Touchable {
       if (fly != null && !fly.dead) {
         prey = fly.hatch();
         pond.captureFly(this, fly);
+        last_meal = 3000.0;
       }
     } else {
       prey.x = tongueX;
@@ -300,7 +299,15 @@ class Frog extends Turtle implements Touchable {
     //---------------------------------------------
     num iw = width;
     num ih = height;
-    ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
+    ctx.save();
+    {
+      if (isFlagSet("hunger") && _saveX == null) {
+        double alpha = min(0.7, max(0.0, (last_meal / 3000) * 0.7)) + 0.3;
+        ctx.globalAlpha = alpha;
+      }
+      ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
+    }
+    ctx.restore();
   }
 
   double _lastX = 0.0, _lastY = 0.0;
@@ -320,7 +327,7 @@ class Frog extends Turtle implements Touchable {
 
   
   void touchUp(Contact c) {
-    //pond.census();
+    pond.census();
   }
   
   

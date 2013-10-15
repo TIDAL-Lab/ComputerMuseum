@@ -7,6 +7,7 @@ class Sounds {
 
   static AudioContext audio = new AudioContext();
   static Map sounds = new Map();
+  static bool mute = false;
 
 
   static void loadSound(String name) {
@@ -29,7 +30,7 @@ class Sounds {
 
 
   static void playSound(String name) {
-    if (sounds[name] != null) {
+    if (sounds[name] != null && !mute) {
       sounds[name].volume = 0.6;
       sounds[name].play();
     }

@@ -24,17 +24,13 @@ part of ComputerHistory;
 
   
 /**
- * Current status for this workstation (frog color, flies eaten, gems found)
+ * Current status for this workstation (frog color, flies eaten found)
  */
 class StatusInfo {
 
   num x, y, w, h;
   
   ImageElement fly = new ImageElement();
-  
-  List<Gem> gems = new List<Gem>();
-  
-  Gem captured = null;
   
   CodeWorkspace workspace;
   
@@ -43,12 +39,6 @@ class StatusInfo {
   
   StatusInfo(this.workspace, this.x, this.y, this.w, this.h) {
     fly.src = "images/dragonfly.png";
-    for (var color in Gem.colors) {
-      Gem gem = new Gem.fromColor(color);
-      gem.size = 0.4;
-      gem.shadowed = true;
-      gems.add(gem);
-    }
   }
   
   
@@ -60,22 +50,6 @@ class StatusInfo {
     }
   }
 
-  
-  void captureGem(Gem g) {
-    captured = new Gem.copy(g);
-    captured.x = workspace.worldToObjectX(g.x, g.y);
-    captured.y = workspace.worldToObjectY(g.x, g.y);
-    for (Gem gem in gems) {
-      if (gem.color == captured.color) {
-        captured.flyTo(gem.x, gem.y, () {
-          gem.shadowed = false;
-          workspace.draw();
-          captured = null;
-        });
-      }
-    }
-  }
-  
   
   void draw(CanvasRenderingContext2D ctx) {
     ctx.save();
@@ -93,13 +67,6 @@ class StatusInfo {
       
       int ix = x + 18;
       int iy = y + h - h ~/ 3;
-      for (Gem gem in gems) {
-        ix += gem.width ~/ 2;
-        gem.x = ix.toDouble();
-        gem.y = iy.toDouble();
-        gem.draw(ctx);
-        ix += gem.width ~/ 2 + 10;
-      }
       
       ix = x + 40;
       iy = y + 20;

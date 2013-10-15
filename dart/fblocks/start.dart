@@ -161,7 +161,7 @@ class EndProgramBlock extends EndBlock {
 
   
   Block step(Program program) {
-    return isFlagSet("evolution") ? begin : null;
+    return AUTO_REPEAT ? begin : null;
   }  
 
   
