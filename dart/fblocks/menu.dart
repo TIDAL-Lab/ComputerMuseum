@@ -42,6 +42,8 @@ class Menu implements Touchable {
   
   List<Button> buttons = new List<Button>();
   
+  Map<String, Beetle> beetles = new Map<String, Beetle>();
+  
   
   Menu(this.workspace, this.x, this.y, this.w, this.h) {
     frog.src = "images/${workspace.color}frog.png";
@@ -71,6 +73,20 @@ class Menu implements Touchable {
     bx += bspace;
     buttons.add(new Button(bx, y + h/2 - 15, "images/toolbar/trash.png", () {
       workspace.removeAllBlocks(); }));
+    
+    // scoreboard
+    bx = w - 30;
+    for (String color in Beetle.colors) {
+      Beetle b = new Beetle(workspace.pond, color);
+      beetles[color] = b;
+      b.x = bx.toDouble();
+      b.y = y + h/2;
+      b.heading = 0.0;
+      b.perched = true;
+      b.locked = true;
+      b.shadowed = true;
+      bx -= 40;
+    }
   }
   
   
@@ -84,8 +100,21 @@ class Menu implements Touchable {
   }
   
   
-  void animate() {
+  void captureFly(Fly fly) {
+    if (fly is Beetle) {
+      beetles[fly.color].shadowed = false;
+      beetles[fly.color].pulse();
+    }
+  }
+  
+  
+  bool animate() {
     play.animate();
+    bool refresh = false;
+    for (Beetle beetle in beetles.values) {
+      if (beetle.animate()) refresh = true;
+    }
+    return refresh;
   }
   
   
@@ -139,6 +168,13 @@ class Menu implements Touchable {
         block.inMenu = true;
         block.draw(ctx);
         ix += block.width + 10;
+      }
+      
+      //---------------------------------------------
+      // scoreboard
+      //---------------------------------------------
+      for (String color in beetles.keys) {
+        beetles[color].draw(ctx);
       }
     }
     ctx.restore();

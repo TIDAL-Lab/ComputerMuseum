@@ -264,7 +264,7 @@ class CodeWorkspace extends TouchLayer {
     if (r != running) refresh = true;
     running = r;
     
-    menu.animate();
+    if (menu.animate()) refresh = true;
 
     //----------------------------------------------
     // for each block being dragged, identify active insertion points 
@@ -326,7 +326,8 @@ class CodeWorkspace extends TouchLayer {
   }
   
   
-  void captureFly() {
+  void captureFly(Fly fly) {
+    menu.captureFly(fly);
     if (status != null) {
       status.fly_count++;
       draw();
