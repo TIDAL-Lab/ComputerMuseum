@@ -114,49 +114,6 @@ class Frog extends Turtle implements Touchable {
   }
   
   
-  void pulse() {
-    tween = new Tween();
-    tween.function = TWEEN_SINE2;
-    tween.duration = 10;
-    tween.repeat = 3;
-    tween.ondelta = ((value) => opacity += value );
-    tween.addControlPoint(1.0, 0.0);
-    tween.addControlPoint(0.0, 0.5);
-    tween.addControlPoint(1.0, 1.0);    
-  }
-  
-  
-  double _saveX, _saveY, _saveH;
-  void flyTo(num tx, num ty, [num th = 0.0]) {
-    _saveX = x;
-    _saveY = y;
-    _saveH = heading;
-    double deltaX = (tx.toDouble() - x);
-    double deltaY = (ty.toDouble() - y);
-    double deltaH = (th.toDouble() - heading);
-    tween = new Tween();
-    tween.function = TWEEN_SINE2;
-    tween.duration = 10;
-    tween.addControlPoint(0, 0);
-    tween.addControlPoint(1, 1);
-    tween.ondelta = ((value) {
-      x += value * deltaX;
-      y += value * deltaY;
-      heading += value * deltaH;
-    });
-  }
-  
-  
-  void flyBack() {
-    if (_saveX != null && _saveY != null && _saveH != null) {
-      flyTo(_saveX, _saveY, _saveH);
-      _saveX = null;
-      _saveY = null;
-      _saveH = null;
-    }
-  }
-  
-  
   bool pathBlocked() {
     forward(radius * 4.0);
     bool blocked = pond.getFrogsHere(this).isNotEmpty;
@@ -220,7 +177,7 @@ class Frog extends Turtle implements Touchable {
       Fly fly = pond.getFlyHere(tongueX, tongueY);
       if (fly != null && !fly.dead) {
         prey = fly.hatch();
-        pond.captureFly(this, fly);
+        fly.die();
       }
     } else {
       prey.x = tongueX;
