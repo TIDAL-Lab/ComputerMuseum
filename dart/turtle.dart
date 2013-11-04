@@ -109,6 +109,18 @@ abstract class Turtle {
   }
   
   
+  void pulse() {
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.duration = 10;
+    tween.repeat = 3;
+    tween.ondelta = ((value) => opacity += value );
+    tween.addControlPoint(1.0, 0.0);
+    tween.addControlPoint(0.0, 0.5);
+    tween.addControlPoint(1.0, 1.0);    
+  }
+  
+  
   bool animate();
 
   
