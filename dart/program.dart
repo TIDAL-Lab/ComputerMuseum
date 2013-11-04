@@ -362,7 +362,7 @@ class Program {
     tween.onend = (() {
       if (frog.prey != null) {
         Sounds.playSound("gulp");
-        //workspace.captureFly(prey);
+        frog.pond.captureFly(frog, frog.prey);
         frog.prey = null;
       }
       doPause(preview);
