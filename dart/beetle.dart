@@ -31,20 +31,36 @@ class Beetle extends Fly {
   
   bool perched = false;
   
+  bool locked = false;
+  
+  bool shadowed = false;
+  
   ImageElement frame0 = new ImageElement();
   ImageElement frame1 = new ImageElement();
   ImageElement frame2 = new ImageElement();
+  ImageElement shadow = new ImageElement();
 
-  var colors = [ 'red', 'green', 'blue', 'yellow' ];
+  static var colors = [ 'red', 'green', 'blue', 'yellow' ];
   
   String color;
   
-  Beetle(FrogPond pond) : super(pond) {
-    color = colors[Turtle.rand.nextInt(colors.length)];
+  Beetle(FrogPond pond, [ String color = null ]) : super(pond) {
+    if (color == null) {
+      color = Beetle.colors[Turtle.rand.nextInt(colors.length)];      
+    }
+    this.color = color;    
     img.src = "images/gems/beetle_${color}2.png";
     frame0.src = "images/gems/beetle_${color}0.png";
     frame1.src = "images/gems/beetle_${color}1.png";
     frame2.src = "images/gems/beetle_${color}2.png";
+    shadow.src = "images/gems/beetle_shadow.png";
+  }
+  
+  
+  Fly hatch() {
+    Beetle clone = new Beetle(pond, color);
+    clone.copy(this);
+    return clone;
   }
   
   
@@ -62,7 +78,10 @@ class Beetle extends Fly {
       return true;
     }
     else if (perched) {
-      if (Turtle.rand.nextInt(100) > 98) {
+      if (locked) {
+        return false;
+      }
+      else if (Turtle.rand.nextInt(100) > 98) {
         left(15.0);
         return true;
       } else if (Turtle.rand.nextInt(100) > 98) {
@@ -91,6 +110,7 @@ class Beetle extends Fly {
     if (dead) return;
     ImageElement i = (frame == 0)? frame1 : frame2;
     if (perched) i = frame0;
+    if (shadowed) i = shadow;
     num iw = i.width;
     num ih = i.height;
     ctx.drawImageScaled(i, -iw/2, -ih/2, iw, ih);
