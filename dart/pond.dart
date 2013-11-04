@@ -293,37 +293,6 @@ class FrogPond extends TouchLayer {
   }
   
   
-  
-  
-  
-/**
- * Show frog histogram
- */
-  void census() {
-    frogs.sort((Frog a, Frog b) => (a.size * 100 - b.size * 100).toInt());
-    
-    double range = 2.0 - 0.1;
-    double interval = range / 5.0;  // eight bins
-    double cutoff = 0.1 + interval;
-    double fx = 0.0, fy = 0.0;
-    
-    for (Frog frog in frogs) {
-
-      if (frog.size > cutoff) {
-        fx += 90.0;
-        fy = 0.0;
-        cutoff += interval;
-      }
-      if (frog._saveX != null) {
-        frog.flyBack();
-      } else {
-        frog.flyTo(fx + 300.0, height - 220.0 - fy, 0);
-      }
-      fy += 20;
-    }
-  }
-  
-  
 /**
  * Preview a programming command
  */
@@ -473,6 +442,7 @@ class FrogPond extends TouchLayer {
   void removeDeadFlies() {
     for (int i=flies.length-1; i >= 0; i--) {
       if (flies[i].dead) {
+        flies[i].erase(layer2);
         turtles.remove(flies[i]);
         flies.removeAt(i);
       }
@@ -525,10 +495,7 @@ class FrogPond extends TouchLayer {
     // first find the workspace
     for (CodeWorkspace workspace in workspaces) {
       if (workspace.name == frog["workspace"]) {
-        workspace.captureFly();
-        fly.erase(layer2);
-        fly.die();
-        //addFly();
+        workspace.captureFly(fly);
         addBeetle();
       }
     }
