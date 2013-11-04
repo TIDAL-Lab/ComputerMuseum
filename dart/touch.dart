@@ -349,7 +349,7 @@ class Contact {
     num top = window.pageYOffset;
     
     if (parent != null) {
-      Rect box = parent.getBoundingClientRect();
+      Rectangle box = parent.getBoundingClientRect();
       left += box.left;
       top += box.top;
     }
