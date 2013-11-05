@@ -49,9 +49,15 @@ class Frog extends Turtle implements Touchable {
   /* fly captured by frog for eating */
   Fly prey = null;
   
+  /* help message */
+  ImageElement help = new ImageElement();
+  
+  double help_alpha = 0.0;
+  
   
   Frog(this.pond) : super() {
     img.src = "images/bluefrog.png";
+    help.src = "images/help/help1.png";
   }
   
   
@@ -88,6 +94,14 @@ class Frog extends Turtle implements Touchable {
       refresh = true;
     }
     if (program.animate()) refresh = true;
+    
+    if (down && help_alpha < 1.0) {
+      help_alpha = min(1.0, help_alpha + 0.1);
+      refresh = true;
+    } else if (!down && help_alpha > 0.0) {
+      help_alpha = max(0.0, help_alpha - 0.1);
+      refresh = true;
+    }
     return refresh;
   }
   
@@ -273,6 +287,16 @@ class Frog extends Turtle implements Touchable {
     num iw = width;
     num ih = height;
     ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
+    
+      
+    //---------------------------------------------
+    // draw the help message
+    //---------------------------------------------
+    if (help_alpha > 0.0 && this["moved"] == false) {
+      ctx.globalAlpha = help_alpha;
+      ctx.drawImage(help, -650, -480);
+      ctx.globalAlpha = 1.0;
+    }
   }
 
   double _lastX = 0.0, _lastY = 0.0;
@@ -284,14 +308,18 @@ class Frog extends Turtle implements Touchable {
   }
   
   
+  bool down = false;
+  
   bool touchDown(Contact c) {
     _lastX = c.touchX;
     _lastY = c.touchY;
+    down = true;
     return true;
   }
 
   
   void touchUp(Contact c) {
+    down = false;
     //pond.census();
   }
   

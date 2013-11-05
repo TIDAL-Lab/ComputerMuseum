@@ -237,6 +237,7 @@ class Program {
       frog.ghost = target;
       target.opacity = 0.3;
     }
+    target["moved"] = true;
     double length = frog.radius * 4.0;
     if (param is num) length *= param;
     bool bounce = frog.pathBlocked() && FROGS_BLOCK;
@@ -282,6 +283,7 @@ class Program {
       target.opacity = 0.5;
       frog.ghost = target;
     }
+    target["moved"] = true;
     String s = "$cmd";
     if (param != null) s = "$cmd $param";
     tween = new Tween();

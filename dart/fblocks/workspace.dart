@@ -351,9 +351,7 @@ class CodeWorkspace extends TouchLayer {
       // draw the status bar
       if (status != null) status.draw(ctx);
   
-      //------------------------------------------------
       // draw blocks themselves
-      //------------------------------------------------
       for (Block block in blocks) {
         block.draw(ctx);
       }

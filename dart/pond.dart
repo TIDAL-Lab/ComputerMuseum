@@ -190,6 +190,7 @@ class FrogPond extends TouchLayer {
   Frog addHomeFrog(CodeWorkspace workspace) {
     Frog frog = new Frog(this);
     frog["workspace"] = workspace.name;
+    frog["moved"] = false;
     double fx = workspace.width / 2;
     double fy = workspace.height - 290.0;
     frog.x = workspace.objectToWorldX(fx, fy);
