@@ -1,3 +1,16 @@
+/**
+ * Frog Pond
+ *
+ * Michael S. Horn
+ * Northwestern University
+ * michael-horn@northwestern.edu
+ * Copyright 2013, Michael S. Horn
+ *
+ * This project was funded in part by the National Science Foundation.
+ * Any opinions, findings and conclusions or recommendations expressed in this
+ * material are those of the author(s) and do not necessarily reflect the views
+ * of the National Science Foundation (NSF).
+ */
 @charset "utf-8";
 
 * { 
@@ -5,13 +18,28 @@
    -webkit-tap-highlight-color: rgba(0,0,0,0);    
 }
 
+
 body {
    margin: 0;
    padding: 0;
    color: #ccc;
-   font: 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
    background-color: #333;
 }
+
+
+/* iPad 2 landscape dimensions */
+#content {
+  width: 1024px;
+  height: 748px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+
 
 canvas {
    position: absolute;
@@ -21,6 +49,7 @@ canvas {
    margin: 0px;
 }
 
+
 #pond {
    z-index: 0;
    background-image: url('../images/texture2.png');
@@ -28,22 +57,9 @@ canvas {
    background-position: 0 0;
 }
 
-#background { z-index: 1; }
 
-#foreground { z-index: 2; }
-
+#frogs { z-index: 1; }
+#flies { z-index: 2; }
 #workspace1 { z-index: 3; }
 
-#workspace2 { z-index: 4; }
 
-#plot {
-   z-index: 5;
-   margin: 0;
-   padding: 0;
-   position: absolute;
-   top: 20px;
-   right: 20px;
-   background-color: white;
-   outline: none;
-   border: 1px solid black;
-}
