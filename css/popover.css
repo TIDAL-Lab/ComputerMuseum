@@ -1,0 +1,121 @@
+/*
+ * Green Home Games
+ *
+ * Michael S. Horn
+ * Northwestern University
+ * michael-horn@northwestern.edu
+ * Copyright 2013, Michael S. Horn
+ *
+ * This project was funded in part by the National Science Foundation.
+ * Any opinions, findings and conclusions or recommendations expressed in this
+ * material are those of the author(s) and do not necessarily reflect the views
+ * of the National Science Foundation (NSF).
+ */
+
+#dialog-overlay {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  visibility: hidden;
+  position: absolute;
+  top: 0px; left: 0px;
+}
+
+
+.popover {
+  background-color: #666;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  width: 220px;
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .25s ease-in-out;
+  -webkit-transition: opacity .25s ease-in-out;
+  z-index: 50;
+}
+
+.popover::before {
+	content: "";
+	width: 0px;
+	height: 0px;
+	border: 20px solid transparent;
+	position: absolute;
+}
+
+
+.popover.bottom::before {
+  left: 40%;
+	bottom: -56px;
+	border-top: 40px solid #666;
+}
+
+
+.popover.left::before {
+  top: 38%;
+	left: -56px;
+	border-right: 40px solid #666;
+}
+
+
+.popover.right::before {
+  top: 37%;
+	right: -56px;
+	border-left: 40px solid #666;
+}
+
+
+.popover.top::before {
+  left: 40%;
+	top: -56px;
+	border-bottom: 40px solid #666;
+}
+
+
+.popover ul {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 6px;
+  margin: 0px;
+  box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.4) inset;
+  list-style: none;
+  font-family: sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  padding: 3px;
+  text-align: left;
+  color: black;
+}
+
+
+.popover ul li {
+  padding: 9px;
+  margin: 0px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+
+.popover ul li:last-child {
+  border-bottom: none;
+}
+
+
+.popover ul li.selected {
+  background-color: #ff6611;
+  color: white;
+}
+
+
+.popover ul li:hover {
+  background-color: #2277ff;
+  color: white;
+}
+
+
+.popover ul li:active {
+  background-color: #ff6611;
+  color: white;
+}

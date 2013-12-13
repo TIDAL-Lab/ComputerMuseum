@@ -53,6 +53,38 @@ class Program {
     curr = other.curr;
     running = other.running;
   }
+
+  
+  void play() {
+    if (isFinished) restart();
+    running = true;
+  }
+
+  
+  void pause() {
+    running = false;
+  }
+  
+
+  void restart() {
+    curr = start;
+    running = false;
+  }
+
+  
+  bool get isRunning {
+    return (running && curr != null && !start.isEmptyProgram);
+  }
+  
+  
+  bool get isPaused {
+    return (!running && curr != null);
+  }
+  
+  
+  bool get isFinished {
+    return (curr == null);
+  }
   
   
   void step() {
@@ -110,55 +142,6 @@ class Program {
   }
   
   
-  void restart() {
-    curr = start;
-    running = false;
-  }
-  
-  
-  void play() {
-    if (isFinished) restart();
-    running = true;
-  }
-  
-  
-  void pause() {
-    running = false;
-  }
-  
-  
-  bool get isRunning {
-    return (running && curr != null);
-  }
-  
-  
-  bool get isPaused {
-    return (!running && curr != null);
-  }
-  
-  
-  bool get isFinished {
-    return (curr == null);
-  }
-  
-  
-  String compile() {
-    String s = "void main() {\n";
-    Block b = start.next;
-    int indent = 1;
-    while (b != null && !(b is EndProgramBlock)) {
-      s += b.compile(indent);
-      if (b is BeginBlock) {
-        indent++;
-      } else if (b is EndBlock) {
-        indent--;
-      }
-      b = b.next;
-    }
-    return s + "}\n";
-  }
-  
-  
   bool getSensorValue(String sensor) {
     if (sensor == "fly") {
       return frog.nearFly();
@@ -166,6 +149,12 @@ class Program {
       return frog.nearWater();
     } else if (sensor == "hungry?") {
       return frog.isHungry();
+    } else if (sensor == "full?") {
+      return frog.isFull();
+    } else if (sensor == "starving?") {
+      return frog.isStarving();
+    } else if (sensor == "not-starving?") {
+      return !frog.isStarving();
     } else if (sensor == "flip-coin?") {
       return Turtle.rand.nextBool();
     } else {
@@ -432,7 +421,7 @@ class Program {
       doPause(preview);
       if (isRunning) baby.program.play();
     });
-    double newsize = frog.size + Turtle.rand.nextDouble() * 0.2 - 0.1;
+    double newsize = frog.size + Turtle.rand.nextDouble() * 0.1 - 0.05;
     newsize = min(3.0, max(0.1, newsize));
     tween.addControlPoint(0.05, 0);
     tween.addControlPoint(newsize, 1.0);

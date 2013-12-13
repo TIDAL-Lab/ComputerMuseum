@@ -2,10 +2,10 @@
  * Computer History Museum Frog Pond
  * Copyright (c) 2013 Michael S. Horn
  * 
- *           Michael S. Horn (michael-horn@northwestern.edu)
- *           Northwestern University
- *           2120 Campus Drive
- *           Evanston, IL 60613
+ *    Michael S. Horn (michael-horn@northwestern.edu)
+ *    Northwestern University
+ *    2120 Campus Drive
+ *    Evanston, IL 60613
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License (version 2) as
@@ -33,6 +33,7 @@ part 'frog.dart';
 part 'lilypad.dart';
 part 'matrix.dart';
 part 'pond.dart';
+part 'popover.dart';
 part 'sounds.dart';
 part 'touch.dart';
 part 'turtle.dart';
@@ -59,9 +60,11 @@ bool SHOW_REPEAT_BLOCK = false;
 bool SHOW_WAIT_TIMEOUT = false;
 bool AUTO_REPEAT = true;
 bool FROGS_PUSH = true;
+int MAX_FROGS = 80;  // Maximum number of frogs of a given color
 
-// Maximum number of frogs of a given color
-int MAX_FROGS = 80;
+
+// Global frog pond
+FrogPond pond;
 
 void main() {
 
@@ -80,6 +83,8 @@ void main() {
   Sounds.loadSound("swoosh");
   Sounds.loadSound("gulp");
   
+  initPopovers();
+  
   // create frog pond
-  FrogPond pond = new FrogPond();
+  pond = new FrogPond();
 }

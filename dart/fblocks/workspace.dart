@@ -56,9 +56,11 @@ class CodeWorkspace extends TouchLayer {
 
 
   
-  CodeWorkspace(this.pond, this.width, this.height, this.name, this.color) {
+  CodeWorkspace(this.pond, this.name, this.color) {
     
-    CanvasElement canvas = document.query("#${name}");
+    CanvasElement canvas = querySelector("#${name}");
+    width = canvas.width;
+    height = canvas.height;
     ctx = canvas.getContext('2d');
 
     // menu bar
@@ -78,49 +80,25 @@ class CodeWorkspace extends TouchLayer {
   
   
 /**
- * Resume the program for all frogs
- */
-  void playProgram() {
-    pond.playProgram(this);
-  }
-
-  
-/**
- * Pause a running program for all frogs
- */
-  void pauseProgram() {
-    pond.pauseProgram(this);
-  }
-  
-  
-/**
- * Halts all frogs and restarts their programs
- */
-  void stopProgram() {
-    pond.stopProgram(this);
-  }
-
-  
-/**
  * Restart to single frog on home lilypad
  */
-  void restartProgram() {
-    pond.restartProgram(this);
+// FIXME
+/*  void restartProgram() {
+    pond.restartProgram();
+    bug.reset();
+  }
+*/  
+
+  void stopProgram() {
+    pond.stopProgram();
     bug.reset();
   }
   
-  
-/**
- * Speeds up program execution
- */
-  void fastForwardProgram() {
-    pond.fastForwardProgram(this);
-  }
-  
-  
+
 /**
  * Erase a program
  */
+/*
   void removeAllBlocks() {
     stopProgram();
     Block block = start.next;
@@ -134,7 +112,7 @@ class CodeWorkspace extends TouchLayer {
     start.next = start.end;
     start.end.prev = start;
   }
-  
+*/  
   
 /**
  * Preview a block for all frogs
@@ -143,7 +121,7 @@ class CodeWorkspace extends TouchLayer {
     if (SHOW_PREVIEW) {
       var pvalue = null;
       if (block.hasParam) pvalue = block.param.value;
-      pond.pauseProgram(this);
+      pond.pauseProgram();
       pond.previewBlock(name, block.text, pvalue);
     }
   }
@@ -204,8 +182,6 @@ class CodeWorkspace extends TouchLayer {
     Block b = findInsertionPoint(target);
     if (b != null) {
       b.insertBlock(target);
-      start.pulse();
-      menu.pulsePlayButton();
       return true;
     } else {
       return false;
@@ -218,8 +194,6 @@ class CodeWorkspace extends TouchLayer {
  */
   void snapToEnd(Block target) {
     start.end.prev.insertBlock(target);
-    start.pulse();
-    menu.pulsePlayButton();
   }
   
 
@@ -252,7 +226,7 @@ class CodeWorkspace extends TouchLayer {
   bool animate() {
     bool refresh = false;
 
-    bool r = pond.isProgramRunning(this.name);
+    bool r = pond.isProgramRunning();
     if (r != running) refresh = true;
     running = r;
     
@@ -294,7 +268,7 @@ class CodeWorkspace extends TouchLayer {
       ctx.textAlign = 'center';
       ctx.fillStyle = 'white';
       ctx.font = '200 16px sans-serif';
-      ctx.fillText(frog.label, tx, ty + 52);
+      ctx.fillText("${frog.label}", tx, ty + 52);
       ctx.restore();
     }
     bug.target = frog.program.curr;

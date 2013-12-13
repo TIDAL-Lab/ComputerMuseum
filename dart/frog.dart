@@ -22,6 +22,7 @@
  */
 part of ComputerHistory;
 
+const MAX_ENERGY = 2000;
 
 class Frog extends Turtle implements Touchable {
   
@@ -50,11 +51,12 @@ class Frog extends Turtle implements Touchable {
   Fly prey = null;
   
   /* how long since last meal? */
-  double last_meal = 3000.0;
+  int last_meal = MAX_ENERGY;
   
   
   Frog(this.pond) : super() {
     img.src = "images/bluefrog.png";
+    size = 0.5;
   }
   
   
@@ -62,6 +64,8 @@ class Frog extends Turtle implements Touchable {
     Frog clone = new Frog(pond);
     clone.copy(this);
     clone.program = new Program.copy(program, clone);
+    last_meal = last_meal ~/ 2;
+    clone.last_meal = last_meal;
     return clone;
   }
   
@@ -92,7 +96,7 @@ class Frog extends Turtle implements Touchable {
     }
     if (program.animate()) refresh = true;
     if (program.isRunning) {
-      last_meal -= sqrt(size);
+      last_meal -= max(1, sqrt(size).toInt());
     }
     return refresh;
   }
@@ -176,6 +180,16 @@ class Frog extends Turtle implements Touchable {
   
   
   bool isHungry() {
+    return last_meal <= 1000;
+  }
+
+  
+  bool isFull() {
+    return last_meal > 1900;
+  }
+  
+  
+  bool isStarving() {
     return last_meal <= 0;
   }
   
@@ -204,7 +218,7 @@ class Frog extends Turtle implements Touchable {
       if (fly != null && !fly.dead) {
         prey = fly.hatch();
         pond.captureFly(this, fly);
-        last_meal = 3000.0;
+        last_meal = MAX_ENERGY;
       }
     } else {
       prey.x = tongueX;
@@ -302,7 +316,7 @@ class Frog extends Turtle implements Touchable {
     ctx.save();
     {
       if (isFlagSet("hunger") && _saveX == null) {
-        double alpha = min(0.7, max(0.0, (last_meal / 3000) * 0.7)) + 0.3;
+        double alpha = min(0.7, max(0.0, (last_meal / MAX_ENERGY) * 0.7)) + 0.3;
         ctx.globalAlpha = alpha;
       }
       ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
@@ -326,20 +340,7 @@ class Frog extends Turtle implements Touchable {
   }
 
   
-  void touchUp(Contact c) {
-    pond.census();
-  }
-  
-  
-  void touchDrag(Contact c) {
-    /*
-    move(c.touchX - _lastX, c.touchY - _lastY);
-    _lastX = c.touchX;
-    _lastY = c.touchY;
-    _refresh = true;
-    */
-  }
-  
-    
+  void touchUp(Contact c) { }
+  void touchDrag(Contact c) { }
   void touchSlide(Contact c) { }
 }

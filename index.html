@@ -7,6 +7,7 @@
   <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi">
   <meta name="format-detection" content="telephone=no">
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/popover.css">
 </head>
 <body>
   <div id="content">
@@ -14,8 +15,26 @@
     <canvas id="frogs" width="1024" height="746"></canvas>
     <canvas id="flies" width="1024" height="746"></canvas>
     <canvas id="workspace1" width="1024" height="746"></canvas>
+    
+    <div id="toolbar">
+      <button id="play-button"></button>
+      <button id="fastforward-button"></button>
+      <button id="restart-button"></button>
+      <!-- <button id="camera-button"></button> -->
+      <!-- <button id="code-button"></button> -->
+    </div>
   </div>
-
+    
+    <!-- IF PARAM POPOVER -->
+  <div id="dialog-overlay">
+    <div class="popover left" id="if-popover">
+      <ul>
+        <li id="starving">Starving?</li>
+        <li id="full">Full?</li>
+        <li id="near-water">Near Water?</li>
+      </ul>
+    </div>
+  </div>
   
   <script src="dart/main.dart" type="application/dart"></script>
   <script src="dart.js" type="text/javascript"></script>

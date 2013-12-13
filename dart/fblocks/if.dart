@@ -30,9 +30,9 @@ class IfBlock extends BeginBlock {
   IfBlock(CodeWorkspace workspace) : super(workspace, 'if') {
     param = new Parameter(this);
     param.centerX = width - 35;
-    param.values = [ 'near-water?', 'hungry?' ];
-    el = new ElseBlock(workspace, this);
-    _addClause(el);    
+    param.values = [ 'near-water?', 'starving?', 'full?' ];
+    //el = new ElseBlock(workspace, this);
+    //_addClause(el);    
     end = new EndBlock(workspace, this);
     _addClause(end);
   }
@@ -56,10 +56,12 @@ class IfBlock extends BeginBlock {
     if (program.getSensorValue(param.value)) {
       program["if${id}"] = "if-branch";
       return next;
-    } else {
+    } else if (el != null) {
       program["if${id}"] = "else-branch";
       return el;
-    }    
+    } else {
+      return end.next;
+    }
   }
 }
 

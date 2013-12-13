@@ -45,7 +45,7 @@ class WaitBlock extends BeginBlock {
   Block step(Program program) {
     //var v = param.value;
     //int t = (v is int) ? v * 20 : Turtle.rand.nextInt(6000);
-    int t = 400;
+    int t = 200;
 
     if (!program.hasVariable("timeout")) {
       program["timeout"] = t;

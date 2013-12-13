@@ -27,8 +27,6 @@ part of ComputerHistory;
  */
 class StartBlock extends BeginBlock {
   
-  Button _play, _pause, _target = null;
-  
   
   StartBlock(CodeWorkspace workspace) : super(workspace, 'start') {
     x = getStartX();
@@ -40,11 +38,11 @@ class StartBlock extends BeginBlock {
     workspace.addBlock(end);
     inserted = true;
     _width = BLOCK_WIDTH + BLOCK_MARGIN;
-    _play = new Button(x + 65, y + height / 2 - 15, "images/toolbar/play.png", () {
-      workspace.playProgram(); });
-    _pause = new Button(x + 65, y + height / 2 - 15, "images/toolbar/pause.png", () {
-      workspace.pauseProgram(); });
-    _pause.visible = false;
+  }
+  
+  
+  bool get isEmptyProgram {
+    return next == end;
   }
   
   
@@ -54,45 +52,16 @@ class StartBlock extends BeginBlock {
   
   
   double getStartX() {
-    return workspace.width / 2 - 300.0;
+    return 40.0;
   }
   
   
   double getStartY() {
-    return workspace.height - 180.0;
+    return workspace.height - 300.0;
   }
   
-  
-  bool animate() {
-    bool refresh = super.animate();
-    if (_play.animate()) return true;
-    if (_pause.animate()) return true;
-    return refresh;
-  }
-  
-  
-  void pulse() {
-    _play.pulse();
-  }
-
   
   bool get isInProgram => true;
-
-  
-  /**
-   * Draw the block
-   */
-  void draw(CanvasRenderingContext2D ctx) {
-    super.draw(ctx);
-    _play.x = x + 65;
-    _play.y = y + height/2 - 15;
-    _pause.x = x + 65;
-    _pause.y = y + height/2 - 15;
-    _play.visible = !workspace.running;
-    _pause.visible = workspace.running;
-    _play.draw(ctx);
-    _pause.draw(ctx);
-  }
 
   
   bool isOutOfBounds() {
@@ -104,14 +73,6 @@ class StartBlock extends BeginBlock {
   
   bool touchDown(Contact c) {
     dragging = false;
-    _target = null;
-    if (_play.containsTouch(c)) {
-      _target = _play;
-      _play.touchDown(c);
-    } else if (_pause.containsTouch(c)) {
-      _target = _pause;
-      _pause.touchDown(c);
-    }
     _lastX = c.touchX;
     _lastY = c.touchY;
     workspace.draw();
@@ -120,11 +81,7 @@ class StartBlock extends BeginBlock {
   
   
   void touchDrag(Contact c) {
-    if (_target == null) {
-      moveChain(c.touchX - _lastX, c.touchY - _lastY);
-    } else {
-      _target.touchDrag(c);
-    }
+    moveChain(c.touchX - _lastX, c.touchY - _lastY);
     _lastX = c.touchX;
     _lastY = c.touchY;
     workspace.draw();
@@ -133,14 +90,10 @@ class StartBlock extends BeginBlock {
   
   void touchUp(Contact c) {
     dragging = false;
-    if (_target != null) {
-      _target.touchUp(c);
-    }
-    else if (isOutOfBounds()) {
+    if (isOutOfBounds()) {
       _targetX = getStartX();
       end._targetY = getStartY() + height;
     }
-    _target = null;
     workspace.draw();
   }
 }

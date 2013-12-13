@@ -22,9 +22,125 @@
  */
 part of ComputerHistory;
 
+Random rand = new Random();
 
+
+/**
+ * Is the given flag set to true in the URL query string?
+ */
 bool isFlagSet(String name) {
   return window.location.search.indexOf("${name}=true") > 0;
+}
+
+
+/**
+ * Detects whether or not this is an iPad based on the user-agent string
+ */
+bool isIPad() {
+  return window.navigator.userAgent.contains("iPad");
+}
+
+
+/**
+ * Binds a click event to a button
+ */
+void bindClickEvent(String id, Function callback) {
+  Element element = querySelector("#${id}");
+  if (element != null) {
+    if (isFlagSet("debug")) {
+      element.onClick.listen(callback);
+    } else {
+      element.onTouchEnd.listen(callback);    
+    }
+  }
+}
+
+
+/**
+ * Adds a class to a DOM element
+ */
+void addHtmlClass(String id, String cls) {
+  Element el = querySelector("#${id}");
+  if (el != null) {
+    el.classes.add(cls);
+  }
+}
+
+
+/**
+ * Removes a class from a DOM element
+ */
+void removeHtmlClass(String id, String cls) {
+  Element el = querySelector("#${id}");
+  if (el != null) {
+    el.classes.remove(cls);
+  }
+}
+
+
+/**
+ * Toggles a CSS class for a DOM element
+ */
+void toggleHtmlClass(String id, String cls) {
+  Element el = querySelector("#${id}");
+  if (el != null) {
+    el.classes.toggle(cls);
+  }
+}
+
+
+/**
+ * Sets the inner HTML for the given DOM element 
+ */
+void setHtmlText(String id, String text) {
+  Element el = querySelector("#${id}");
+  if (el != null) {
+    el.innerHtml = text;
+  }
+}
+
+
+/**
+ * Sets the inner HTML for the given DOM element 
+ */
+void appendHtmlText(String id, String text) {
+  Element el = querySelector("#${id}");
+  if (el != null) {
+    el.innerHtml = el.innerHtml + text;
+  }
+}
+
+
+/*
+ * Sets the visibility state for the given DOM element
+ */
+void setHtmlVisibility(String id, bool visible) {
+  Element el = querySelector("#${id}");
+  if (el != null) {
+    el.style.visibility = visible ? "visible" : "hidden";
+  }
+}
+
+
+/*
+ * Sets the opacity state for the given DOM element
+ */
+void setHtmlOpacity(String id, double opacity) {
+  Element el = querySelector("#${id}");
+  if (el != null) {
+    el.style.opacity = "${opacity}";
+  }
+}
+
+
+/*
+ * Sets the background image for a DOM element
+ */
+void setHtmlBackground(String id, String url) {
+  Element el = querySelector("#${id}");
+  if (el != null) {
+    el.style.backgroundImage = "url('${url}')";
+  }
 }
 
 

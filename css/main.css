@@ -58,8 +58,63 @@ canvas {
 }
 
 
-#frogs { z-index: 1; }
-#flies { z-index: 2; }
-#workspace1 { z-index: 3; }
+#codespace {
+  background-color: rgba(0, 0, 0, 0.75);
+  width: 1000px;
+  height: 724px;
+  border-radius: 20px;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s linear;
+  -webkit-transition: opacity 0.2s linear;
+}
 
+
+#if-popover {
+  left: 200px;
+  top: 500px;
+}
+
+
+/* TOOLBAR */
+#toolbar {
+  /*
+   background-color: rgb(22, 49, 79);
+   border-radius: 15px;
+   border: 2px solid white;
+   */
+   position: absolute;
+   bottom: 10px;
+   right: 0px;
+   text-align: center;
+   padding: 5px;
+   width: 200px;
+   height: 40px;
+}
+
+#toolbar button {
+   outline: none;
+   border: none;
+   width: 30px;
+   height: 30px;
+   margin-left: 10px;
+   margin-right: 10px;
+   margin-top: 3px;
+   display: inline-block;
+   background-color: transparent;
+   background-repeat: no-repeat;
+}
+
+#toolbar button:active {
+  background-position: 2px 2px;
+}
+
+#play-button { background-image: url("../images/toolbar/play.png"); }
+#restart-button { background-image: url("../images/toolbar/restart.png"); }
+#fastforward-button { background-image: url("../images/toolbar/fastforward.png"); }
+#camera-button { background-image: url("../images/toolbar/camera.png"); }
+#code-button { background-image: url("../images/toolbar/code.png"); }
 

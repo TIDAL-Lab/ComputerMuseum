@@ -91,8 +91,8 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="455.0312"
+     inkscape:zoom="0.24748737"
+     inkscape:cx="416.6454"
      inkscape:cy="-359.38974"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -123,8 +123,9 @@
        id="rect3083"
        width="1315.7142"
        height="644.28571"
-       x="-293.57141"
-       y="1109.5049" />
+       x="-309.73386"
+       y="-1660.8563"
+       transform="scale(1,-1)" />
     <path
        style="fill:#ffffff;stroke:none;"
        d="m -58.57052,1347.5756 0,-194.9982 191.38553,97.4991 z"
@@ -161,26 +162,12 @@
          y="719.14789"
          id="tspan2995"
          style="-inkscape-font-specification:Webdings;font-family:Webdings;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">,./&lt;&gt;?;':&quot;[]{}|\</tspan></text>
-    <g
-       id="g3870"
-       style="fill:#ffffff;stroke:none"
-       transform="matrix(-0.63123745,0.63123746,-0.63123746,-0.63123745,1365.1104,1531.7037)"
-       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/restart.png"
-       inkscape:export-xdpi="9.6398134"
-       inkscape:export-ydpi="9.6398134">
-      <path
-         inkscape:connector-curvature="0"
-         id="path2997"
-         d="m 445.42041,768.46637 c -6.70673,-0.008 -13.50037,0.65611 -20.28575,2.02843 -4.16068,0.79597 -8.0168,3.62823 -10.46837,7.68883 -2.45157,4.0606 -3.4677,9.29841 -2.75855,14.21928 0.70916,4.92088 3.13468,9.46284 6.58466,12.33025 3.44998,2.8674 7.88096,4.02414 12.02897,3.14023 39.72088,-8.03344 75.21619,17.67485 82.37249,53.05875 7.1563,35.38389 -13.61636,71.73362 -53.33726,79.76707 -39.72089,8.03346 -76.89796,-18.22219 -84.05428,-53.60609 -0.81213,-4.01556 -1.23473,-8.07004 -1.27661,-12.13374 0.0144,-5.01296 -1.73233,-10.00092 -4.73807,-13.53008 -3.00575,-3.52916 -7.23203,-5.55433 -11.46399,-5.49338 -4.23196,0.0609 -8.41542,2.20724 -11.34783,5.82192 -2.93241,3.61469 -4.57622,8.65148 -4.45892,13.66254 0.071,6.89864 0.80294,13.77587 2.16401,20.50567 11.85577,58.62002 66.27937,93.13036 120.56239,82.15175 l 0.17125,-0.0369 c 54.19141,-11.06214 92.44123,-66.81823 80.59807,-125.37593 -10.3738,-51.29251 -53.34504,-84.1442 -100.29221,-84.19862 z"
-         style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:64.25609589;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
-         sodipodi:nodetypes="ccssscssscssscsccscc" />
-      <path
-         style="fill:#ffffff;stroke:none"
-         d="m 401.4465,891.00654 -81.0979,-7e-5 40.54898,-73.66774 z"
-         id="path2999"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="cccc" />
-    </g>
+    <path
+       sodipodi:nodetypes="cccc"
+       inkscape:connector-curvature="0"
+       id="path2999"
+       d="m 496.56118,1249.3901 46.46758,-80.4843 42.06598,77.9429 z"
+       style="fill:#ffffff;stroke:none" />
     <rect
        style="fill:none;stroke:none"
        id="rect3888"
@@ -201,28 +188,20 @@
        inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/restart.png"
        inkscape:export-xdpi="9.932148"
        inkscape:export-ydpi="9.932148" />
-    <g
-       id="g3091"
-       style="fill:#ffffff;fill-opacity:1"
-       transform="matrix(1.1930532,0,0,1.0036764,-45.573003,10.204897)"
-       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/pause.png"
-       inkscape:export-xdpi="9.2647066"
-       inkscape:export-ydpi="9.2647066">
-      <rect
-         y="1148.7908"
-         x="190.26578"
-         height="194.28572"
-         width="45.182716"
-         id="rect3085"
-         style="fill:#ffffff;fill-opacity:1;stroke:none" />
-      <rect
-         style="fill:#ffffff;fill-opacity:1;stroke:none"
-         id="rect3089"
-         width="45.182716"
-         height="194.28572"
-         x="288.26578"
-         y="1148.7908" />
-    </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       id="rect3085"
+       width="53.905384"
+       height="195"
+       x="181.42419"
+       y="1163.2191" />
+    <rect
+       y="1163.2191"
+       x="276.34341"
+       height="195"
+       width="53.905384"
+       id="rect3089"
+       style="fill:#ffffff;fill-opacity:1;stroke:none" />
     <rect
        inkscape:export-ydpi="9"
        inkscape:export-xdpi="9"
@@ -233,5 +212,48 @@
        width="250"
        id="rect3863"
        style="fill:none;stroke:none" />
+    <path
+       sodipodi:type="arc"
+       style="fill:none;stroke:#ffffff;stroke-width:53.65227509;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path3113"
+       sodipodi:cx="142.4315"
+       sodipodi:cy="1570.5704"
+       sodipodi:rx="93.944183"
+       sodipodi:ry="93.944183"
+       d="m 228.19536,1608.9119 a 93.944183,93.944183 0 1 1 -27.89087,-112.343"
+       sodipodi:start="0.42040537"
+       sodipodi:end="5.3760893"
+       sodipodi:open="true"
+       transform="matrix(0.74554153,0,0,0.74554153,386.73212,102.68041)" />
+    <g
+       id="g2990"
+       transform="matrix(2.811132,-1.2394058e-8,1.2394058e-8,2.811132,702.00686,1195.4597)"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/toolbar/camera.png"
+       inkscape:export-xdpi="9.8199997"
+       inkscape:export-ydpi="9.8199997"
+       style="fill:#ffffff">
+      <path
+         style="fill:#ffffff;fill-rule:evenodd"
+         inkscape:connector-curvature="0"
+         id="path3"
+         d="m 6.7787329,7.9671821 h 4.2688541 c 2.845734,0 2.845734,-7.11458398 5.69197,-7.11458398 h 2.846238 0.0069 0.02113 0.03512 0.02562 0.02311 0.06174 0.03114 0.04313 0.07079 0.01612 0.09638 0.0015 0.108427 0.0012 0.107423 0.01361 0.09286 0.03863 0.06678 0.07531 0.02763 0.101401 0.02262 0.07631 0.08485 0.01159 0.09437 0.06426 0.02813 0.08987 0.06123 0.02663 0.08485 0.07582 0.0069 0.07983 0.07732 0.03162 0.04313 0.0723 0.06878 0.01911 0.04663 0.06274 0.06024 0.04064 0.01612 0.05368 0.05065 0.04663 0.04362 0.0063 0.03413 0.03663 0.03313 0.02912 0.02561 0.02213 0.01811 0.01411 0.01058 0 0.0063 0.0015 9.960819 c 2.845733,0 2.845733,7.11458398 5.691471,7.11458398 h 27.03587 c 0,-1.571201 1.274536,-2.845733 2.845743,-2.845733 h 2.846246 c 1.571177,0 2.845723,1.274532 2.845723,2.845733 h 4.268841 c 3.928526,0 7.114564,3.1860829 7.114564,7.1145859 v 42.688005 c 0,3.929 -3.186038,7.11508 -7.114564,7.11508 H 6.7787803 c -3.9285059,5e-4 -7.11458704,-3.18557 -7.11458704,-7.11457 V 15.082271 c 0,-3.929006 3.18608114,-7.1150889 7.11458704,-7.1150889 l 0,0 z M 56.581838,15.082271 c -11.786025,0 -21.344258,9.558234 -21.344258,21.344261 0,11.786031 9.55773,21.344251 21.344258,21.344251 11.786022,0 21.344266,-9.55772 21.344266,-21.344251 C 77.9256,24.640003 68.367356,15.082271 56.581838,15.082271 l 0,0 z m -39.842281,7.114585 h 8.537703 c 1.571201,0 2.845734,-1.274532 2.845734,-2.845733 v -1.422615 c 0,-1.571706 -1.274533,-2.845736 -2.845734,-2.845736 h -8.537703 c -1.571704,0 -2.845734,1.274533 -2.845734,2.845736 v 1.422615 c -5.02e-4,1.571201 1.27403,2.845733 2.845734,2.845733 z"
+         clip-rule="evenodd" />
+      <path
+         style="fill:#ffffff;fill-rule:evenodd"
+         inkscape:connector-curvature="0"
+         id="path5"
+         d="m 56.581838,20.773741 c -8.643118,0 -15.652288,7.00917 -15.652288,15.652289 0,8.643113 7.00917,15.652793 15.652288,15.652793 8.643125,0 15.652287,-7.00968 15.652287,-15.652793 0,-8.643119 -7.009162,-15.652289 -15.652287,-15.652289 l 0,0 z"
+         clip-rule="evenodd" />
+    </g>
+    <rect
+       style="fill:none;stroke:none"
+       id="rect4087"
+       width="275"
+       height="275"
+       x="683.56299"
+       y="1150.358"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/toolbar/camera.png"
+       inkscape:export-xdpi="9.8199997"
+       inkscape:export-ydpi="9.8199997" />
   </g>
 </svg>

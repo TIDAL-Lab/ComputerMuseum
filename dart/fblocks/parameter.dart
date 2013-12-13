@@ -235,6 +235,7 @@ class Parameter implements Touchable {
   
   
   bool touchDown(Contact c) {
+    /*
     downX = c.touchX;
     downY = c.touchY;
     lastX = c.touchX;
@@ -242,6 +243,8 @@ class Parameter implements Touchable {
     downIndex = index;
     dragging = true;
     block.workspace.draw();
+    */
+    showPopover("if-popover", block.x + block.width - 20, block.y);
     return true;
   }
   
