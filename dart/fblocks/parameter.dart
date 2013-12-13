@@ -214,6 +214,15 @@ class Parameter implements Touchable {
   }
   
   
+  void changeParameter(int i) {
+    popoverTarget = null;
+    index = i;
+    block.parameterChanged(this);
+    Sounds.playSound("click");
+    block.workspace.draw();
+  }
+  
+  
   bool containsTouch(Contact c) {
     double cx = centerX + block.x - 18 + width/2;
     double cy = centerY + block.y;
@@ -226,11 +235,13 @@ class Parameter implements Touchable {
   
   
   void touchUp(Contact c) {
+    /*
     index = _getDragIndex().round().toInt();
     if (index != downIndex) changed = true;
     downIndex = index;
     dragging = false;
     block.workspace.draw();
+    */
   }
   
   
@@ -244,13 +255,14 @@ class Parameter implements Touchable {
     dragging = true;
     block.workspace.draw();
     */
+    popoverTarget = this;
     showPopover("if-popover", block.x + block.width - 20, block.y);
     return true;
   }
   
   
   void touchDrag(Contact c) {
-    //int oldindex = getDragIndex().round().toInt();
+    /*
     num oldIndex = _getDragIndex() % values.length;
     lastX = c.touchX;
     lastY = c.touchY;
@@ -261,6 +273,7 @@ class Parameter implements Touchable {
       Sounds.playSound("click");
     }
     block.workspace.draw();
+    */
   }
   
   

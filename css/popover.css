@@ -104,7 +104,7 @@
 
 
 .popover ul li.selected {
-  background-color: #ff6611;
+  background-color: #2277ff;
   color: white;
 }
 
@@ -116,6 +116,6 @@
 
 
 .popover ul li:active {
-  background-color: #ff6611;
+  background-color: #2277ff;
   color: white;
 }

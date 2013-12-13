@@ -95,9 +95,11 @@ void popoverAction(String popover, String action) {
     removeHtmlClass(item.id, "selected");
   }
   addHtmlClass(action, "selected");
-  
-  if (popover == "if-popover") {
-    print(action);
+  if (popover == "if-popover" && action.startsWith("param") && popoverTarget != null) {
+    int index = int.parse(action.substring(5));
+    popoverTarget.changeParameter(index);
   }
 }
+
+Parameter popoverTarget = null;
 
