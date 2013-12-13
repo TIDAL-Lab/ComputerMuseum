@@ -59,14 +59,14 @@ class Menu implements Touchable {
       ctx.fillRect(x, y, w, h);
 
       int ix = 10;
-      int iy = y + h/2;
+      int iy = (y + h / 2).toInt();
       
       for (Block block in blocks) {
         block.x = ix.toDouble();
         block.y = iy.toDouble() - block.height / 2;
         block.inMenu = true;
         block.draw(ctx);
-        ix += block.width + 10;
+        ix += (block.width + 10).toInt();
       }
     }
     ctx.restore();

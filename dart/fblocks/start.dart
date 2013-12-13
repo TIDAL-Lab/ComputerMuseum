@@ -37,7 +37,7 @@ class StartBlock extends BeginBlock {
     _addClause(end);
     workspace.addBlock(end);
     inserted = true;
-    _width = BLOCK_WIDTH + BLOCK_MARGIN;
+    _width = (BLOCK_WIDTH + BLOCK_MARGIN).toDouble();
   }
   
   
