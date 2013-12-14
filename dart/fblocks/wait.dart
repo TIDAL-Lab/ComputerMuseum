@@ -25,7 +25,7 @@ part of ComputerHistory;
   
 class WaitBlock extends BeginBlock {
 
-  WaitBlock(CodeWorkspace workspace) : super(workspace, 'wait for fly') {
+  WaitBlock(CodeWorkspace workspace) : super(workspace, 'look for fly') {
     //param = new Parameter(this);
     //param.centerX = width - 7;
     //param.values = [ 50, 100, 150, 200, 250, 300, 350, 400 ];
