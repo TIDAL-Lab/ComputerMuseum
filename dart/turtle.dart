@@ -180,7 +180,9 @@ abstract class Turtle {
   
   
   void erase(CanvasRenderingContext2D ctx) {
-    ctx.clearRect(x - width/2, y - height/2, width, height);
+    num w = width * 1.3;
+    num h = height * 1.3;
+    ctx.clearRect(x - w/2, y - h/2, w, h);
   }
 
 
