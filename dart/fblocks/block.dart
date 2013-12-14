@@ -281,7 +281,7 @@ class Block implements Touchable {
   void _resize(CanvasRenderingContext2D ctx) {
     if (param != null && inserted) {
       double cw = param.getDisplayWidth(ctx) + param.centerX - 14;
-      _width = max(cw, BLOCK_WIDTH);
+      _width = max(cw, BLOCK_WIDTH.toDouble());
     }
   }
   
