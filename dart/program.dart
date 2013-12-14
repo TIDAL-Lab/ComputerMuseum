@@ -192,8 +192,9 @@ class Program {
   
   void doPause(bool preview) {
     
-    // is the frog in the water? 
-    if (frog.inWater()) {
+    // is the frog in the water?
+    frog.updateLilyPad();
+    if (frog.lilypad == null) {
       Sounds.playSound("splash");
       frog.die();
       return;
@@ -397,11 +398,15 @@ class Program {
  * Hatch a new frog
  */
   void doHatch(String cmd, var param, bool preview) {
-    Frog baby;
-    if (frog.pond.getFrogCount(frog["workspace"]) < MAX_FROGS) {
-       baby = frog.hatch();
+    Frog baby = null;
+    
+    if (frog.lilypad != null) {
+      if (frog.lilypad.getFrogCount() < MAX_FROGS) {
+        baby = frog.hatch();
+      }
     }
     if (baby == null) return;
+    
     if (preview) {
       baby.opacity = 0.3;
       frog.ghost = baby;

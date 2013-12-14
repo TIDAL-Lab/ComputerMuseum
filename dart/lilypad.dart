@@ -31,6 +31,9 @@ class LilyPad extends Turtle implements Touchable {
   double _lastX, _lastY;
   
   bool refresh = false;
+  
+  /* List of frogs currently sitting on this lilypad */
+  Set<Frog> frogs = new Set<Frog>();
 
   
   LilyPad(this.pond) : super() {
@@ -41,12 +44,31 @@ class LilyPad extends Turtle implements Touchable {
   bool animate() {
     return refresh;
   }
+  
+  
+  void removeFrog(Frog frog) {
+    frogs.remove(frog);
+  }
+  
+  
+  void addFrog(Frog frog) {
+    frogs.add(frog);
+  }
+  
+  
+  int getFrogCount() {
+    return frogs.length;
+  }
 
   
   void _drawLocal(CanvasRenderingContext2D ctx) {  
     num iw = width;
     num ih = height;
     ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
+    //ctx.fillStyle = "white";
+    //ctx.font = "14pt sans-serif";
+    //ctx.textAlign = "center";
+    //ctx.fillText("${x.toInt()}, ${y.toInt()}, $size", 0, 0);
     //ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
     //ctx.beginPath();
     //ctx.arc(0, 0, radius, 0, PI * 2, true);

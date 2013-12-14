@@ -53,6 +53,9 @@ class Frog extends Turtle implements Touchable {
   /* how long since last meal? */
   int last_meal = MAX_ENERGY;
   
+  /* OPTIMIZATION: Lilypad this frog is stting on */
+  LilyPad lilypad = null;
+  
   
   Frog(this.pond) : super() {
     img.src = "images/bluefrog.png";
@@ -66,6 +69,8 @@ class Frog extends Turtle implements Touchable {
     clone.program = new Program.copy(program, clone);
     last_meal = last_meal ~/ 2;
     clone.last_meal = last_meal;
+    clone.lilypad = lilypad;
+    if (lilypad != null) lilypad.addFrog(clone);
     return clone;
   }
   
@@ -92,7 +97,7 @@ class Frog extends Turtle implements Touchable {
     _refresh = false;
     if (tween.isTweening()) {
       tween.animate();
-        refresh = true;
+      refresh = true;
     }
     if (program.animate()) refresh = true;
     if (program.isRunning) {
@@ -196,6 +201,18 @@ class Frog extends Turtle implements Touchable {
   
   bool inWater() {
     return pond.inWater(x, y);
+  }
+  
+  
+  void updateLilyPad() {
+    LilyPad newpad = pond.getLilyPadHere(x, y);
+    LilyPad oldpad = lilypad;
+    
+    if (newpad != oldpad) {
+      if (oldpad != null) oldpad.removeFrog(this);
+      if (newpad != null) newpad.addFrog(this);
+      lilypad = newpad;
+    }
   }
   
   
@@ -313,14 +330,7 @@ class Frog extends Turtle implements Touchable {
     //---------------------------------------------
     num iw = width;
     num ih = height;
-    ctx.save();
-    {
-      if (isFlagSet("hunger") && _saveX == null) {
-        double alpha = min(0.7, max(0.0, (last_meal / MAX_ENERGY) * 0.7)) + 0.3;
-        ctx.globalAlpha = alpha;
-      }
-      ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
-    }
+    ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
     ctx.restore();
   }
 
