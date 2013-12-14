@@ -83,7 +83,7 @@ class Program {
   
   
   bool get isFastForward {
-    return pond.play_state > 1;
+    return true; //pond.play_state > 1;
   }
   
   
@@ -207,7 +207,7 @@ class Program {
     
     tween = new Tween();
     tween.delay = 0;
-    tween.duration = 20;
+    tween.duration = isFastForward ? 10 : 20;
     tween.onstart = (() { });
     tween.onend = (() { frog.reset(); });
   }
@@ -230,7 +230,7 @@ class Program {
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.delay = 0;
-    tween.duration = 12;
+    tween.duration = isFastForward? 6: 12;
     tween.onstart = (() { Sounds.playSound(cmd); target.label = s; });
     tween.onend = (() { doPause(preview); });
     tween.addControlPoint(0, 0);
@@ -264,7 +264,7 @@ class Program {
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.delay = 0;
-    tween.duration = 20;
+    tween.duration = isFastForward? 10 : 20;
     tween.onstart = (() => target.label = s);
     tween.addControlPoint(0, 0);
     tween.addControlPoint(angle, 1);
@@ -290,7 +290,7 @@ class Program {
     });
     tween.addControlPoint(0, 0);
     tween.addControlPoint(175, 1);
-    tween.duration = 25;
+    tween.duration = isFastForward? 12 : 24;
     tween.delay = 0;
     tween.ondelta = ((value) => frog._sound += value);
   }
@@ -309,7 +309,7 @@ class Program {
     tween.addControlPoint(0.0, 0.0);
     tween.addControlPoint(1.0, 0.4);
     tween.addControlPoint(0.0, 1.0);
-    tween.duration = 20;
+    tween.duration = isFastForward? 10 : 20;
     tween.ondelta = ((value) {
       frog._tongue += value;
       if (!preview) {
@@ -344,7 +344,7 @@ class Program {
  */
   void doIf(String cmd, var param, bool preview) {
     tween = new Tween();
-    tween.duration = 5;
+    tween.duration = isFastForward? 1 : 5;
     tween.onstart = (() => frog.label = "$cmd $param");
     tween.onend = (() { doPause(preview); });
   }
@@ -355,7 +355,7 @@ class Program {
  */
   void doEnd(String cmd, var param, bool preview) {
     tween = new Tween();
-    tween.duration = 5;
+    tween.duration = isFastForward? 1 : 5;
     tween.onstart = (() => frog.label = cmd);
     tween.onend = (() => doPause(preview));
   }
@@ -370,7 +370,7 @@ class Program {
       frog.label = "$cmd";
       if (preview) {
         tween = new Tween();
-        tween.duration = 40;
+        tween.duration = isFastForward? 20 : 40;
         tween.onend = (() {
           frog.label = null;
           frog._vision = 0.0;
@@ -387,7 +387,7 @@ class Program {
     tween = new Tween();
     tween.function = TWEEN_DECAY;
     tween.delay = 0;
-    tween.duration = 8;
+    tween.duration = isFastForward? 4 : 8;
     tween.repeat = 3;
     tween.addControlPoint(1.0, 0);
     tween.addControlPoint(0.0, 0.5);
@@ -425,7 +425,7 @@ class Program {
     tween = new Tween();
     tween.function = TWEEN_DECAY;
     tween.delay = 0;
-    tween.duration = 15;
+    tween.duration = isFastForward? 7 : 14;
     tween.onstart = (() => frog.label = cmd);
     tween.onend = (() {
       doPause(preview);
