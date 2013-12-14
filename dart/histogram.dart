@@ -119,7 +119,7 @@ class Histogram {
       
       iw = frog.width * id;
       ih = frog.height * id;
-      id += 0.1;
+      id *= 1.5;
       
       ctx.fillRect(bx + GAP, by, bw - GAP * 2, bh);
       ctx.drawImageScaled(frog, bx + bw/2 - iw/2, gy + gh + 8, iw, ih);
