@@ -53,7 +53,7 @@ class Program {
     curr = other.curr;
     running = other.running;
   }
-
+  
   
   void play() {
     if (isFinished) restart();
@@ -79,6 +79,11 @@ class Program {
   
   bool get isPaused {
     return (!running && curr != null);
+  }
+  
+  
+  bool get isFastForward {
+    return pond.play_state > 1;
   }
   
   
@@ -181,7 +186,7 @@ class Program {
       doIf(cmd, param, preview);
     } else if (cmd.startsWith("repeat")) {
       doRepeat(cmd, param, preview);
-    } else if (cmd.startsWith("wait")) {
+    } else if (cmd.startsWith("look")) {
       doWait(cmd, param, preview);
     }
     //else if (cmd.startsWith("end")) {
@@ -426,7 +431,7 @@ class Program {
       doPause(preview);
       if (isRunning) baby.program.play();
     });
-    double newsize = frog.size + Turtle.rand.nextDouble() * 0.1 - 0.05;
+    double newsize = frog.size + Turtle.rand.nextDouble() * 0.2 - 0.1;
     newsize = min(3.0, max(0.1, newsize));
     tween.addControlPoint(0.05, 0);
     tween.addControlPoint(newsize, 1.0);
