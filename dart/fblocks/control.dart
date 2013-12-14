@@ -167,7 +167,7 @@ class ControlBlock extends Block {
       super.touchDrag(c);
       return;
     }
-    double miny = (cprev != null) ? cprev.y + cprev.height : 0;
+    double miny = (cprev != null) ? cprev.y + cprev.height : 0.0;
     double maxy = (cnext != null) ? cnext.y - height : workspace.start.end.y - height;
     
     double ty = y + (c.touchY - _lastY);
