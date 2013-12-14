@@ -290,7 +290,7 @@ class Program {
     });
     tween.addControlPoint(0, 0);
     tween.addControlPoint(175, 1);
-    tween.duration = isFastForward? 12 : 24;
+    tween.duration = 24;
     tween.delay = 0;
     tween.ondelta = ((value) => frog._sound += value);
   }
@@ -344,7 +344,7 @@ class Program {
  */
   void doIf(String cmd, var param, bool preview) {
     tween = new Tween();
-    tween.duration = isFastForward? 1 : 5;
+    tween.duration = 5;
     tween.onstart = (() => frog.label = "$cmd $param");
     tween.onend = (() { doPause(preview); });
   }
