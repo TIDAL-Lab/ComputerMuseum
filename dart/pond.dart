@@ -74,7 +74,7 @@ class FrogPond extends TouchLayer {
     width = canvas.width;
     height = canvas.height;
     
-    tmanager.registerEvents(document.documentElement);
+    tmanager.registerEvents(querySelector("#workspace1"));
     tmanager.addTouchLayer(this);
     
     hist = new Histogram("plot", this);
@@ -97,13 +97,18 @@ class FrogPond extends TouchLayer {
     bindClickEvent("plot-button", (event) {
       pauseProgram();
       hist.draw();
+      setHtmlVisibility("overlay", true);
       setHtmlVisibility("plot-dialog", true);
       setHtmlOpacity("plot-dialog", 1.0);
     });
     bindClickEvent("close-button", (event) {
       setHtmlOpacity("plot-dialog", 0.0);
-      new Timer(const Duration(milliseconds : 300), () => setHtmlVisibility("plot-dialog", false));
+      new Timer(const Duration(milliseconds : 300), () {
+        setHtmlVisibility("overlay", false);
+        setHtmlVisibility("plot-dialog", false);
+      });
     });
+
     
     CodeWorkspace workspace = new CodeWorkspace(this, "workspace1", "blue");
     tmanager.addTouchLayer(workspace);
@@ -312,7 +317,7 @@ class FrogPond extends TouchLayer {
     Sounds.mute = false;
     if (play_state <= 0) {
       play_state = 1;
-    } else if (play_state < 32) {
+    } else if (play_state < 16) {
       play_state *= 2;
       Sounds.mute = true;
     } else {
