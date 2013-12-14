@@ -22,6 +22,7 @@
  */
 library ComputerHistory;
 
+
 import 'dart:collection';
 import 'dart:html';
 import 'dart:math';
@@ -30,6 +31,7 @@ import 'dart:web_audio';
 
 part 'fly.dart';
 part 'frog.dart';
+part 'histogram.dart';
 part 'lilypad.dart';
 part 'matrix.dart';
 part 'pond.dart';
@@ -59,8 +61,8 @@ bool SHOW_PREVIEW = false;
 bool SHOW_REPEAT_BLOCK = false;
 bool SHOW_WAIT_TIMEOUT = false;
 bool AUTO_REPEAT = true;
-bool FROGS_PUSH = true;
-int MAX_FROGS = 80;  // Maximum number of frogs of a given color
+bool FROGS_PUSH = false;
+int MAX_FROGS = 10;  // Maximum number of frogs of a given color
 
 
 // Global frog pond
