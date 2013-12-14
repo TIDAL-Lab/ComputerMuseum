@@ -58,18 +58,29 @@ canvas {
 }
 
 
-#codespace {
+#plot-dialog {
   background-color: rgba(0, 0, 0, 0.75);
-  width: 1000px;
-  height: 724px;
+  width: 750px;
+  height: 580px;
   border-radius: 20px;
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 40px;
+  left: 112px;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.2s linear;
   -webkit-transition: opacity 0.2s linear;
+  font: 30px sans-serif;
+  color: white;
+  padding-left: 50px;
+  padding-top: 20px;
+}
+
+
+#plot {
+  position: static;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
@@ -91,7 +102,7 @@ canvas {
    right: 0px;
    text-align: center;
    padding: 5px;
-   width: 200px;
+   width: 250px;
    height: 40px;
 }
 
@@ -100,8 +111,8 @@ canvas {
    border: none;
    width: 30px;
    height: 30px;
-   margin-left: 10px;
-   margin-right: 10px;
+   margin-left: 6px;
+   margin-right: 6px;
    margin-top: 3px;
    display: inline-block;
    background-color: transparent;
@@ -117,4 +128,22 @@ canvas {
 #fastforward-button { background-image: url("../images/toolbar/fastforward.png"); }
 #camera-button { background-image: url("../images/toolbar/camera.png"); }
 #code-button { background-image: url("../images/toolbar/code.png"); }
+#plot-button { background-image: url("../images/toolbar/plot.png"); }
+
+#close-button {
+  outline: none;
+  border: none;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-image: url("../images/toolbar/close.png");
+}
+
+#close-button:active {
+  background-position: 3px 3px;
+}
 
