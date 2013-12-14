@@ -62,13 +62,13 @@ class Histogram {
     }
     
     for (Frog frog in pond.frogs) {
-      if (frog.size >= 1.6) {
+      if (frog.size >= 1.2) {
         counts[4]++;
-      } else if (frog.size >= 0.8) {
+      } else if (frog.size >= 0.6) {
         counts[3]++;
-      } else if (frog.size >= 0.4) {
+      } else if (frog.size >= 0.3) {
         counts[2]++;
-      } else if (frog.size >= 0.2) {
+      } else if (frog.size >= 0.15) {
         counts[1]++;
       } else {
         counts[0]++;
