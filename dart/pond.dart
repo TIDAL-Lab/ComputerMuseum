@@ -317,7 +317,7 @@ class FrogPond extends TouchLayer {
     Sounds.mute = false;
     if (play_state <= 0) {
       play_state = 1;
-    } else if (play_state < 16) {
+    } else if (play_state < 32) {
       play_state *= 2;
       Sounds.mute = true;
     } else {
