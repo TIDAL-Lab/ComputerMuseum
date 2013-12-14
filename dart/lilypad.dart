@@ -56,6 +56,11 @@ class LilyPad extends Turtle implements Touchable {
   }
   
   
+  void removeAllFrogs() {
+    frogs.clear();
+  }
+  
+  
   int getFrogCount() {
     return frogs.length;
   }

@@ -75,6 +75,13 @@ class Frog extends Turtle implements Touchable {
   }
   
   
+  void die() {
+    super.die();
+    if (lilypad != null) lilypad.removeFrog(this);
+    lilypad = null;
+  }
+  
+  
   double get tongueX => x + sin(heading) * _tongue * height * 1.5;
   
   double get tongueY => y - cos(heading) * _tongue * height * 1.5;

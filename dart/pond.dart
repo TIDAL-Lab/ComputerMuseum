@@ -297,6 +297,9 @@ class FrogPond extends TouchLayer {
   void restartProgram() {
     play_state = 1;
     frogs.forEach((frog) => frog.die());
+    for (LilyPad pad in pads) {
+      pad.removeAllFrogs();
+    }
     for (CodeWorkspace workspace in workspaces) {
       for (int i=0; i<4; i++) {
         addRandomFrog(workspace);
