@@ -56,6 +56,9 @@ class FrogPond extends TouchLayer {
    */
   int play_state = 1; 
   
+  /* Histogram of frog populations */
+  Histogram hist;
+  
   
   
   FrogPond() {
@@ -74,17 +77,32 @@ class FrogPond extends TouchLayer {
     tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(this);
     
-    for (int i=0; i<10; i++) {
-      addLilyPad();
-    }
+    hist = new Histogram("plot", this);
     
-
+    addLilyPad(732, 570, 0.35);
+    addLilyPad(820, 390, 0.52);
+    addLilyPad(848, 149, 0.475);
+    addLilyPad(625, 181, 0.5);
+    addLilyPad(609, 405, 0.4);
+    addLilyPad(562, 570, 0.4);
+    addLilyPad(361, 515, 0.475);
+    addLilyPad(420, 145, 0.5);
+    addLilyPad(248, 310, 0.4);
+    addLilyPad(447, 328, 0.4);
+    
+    
     bindClickEvent("play-button", (event) => playPauseProgram());
     bindClickEvent("restart-button", (event) => restartProgram());
     bindClickEvent("fastforward-button", (event) => fastForwardProgram());
-    bindClickEvent("code-button", (event) {
-      setHtmlVisibility("codespace", true);
-      setHtmlOpacity("codespace", 1.0);
+    bindClickEvent("plot-button", (event) {
+      pauseProgram();
+      hist.draw();
+      setHtmlVisibility("plot-dialog", true);
+      setHtmlOpacity("plot-dialog", 1.0);
+    });
+    bindClickEvent("close-button", (event) {
+      setHtmlOpacity("plot-dialog", 0.0);
+      new Timer(const Duration(milliseconds : 300), () => setHtmlVisibility("plot-dialog", false));
     });
     
     CodeWorkspace workspace = new CodeWorkspace(this, "workspace1", "blue");
@@ -95,10 +113,22 @@ class FrogPond extends TouchLayer {
       addFly();
     }
     
-    drawPond(layer0);
-
     // main animation timer
     new Timer.periodic(const Duration(milliseconds : 40), tick);
+   
+   
+    // crude resource loading scheme 
+    ImageElement loader = new ImageElement();
+    loader.src = "images/lilypad.png";
+    loader.onLoad.listen((event) {
+      drawPond(layer0);
+    });
+    
+    ImageElement loader2 = new ImageElement();
+    loader2.src = "images/buildfrog.png";
+    loader2.onLoad.listen((event) {
+      drawForeground();
+    });
   }
   
   
@@ -110,14 +140,18 @@ class FrogPond extends TouchLayer {
     for (int i=0; i<20; i++) {
       int x = rand.nextInt(width - 200) + 100;
       int y = rand.nextInt(height - 300) + 150;
-      if (!inWater(x, y)) {
+      LilyPad pad = getLilyPadHere(x, y);
+      if (pad != null) {
         Frog frog = new Frog(this);
         frog["breed"] = breed;
         frog.x = x.toDouble();
         frog.y = y.toDouble();
+        frog.lilypad = pad;
+        pad.addFrog(frog);
         frog.program = new Program(workspace.start, frog);
         frog.img.src = "images/${breed}frog.png";
-        addFrog(frog);
+        frogs.add(frog);
+        addTouchable(frog);
         return;
       }
     }
@@ -275,7 +309,7 @@ class FrogPond extends TouchLayer {
     Sounds.mute = false;
     if (play_state <= 0) {
       play_state = 1;
-    } else if (play_state < 64) {
+    } else if (play_state < 32) {
       play_state *= 2;
       Sounds.mute = true;
     } else {
@@ -324,8 +358,8 @@ class FrogPond extends TouchLayer {
     if (lx == null) lx = rand.nextInt(width).toDouble();
     if (ly == null) ly = rand.nextInt(height).toDouble();
     if (ls == null) ls = 0.4 + rand.nextDouble() * 0.1;
-    pad.x = lx;
-    pad.y = ly;
+    pad.x = lx.toDouble();
+    pad.y = ly.toDouble();
     pad.size = ls;
     pad.refresh = true;
     pads.add(pad);
@@ -444,10 +478,19 @@ class FrogPond extends TouchLayer {
  * Returns true if the given point is in the water
  */
   bool inWater(num x, num y) {
-    for (LilyPad pad in pads) {
-      if (pad.overlapsPoint(x, y)) return false;
+    return (getLilyPadHere(x, y) != null);
+  }
+  
+  
+/**
+ * Returns the topmost lilypad at the given point or null if none exists
+ */
+  LilyPad getLilyPadHere(num x, num y) {
+    for (int i=pads.length - 1; i >= 0; i--) {
+      LilyPad pad = pads[i];
+      if (pad.overlapsPoint(x, y)) return pad;
     }
-    return true;
+    return null;
   }
   
   
