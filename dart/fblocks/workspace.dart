@@ -118,12 +118,10 @@ class CodeWorkspace extends TouchLayer {
  * Preview a block for all frogs
  */
   void preview(Block block) {
-    if (SHOW_PREVIEW) {
-      var pvalue = null;
-      if (block.hasParam) pvalue = block.param.value;
-      pond.pauseProgram();
-      pond.previewBlock(name, block.text, pvalue);
-    }
+    var pvalue = null;
+    if (block.hasParam) pvalue = block.param.value;
+    pond.pauseProgram();
+    pond.previewBlock(name, block.text, pvalue);
   }
 
 
@@ -323,17 +321,15 @@ class CodeWorkspace extends TouchLayer {
     menu.addBlock(new Block(this, 'eat'));
     
     // TURN block
-    if (SHOW_TURN_BLOCK) {
-      block = new Block(this, 'turn');
-      //block.param = new Parameter(block);
-      //block.param.values = [ -90, -75, -60, -45, -30, -15, 'random', 15, 30, 45, 60, 75, 90 ];
-      //block.param.index = 6;
-      menu.addBlock(block);
-    }
-    else {
-      menu.addBlock(new Block(this, 'left'));
-      menu.addBlock(new Block(this, 'right'));
-    }
+    //block = new Block(this, 'turn');
+    //block.param = new Parameter(block);
+    //block.param.values = [ -90, -75, -60, -45, -30, -15, 'random', 15, 30, 45, 60, 75, 90 ];
+    //block.param.index = 6;
+    //menu.addBlock(block);
+    
+    menu.addBlock(new Block(this, 'left'));
+    menu.addBlock(new Block(this, 'right'));
+    
     
     // HATCH block
     block = new Block(this, 'hatch');
@@ -341,17 +337,15 @@ class CodeWorkspace extends TouchLayer {
     menu.addBlock(block);
     
     // DIE block
-    if (SHOW_DIE_BLOCK) {
-      block = new Block(this, 'die');
-      block.color = '#b67196';
-      menu.addBlock(block);
-    }
+    //block = new Block(this, 'die');
+    //block.color = '#b67196';
+    //menu.addBlock(block);
     
     // IF block
     menu.addBlock(new IfBlock(this));
     
     // REPEAT block
-    if (SHOW_REPEAT_BLOCK) menu.addBlock(new RepeatBlock(this));
+    //menu.addBlock(new RepeatBlock(this));
     
     // WAIT block
     menu.addBlock(new WaitBlock(this));
