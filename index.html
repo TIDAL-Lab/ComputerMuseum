@@ -7,41 +7,77 @@
   <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi">
   <meta name="format-detection" content="telephone=no">
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/pages.css">
   <link rel="stylesheet" href="css/popover.css">
 </head>
 <body>
+  
+  <!-- TABLE OF CONTENTS -->
+  <div id="toc">
+    Frog Pond: Natural Selection
+    <button class="back-button">&#x25C4; BACK</button>
+    <button class="next-button">NEXT &#x25BA;</button>
+  </div>
+  
+  
   <div id="content">
-    <canvas id="pond" width="1024" height="768"></canvas>
-    <canvas id="frogs" width="1024" height="768"></canvas>
-    <canvas id="flies" width="1024" height="768"></canvas>
-    <canvas id="workspace1" width="1024" height="768"></canvas>
     
-    <div id="toolbar">
-      <button id="play-button"></button>
-      <button id="fastforward-button"></button>
-      <button id="restart-button"></button>
-      <button id="plot-button"></button>
+    <!-- TITLE PAGE -->
+    <div class="page" id="intro-page">
+      Hello there, kidos
     </div>
     
-    <div id="overlay">
-      <div id="plot-dialog">
-        <button id="close-button"></button>
-        Frog Sizes
-        <canvas id="plot" width="700" height="500"></canvas>
+    <!-- CHALLENGE PAGE -->
+    <div class="page" id="challenge-A">
+      This is a challenge.
+    </div>
+    
+    <!-- MAIN FROG POND PAGE -->
+    <div class="page" id="sim-page">
+      <canvas id="pond" width="1024" height="720"></canvas>
+      <canvas id="frogs" width="1024" height="720"></canvas>
+      <canvas id="flies" width="1024" height="720"></canvas>
+      <canvas id="workspace1" width="1024" height="720"></canvas>
+      <canvas id="mini-plot" width="140" height="100"></canvas>
+    
+      <div id="toolbar">
+        <button id="play-button"></button>
+        <button id="fastforward-button"></button>
+        <button id="restart-button"></button>
+        <button id="plot-button"></button>
+        <button id="settings-button"></button>
+      </div>
+    
+      <div id="overlay">
+        <div id="plot-dialog" class="dialog">
+          <button class="close-button"></button>
+          Frog Sizes
+          <canvas id="plot" width="700" height="500"></canvas>
+        </div>
+        
+        <div id="settings-dialog" class="dialog">
+          <button class="close-button"></button>
+          Settings
+          <div id="settings-list">
+            <!-- AUTO POPULATED -->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="dialog-overlay">
+      
+      <!-- IF PARAM POPOVER -->
+      <div class="popover left" id="if-popover">
+        <ul>
+          <li id="param0">Hungry?</li>
+          <li id="param1">Full?</li>
+          <li id="param2">Water Ahead?</li>
+        </ul>
       </div>
     </div>
   </div>
     
-    <!-- IF PARAM POPOVER -->
-  <div id="dialog-overlay">
-    <div class="popover left" id="if-popover">
-      <ul>
-        <li id="param0">Starving?</li>
-        <li id="param1">Full?</li>
-        <li id="param2">Near Water?</li>
-      </ul>
-    </div>
-  </div>
   
   <script src="dart/main.dart" type="application/dart"></script>
   <script src="dart.js" type="text/javascript"></script>
