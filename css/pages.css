@@ -1,0 +1,94 @@
+/*
+ * Frog Pond Evolution
+ * Copyright (c) 2013 Michael S. Horn
+ * 
+ *           Michael S. Horn (michael-horn@northwestern.edu)
+ *           Northwestern University
+ *           2120 Campus Drive
+ *           Evanston, IL 60613
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License (version 2) as
+ * published by the Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+.page {
+  width: 864px;
+  height: 580px;
+  position: absolute;
+  top: 0px;
+  left: -1050px;
+  visibility: visible;
+  background-color: #ddd;
+  padding: 80px;
+  text-align: center;
+}
+
+
+/* page transition animation */
+@-webkit-keyframes slidein-left {
+  0%   { left: 1050px; }
+  100% { left: 0px; }
+}
+
+@-webkit-keyframes slideout-left {
+  0%   { left: 0px; }
+  100% { left: -1050px; }
+}
+
+@-webkit-keyframes slidein-right {
+  0%     { left: -1050px; }
+  100%   { left: 0px; }
+}
+
+@-webkit-keyframes slideout-right {
+  0%     { left: 0px; }
+  100%   { left: 1050px; }
+}
+
+.next-button {
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  width: 90px;
+  height: 33px;
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(255, 255, 255, 0.6);
+  font: bold 14px 'Helvetica Neue', sans-serif;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
+}
+
+.next-button:active {
+  background-color: #fff;
+}
+
+.back-button {
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  width: 90px;
+  height: 33px;
+  position: absolute;
+  left: 10px;
+  top: 6px;
+  color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(255, 255, 255, 0.6);
+  font: bold 14px 'Helvetica Neue', sans-serif;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
+}
+
+.back-button:active {
+  background-color: #999;
+}

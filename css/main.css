@@ -24,20 +24,39 @@ body {
    padding: 0;
    color: #ccc;
    background-color: #333;
+   font: 200 14pt 'Helvetica Neue', sans-serif;
+}
+
+
+/* Table of contents */
+#toc {
+  width: 1004px;
+  height: 28px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  background-color: #969;
+  color: white;
+  font: 200 20pt 'Helvetica Neue', sans-serif;
+  letter-spacing: 1px;
+  text-align: center;
+  padding: 10px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 
 /* iPad 2 landscape dimensions */
 #content {
   width: 1024px;
-  height: 768px;
+  height: 720px;
   overflow-x: hidden;
   overflow-y: hidden;
   position: absolute;
   left: 0px;
-  top: 0px;
+  top: 48px;
   margin: 0px;
   padding: 0px;
+  color: #222;
 }
 
 
@@ -68,7 +87,7 @@ canvas {
 }
 
 
-#plot-dialog {
+.dialog {
   background-color: rgba(0, 0, 0, 0.75);
   width: 750px;
   height: 580px;
@@ -94,9 +113,21 @@ canvas {
 }
 
 
+#mini-plot {
+  position: absolute;
+  top: 5px;
+  left: auto;
+  right: 5px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.7);
+  transition: opacity 0.2s linear;
+  -webkit-transition: opacity 0.2s linear;
+}
+
+
 #if-popover {
   left: 200px;
-  top: 500px;
+  top: 550px;
 }
 
 
@@ -108,11 +139,11 @@ canvas {
    border: 2px solid white;
    */
    position: absolute;
-   bottom: 10px;
+   bottom: 30px;
    right: 0px;
    text-align: center;
    padding: 5px;
-   width: 250px;
+   width: 260px;
    height: 40px;
 }
 
@@ -137,10 +168,10 @@ canvas {
 #restart-button { background-image: url("../images/toolbar/restart.png"); }
 #fastforward-button { background-image: url("../images/toolbar/fastforward.png"); }
 #camera-button { background-image: url("../images/toolbar/camera.png"); }
-#code-button { background-image: url("../images/toolbar/code.png"); }
+#settings-button { background-image: url("../images/toolbar/code.png"); }
 #plot-button { background-image: url("../images/toolbar/plot.png"); }
 
-#close-button {
+.close-button {
   outline: none;
   border: none;
   width: 40px;
@@ -153,7 +184,51 @@ canvas {
   background-image: url("../images/toolbar/close.png");
 }
 
-#close-button:active {
+.close-button:active {
   background-position: 3px 3px;
 }
 
+
+/* Settings */
+#settings-list {
+  font: 200 14px sans-serif;
+  margin-top: 50px;
+  border: 1px solid white;
+  border-radius: 3px;
+  background-color: #333;
+  width: 700px;
+}
+
+.setting {
+  padding: 20px;
+}
+
+.setting-description {
+  width: 250px;
+  text-align: right;
+  display: inline-block;
+}
+
+
+.setting-control {
+  width: 320px;
+  text-align: left;
+  padding-left: 40px;
+  display: inline-block;
+}
+
+
+/* Toggle switch */
+.toggle-switch {
+  width: 50px;
+}
+
+
+label {
+  margin-left: 10px;
+}
+
+
+.slider {
+   width: 200px;
+}
