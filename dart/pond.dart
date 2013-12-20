@@ -32,6 +32,9 @@ class FrogPond extends TouchLayer {
   
   TouchManager tmanager = new TouchManager();
   
+  /* Page manager */
+  PageManager pages = new PageManager();
+  
   List<CodeWorkspace> workspaces = new List<CodeWorkspace>();
   
   int width, height;
@@ -54,10 +57,10 @@ class FrogPond extends TouchLayer {
    *   2  : play forward 2x
    *   4  : play forward 4x ....
    */
-  int play_state = 1; 
+  int play_state = 1;
   
   /* Histogram of frog populations */
-  Histogram hist;
+  Histogram hist, miniHist;
   
   
   
@@ -77,12 +80,16 @@ class FrogPond extends TouchLayer {
     tmanager.registerEvents(querySelector("#workspace1"));
     tmanager.addTouchLayer(this);
     
+    pages.gotoPage(0);
+    
     hist = new Histogram("plot", this);
+    miniHist = new Histogram("mini-plot", this);
+    miniHist.mini = true;
     
     addLilyPad(732, 570, 0.35);
     addLilyPad(820, 390, 0.52);
-    addLilyPad(848, 149, 0.475);
-    addLilyPad(625, 181, 0.5);
+    addLilyPad(820, 159, 0.475);
+    addLilyPad(633, 187, 0.5);
     addLilyPad(609, 405, 0.4);
     addLilyPad(562, 570, 0.4);
     addLilyPad(361, 515, 0.475);
@@ -90,25 +97,20 @@ class FrogPond extends TouchLayer {
     addLilyPad(248, 310, 0.4);
     addLilyPad(447, 328, 0.4);
     
-    
     bindClickEvent("play-button", (event) => playPauseProgram());
     bindClickEvent("restart-button", (event) => restartProgram());
     bindClickEvent("fastforward-button", (event) => fastForwardProgram());
-    bindClickEvent("plot-button", (event) {
-      pauseProgram();
-      hist.draw();
+    bindClickEvent("mini-plot", (event) => showHistogramDialog());
+    bindClickEvent("plot-button", (event) => showHistogramDialog());
+    bindClickEvents("close-button", (event) => hideAllDialogs());
+    bindClickEvent("overlay", (event) => hideAllDialogs());
+    
+    bindClickEvent("settings-button", (event) {
+      setHtmlOpacity("mini-plot", 0.0);
       setHtmlVisibility("overlay", true);
-      setHtmlVisibility("plot-dialog", true);
-      setHtmlOpacity("plot-dialog", 1.0);
+      setHtmlVisibility("settings-dialog", true);
+      setHtmlOpacity("settings-dialog", 1.0);
     });
-    bindClickEvent("close-button", (event) {
-      setHtmlOpacity("plot-dialog", 0.0);
-      new Timer(const Duration(milliseconds : 300), () {
-        setHtmlVisibility("overlay", false);
-        setHtmlVisibility("plot-dialog", false);
-      });
-    });
-
     
     CodeWorkspace workspace = new CodeWorkspace(this, "workspace1", "blue");
     tmanager.addTouchLayer(workspace);
@@ -138,9 +140,22 @@ class FrogPond extends TouchLayer {
   
   
 /**
+ * Show histogram dialog
+ */
+  void showHistogramDialog() {
+    pauseProgram();
+    hist.draw();
+    setHtmlOpacity("mini-plot", 0.0);
+    setHtmlVisibility("overlay", true);
+    setHtmlVisibility("plot-dialog", true);
+    setHtmlOpacity("plot-dialog", 1.0);
+  }
+
+  
+/**
  * Add a frog to the pond
  */
-  void addRandomFrog(CodeWorkspace workspace) {
+  void addRandomFrog(CodeWorkspace workspace, [ double size = 0.5 ]) {
     String breed = workspace.color;
     for (int i=0; i<20; i++) {
       int x = rand.nextInt(width - 200) + 100;
@@ -151,6 +166,7 @@ class FrogPond extends TouchLayer {
         frog["breed"] = breed;
         frog.x = x.toDouble();
         frog.y = y.toDouble();
+        frog.size = size;
         frog.lilypad = pad;
         pad.addFrog(frog);
         frog.program = new Program(workspace.start, frog);
@@ -162,7 +178,7 @@ class FrogPond extends TouchLayer {
     }
 
     // try again in 2 seconds
-    new Timer(const Duration(milliseconds : 2000), () => addRandomFrog(workspace));
+    new Timer(const Duration(milliseconds : 2000), () => addRandomFrog(workspace, size));
   }
   
   
@@ -306,8 +322,8 @@ class FrogPond extends TouchLayer {
       pad.removeAllFrogs();
     }
     for (CodeWorkspace workspace in workspaces) {
-      for (int i=0; i<4; i++) {
-        addRandomFrog(workspace);
+      for (int i=0; i<5; i++) {
+        addRandomFrog(workspace, 0.2 + 0.2 * i);
       }
     }
   }
@@ -433,7 +449,10 @@ class FrogPond extends TouchLayer {
     for (int i=0; i<play_state; i++) {
       if (animate()) refresh = true;
     }
-    if (refresh) drawForeground();
+    if (refresh) {
+      drawForeground();
+      miniHist.draw();
+    }
     
     // draw flies
     flies.forEach((fly) => fly.draw(layer2));
@@ -486,7 +505,7 @@ class FrogPond extends TouchLayer {
  * Returns true if the given point is in the water
  */
   bool inWater(num x, num y) {
-    return (getLilyPadHere(x, y) != null);
+    return (getLilyPadHere(x, y) == null);
   }
   
   
