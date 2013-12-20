@@ -11,3 +11,11 @@ touch frog to change focal frog
 no way to run programs once they go past the top of the screen.
 CRASH -- possibly related to push?
 make the bug a frog shape instead of an arrow
+
+
+Carrying capacity based on pushing
+Get rid of if full
+Parameter screen
+*  Can move lily pads
+*  Can move frogs
+*  Frog variation
