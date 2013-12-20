@@ -34,8 +34,10 @@ part 'frog.dart';
 part 'histogram.dart';
 part 'lilypad.dart';
 part 'matrix.dart';
+part 'pages.dart';
 part 'pond.dart';
 part 'popover.dart';
+part 'settings.dart';
 part 'sounds.dart';
 part 'touch.dart';
 part 'turtle.dart';
@@ -54,19 +56,11 @@ part 'fblocks/wait.dart';
 part 'fblocks/workspace.dart';
 
 
-bool SHOW_FASTFORWARD = true;
-bool SHOW_TURN_BLOCK = true;
-bool SHOW_DIE_BLOCK = true;
-bool SHOW_PREVIEW = false;
-bool SHOW_REPEAT_BLOCK = false;
-bool SHOW_WAIT_TIMEOUT = false;
-bool AUTO_REPEAT = true;
-bool FROGS_PUSH = false;
-int MAX_FROGS = 10;  // Maximum number of frogs of a given color
-
-
 // Global frog pond
 FrogPond pond;
+
+// Global settings
+Settings settings;
 
 void main() {
 
@@ -86,6 +80,8 @@ void main() {
   Sounds.loadSound("gulp");
   
   initPopovers();
+  
+  settings = new Settings();
   
   // create frog pond
   pond = new FrogPond();
