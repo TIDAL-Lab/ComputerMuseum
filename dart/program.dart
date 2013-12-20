@@ -150,7 +150,7 @@ class Program {
   bool getSensorValue(String sensor) {
     if (sensor == "fly") {
       return frog.nearFly();
-    } else if (sensor == "near-water?") {
+    } else if (sensor == "water-ahead?") {
       return frog.nearWater();
     } else if (sensor == "hungry?") {
       return frog.isHungry();
@@ -186,7 +186,7 @@ class Program {
       doIf(cmd, param, preview);
     } else if (cmd.startsWith("repeat")) {
       doRepeat(cmd, param, preview);
-    } else if (cmd.startsWith("look")) {
+    } else if (cmd.startsWith("wait")) {
       doWait(cmd, param, preview);
     }
     //else if (cmd.startsWith("end")) {
@@ -201,6 +201,12 @@ class Program {
     frog.updateLilyPad();
     if (frog.lilypad == null) {
       Sounds.playSound("splash");
+      frog.die();
+      return;
+    }
+    
+    // has the frog starved to death?
+    if (settings["frogs-starve"] && frog.isStarving()) {
       frog.die();
       return;
     }
@@ -250,8 +256,11 @@ class Program {
     if (param is num) {
       angle = param;
     }
-    if (cmd == 'right') {
-      angle *= -1;
+    if (cmd == 'left') {
+      angle = Turtle.rand.nextInt(90).toDouble();  
+    }
+    else if (cmd == 'right') {
+      angle = Turtle.rand.nextInt(90).toDouble() * -1.0;
     }
     Frog target = frog;
     if (preview) {
@@ -387,7 +396,7 @@ class Program {
     tween = new Tween();
     tween.function = TWEEN_DECAY;
     tween.delay = 0;
-    tween.duration = isFastForward? 4 : 8;
+    tween.duration = 8;
     tween.repeat = 3;
     tween.addControlPoint(1.0, 0);
     tween.addControlPoint(0.0, 0.5);
@@ -406,22 +415,22 @@ class Program {
     Frog baby = null;
     
     if (frog.lilypad != null) {
-      if (frog.lilypad.getFrogCount() < MAX_FROGS) {
+      if (frog.lilypad.getFrogCount() < settings["max-frogs"]) {
         baby = frog.hatch();
       }
     }
     if (baby == null) return;
-    
-    if (preview) {
-      baby.opacity = 0.3;
-      frog.ghost = baby;
-    } else {
-      frog.pond.addFrog(baby);
-      baby.program.pause();
-    }
+    baby.program.pause();
     baby.size = 0.05;
     baby.left(Turtle.rand.nextInt(360).toDouble());
     baby.forward(35.0);
+    baby.updateLilyPad();
+    if (baby.lilypad == null) {
+      baby.die();
+      return;
+    }
+    frog.pond.addFrog(baby);
+    
     tween = new Tween();
     tween.function = TWEEN_DECAY;
     tween.delay = 0;
@@ -432,7 +441,7 @@ class Program {
       if (isRunning) baby.program.play();
     });
     double newsize = frog.size + Turtle.rand.nextDouble() * 0.2 - 0.1;
-    newsize = min(3.0, max(0.1, newsize));
+    newsize = min(Settings.MAX_FROG_SIZE, max(Settings.MIN_FROG_SIZE, newsize));
     tween.addControlPoint(0.05, 0);
     tween.addControlPoint(newsize, 1.0);
     tween.ondelta = ((value) => baby.size += value);
