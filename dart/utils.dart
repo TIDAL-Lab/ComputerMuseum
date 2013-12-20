@@ -50,9 +50,39 @@ void bindClickEvent(String id, Function callback) {
     if (isFlagSet("debug")) {
       element.onClick.listen(callback);
     } else {
-      element.onTouchEnd.listen(callback);    
+      element.onTouchStart.listen(callback);    
     }
   }
+}
+
+
+/**
+ * Bind click event to all buttons matching the given class name
+ */
+void bindClickEvents(String classname, Function callback) {
+  var buttons = querySelectorAll(".${classname}");
+  for (Element element in buttons) {
+    if (isFlagSet("debug")) {
+      element.onClick.listen(callback);
+    } else {
+      element.onTouchStart.listen(callback);
+    }
+  }
+}
+
+
+/**
+ * Hide all dialog boxes
+ */
+void hideAllDialogs() {
+  setHtmlOpacity("plot-dialog", 0.0);
+  setHtmlOpacity("settings-dialog", 0.0);
+  setHtmlOpacity("mini-plot", 1.0);
+  new Timer(const Duration(milliseconds : 300), () {
+    setHtmlVisibility("overlay", false);
+    setHtmlVisibility("plot-dialog", false);
+    setHtmlVisibility("settings-dialog", false);
+  });
 }
 
 
