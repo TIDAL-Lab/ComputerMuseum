@@ -22,14 +22,12 @@
  */
 part of ComputerHistory;
 
-const MARGIN = 20.5;
-const GAP = 6;
-
 
 class Histogram {
   
   int width = 300;
   int height = 300;
+  bool mini = false;
   
   FrogPond pond;
   
@@ -39,7 +37,8 @@ class Histogram {
   
   ImageElement frog = new ImageElement();
   
-  List<double> values = new List<double>();
+  List<double> values;
+  List<int> counts;
   
   
   Histogram(String name, this.pond) {
@@ -48,6 +47,7 @@ class Histogram {
     width = canvas.width;
     height = canvas.height;
     values = new List<double>(bins);
+    counts = new List<int>(bins);
     frog.src = "images/whitefrog.png";
   }
   
@@ -56,19 +56,20 @@ class Histogram {
     double bottom = 0.1;
     double range = (3.0 - bottom);
     double bin = range / bins;
-    List<int> counts = new List<int>(bins);
+
     for (int i=0; i<bins; i++) {
       counts[i] = 0;
+      values[i] = 0.0;
     }
     
     for (Frog frog in pond.frogs) {
-      if (frog.size >= 1.2) {
+      if (frog.size >= 1.0) {
         counts[4]++;
-      } else if (frog.size >= 0.6) {
+      } else if (frog.size >= 0.8) {
         counts[3]++;
-      } else if (frog.size >= 0.3) {
+      } else if (frog.size >= 0.6) {
         counts[2]++;
-      } else if (frog.size >= 0.15) {
+      } else if (frog.size >= 0.4) {
         counts[1]++;
       } else {
         counts[0]++;
@@ -87,11 +88,15 @@ class Histogram {
     recalculate();
     
     ctx.clearRect(0, 0, width, height);
-    
+
+
+    double MARGIN = mini? 10.0 : 20.0;
+    double GAP = mini? 2.0 : 5.0;
+
     double gx = MARGIN;
-    double gy = MARGIN;
+    double gy = mini ? MARGIN * 2 : MARGIN * 3;
     double gw = width - MARGIN * 2 + 0.5;
-    double gh = height - MARGIN * 6 + 0.5;
+    double gh = mini ? height - MARGIN * 3.5 : height - MARGIN * 8;
     
     ctx.strokeStyle = "white";
     ctx.lineWidth = 3;
@@ -112,6 +117,9 @@ class Histogram {
     double id = 0.2;
     
     ctx.fillStyle = "white";
+    ctx.font = "20px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "bottom";
     for (int i=0; i<bins; i++) {
       
       bh = gh * values[i];
@@ -119,10 +127,13 @@ class Histogram {
       
       iw = frog.width * id;
       ih = frog.height * id;
-      id *= 1.5;
       
       ctx.fillRect(bx + GAP, by, bw - GAP * 2, bh);
-      ctx.drawImageScaled(frog, bx + bw/2 - iw/2, gy + gh + 8, iw, ih);
+      if (!mini) {
+        ctx.drawImageScaled(frog, bx + bw/2 - iw/2, gy + gh + 8, iw, ih);
+        ctx.fillText("${counts[i]}", bx + bw/2, by - 4);
+      }
+      id += 0.2;
       bx += bw;
     }
   }
