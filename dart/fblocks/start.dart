@@ -114,7 +114,7 @@ class EndProgramBlock extends EndBlock {
 
   
   Block step(Program program) {
-    return AUTO_REPEAT ? begin : null;
+    return begin;
   }  
 
   
