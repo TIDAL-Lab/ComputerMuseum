@@ -23,14 +23,15 @@
 part of ComputerHistory;
 
   
-class WaitBlock extends BeginBlock {
+class WaitBlock extends Block {
 
-  WaitBlock(CodeWorkspace workspace) : super(workspace, 'look for fly') {
+  WaitBlock(CodeWorkspace workspace) : super(workspace, 'wait for fly') {
+    color = '#c92';
     //param = new Parameter(this);
     //param.centerX = width - 7;
     //param.values = [ 50, 100, 150, 200, 250, 300, 350, 400 ];
-    end = new EndBlock(workspace, this);
-    _addClause(end);
+    //end = new EndBlock(workspace, this);
+    //_addClause(end);
   }
 
   
@@ -43,14 +44,30 @@ class WaitBlock extends BeginBlock {
   
   
   Block step(Program program) {
-    //var v = param.value;
-    //int t = (v is int) ? v * 20 : Turtle.rand.nextInt(6000);
+    
+    // Timeout if the frog has starved to death
+    if (settings["frogs-starve"] && program.getSensorValue("starving?")) {
+      return next;
+    }
+    
+    // Timeout if the frog sees a fly
+    else if (program.getSensorValue("fly")) {
+      //program.removeVariable("timeout");
+      return next;
+    }
+    
+    // Otherwise wait for another tick
+    else {
+      return this;
+    }
+    
+    /*
     int t = 200;
 
     if (!program.hasVariable("timeout")) {
       program["timeout"] = t;
     }
-    
+
     if (program.getSensorValue("fly")) {
       program.removeVariable("timeout");
       return next;
@@ -60,8 +77,12 @@ class WaitBlock extends BeginBlock {
       return end;
     }
     else {
-      program["timeout"] --;
+      program["timeout"]--;
       return this;
     }
+    else {
+      return this;
+    }
+    */
   }
 }
