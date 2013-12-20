@@ -22,7 +22,6 @@
  */
 part of ComputerHistory;
 
-const MAX_ENERGY = 2000;
 
 class Frog extends Turtle implements Touchable {
   
@@ -51,7 +50,7 @@ class Frog extends Turtle implements Touchable {
   Fly prey = null;
   
   /* how long since last meal? */
-  int last_meal = MAX_ENERGY;
+  int _last_meal = 0;
   
   /* OPTIMIZATION: Lilypad this frog is stting on */
   LilyPad lilypad = null;
@@ -67,10 +66,9 @@ class Frog extends Turtle implements Touchable {
     Frog clone = new Frog(pond);
     clone.copy(this);
     clone.program = new Program.copy(program, clone);
-    last_meal = last_meal ~/ 2;
-    clone.last_meal = last_meal;
-    clone.lilypad = lilypad;
-    if (lilypad != null) lilypad.addFrog(clone);
+    //_last_meal = _last_meal ~/ 2;
+    //clone._last_meal = _last_meal;
+    clone.updateLilyPad();
     return clone;
   }
   
@@ -108,7 +106,8 @@ class Frog extends Turtle implements Touchable {
     }
     if (program.animate()) refresh = true;
     if (program.isRunning) {
-      last_meal -= max(1, sqrt(size).toInt());
+      //_last_meal -= max(1, sqrt(size).toInt());
+      _last_meal += 1;
     }
     return refresh;
   }
@@ -118,19 +117,20 @@ class Frog extends Turtle implements Touchable {
  * Push other frogs out of the way
  */
   void push(num distance) {
-    if (!FROGS_PUSH) return;
-    for (Frog frog in pond.getFrogsHere(this)) {
-      double angle = angleBetween(frog);
-      if (angle.abs() < 90.0) {
-        angle = angle / -180.0 * PI;
-        angle += heading;
-        double dx = distance * sin(angle);
-        double dy = distance * cos(angle);
-        frog.x += dx;
-        frog.y -= dy;
-        if (pond.inWater(frog.x, frog.y)) {
-          Sounds.playSound("splash");
-          frog.die();
+    if (settings["frogs-push"]) {
+      for (Frog frog in pond.getFrogsHere(this)) {
+        double angle = angleBetween(frog);
+        if (angle.abs() < 90.0) {
+          angle = angle / -180.0 * PI;
+          angle += heading;
+          double dx = distance * sin(angle);
+          double dy = distance * cos(angle);
+          frog.x += dx;
+          frog.y -= dy;
+          if (pond.inWater(frog.x, frog.y)) {
+            Sounds.playSound("splash");
+            frog.die();
+          }
         }
       }
     }
@@ -192,17 +192,17 @@ class Frog extends Turtle implements Touchable {
   
   
   bool isHungry() {
-    return last_meal <= 1000;
+    return _last_meal > (settings["frog-lifespan"] * 30) - 290;
   }
 
   
   bool isFull() {
-    return last_meal > 1900;
+    return _last_meal <= 100;
   }
   
   
   bool isStarving() {
-    return last_meal <= 0;
+    return _last_meal > (settings["frog-lifespan"] * 30);
   }
   
   
@@ -242,7 +242,7 @@ class Frog extends Turtle implements Touchable {
       if (fly != null && !fly.dead) {
         prey = fly.hatch();
         pond.captureFly(this, fly);
-        last_meal = MAX_ENERGY;
+        _last_meal = 0;
       }
     } else {
       prey.x = tongueX;
@@ -337,7 +337,13 @@ class Frog extends Turtle implements Touchable {
     //---------------------------------------------
     num iw = width;
     num ih = height;
-    ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
+    ctx.save();
+    {
+      if (settings["frogs-starve"] && isHungry()) {
+        ctx.globalAlpha = 0.5;
+      }
+      ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
+    }
     ctx.restore();
   }
 
