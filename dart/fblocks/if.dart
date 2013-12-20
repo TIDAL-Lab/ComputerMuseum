@@ -30,9 +30,9 @@ class IfBlock extends BeginBlock {
   IfBlock(CodeWorkspace workspace) : super(workspace, 'if') {
     param = new Parameter(this);
     param.centerX = width - 35;
-    param.values = [ 'starving?', 'full?', 'near-water?' ];
-    //el = new ElseBlock(workspace, this);
-    //_addClause(el);    
+    param.values = [ 'hungry?', 'full?', 'water-ahead?' ];
+    el = new ElseBlock(workspace, this);
+    _addClause(el);    
     end = new EndBlock(workspace, this);
     _addClause(end);
   }
