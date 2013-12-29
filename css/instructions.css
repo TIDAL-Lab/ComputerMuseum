@@ -65,3 +65,10 @@
   width:800px;
   height:590px;
 }
+
+#bottomline 
+{
+  position:absolute;
+  left:125px;
+  top:620px;
+}
