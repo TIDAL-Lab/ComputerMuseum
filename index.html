@@ -23,8 +23,21 @@
   
   <div id="content">
     
-    <!-- TITLE PAGE -->
-    <div class="page" id="intro-page">
+     <!-- TITLE PAGE0 -->
+    <div class="page" id="intro-page0">
+      <div id="titleystuff">
+      <h2>You control how the frogs in the pond behave by making programs<br>
+      <i>The only difference between frogs is their size...</i></h2>
+      
+      
+      <img id="overview" height="520" src="images/overview-image.png">
+      
+      </div>
+      
+    </div>
+    
+     <!-- TITLE PAGE1 -->
+    <div class="page" id="intro-page1">
       <div id="titleystuff">
       <h2>A frog's size affects some of the things it does...</h2>
       </div>
@@ -33,14 +46,14 @@
       <b>Hop:</b><br>
       <img class="frogs" id="hopfrog1" height="250" src="images/frog-jump-demo.png"><br>
       <img class="frogs" id="hopfrog2" height="130" src="images/frog-jump-demo.png"><br>
-      <i>Bigger frogs hop further.</i>
+      <i>Bigger frogs hop farther.</i>
       </div>
       
       <div id="example-wait">
       <b>Wait for a fly:</b><br>
       <img class="frogs" id="waitfrog1" height="250" src="images/frog-wait-demo.png"><br>
       <img class="frogs" id="waitfrog2" height="130" src="images/frog-wait-demo.png"><br>
-      <i>Bigger frogs see further.</i><br>
+      <i>Bigger frogs see farther.</i><br>
       </div>
       
       <div id="example-eat">
@@ -49,22 +62,35 @@
       <img class="frogs" id="eatfrog2" height="130" src="images/frog-eat-demo.png"><br>
       <i>Bigger frogs have longer tongues.</i>
       </div>
-      
-      
     </div>
     
-    <!-- CHALLENGE PAGE -->
-    <div class="page" id="challenge-A">
+    <!-- TITLE PAGE2 -->
+    <div class="page" id="intro-page2">
       <div id="titleystuff">
-      <h2>Try this program:</h2>
+      <h2>Other things the frogs do have a bit of randomness...</h2>
       </div>
       
-      <div id="example-wait">
-      <img src="images/challenge1.png"><br><br>
-      <b>What do you think will happen?</b>
+      <div id="example-hatch">
+      <b>Hatching:</b><br><br>
+      <img height="330px" src="images/hatch-demo2.png"><br>
+       Offspring grow up right away.<br>
+       They may be a little bit bigger or smaller than their parent. <br>
+      They will start a little bit away from their parent and facing in a slightly different direction.
       </div>
+      
+      <div id="example-turn">
+      <b>Turning:</b><br>
+      <img height="175px" src="images/turn-demo1.png"><br>
+      <img height="175px" src="images/turn-demo2.png"><br>
+      Frogs don't turn precisely.<br>
+      "Right" tells a frog to turn a little to its right.<br>
+      "Left" tells a frog to turn a little to its left
+      </div>
+      
+      
     </div>
     
+   
     <!-- MAIN FROG POND PAGE -->
     <div class="page" id="sim-page">
       <canvas id="pond" width="1024" height="720"></canvas>
@@ -97,6 +123,37 @@
         </div>
       </div>
     </div>
+    
+     <!-- CHALLENGE PAGE -->
+    <div class="page" id="challenge-A">
+      <div id="titleystuff">
+      <h2>Try this program:</h2>
+      </div>
+      
+      <div id="challenge">
+      <img src="images/challenge1.png"><br><br>
+      <b>Can you imagine what <i>each</i> frog will do?</b><br><br>
+      <b>What do you think will happen to the frog <i>population</i> over time?</b>
+      </div>
+    </div>
+    
+    <!-- CHALLENGE PAGE -->
+    <div class="page" id="challenge-B">
+      <div id="titleystuff">
+      <h2>Can you make...</h2>
+      </div>
+      
+      <div id="challenge">
+      <h3>
+   
+     ...a program that causes the frog population to get BIGGER?<br>
+      <br><br>
+      ...a pond and program so that BOTH very big AND very little frogs thrive?<br>
+      
+      </h3>
+      </div>
+    </div>
+    
     
     <div id="dialog-overlay">
       
