@@ -1,4 +1,17 @@
 TODO:
+March 8-9 test next version at CHM with all of the changes in place
+- show code
+- better parameters (is that right? I wasn't sure I heard you correctly)
+- small bugs fixed
+- intro/help functions
+- scoring
+
+Interim dates: 
+- Show Code (and scoring?) functions by February 7
+- Preliminary version of the rest by March 1
+
+
+
 
 credits
 redo parameter selection
