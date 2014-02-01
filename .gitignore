@@ -2,3 +2,4 @@ blockly
 old
 concept
 *.dart.js.*
+*.precompiled*
