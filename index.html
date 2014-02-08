@@ -25,22 +25,13 @@
     
      <!-- TITLE PAGE0 -->
     <div class="page" id="intro-page0">
-      <div id="titleystuff">
-      <h2>You control how the frogs in the pond behave by making programs<br>
-      <i>The only difference between frogs is their size...</i></h2>
-      
-      
-      <img id="overview" height="520" src="images/overview-image.png">
-      
-      </div>
-      
+      <h2>You can control frogs in a pond by making programs...</h2>
+      <img id="overview" height="600" src="images/overview-image.png">
     </div>
     
      <!-- TITLE PAGE1 -->
     <div class="page" id="intro-page1">
-      <div id="titleystuff">
-      <h2>A frog's size affects some of the things it does...</h2>
-      </div>
+      <h2>A frog's size changes some of the things it does...</h2>
       
       <div id="example-hop">
       <b>Hop:</b><br>
@@ -66,16 +57,13 @@
     
     <!-- TITLE PAGE2 -->
     <div class="page" id="intro-page2">
-      <div id="titleystuff">
       <h2>Other things the frogs do have a bit of randomness...</h2>
-      </div>
       
       <div id="example-hatch">
       <b>Hatching:</b><br><br>
       <img height="330px" src="images/hatch-demo2.png"><br>
        Offspring grow up right away.<br>
        They may be a little bit bigger or smaller than their parent. <br>
-      They will start a little bit away from their parent, facing in a different direction.
       </div>
       
       <div id="example-turn">
@@ -83,24 +71,38 @@
       <img height="175px" src="images/turn-demo1.png"><br>
       <img height="175px" src="images/turn-demo2.png"><br>
       Frogs don't turn precisely.<br>
-      "Right" tells a frog to turn a little to its right.<br>
-      "Left" tells a frog to turn a little to its left
       </div>
-      <div id="bottomline">
+
       <h4>
-      <img src="images/toolbar/code.png"> Click the <b>settings</b> wrench to see and change other rules of the Pond World.
+      <img src="images/toolbar/code.png" style="background-color: #666;"> Click the <b>settings</b> wrench to see and change other rules of the Pond World.
       </h4>
-      </div>
       
+    </div>
+    
+    <!-- CHALLENGE PAGE -->
+    <div class="page" id="challenge-A">
+      <h2><u>Challenge 1</u> Try this program:</h2>
+      
+      <div id="challenge">
+      <img src="images/challenge1.png"><br><br>
+      <b>Can you imagine what <i>each</i> frog will do?</b><br><br>
+      <b>What do you think will happen to the frog <i>population</i> over time?</b>
+      </div>
     </div>
     
    
     <!-- MAIN FROG POND PAGE -->
     <div class="page" id="sim-page">
+      <!--
       <canvas id="pond" width="1024" height="710"></canvas>
       <canvas id="frogs" width="1024" height="710"></canvas>
       <canvas id="flies" width="1024" height="710"></canvas>
       <canvas id="workspace1" width="1024" height="710"></canvas>
+      -->
+      <canvas id="pond" width="1920" height="1032"></canvas>
+      <canvas id="frogs" width="1920" height="1032"></canvas>
+      <canvas id="flies" width="1920" height="1032"></canvas>
+      <canvas id="workspace1" width="1920" height="1032"></canvas>
       <canvas id="mini-plot" width="140" height="100"></canvas>
     
       <div id="toolbar">
@@ -128,32 +130,15 @@
       </div>
     </div>
     
-     <!-- CHALLENGE PAGE -->
-    <div class="page" id="challenge-A">
-      <div id="titleystuff">
-      <h2><u>Challenge 1</u> Try this program:</h2>
-      </div>
-      
-      <div id="challenge">
-      <img src="images/challenge1.png"><br><br>
-      <b>Can you imagine what <i>each</i> frog will do?</b><br><br>
-      <b>What do you think will happen to the frog <i>population</i> over time?</b>
-      </div>
-    </div>
-    
     <!-- CHALLENGE PAGE -->
     <div class="page" id="challenge-B">
-      <div id="titleystuff">
-      <h2><u>More Challenges</u><br> Can you make...</h2>
-      </div>
+      <h2><u>More Challenges</u></h2>
       
       <div id="challenge">
       <h3>
-   <br>
-     ...a program that causes the frog population to get BIGGER?<br>
+      Can you make a program that causes the frog population to get BIGGER?<br>
       <br><br>
-      ...a pond and program so that BOTH very big AND very little frogs thrive?<br>
-      
+      Can you make a pond and program so that BOTH very big AND very little frogs thrive?<br>
       </h3>
       </div>
     </div>
