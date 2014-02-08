@@ -14,56 +14,50 @@
 
 #example-hop
 {
-  position:absolute;
-  left:10px;
-  top:130px;
   width:300px;
   height:290px;
+  display: inline-block;
+  padding: 15px;
 }
 
 #example-wait
 {
-  position:absolute;
-  left:320px;
-  top:130px;
   width:300px;
   height:290px;
+  display: inline-block;
+  padding: 15px;
 }
 
 #example-eat
 {
-  position:absolute;
-  left:650px;
-  top:130px;
   width:300px;
   height:290px;
+  display: inline-block;
+  padding: 15px;
 }
 
 #example-hatch 
 {
-  position:absolute;
-  left:10px;
-  top:130px;
   width:500px;
   height:490px;
+  display: inline-block;
+  padding: 15px;
 }
 
 #example-turn 
 {
-  position:absolute;
-  left:500px;
-  top:130px;
   width:500px;
   height:490px;
+  display: inline-block;
+  padding: 15px;
 }
 
 #challenge
 {
-  position:absolute;
-  left:100px;
-  top:100px;
   width:800px;
   height:590px;
+  display: inline-block;
+  padding: 15px;
 }
 
 #bottomline 
