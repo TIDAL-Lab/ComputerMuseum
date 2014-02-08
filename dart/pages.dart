@@ -92,10 +92,10 @@ class PageManager {
     Element el = querySelector("#${id}");
     if (left) {
       el.style.animation = "slideout-left 0.5s ease-in-out 0 1";
-      el.style.left = "-1050px";
+      el.style.left = "-2000px";  // iPad2 -1050px
     } else {
       el.style.animation = "slideout-right 0.5s ease-in-out 0 1";
-      el.style.left = "1050px";
+      el.style.left = "2000px"; // iPad2 1050px;
     }
   }
   
