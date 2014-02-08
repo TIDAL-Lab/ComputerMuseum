@@ -22,37 +22,49 @@
  */
 
 .page {
+  
+  /* iPad 2 1024 x 768 */
+  /*
+  padding: 80px;
   width: 864px;
   height: 580px;
+  left: -1050px;
+  */
+  
+  /* Dell 23" 1920 x 1080 */
+  padding: 150px;
+  width: 1620px;
+  height: 780px;
+  left: -2000px;
+  
   position: absolute;
   top: 0px;
-  left: -1050px;
   visibility: visible;
-  background-color: #999;
-  padding: 80px;
+  background-color: #fefafe;
   text-align: center;
 }
 
 
 /* page transition animation */
+/* iPad 2 left: 1050px; */
 @-webkit-keyframes slidein-left {
-  0%   { left: 1050px; }
+  0%   { left: 2000px; }
   100% { left: 0px; }
 }
 
 @-webkit-keyframes slideout-left {
   0%   { left: 0px; }
-  100% { left: -1050px; }
+  100% { left: -2000px; }
 }
 
 @-webkit-keyframes slidein-right {
-  0%     { left: -1050px; }
+  0%     { left: -2000px; }
   100%   { left: 0px; }
 }
 
 @-webkit-keyframes slideout-right {
   0%     { left: 0px; }
-  100%   { left: 1050px; }
+  100%   { left: 2000px; }
 }
 
 .next-button {
