@@ -77,7 +77,8 @@ class FrogPond extends TouchLayer {
     width = canvas.width;
     height = canvas.height;
     
-    tmanager.registerEvents(querySelector("#workspace1"));
+    //tmanager.registerEvents(querySelector("#workspace1"));
+    tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(this);
     
     pages.gotoPage(0);
@@ -86,6 +87,7 @@ class FrogPond extends TouchLayer {
     miniHist = new Histogram("mini-plot", this);
     miniHist.mini = true;
     
+/*  ---iPad 2 layout---
     addLilyPad(732, 570, 0.35);
     addLilyPad(820, 390, 0.52);
     addLilyPad(820, 159, 0.475);
@@ -96,6 +98,20 @@ class FrogPond extends TouchLayer {
     addLilyPad(420, 145, 0.5);
     addLilyPad(248, 310, 0.4);
     addLilyPad(447, 328, 0.4);
+*/
+
+/* Dell layout */
+    addLilyPad(300, height/2, 0.6);
+    addLilyPad(370, 100, 0.6);
+    addLilyPad(1620, height/2, 0.6);
+    addLilyPad(550, 790, 0.8);
+    addLilyPad(630, 370, 0.9);
+    addLilyPad(940, 650, 0.8);
+    addLilyPad(1000, 250, 0.8);
+    addLilyPad(1300, height/2, 0.8);
+    addLilyPad(1400, 130, 0.6);
+    addLilyPad(1300, height - 130, 0.6);
+    addLilyPad(900, height - 130, 0.6);    
     
     bindClickEvent("play-button", (event) => playPauseProgram());
     bindClickEvent("restart-button", (event) => restartProgram());
