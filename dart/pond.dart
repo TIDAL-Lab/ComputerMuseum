@@ -62,7 +62,7 @@ class FrogPond extends TouchLayer {
   /* Histogram of frog populations */
   Histogram hist, miniHist;
   
-  
+  bool button_state = false;
   
   FrogPond() {
     canvas = querySelector("#pond");
@@ -77,8 +77,8 @@ class FrogPond extends TouchLayer {
     width = canvas.width;
     height = canvas.height;
     
-    //tmanager.registerEvents(querySelector("#workspace1"));
-    tmanager.registerEvents(document.documentElement);
+    tmanager.registerEvents(querySelector("#workspace1"));
+    //tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(this);
     
     pages.gotoPage(0);
@@ -484,10 +484,12 @@ class FrogPond extends TouchLayer {
     }
     
     // update play / pause button
-    if (isProgramRunning()) {
+    if (isProgramRunning() && !button_state) {
       setHtmlBackground("play-button", "images/toolbar/pause.png");
-    } else {
+      button_state = true;
+    } else if (!isProgramRunning() && button_state){
       setHtmlBackground("play-button", "images/toolbar/play.png");
+      button_state = false;
     }
   }
   
