@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="css/pages.css">
   <link rel="stylesheet" href="css/popover.css">
   <link rel="stylesheet" href="css/instructions.css">
+  <link rel="stylesheet" href="css/audiorecordbuttons.css">
+  
 </head>
 <body>
   
@@ -125,7 +127,6 @@
       </div>
     </div>
     
-   
     
     
     <div id="dialog-overlay">
@@ -140,6 +141,32 @@
       </div>
     </div>
   </div>
+    
+  <script type="text/javascript">
+    function toggleRecord() {
+      var rbutton = document.getElementById("record");
+      rbutton.style.visibility = "hidden";
+      var sbutton = document.getElementById("stop");
+      sbutton.style.visibility = "visible";
+    }
+    
+    function toggleStop() {
+      var rbutton = document.getElementById("record");
+      rbutton.style.visibility = "visible";
+      var sbutton = document.getElementById("stop");
+      sbutton.style.visibility = "hidden";
+    }
+  </script>
+   <!-- Record Your Strategies -->
+    <div class="page" id="recording-page">
+      <h1>Describe how your code works and how you built it...</h1>
+<br>
+    <a id="record" onclick="toggleRecord();" href="#" class="audio-button">record</a>
+    <br>
+    <br>
+    <a id="stop" style="visibility:hidden" onclick="toggleStop();" href="#" class="audio-button-stop">stop</a>
+         
+    </div>
     
   
   <script src="dart/main.dart" type="application/dart"></script>
