@@ -45,21 +45,24 @@ class Toolbar {
   Toolbar(this.workspace, this.x, this.y, this.w, this.h) {
     frog.src = "images/${workspace.color}frog.png";
     
-    int bx = x + 95;
+    int bx = x + 85;
     int by = y + h/2 - 15;
-    int bspace = 43;
+    int bspace = 35;
     
-    buttons.add(new Button(bx, by, "images/toolbar/play.png", () {
+    buttons.add(new Button(bx, by, workspace, "images/toolbar/play.png", () {
       workspace.playProgram(); }));
     
-    buttons.add(new Button(bx, by, "images/toolbar/pause.png", () {
+    buttons.add(new Button(bx, by, workspace, "images/toolbar/pause.png", () {
       workspace.pauseProgram(); }));
     
-    buttons.add(new Button(bx + bspace, by, "images/toolbar/restart.png", () {
+    buttons.add(new Button(bx + bspace, by, workspace, "images/toolbar/restart.png", () {
       workspace.restartProgram(); }));
     
-    buttons.add(new Button(bx + bspace * 2, by, "images/toolbar/trash.png", () {
+    buttons.add(new Button(bx + bspace * 2, by, workspace, "images/toolbar/trash.png", () {
       workspace.removeAllBlocks(); }));
+    
+    buttons.add(new Button(bx + bspace * 3, by, workspace, "images/toolbar/help.png", () {
+      workspace.showHideHelp(); }));
     
     play = buttons[0];
     pause = buttons[1];
@@ -130,9 +133,10 @@ class Button extends Touchable {
   Function action = null;
   Tween tween = new Tween();
   double _pulse = 1.0;
+  CodeWorkspace workspace;
   
   
-  Button(this.x, this.y, String src, this.action) {
+  Button(this.x, this.y, this.workspace, String src, this.action) {
     img.src = src;
     img.onLoad.listen((e) {
       w = img.width;
@@ -195,6 +199,7 @@ class Button extends Touchable {
   bool touchDown(Contact c) {
     down = true;
     over = true;
+    workspace.draw();
     return visible;
   }
   
@@ -211,6 +216,7 @@ class Button extends Touchable {
   void touchDrag(Contact c) {
     if (down && visible) {
       over = containsTouch(c);
+      workspace.draw();
     }
   }
 
