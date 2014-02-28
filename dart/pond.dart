@@ -72,13 +72,13 @@ class FrogPond extends TouchLayer {
   
   
   FrogPond() {
-    canvas = document.query("#pond");
+    canvas = querySelector("#pond");
     layer0 = canvas.getContext('2d');
     
-    canvas = document.query("#frogs");
+    canvas = querySelector("#frogs");
     layer1 = canvas.getContext('2d');
     
-    canvas = document.query("#flies");
+    canvas = querySelector("#flies");
     layer2 = canvas.getContext('2d');
     
     width = canvas.width;
