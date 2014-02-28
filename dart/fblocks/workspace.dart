@@ -64,7 +64,7 @@ class CodeWorkspace extends TouchLayer {
   
   CodeWorkspace(this.pond, this.width, this.height, this.name, this.color) {
     
-    CanvasElement canvas = document.query("#${name}");
+    CanvasElement canvas = querySelector("#${name}");
     ctx = canvas.getContext('2d');
 
     // toolbar
@@ -73,7 +73,6 @@ class CodeWorkspace extends TouchLayer {
     // menu bar
     menu = new Menu(this, 220, height - BLOCK_HEIGHT * 1.85, width - 220, BLOCK_HEIGHT * 1.85);
     _initMenu();
-    addTouchable(menu);
     
     // status area
     if (SHOW_STATUS) {
@@ -180,6 +179,7 @@ class CodeWorkspace extends TouchLayer {
     blocks.remove(block);
     removeTouchable(block);
     if (block.hasParam) removeTouchable(block.param);
+    draw();
   }
   
   
@@ -189,6 +189,15 @@ class CodeWorkspace extends TouchLayer {
   void moveToTop(Block block) {
     removeBlock(block);
     addBlock(block);
+  }
+  
+  
+  int getBlockCount(String blockType) {
+    int count = 0;
+    for (Block block in blocks) {
+      if (block.type == blockType) count++;
+    }
+    return count;
   }
   
   
@@ -373,13 +382,13 @@ class CodeWorkspace extends TouchLayer {
     Parameter param;
     
     // HOP block
-    menu.addBlock(new Block(this, 'hop'));
+    menu.addBlock(new Block(this, 'hop'), 3);
     
     // CHIRP block
-    menu.addBlock(new Block(this, 'chirp'));
+    menu.addBlock(new Block(this, 'chirp'), 2);
     
     // EAT block
-    menu.addBlock(new Block(this, 'eat'));
+    menu.addBlock(new Block(this, 'eat'), 2);
     
     // TURN block
     if (SHOW_TURN_BLOCK) {
@@ -387,35 +396,35 @@ class CodeWorkspace extends TouchLayer {
       block.param = new Parameter(block);
       block.param.values = [ -90, -75, -60, -45, -30, -15, 'random', 15, 30, 45, 60, 75, 90 ];
       block.param.index = 6;
-      menu.addBlock(block);
+      menu.addBlock(block, 2);
     }
     else {
-      menu.addBlock(new Block(this, 'left'));
-      menu.addBlock(new Block(this, 'right'));
+      menu.addBlock(new Block(this, 'left'), 2);
+      menu.addBlock(new Block(this, 'right'), 2);
     }
     
-    menu.addBlock(new Block(this, 'spin'));
+    menu.addBlock(new Block(this, 'spin'), 2);
     
     // HATCH block
     block = new Block(this, 'hatch');
     block.color = '#b67196';
-    menu.addBlock(block);
+    menu.addBlock(block, 1);
     
     // DIE block
     if (SHOW_DIE_BLOCK) {
       block = new Block(this, 'die');
       block.color = '#b67196';
-      menu.addBlock(block);
+      menu.addBlock(block, 1);
     }
     
     // IF block
-    menu.addBlock(new IfBlock(this));
+    menu.addBlock(new IfBlock(this), 2);
     
     // REPEAT block
-    menu.addBlock(new RepeatBlock(this));
+    menu.addBlock(new RepeatBlock(this), 2);
     
     // WAIT block
-    if (SHOW_WAIT_BLOCK) menu.addBlock(new WaitBlock(this));
+    if (SHOW_WAIT_BLOCK) menu.addBlock(new WaitBlock(this), 2);
         
   }
 }
