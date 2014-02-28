@@ -72,7 +72,7 @@ class ControlBlock extends Block {
   }
  
   
-  void draw(CanvasRenderingContext2D ctx) {
+  void draw(CanvasRenderingContext2D ctx, [ bool disabled = false ]) {
     _resize(ctx);
     _drawMenuArrow(ctx);
      _drawLabel(ctx);
@@ -203,12 +203,14 @@ class BeginBlock extends ControlBlock {
   }
   
 
-  void draw(CanvasRenderingContext2D ctx) {
+  void draw(CanvasRenderingContext2D ctx, [ bool disabled = false ]) {
+    ctx.globalAlpha = disabled ? 0.3 : 1.0;
     _resize(ctx);
     _drawMenuArrow(ctx);
     _drawOutline(ctx);
     _drawLabel(ctx);
     _drawParam(ctx);
+    ctx.globalAlpha = 1.0;
   }
 
   
