@@ -82,7 +82,7 @@ class StartBlock extends BeginBlock {
   /**
    * Draw the block
    */
-  void draw(CanvasRenderingContext2D ctx) {
+  void draw(CanvasRenderingContext2D ctx, [ bool disabled = false ]) {
     super.draw(ctx);
     _play.x = x + 65;
     _play.y = y + height/2 - 15;
