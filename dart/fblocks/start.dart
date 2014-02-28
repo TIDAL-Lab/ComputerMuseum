@@ -40,9 +40,9 @@ class StartBlock extends BeginBlock {
     workspace.addBlock(end);
     inserted = true;
     _width = BLOCK_WIDTH + BLOCK_MARGIN;
-    _play = new Button(x + 65, y + height / 2 - 15, "images/toolbar/play.png", () {
+    _play = new Button(x + 65, y + height / 2 - 15, workspace, "images/toolbar/play.png", () {
       workspace.playProgram(); });
-    _pause = new Button(x + 65, y + height / 2 - 15, "images/toolbar/pause.png", () {
+    _pause = new Button(x + 65, y + height / 2 - 15, workspace, "images/toolbar/pause.png", () {
       workspace.pauseProgram(); });
     _pause.visible = false;
   }
