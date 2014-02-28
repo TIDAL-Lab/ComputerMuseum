@@ -11,14 +11,17 @@ Interim dates:
 - Preliminary version of the rest by March 1
 
 
-
-
+Fix parameter menus
+bug with the beetles
+show code button
+touch any frog pops up the help dialog but from the menu bar frog
+big play / pause button
+master timeout
+space out buttons
+scoreboard
 credits
-redo parameter selection
-hear sound
-code visualization
-what happens when you touch a frog?
-customize frogs?
+
+
 drag EndBlocks too!
 touch frog to change focal frog
 no way to run programs once they go past the top of the screen.
