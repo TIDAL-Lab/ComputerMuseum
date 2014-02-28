@@ -44,6 +44,7 @@ part 'program.dart';
 part 'fblocks/block.dart';
 part 'fblocks/bug.dart';
 part 'fblocks/control.dart';
+part 'fblocks/help.dart';
 part 'fblocks/if.dart';
 part 'fblocks/menu.dart';
 part 'fblocks/parameter.dart';
