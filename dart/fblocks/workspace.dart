@@ -82,6 +82,7 @@ class CodeWorkspace extends TouchLayer {
     // start block
     start = new StartBlock(this);
     addBlock(start);
+    buildDefaultProgram();
     
     // trace bug
     bug = new TraceBug(start);
@@ -146,6 +147,21 @@ class CodeWorkspace extends TouchLayer {
     }
     start.next = start.end;
     start.end.prev = start;
+    
+    buildDefaultProgram();    
+  }
+  
+    
+/**
+ * Creates a simple starting program so that there's something that can be run
+ */
+  void buildDefaultProgram() {
+    Block block = new Block(this, 'hop');
+    block.x = start.x;
+    block.y = start.y - 300.0;
+    addBlock(block);
+    snapTogether(block);
+    block.inserted = true;
   }
   
   
