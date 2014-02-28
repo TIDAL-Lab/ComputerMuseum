@@ -37,6 +37,9 @@ class CodeWorkspace extends TouchLayer {
   /* block menu */
   Menu menu;
   
+  /* button toolbar */
+  Toolbar toolbar;
+  
   /* status display (frog color, number of gems, number of flies) */
   StatusInfo status;
   
@@ -64,8 +67,11 @@ class CodeWorkspace extends TouchLayer {
     CanvasElement canvas = document.query("#${name}");
     ctx = canvas.getContext('2d');
 
+    // toolbar
+    toolbar = new Toolbar(this, 0, height - BLOCK_HEIGHT * 1.85, 220, BLOCK_HEIGHT * 1.85);
+    
     // menu bar
-    menu = new Menu(this, 0, height - BLOCK_HEIGHT * 1.85, width, BLOCK_HEIGHT * 1.85);
+    menu = new Menu(this, 220, height - BLOCK_HEIGHT * 1.85, width - 220, BLOCK_HEIGHT * 1.85);
     _initMenu();
     addTouchable(menu);
     
@@ -213,7 +219,7 @@ class CodeWorkspace extends TouchLayer {
     if (b != null) {
       b.insertBlock(target);
       start.pulse();
-      menu.pulsePlayButton();
+      toolbar.pulsePlayButton();
       return true;
     } else {
       return false;
@@ -227,7 +233,7 @@ class CodeWorkspace extends TouchLayer {
   void snapToEnd(Block target) {
     start.end.prev.insertBlock(target);
     start.pulse();
-    menu.pulsePlayButton();
+    toolbar.pulsePlayButton();
   }
   
 
@@ -265,6 +271,7 @@ class CodeWorkspace extends TouchLayer {
     running = r;
     
     if (menu.animate()) refresh = true;
+    if (toolbar.animate()) refresh = true;
 
     //----------------------------------------------
     // for each block being dragged, identify active insertion points 
@@ -345,8 +352,9 @@ class CodeWorkspace extends TouchLayer {
       // erase the background
       ctx.clearRect(0, 0, width, height);
       
-      // draw the menu
+      // draw the menu and the toolbar
       menu.draw(ctx);
+      toolbar.draw(ctx);
       
       // draw the status bar
       if (status != null) status.draw(ctx);
