@@ -1,6 +1,6 @@
 /*
  * Computer History Museum Frog Pond
- * Copyright (c) 2013 Michael S. Horn
+ * Copyright (c) 2014 Michael S. Horn
  * 
  *           Michael S. Horn (michael-horn@northwestern.edu)
  *           Northwestern University
@@ -24,58 +24,31 @@ part of ComputerHistory;
 
   
 /**
- * Visual programming block
+ * Visual programming menu bar
  */
 class Menu implements Touchable {
 
+  /* Link back to the code workspace that owns this menu bar */
   CodeWorkspace workspace;
   
+  /* Dimensions of the menu */
   num x, y, w, h;
   
+  /* List of the blocks in the menu bar */
   List<Block> blocks = new List<Block>();
+  
+  /* Count of available blocks at a given position (-1 means infinite) */
+  List<int> counts = new List<int>();
   
   Block target = null;
   
-  Button play, pause, btarget = null;
-  
-  ImageElement frog = new ImageElement();
-  
-  List<Button> buttons = new List<Button>();
-  
+  /* Beetle scoreboard */
   Map<String, Beetle> beetles = new Map<String, Beetle>();
   
   
   Menu(this.workspace, this.x, this.y, this.w, this.h) {
-    frog.src = "images/${workspace.color}frog.png";
-    
-    int bx = x + 95;
-    int bspace = SHOW_FASTFORWARD ? 35 : 43;
-    play = new Button(bx, y + h/2 - 15, "images/toolbar/play.png", () {
-      workspace.playProgram(); });
-    
-    pause = new Button(bx, y + h/2 - 15, "images/toolbar/pause.png", () {
-      workspace.pauseProgram(); });
-    pause.visible = false;
-    
-    buttons.add(play);
-    buttons.add(pause);
-    
-    bx += bspace;
-    buttons.add(new Button(bx, y + h/2 - 15, "images/toolbar/restart.png", () {
-      workspace.restartProgram(); }));
-    
-    if (SHOW_FASTFORWARD) {
-      bx += bspace;
-      buttons.add(new Button(bx, y + h/2 - 15, "images/toolbar/fastforward.png", () {
-        workspace.fastForwardProgram(); }));
-    }
-    
-    bx += bspace;
-    buttons.add(new Button(bx, y + h/2 - 15, "images/toolbar/trash.png", () {
-      workspace.removeAllBlocks(); }));
-    
     // scoreboard
-    bx = w - 30;
+    int bx = x + w - 30;
     for (String color in Beetle.colors) {
       Beetle b = new Beetle(workspace.pond, color);
       beetles[color] = b;
@@ -109,7 +82,6 @@ class Menu implements Touchable {
   
   
   bool animate() {
-    play.animate();
     bool refresh = false;
     for (Beetle beetle in beetles.values) {
       if (beetle.animate()) refresh = true;
@@ -118,49 +90,17 @@ class Menu implements Touchable {
   }
   
   
-  void pulsePlayButton() {
-    play.pulse();
-  }
-
-  
   void draw(CanvasRenderingContext2D ctx) {
     ctx.save();
     {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
       ctx.fillRect(x, y, w, h);
 
-      ctx.fillStyle = '#3e5d64';
-      ctx.strokeStyle = '#223333';
-      ctx.lineWidth = 3;
-      
-      ctx.beginPath();
-      ctx.moveTo(x + 230, y + h);
-      ctx.bezierCurveTo(x + 250, y - 50, x + 160, y + 10, x - 6, y - 5);
-      ctx.lineTo(x - 6, y + h);
-      ctx.fill();
-      ctx.stroke();
-      
-      //---------------------------------------------
-      // representative frog
-      //---------------------------------------------      
-      int iw = (frog.width * 0.7).toInt();
-      int ih = (frog.height * 0.7).toInt();
-      int ix = x + 10;
-      int iy = y + 2;
-      ctx.drawImageScaled(frog, ix, iy, iw, ih);
-      
-      //---------------------------------------------
-      // toolbar buttons
-      //---------------------------------------------
-      play.visible = !workspace.running;
-      pause.visible = workspace.running;
-      buttons.forEach((button) => button.draw(ctx));
-      
       //---------------------------------------------
       // programming blocks
       //---------------------------------------------
-      ix += 235;
-      iy = y + h/2;
+      int ix = x + 25;
+      int iy = y + h/2;
       
       for (Block block in blocks) {
         block.x = ix.toDouble();
@@ -187,11 +127,6 @@ class Menu implements Touchable {
         return true;
       }
     }
-    for (Button button in buttons) {
-      if (button.containsTouch(c)) {
-        return true;
-      }
-    }
     return false;
   }
   
@@ -207,15 +142,6 @@ class Menu implements Touchable {
       }
     }
     
-    for (Button button in buttons) {
-      if (button.containsTouch(c)) {
-        btarget = button;
-        btarget.touchDown(c);
-        workspace.draw();
-        return true;
-      }
-    }
-    
     return false;
   }
   
@@ -224,12 +150,7 @@ class Menu implements Touchable {
     if (target != null) {
       target.touchUp(c);
     }
-    else if (btarget != null) {
-      btarget.touchUp(c);
-      workspace.draw();
-    }
     target = null;
-    btarget = null;
   }
   
   
@@ -237,108 +158,8 @@ class Menu implements Touchable {
     if (target != null) {
       target.touchDrag(c);
     }
-    else if (btarget != null) {
-      btarget.touchDrag(c);
-      workspace.draw();
-    }
   }
   
   
   void touchSlide(Contact c) { }
-}
-
-
-class Button {
-  
-  num x, y, w, h;
-  ImageElement img = new ImageElement();
-  bool down = false;
-  bool over = false;
-  bool visible = true;
-  Function action = null;
-  Tween tween = new Tween();
-  double _pulse = 1.0;
-  
-  
-  Button(this.x, this.y, String src, this.action) {
-    img.src = src;
-    img.onLoad.listen((e) {
-      w = img.width;
-      h = img.height;
-    });
-  }
-  
-  int get width => w;
-  
-  int get height => h;
-
-  
-  void pulse() {
-    tween = new Tween();
-    tween.function = TWEEN_SINE2;
-    tween.delay = 5;
-    tween.duration = 30;
-    tween.repeat = 2;
-    tween.onstart = (() => _pulse = 1.0 );
-    tween.onend = (() => _pulse = 1.0 );
-    tween.ondelta = ((value) {
-      _pulse += value;
-    });
-    tween.addControlPoint(1.0, 0.0);
-    tween.addControlPoint(0.3, 0.5);
-    tween.addControlPoint(1.0, 1.0);
-  }
-  
-  
-  bool animate() {
-    if (tween.isTweening()) {
-      tween.animate();
-      return true;
-    } else {
-      return false;
-    }
-  }
-  
-  
-  void draw(CanvasRenderingContext2D ctx) {
-    if (visible) {
-      int ix = (down && over) ? x + 2 : x;
-      int iy = (down && over) ? y + 2 : y;
-      ctx.globalAlpha = _pulse;
-      ctx.drawImage(img, ix, iy);
-      ctx.globalAlpha = 1.0;
-    }
-  }
-  
-  
-  bool containsTouch(Contact c) {
-    return (visible &&
-            c.touchX >= x &&
-            c.touchY >= y &&
-            c.touchX <= x + w &&
-            c.touchY <= y + h);
-  }
-  
-  
-  bool touchDown(Contact c) {
-    down = true;
-    over = true;
-    return visible;
-  }
-  
-  
-  void touchUp(Contact c) {
-    if (down && over && visible && action != null) {
-      Function.apply(action, []);
-    }
-    down = false;
-    over = false;
-  }
-  
-  
-  void touchDrag(Contact c) {
-    if (down && visible) {
-      over = containsTouch(c);
-    }
-  }
 }
