@@ -95,6 +95,8 @@ class CodeWorkspace extends TouchLayer {
     bug = new TraceBug(start);
     
     draw();
+    
+    help.show();
   }
   
   
