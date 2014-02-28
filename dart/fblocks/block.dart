@@ -56,6 +56,9 @@ class Block implements Touchable {
   /* Text displayed inside the block */
   String text = 'hop';
   
+  /* Block 'type' (usually the same as text) */
+  String type = 'hop';
+  
   /* CSS color of the block */
   String color = '#3399aa';
   
@@ -91,6 +94,7 @@ class Block implements Touchable {
     id = Block.BLOCK_ID++;
     _width = BLOCK_WIDTH.toDouble();
     _height = BLOCK_HEIGHT.toDouble();
+    type = text;
   }
   
   
@@ -269,12 +273,14 @@ class Block implements Touchable {
 /**
  * Draw the block
  */
-  void draw(CanvasRenderingContext2D ctx) {
+  void draw(CanvasRenderingContext2D ctx, [ bool disabled = false ]) {
+    ctx.globalAlpha = disabled ? 0.3 : 1.0;
     _drawMenuArrow(ctx);
     _resize(ctx);
     _drawOutline(ctx);
     _drawLabel(ctx);
     _drawParam(ctx);
+    ctx.globalAlpha = 1.0;
   }
   
   
