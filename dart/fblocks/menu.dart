@@ -26,7 +26,7 @@ part of ComputerHistory;
 /**
  * Visual programming menu bar
  */
-class Menu implements Touchable {
+class Menu {
 
   /* Link back to the code workspace that owns this menu bar */
   CodeWorkspace workspace;
@@ -35,12 +35,7 @@ class Menu implements Touchable {
   num x, y, w, h;
   
   /* List of the blocks in the menu bar */
-  List<Block> blocks = new List<Block>();
-  
-  /* Count of available blocks at a given position (-1 means infinite) */
-  List<int> counts = new List<int>();
-  
-  Block target = null;
+  List<Slot> slots = new List<Slot>();
   
   /* Beetle scoreboard */
   Map<String, Beetle> beetles = new Map<String, Beetle>();
@@ -63,15 +58,14 @@ class Menu implements Touchable {
   }
   
   
-  void addBlock(Block block) {
-    blocks.add(block);
+  void addBlock(Block block, int count) {
+    slots.add(new Slot(block, workspace, count));
   }
   
   
   bool overlaps(Block block) {
     return (block.centerY >= y);
   }
-  
   
   void captureFly(Fly fly) {
     if (fly is Beetle) {
@@ -102,12 +96,11 @@ class Menu implements Touchable {
       int ix = x + 25;
       int iy = y + h/2;
       
-      for (Block block in blocks) {
-        block.x = ix.toDouble();
-        block.y = iy.toDouble() - block.height / 2;
-        block.inMenu = true;
-        block.draw(ctx);
-        ix += block.width + 10;
+      for (Slot slot in slots) {
+        slot.x = ix;
+        slot.y = iy - slot.height / 2;
+        slot.draw(ctx);
+        ix += slot.width + 10;
       }
       
       //---------------------------------------------
@@ -119,30 +112,56 @@ class Menu implements Touchable {
     }
     ctx.restore();
   }
+} 
+
+
+class Slot implements Touchable {
+  
+  Block block;
+  Block target = null;
+  
+  CodeWorkspace workspace;
+  
+  int count = 2;
+  
+  
+  Slot(this.block, this.workspace, this.count) {
+    block.inMenu = true;
+    workspace.addTouchable(this);
+  }
+  
+  
+  bool isAvailable() {
+    return workspace.getBlockCount(block.type) < count;
+  }
+  
+  
+  set x(num value) => block.x = value;
+  set y(num value) => block.y = value;
+  num get width => block.width;
+  num get height => block.height;
+  
+  
+  void draw(CanvasRenderingContext2D ctx) {
+    block.draw(ctx, ! isAvailable());
+  }
   
   
   bool containsTouch(Contact c) {
-    for (Block block in blocks) {
-      if (block.containsTouch(c)) {
-        return true;
-      }
-    }
-    return false;
+    return block.containsTouch(c);
   }
   
   
   bool touchDown(Contact c) {
-    for (Block block in blocks) {
-      if (block.containsTouch(c)) {
-        target = block.clone();
-        workspace.addBlock(target);
-        target.move(-2, -8);
-        target.touchDown(c);
-        return true;
-      }
+    if (target == null && block.containsTouch(c) && isAvailable()) {
+      target = block.clone();
+      workspace.addBlock(target);
+      target.move(-2, -8);
+      target.touchDown(c);
+      return true;
+    } else {
+      return false;
     }
-    
-    return false;
   }
   
   
@@ -159,7 +178,6 @@ class Menu implements Touchable {
       target.touchDrag(c);
     }
   }
-  
   
   void touchSlide(Contact c) { }
 }
