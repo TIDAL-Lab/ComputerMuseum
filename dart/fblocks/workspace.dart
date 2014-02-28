@@ -58,8 +58,12 @@ class CodeWorkspace extends TouchLayer {
   /* is the program currently running? */
   bool running = false;
   
+  /* help message */
+  Help help;
+  
   CanvasRenderingContext2D ctx;
 
+  
 
   
   CodeWorkspace(this.pond, this.width, this.height, this.name, this.color) {
@@ -78,6 +82,9 @@ class CodeWorkspace extends TouchLayer {
     if (SHOW_STATUS) {
       status = new StatusInfo(this, width - 150, height - 100, 150, 100);
     }
+    
+    // help message
+    help = new Help(this);
     
     // start block
     start = new StartBlock(this);
@@ -290,6 +297,10 @@ class CodeWorkspace extends TouchLayer {
  */
   bool animate() {
     bool refresh = false;
+    
+    if (help.animate()) {
+      refresh = true;
+    }
 
     bool r = pond.isProgramRunning(this.name);
     if (r != running) refresh = true;
@@ -377,10 +388,6 @@ class CodeWorkspace extends TouchLayer {
       // erase the background
       ctx.clearRect(0, 0, width, height);
       
-      // draw the menu and the toolbar
-      menu.draw(ctx);
-      toolbar.draw(ctx);
-      
       // draw the status bar
       if (status != null) status.draw(ctx);
   
@@ -388,8 +395,20 @@ class CodeWorkspace extends TouchLayer {
       for (Block block in blocks) {
         block.draw(ctx);
       }
+      
+      // draw the help message
+      help.draw(ctx);
+      
+      // draw the menu and the toolbar
+      menu.draw(ctx);
+      toolbar.draw(ctx);
     }
     ctx.restore();
+  }
+  
+  
+  void showHideHelp() {
+    help.showHide();
   }
   
   
