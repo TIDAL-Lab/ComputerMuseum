@@ -1,6 +1,6 @@
 /*
  * Computer History Museum Frog Pond
- * Copyright (c) 2013 Michael S. Horn
+ * Copyright (c) 2014 Michael S. Horn
  * 
  *           Michael S. Horn (michael-horn@northwestern.edu)
  *           Northwestern University
@@ -294,18 +294,6 @@ class FrogPond extends TouchLayer {
   }
   
   
-/**
- * Preview a programming command
- */
-  void previewBlock(String workspace, String cmd, var param) {
-    for (Frog frog in frogs) {
-      if (frog["workspace"] == workspace) {
-        frog.program.doCommand(cmd, param, true);
-      }
-    }
-  }
-
-
   void playProgram(CodeWorkspace workspace) {
     int count = getFrogCount(workspace.name);
     if (count == 0) addHomeFrog(workspace);
@@ -741,11 +729,7 @@ class FrogPond extends TouchLayer {
     for (CodeWorkspace workspace in workspaces) {
       Frog target = getFocalFrog(workspace.name);
       if (target != null) {
-        if (target.ghost != null && target.ghost.label != null) {
-          workspace.traceExecution(ctx, target.ghost);
-        } else {
-          workspace.traceExecution(ctx, target);
-        }
+        workspace.traceExecution(ctx, target);
         workspace.drawBug(ctx);
       }
     }
