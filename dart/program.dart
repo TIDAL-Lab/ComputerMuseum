@@ -66,7 +66,7 @@ class Program {
   void skip() {
     if (isRunning) {
       curr = curr.step(this);
-      doPause(false);
+      doPause();
     }
   }
   
@@ -176,36 +176,31 @@ class Program {
   }
 
   
-  void doCommand(String cmd, var param, [ bool preview = false ]) {
+  void doCommand(String cmd, var param) {
     frog.reset();
     if (cmd == "hop") {
-      doMove(cmd, param, preview);
+      doMove(cmd, param);
     } else if (cmd == "turn" || cmd == "left" || cmd == "right") {
-      doTurn(cmd, param, preview);
+      doTurn(cmd, param);
     } else if (cmd == "chirp") {
-      doSound(cmd, param, preview);
+      doSound(cmd, param);
     } else if (cmd == "spin") {
-      doSpin(cmd, param, preview);
+      doSpin(cmd, param);
     } else if (cmd == "eat") {
-      doEat(cmd, param, preview);
+      doEat(cmd, param);
     } else if (cmd == "hatch") {
-      doHatch(cmd, param, preview);
+      doHatch(cmd, param);
     } else if (cmd == "die") {
-      doDie(cmd, param, preview);
+      doDie(cmd, param);
     } else if (cmd.startsWith("if")) {
-      doIf(cmd, param, preview);
+      doIf(cmd, param);
     } else if (cmd.startsWith("repeat")) {
-      doRepeat(cmd, param, preview);
-    } else if (cmd.startsWith("wait")) {
-      doWait(cmd, param, preview);
+      doRepeat(cmd, param);
     }
-    //else if (cmd.startsWith("end")) {
-    //  doEnd(cmd, param, preview);
-    //}
   }
 
   
-  void doPause(bool preview) {
+  void doPause() {
     
     // is the frog in the water? 
     if (frog.inWater()) {
@@ -215,9 +210,7 @@ class Program {
     }
     
     // did we capture a gem?
-    if (!preview) {
-      frog.captureGem();
-    }
+    frog.captureGem();
     
     tween = new Tween();
     tween.delay = 0;
@@ -230,13 +223,8 @@ class Program {
 /**
  * Hop forward
  */
-  void doMove(String cmd, var param, bool preview) {
+  void doMove(String cmd, var param) {
     Frog target = frog;
-    if (preview) {
-      target = frog.hatch();
-      frog.ghost = target;
-      target.opacity = 0.3;
-    }
     target["moved"] = true;
     double length = frog.radius * 4.0;
     if (param is num) length *= param;
@@ -247,7 +235,7 @@ class Program {
     tween.delay = 0;
     tween.duration = 12;
     tween.onstart = (() { Sounds.playSound(cmd); target.label = s; });
-    tween.onend = (() { doPause(preview); });
+    tween.onend = (() { doPause(); });
     tween.addControlPoint(0, 0);
     if (bounce) {
       tween.addControlPoint(length * 0.5, 0.5);
@@ -259,7 +247,7 @@ class Program {
       target.forward(value);
       Beetle beetle = target.pond.getTurtleHere(target, Beetle);
       if (beetle != null) beetle.spook();
-      if (!preview && FROGS_PUSH) target.push(value);
+      if (FROGS_PUSH) target.push(value);
     });
   }
   
@@ -267,7 +255,7 @@ class Program {
 /**
  * Turn the frog left or right
  */
-  void doTurn(String cmd, var param, bool preview) {
+  void doTurn(String cmd, var param) {
     num angle = 60;
     if (param is num) {
       angle = param;
@@ -278,11 +266,6 @@ class Program {
       angle *= -1;
     }
     Frog target = frog;
-    if (preview) {
-      target = frog.hatch();
-      target.opacity = 0.5;
-      frog.ghost = target;
-    }
     target["moved"] = true;
     String s = "$cmd";
     if (param != null) s = "$cmd $param";
@@ -294,14 +277,14 @@ class Program {
     tween.addControlPoint(0, 0);
     tween.addControlPoint(angle, 1);
     tween.ondelta = ((value) => target.left(value));
-    tween.onend = (() { doPause(preview); });
+    tween.onend = (() { doPause(); });
   }
   
 
 /**
  * Spin randomly
  */
-  void doSpin(String cmd, var param, bool preview) {
+  void doSpin(String cmd, var param) {
     num angle = 60 * Turtle.rand.nextInt(40);
     if (Turtle.rand.nextBool()) angle *= -1;
     String s = "$cmd";
@@ -313,14 +296,14 @@ class Program {
     tween.addControlPoint(0, 0);
     tween.addControlPoint(angle, 1);
     tween.ondelta = ((value) => frog.left(value));
-    tween.onend = (() { doPause(preview); });
+    tween.onend = (() { doPause(); });
   }
   
 
 /**
  * Make the frog chirp
  */
-  void doSound(String cmd, var param, bool preview) {
+  void doSound(String cmd, var param) {
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.onstart = (() {
@@ -330,7 +313,7 @@ class Program {
     });
     tween.onend = (() {
       frog._sound = -1.0;
-      doPause(preview);
+      doPause();
     });
     tween.addControlPoint(0, 0);
     tween.addControlPoint(175, 1);
@@ -343,7 +326,7 @@ class Program {
 /**
  * Make the frog stick out its tongue
  */
-  void doEat(String cmd, var param, bool preview) {
+  void doEat(String cmd, var param) {
     tween = new Tween();
     tween.function = TWEEN_SINE2;
     tween.onstart = (() {
@@ -356,9 +339,7 @@ class Program {
     tween.duration = 20;
     tween.ondelta = ((value) {
       frog._tongue += value;
-      if (!preview) {
-        frog.eatFly();
-      }
+      frog.eatFly();
       if (frog._tongue == 1.0) Sounds.playSound("swoosh");
     });
     tween.onend = (() {
@@ -367,7 +348,7 @@ class Program {
         frog.pond.captureFly(frog, frog.prey);
         frog.prey = null;
       }
-      doPause(preview);
+      doPause();
     });
   }
   
@@ -375,59 +356,29 @@ class Program {
 /**
  * For repeats just show the text label and pause slightly
  */
-  void doRepeat(String cmd, var param, bool preview) {
+  void doRepeat(String cmd, var param) {
     tween = new Tween();
     tween.duration = 5;
     tween.onstart = (() => frog.label = "$cmd $param");
-    tween.onend = (() { doPause(preview); });
+    tween.onend = (() { doPause(); });
   }
   
   
 /**
  * For if statements just show the label and pause slightly
  */
-  void doIf(String cmd, var param, bool preview) {
+  void doIf(String cmd, var param) {
     tween = new Tween();
     tween.duration = 5;
     tween.onstart = (() => frog.label = "$cmd $param");
-    tween.onend = (() { doPause(preview); });
-  }
-  
-  
-/**
- * End of a control structure
- */
-  void doEnd(String cmd, var param, bool preview) {
-    tween = new Tween();
-    tween.duration = 5;
-    tween.onstart = (() => frog.label = cmd);
-    tween.onend = (() => doPause(preview));
-  }
-  
-
-/**
- * For waits we use a tight loop
- */
-  void doWait(String cmd, var param, bool preview) {
-    //if (param == 'fly') {
-      frog._vision = 10.0;
-      frog.label = "$cmd $param";
-      if (preview) {
-        tween = new Tween();
-        tween.duration = 40;
-        tween.onend = (() {
-          frog.label = null;
-          frog._vision = 0.0;
-        });
-      }
-    //}
+    tween.onend = (() { doPause(); });
   }
   
   
 /**
  * Kill this frog
  */
-  void doDie(String cmd, var param, bool preview) {
+  void doDie(String cmd, var param) {
     tween = new Tween();
     tween.function = TWEEN_DECAY;
     tween.delay = 0;
@@ -438,7 +389,7 @@ class Program {
     tween.addControlPoint(1.0, 1.0);
     tween.ondelta = ((value) => frog.opacity += value );
     tween.onend = (() {
-      if (!preview) frog.die();
+      frog.die();
     });
   }
   
@@ -446,19 +397,14 @@ class Program {
 /**
  * Hatch a new frog
  */
-  void doHatch(String cmd, var param, bool preview) {
+  void doHatch(String cmd, var param) {
     Frog baby;
     if (frog.pond.getFrogCount(frog["workspace"]) < MAX_FROGS) {
        baby = frog.hatch();
     }
     if (baby == null) return;
-    if (preview) {
-      baby.opacity = 0.3;
-      frog.ghost = baby;
-    } else {
-      frog.pond.addFrog(baby);
-      baby.program.pause();
-    }
+    frog.pond.addFrog(baby);
+    baby.program.pause();
     baby.size = 0.05;
     baby.heading = frog.heading;
     baby.left(60.0 + Turtle.rand.nextInt(5) * 60.0);
@@ -470,7 +416,7 @@ class Program {
     tween.duration = 15;
     tween.onstart = (() => frog.label = cmd);
     tween.onend = (() {
-      doPause(preview);
+      doPause();
       baby.program.play();
       //baby.program.skip();
     });
