@@ -1,6 +1,6 @@
 /*
  * Computer History Museum Frog Pond
- * Copyright (c) 2013 Michael S. Horn
+ * Copyright (c) 2014 Michael S. Horn
  * 
  *           Michael S. Horn (michael-horn@northwestern.edu)
  *           Northwestern University
@@ -34,14 +34,8 @@ class Frog extends Turtle implements Touchable {
   /* length of the tongue coming out of the frog */
   double _tongue = 0.0;
   
-  /* angular extent +/- of vision cone */
-  double _vision = -1.0;
-
   /* name of the command being executed */
   String label = null;
-  
-  /* saved state of this frog (for previewing) */
-  Frog ghost = null;
   
   /* this frog's control program */
   Program program;
@@ -78,9 +72,7 @@ class Frog extends Turtle implements Touchable {
   
   void reset() {
     opacity = 1.0;
-    ghost = null;
     _sound = -1.0;
-    _vision = -1.0;
     _tongue = 0.0;
     label = null;
   }
@@ -236,7 +228,6 @@ class Frog extends Turtle implements Touchable {
   void draw(CanvasRenderingContext2D ctx) {
     if (prey != null) prey.draw(ctx);
     super.draw(ctx);
-    if (ghost != null) ghost.draw(ctx);
   }
   
   
@@ -254,21 +245,6 @@ class Frog extends Turtle implements Touchable {
       ctx.stroke();
     }
    
-    //---------------------------------------------
-    // draw vision cone
-    //---------------------------------------------
-    if (_vision > 0) {
-      double theta = _vision / 180.0 * PI;
-      double r = height * 1.5;
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.arc(0, 0, r, PI * -0.5 - theta, PI * -0.5 + theta, false);
-      ctx.closePath();
-      ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
-      ctx.fill();
-    }
-    
-    
     //---------------------------------------------
     // draw tongue sticking out
     //---------------------------------------------
