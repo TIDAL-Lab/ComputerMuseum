@@ -254,7 +254,6 @@ class Parameter implements Touchable {
     num newIndex = _getDragIndex() % values.length;
     if (oldIndex != newIndex && newIndex == newIndex.floor()) {
       index = _getDragIndex().round().toInt();
-      block.parameterChanged(this);
       Sounds.playSound("click");
     }
     block.workspace.draw();

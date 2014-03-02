@@ -175,19 +175,6 @@ class CodeWorkspace extends TouchLayer {
   
   
 /**
- * Preview a block for all frogs
- */
-  void preview(Block block) {
-    if (SHOW_PREVIEW) {
-      var pvalue = null;
-      if (block.hasParam) pvalue = block.param.value;
-      pond.pauseProgram(this);
-      pond.previewBlock(name, block.text, pvalue);
-    }
-  }
-
-
-/**
  * Add a block to the workspace
  */
   void addBlock(Block block) {

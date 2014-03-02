@@ -227,14 +227,6 @@ class Block implements Touchable {
   }
   
   
-/**
- * Callback for when a parameter value has been changed by the user
- */
-  void parameterChanged(Parameter param) {
-    workspace.preview(this);
-  }
-  
-  
   bool animate() {
     double dx = targetX - x;
     double dy = targetY - y;
@@ -394,12 +386,10 @@ class Block implements Touchable {
   void touchUp(Contact c) {
     if (workspace.snapTogether(this)) {
       Sounds.playSound("click");
-      workspace.preview(this);
       inserted = true;
     } else if (!inserted && workspace.isOverMenu(this)) {
       workspace.snapToEnd(this);
       Sounds.playSound("click");
-      workspace.preview(this);
       inserted = true;
     } else if (workspace.isOffscreen(this) || workspace.isOverMenu(this) || inserted) {
       workspace.removeBlock(this);
