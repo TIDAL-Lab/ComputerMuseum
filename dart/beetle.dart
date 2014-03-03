@@ -94,8 +94,8 @@ class Beetle extends Fly {
       forward(6.0);
       left(_turn);
       if (pond.onGridPoint(x, y, 8) &&
-          pond.getTurtlesHere(this, Frog).isEmpty &&
-          pond.getTurtlesHere(this, Beetle).isEmpty) {
+          pond.frogs.getTurtlesHere(this).isEmpty &&
+          pond.bugs.getTurtlesHere(this).isEmpty) {
         perched = true;
       }
       else if (Turtle.rand.nextInt(100) > 98) {
