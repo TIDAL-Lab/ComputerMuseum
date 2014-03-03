@@ -27,8 +27,8 @@ class FrogPond extends TouchLayer {
   
   CanvasElement canvas;
   CanvasRenderingContext2D layer0;  // lily pads
-  CanvasRenderingContext2D layer1;  // frogs / gems
-  CanvasRenderingContext2D layer2;  // flies
+  CanvasRenderingContext2D layer1;  // frogs
+  CanvasRenderingContext2D layer2;  // bugs
   
   TouchManager tmanager = new TouchManager();
   
@@ -36,42 +36,25 @@ class FrogPond extends TouchLayer {
   
   int width, height;
   
-  /* Generic list of all turtles */
-  List<Turtle> turtles = new List<Turtle>();
+  /* List of bugs */
+  AgentSet bugs = new AgentSet(null);
   
-  /* List of gems on the screen */
-  List<Gem> gems = new List<Gem>();
-
-  /* List of flies */  
-  List<Fly> flies = new List<Fly>();
-  
-  /* List of frogs */  
-  List<Frog> frogs = new List<Frog>();
+  /* List of frogs */
+  AgentSet frogs;
   
   /* List of lilypads */
-  List<LilyPad> pads = new List<LilyPad>();
+  AgentSet pads = new AgentSet(null);
   
   /* List of lattice grid points */
   List lattice = new List();
   
-  /*
-   * Play state
-   *   -2 : play backward 2x
-   *   -1 : play backward normal speed
-   *   0  : paused
-   *   1  : play forward normal speed
-   *   2  : play forward 2x
-   *   4  : play forward 4x ....
-   */
-  int play_state = 1; 
-  
   /* Master timeout to restart exhibit after 80 seconds of inactivity */
   int _countdown = 0;
-  
-  ImageElement pond = new ImageElement();
-  
+
   
   FrogPond() {
+    frogs = new AgentSet(this);
+    
     canvas = querySelector("#pond");
     layer0 = canvas.getContext('2d');
     
@@ -87,55 +70,32 @@ class FrogPond extends TouchLayer {
     tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(this);
     
-
-    for (int i=0; i<MAX_GEMS; i++) addGem();
+    for (int i=0; i<MAX_BEETLES; i++) bugs.add(new Beetle(this));
     
-    for (int i=0; i<MAX_FLIES; i++) addFly();
-    
-    for (int i=0; i<MAX_BEETLES; i++) addBeetle();
-  
-    
-    if (isFlagSet("evolution")) {
-      addLilyPad(width/2, height/2, 1.0);
-      addLilyPad(200, 200, 0.7);
-      addLilyPad(900, 210, 0.7);
-      addLilyPad(840, 550, 0.6);
-    } else {
-      addLilyPad(300, height/2, 0.6);
-      addLilyPad(370, 100, 0.6);
-      addLilyPad(1620, height/2, 0.6);
-      addLilyPad(550, 790, 0.8);
-      addLilyPad(630, 370, 0.9);
-      addLilyPad(940, 650, 0.8);
-      addLilyPad(1000, 250, 0.8);
-      addLilyPad(1300, height/2, 0.8);
-      addLilyPad(1400, 130, 0.6);
-      addLilyPad(1300, height - 130, 0.6);
-      addLilyPad(900, height - 130, 0.6);
-    }
+    addLilyPad(300, height/2, 0.6);
+    addLilyPad(370, 100, 0.6);
+    addLilyPad(1620, height/2, 0.6);
+    addLilyPad(550, 790, 0.8);
+    addLilyPad(630, 370, 0.9);
+    addLilyPad(940, 650, 0.8);
+    addLilyPad(1000, 250, 0.8);
+    addLilyPad(1300, height/2, 0.8);
+    addLilyPad(1400, 130, 0.6);
+    addLilyPad(1300, height - 130, 0.6);
+    addLilyPad(900, height - 130, 0.6);
     
 
-    if (isFlagSet("evolution")) {
-      MAX_FROGS = 100;
-      CodeWorkspace workspace = new CodeWorkspace(this, width, height, "workspace1", "green");
-      workspaces.add(workspace);
-      tmanager.addTouchLayer(workspace);
-      for (int i=0; i<4; i++) {
-        addRandomFrog(workspace);
-      }
-    } else {
-      CodeWorkspace workspace = new CodeWorkspace(this, height, width, "workspace1", "blue");
-      workspace.transform(cos(PI / -2), sin(PI / -2), -sin(PI / -2), cos(PI / -2), 0, height);
-      workspaces.add(workspace);
-      tmanager.addTouchLayer(workspace);
-      addHomeFrog(workspace);
+    CodeWorkspace workspace = new CodeWorkspace(this, height, width, "workspace1", "blue");
+    workspace.transform(cos(PI / -2), sin(PI / -2), -sin(PI / -2), cos(PI / -2), 0, height);
+    workspaces.add(workspace);
+    tmanager.addTouchLayer(workspace);
+    addHomeFrog(workspace);
   
-      workspace = new CodeWorkspace(this, height, width, "workspace2", "green");
-      workspace.transform(cos(PI/2), sin(PI/2), -sin(PI/2),cos(PI/2), width, 0);
-      workspaces.add(workspace);
-      tmanager.addTouchLayer(workspace);
-      addHomeFrog(workspace);
-    }
+    workspace = new CodeWorkspace(this, height, width, "workspace2", "green");
+    workspace.transform(cos(PI/2), sin(PI/2), -sin(PI/2),cos(PI/2), width, 0);
+    workspaces.add(workspace);
+    tmanager.addTouchLayer(workspace);
+    addHomeFrog(workspace);
 
     new Timer.periodic(const Duration(milliseconds : 40), tick);
     
@@ -161,36 +121,11 @@ class FrogPond extends TouchLayer {
   
   
 /**
- * Add a frog to the pond
- */
-  void addRandomFrog(CodeWorkspace workspace) {
-    for (int i=0; i<20; i++) {
-      int x = Turtle.rand.nextInt(width - 200) + 100;
-      int y = Turtle.rand.nextInt(height - 300) + 150;
-      if (!inWater(x, y)) {
-        Frog frog = new Frog(this);
-        frog["workspace"] = workspace.name;
-        frog.x = x.toDouble();
-        frog.y = y.toDouble();
-        frog.program = new Program(workspace.start, frog);
-        frog.img.src = "images/${workspace.color}frog.png";
-        addFrog(frog);
-        return;
-      }
-    }
-
-    // try again in 2 seconds
-    new Timer(const Duration(milliseconds : 2000), () => addRandomFrog(workspace));
-  }
-  
-  
-/**
  * Adds a new frog for the given workspace
  */
   Frog addHomeFrog(CodeWorkspace workspace) {
     Frog frog = new Frog(this);
     frog["workspace"] = workspace.name;
-    frog["moved"] = false;
     double fx = workspace.width / 2;
     double fy = workspace.height - 290.0;
     frog.x = workspace.objectToWorldX(fx, fy);
@@ -198,21 +133,11 @@ class FrogPond extends TouchLayer {
     frog.heading = workspace.objectToWorldTheta(0);
     frog.program = new Program(workspace.start, frog);
     frog.img.src = "images/${workspace.color}frog.png";
-    addFrog(frog);
+    frogs.add(frog);
     return frog;
   }
   
 
-/**
- * Add an existing frog to the pond
- */
-  void addFrog(Frog frog) {
-    frogs.add(frog);
-    turtles.add(frog);
-    addTouchable(frog);
-  }
-  
-  
 /**
  * Count the number of frogs of a given color
  */
@@ -220,13 +145,7 @@ class FrogPond extends TouchLayer {
     if (workspaceName == null) {
       return frogs.length;
     } else {
-      int count = 0;
-      for (Frog frog in frogs) {
-        if (frog["workspace"] == workspaceName) {
-          count++;
-        }
-      }
-      return count;
+      return frogs.getCountWith((Turtle t) => t["workspace"] == workspaceName);
     }
   }
   
@@ -235,69 +154,14 @@ class FrogPond extends TouchLayer {
  * Frog to trace program execution
  */
   Frog getFocalFrog(String workspace) {
-    for (Frog frog in frogs) {
-      if (frog["workspace"] == workspace) {
-        return frog;
-      }
-    }
-    return null;
-  }
-  
-  
-/**
- * Remove a frog from the pond
- */
-  void removeFrog(Frog frog) {
-    frogs.remove(frog);
-    turtles.remove(frog);
-    removeTouchable(frog);
-  }
-  
-
-/**
- * Remove dead frogs
- */
-  bool removeDeadFrogs() {
-    int count = 0;
-    for (int i=frogs.length-1; i >= 0; i--) {
-      if (frogs[i].dead) {
-        removeFrog(frogs[i]);
-        count++;
-      }
-    }
-    return count > 0;
-  }
-  
-  
-/**
- * Returns all frogs at the given location (not including the original frog)
- */
-  Set<Frog> getFrogsHere(Turtle turtle) {
-    Set<Frog> aset = new HashSet<Frog>();
-    for (Frog f in frogs) {
-      if (f != turtle && f.overlapsTurtle(turtle)) {
-        aset.add(f);
-      }
-    }
-    return aset;
-  }
-
-
-/**
- * Returns one frog at the given location
- */
-  Frog getFrogHere(num x, num y) {
-    for (Frog frog in frogs) {
-      if (frog.overlapsPoint(x, y)) return frog;
-    }
-    return null;
+    return frogs.getTurtleWith((Turtle t) => t["workspace"] == workspace);
   }
   
   
   void playProgram(CodeWorkspace workspace) {
     int count = getFrogCount(workspace.name);
     if (count == 0) addHomeFrog(workspace);
-    for (Frog frog in frogs) {
+    for (Frog frog in frogs.agents) {
       if (frog["workspace"] == workspace.name) {
         frog.program.play();
       }
@@ -306,8 +170,7 @@ class FrogPond extends TouchLayer {
   
   
   void pauseProgram(CodeWorkspace workspace) {
-    play_state = 1;
-    for (Frog frog in frogs) {
+    for (Frog frog in frogs.agents) {
       if (frog["workspace"] == workspace.name) {
         frog.program.pause();
       }
@@ -316,7 +179,7 @@ class FrogPond extends TouchLayer {
   
   
   void stopProgram(CodeWorkspace workspace) {
-    for (Frog frog in frogs) {
+    for (Frog frog in frogs.agents) {
       if (frog["workspace"] == workspace.name) {
         frog.program.restart();
       }
@@ -325,7 +188,7 @@ class FrogPond extends TouchLayer {
   
   
   void restartProgram(CodeWorkspace workspace) {
-    for (Frog frog in frogs) {
+    for (Frog frog in frogs.agents) {
       if (frog["workspace"] == workspace.name) {
         frog.die();
       }
@@ -334,23 +197,11 @@ class FrogPond extends TouchLayer {
   }
   
   
-  void fastForwardProgram(CodeWorkspace workspace) {
-    if (play_state <= 0) {
-      play_state = 1;
-    } else if (play_state < 64) {
-      play_state *= 2;
-    } else {
-      play_state = 1;
-    }
-    drawForeground();
-  }
-  
-  
 /**
  * Are all programs paused?
  */
   bool isProgramPaused(String workspaceName) {
-    for (Frog frog in frogs) {
+    for (Frog frog in frogs.agents) {
       if (frog["workspace"] == workspaceName) {
         if (!frog.program.isPaused) return false;
       }
@@ -363,7 +214,7 @@ class FrogPond extends TouchLayer {
  * Are all programs finished running?
  */
   bool isProgramFinished(String workspaceName) {
-    for (Frog frog in frogs) {
+    for (Frog frog in frogs.agents) {
       if (frog['workspace'] == workspaceName) {
         if (!frog.program.isFinished) return false;
       }
@@ -377,7 +228,7 @@ class FrogPond extends TouchLayer {
  */
   bool isProgramRunning(String workspaceName) {
     bool running = false;
-    for (Frog frog in frogs) {
+    for (Frog frog in frogs.agents) {
       if (frog['workspace'] == workspaceName) {
         if (frog.program.isRunning) running = true;
       }
@@ -396,160 +247,27 @@ class FrogPond extends TouchLayer {
     pad.size = ls;
     pad.refresh = true;
     pads.add(pad);
-    turtles.add(pad);
-    addTouchable(pad);
   }
 
   
 /**
- * Adds a new random fly to the pond
+ * Capture a bug
  */
-  void addFly() {
-    if (flies.length < MAX_FLIES) {
-      Fly fly = new Fly(this);
-      flies.add(fly);
-      turtles.add(fly);
-    }
-  }
-  
-  
-/**
- * Adds a new random beetle to the pond
- */
-  void addBeetle() {
-    if (flies.length < MAX_BEETLES) {
-      Beetle beetle = new Beetle(this);
-      flies.add(beetle);
-      turtles.add(beetle);
-    }
-  }
-  
-  
-/**
- * Remove dead flies
- */
-  void removeDeadFlies() {
-    for (int i=flies.length-1; i >= 0; i--) {
-      if (flies[i].dead) {
-        flies[i].erase(layer2);
-        turtles.remove(flies[i]);
-        flies.removeAt(i);
-      }
-    }
-  }
-  
-
-/**
- * Get turtles here, not including target
- */
-  Set<Turtle> getTurtlesHere(Turtle target, [Type type = Turtle]) {
-    Set<Turtle> aset = new HashSet<Turtle>();
-    for (Turtle t in turtles) {
-      if (t != target && t.runtimeType == type && !t.dead && t.overlapsTurtle(target)) {
-        aset.add(t);
-      }
-    }
-    return aset;
-  }
-  
-  
-/**
- * Get one turtle here, not including target
- */
-  Turtle getTurtleHere(Turtle target, [Type type = Turtle]) {
-    Set<Turtle> aset = getTurtlesHere(target, type);
-    if (aset.isEmpty) {
-      return null;
-    } else {
-      return aset.first;
-    }
-  }
-
-  
-/**
- * Returns the fly at the given location
- */
-  Fly getFlyHere(num x, num y) {
-    for (Fly fly in flies) {
-      if (fly.overlapsPoint(x, y, 30)) return fly;
-    }
-    return null;
-  }
-  
-  
-/**
- * Capture a fly
- */
-  void captureFly(Frog frog, Fly fly) {
+  void captureBug(Frog frog, Beetle bug) {
     // first find the workspace
     for (CodeWorkspace workspace in workspaces) {
       if (workspace.name == frog["workspace"]) {
-        workspace.captureFly(fly);
-        addBeetle();
+        workspace.captureBug(bug);
+        bugs.add(new Beetle(this));
       }
     }
   }
   
   
 /**
- * Adds a random gem to the pond in a place where there are no frogs... give up
- * after a few tries and try again later.
+ * Show a help message when a visitor touches a frog on the screen
  */
-  void addGem()  {
-    for (int i=0; i<25; i++) {
-      int x = Turtle.rand.nextInt(width - 100) + 50;
-      int y = Turtle.rand.nextInt(height - 200) + 100;
-      if (!inWater(x, y) && getFrogHere(x, y) == null) {
-        Gem gem = new Gem();
-        gem.x = x.toDouble();
-        gem.y = y.toDouble();
-        gem.size = 0.75;
-        gems.add(gem);
-        turtles.add(gem);
-        return;
-      }
-    }
-    // try again in 4 seconds
-    new Timer(const Duration(milliseconds : 4000), addGem);
-  }
-
-  
-/**
- * Remove dead gems
- */
-  void removeDeadGems() {
-    for (int i=gems.length-1; i >= 0; i--) {
-      if (gems[i].dead) {
-        gems.removeAt(i);
-        turtles.remove(gems[i]);
-      }
-    }
-  }
-  
-  
-/**
- * Get any gem at this location 
- */
-  Gem getGemHere(Frog frog) {
-    for (Gem gem in gems) {
-      if (gem.overlapsTurtle(frog) && !gem.dead) return gem;
-    }
-    return null;
-  }
-  
-  
-/**
- * Capture a gem
- */
-  void captureGem(Frog frog, Gem gem) {
-    // first find the workspace
-    for (CodeWorkspace workspace in workspaces) {
-      if (workspace.name == frog["workspace"]) {
-        workspace.captureGem(gem);
-        gem.die();
-        new Timer(const Duration(milliseconds : 3000), () { addGem(); });
-      }
-    }
+  void showHelpMessage(Frog frog) {
   }
   
   
@@ -558,34 +276,23 @@ class FrogPond extends TouchLayer {
  */
   void tick(Timer timer) {
     
+    // remove dead frogs and bugs
+    bugs.erase(layer2);
+    bugs.removeDead();
+    frogs.removeDead();
     
-    // animate flies
+    bugs.animate();
+    bugs.draw(layer2);
+    
+    // animate agents and workspaces
     bool refresh = false;
-    for (Fly fly in flies) {
-      if (fly.animate()) refresh = true;
-    }
-    if (refresh) {
-      flies.forEach((fly) => fly.erase(layer2));
-      flies.forEach((fly) => fly.draw(layer2));
-    }
-    
-    // animate lilypad movement
-    refresh = false;
-    for (LilyPad pad in pads) {
-      if (pad.refresh) {
-        refresh = true;
-        pad.refresh = false;
-      }
+
+    if (frogs.animate()) refresh = true;
+
+    for (CodeWorkspace workspace in workspaces) {    
+      if (workspace.bug.animate()) refresh = true;
     }
     
-    if (refresh) {
-      drawPond();
-    }
-    
-    refresh = false;
-    for (int i=0; i<play_state; i++) {
-      if (animate()) refresh = true;
-    }
     if (refresh) {
       drawForeground();
     }
@@ -599,48 +306,14 @@ class FrogPond extends TouchLayer {
         workspace.draw();
       }
     }
-    
   }
+
   
-  
-/**
- * Animate all of the agents and the workspaces
- */
-  bool animate() {
-    bool refresh = false;
-
-    // remove dead frogs, flies, and gems
-    removeDeadFlies();
-    removeDeadGems();
-    removeDeadFrogs();
-    
-    // animate agents and workspaces
-    refresh = false;
-    for (Gem gem in gems) {
-      if (gem.animate()) refresh = true;
-    }
-
-    // animate might add a new frog, so use a counting for loop
-    for (int i=0; i<frogs.length; i++) {
-      if (frogs[i].animate()) refresh = true;
-    }
-
-    for (CodeWorkspace workspace in workspaces) {    
-      if (workspace.bug.animate()) refresh = true;
-    }
-    
-    return refresh;
-  }
-  
-
 /**
  * Returns true if the given point is in the water
  */
   bool inWater(num x, num y) {
-    for (LilyPad pad in pads) {
-      if (pad.overlapsPoint(x, y)) return false;
-    }
-    return true;
+    return (pads.getTurtleAtPoint(x, y) == null);
   }
   
   
@@ -654,9 +327,7 @@ class FrogPond extends TouchLayer {
 
   void drawPond() {
     layer0.clearRect(0, 0, width, height);
-    for (LilyPad pad in pads) {
-      pad.draw(layer0);
-    }
+    pads.draw(layer0);
     drawGrid(layer0);
   }
   
@@ -708,23 +379,13 @@ class FrogPond extends TouchLayer {
   
   
 /**
- * Draws the flies, frogs, gems, and programming blocks
+ * Draws the bugs, frogs, and programming blocks
  */
   void drawForeground() {
     CanvasRenderingContext2D ctx = layer1;
     ctx.clearRect(0, 0, width, height);
     
-    gems.forEach((gem) => gem.draw(ctx));
-    
-    frogs.forEach((frog) => frog.draw(ctx));
-    
-    if (play_state > 1) {
-      ctx.font = "20px sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "top";
-      ctx.fillStyle = "white";
-      ctx.fillText("Speedup: x${play_state}", width / 2, 15);
-    }
+    frogs.draw(ctx);
     
     for (CodeWorkspace workspace in workspaces) {
       Frog target = getFocalFrog(workspace.name);
