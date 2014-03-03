@@ -40,18 +40,12 @@ class Frog extends Turtle implements Touchable {
   /* this frog's control program */
   Program program;
   
-  /* fly captured by frog for eating */
-  Fly prey = null;
-  
-  /* help message */
-  ImageElement help = new ImageElement();
-  
-  double help_alpha = 0.0;
+  /* beetle captured by frog for eating */
+  Beetle prey = null;
   
   
   Frog(this.pond) : super() {
     img.src = "images/bluefrog.png";
-    help.src = "images/help/help1.png";
   }
   
   
@@ -79,21 +73,12 @@ class Frog extends Turtle implements Touchable {
   
   
   bool animate() {
-    bool refresh = _refresh;
-    _refresh = false;
+    bool refresh = false;
     if (tween.isTweening()) {
       tween.animate();
       refresh = true;
     }
     if (program.animate()) refresh = true;
-    
-    if (down && help_alpha < 1.0) {
-      help_alpha = min(1.0, help_alpha + 0.1);
-      refresh = true;
-    } else if (!down && help_alpha > 0.0) {
-      help_alpha = max(0.0, help_alpha - 0.1);
-      refresh = true;
-    }
     return refresh;
   }
   
@@ -102,7 +87,7 @@ class Frog extends Turtle implements Touchable {
  * Push other frogs out of the way
  */
   void push(num distance) {
-    for (Frog frog in pond.getFrogsHere(this)) {
+    for (Frog frog in pond.frogs.getTurtlesHere(this)) {
       double angle = angleBetween(frog);
       if (angle.abs() < 90.0) {
         angle = angle / -180.0 * PI;
@@ -122,7 +107,7 @@ class Frog extends Turtle implements Touchable {
   
   bool pathBlocked() {
     forward(radius * 4.0);
-    bool blocked = pond.getFrogsHere(this).isNotEmpty;
+    bool blocked = pond.frogs.getTurtlesHere(this).isNotEmpty;
     backward(radius * 4.0);
     return blocked;
   }
@@ -144,84 +129,32 @@ class Frog extends Turtle implements Touchable {
   
   bool seeBug() {
     forward(radius * 4.0);
-    Beetle bug = pond.getTurtleHere(this, Beetle);
+    Beetle bug = pond.bugs.getTurtleHere(this);
     bool b = bug != null;
     backward(radius * 4.0);
     return b;
   }
   
   
-  void captureGem() {
-    Gem gem = pond.getGemHere(this);
-    if (gem != null) pond.captureGem(this, gem);
-  }
-
-  
-  bool nearFly() {
-    for (Fly fly in pond.flies) {
-      if (angleBetween(fly).abs() < 10.0) {
-        num d = distance(fly.x, fly.y, x, y);
-        if (d > height / 4 && d < height * 1.5) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-  
-  
   bool isBlocked() {
     forward(radius * 4.0);
-    bool blocked = pond.getTurtleHere(this, Frog) != null;
+    bool blocked = pond.frogs.getTurtleHere(this) != null;
     backward(radius * 4.0);
     return blocked;
   }
   
   
-  void eatFly() {
+  void eatBug() {
     if (prey == null) {
-      Fly fly = pond.getFlyHere(tongueX, tongueY);
-      if (fly != null && !fly.dead) {
-        prey = fly.hatch();
-        fly.die();
+      Beetle bug = pond.bugs.getTurtleAtPoint(tongueX, tongueY);
+      if (bug != null && !bug.dead) {
+        prey = bug.hatch();
+        bug.die();
       }
     } else {
       prey.x = tongueX;
       prey.y = tongueY;
     }
-  }
-  
-  
-  bool hearSound() {
-    return false;
-  }
-  
-  
-  void drawProgram(CanvasRenderingContext2D ctx) {
-/*
-    if (program != null) {
-      ctx.save();
-      {
-        var prog = program.compile().split('\n');
-        ctx.globalAlpha = 1.0;
-        ctx.textBaseline = "top";
-        ctx.textAlign = "left";
-        ctx.fillStyle = "white";
-        ctx.font = "200 16px monospace";
-        num lx = x + 80;
-        num ly = y - 20 * prog.length - 40;
-        ctx.strokeStyle = "black";
-        drawBubble(ctx, lx - 20, ly - 20, 260, y - ly, 20);
-        
-        ctx.fillStyle = "black";
-        for (int line = 0; line < prog.length; line++) {
-          ctx.fillText(prog[line], lx, ly);
-          ly += 20;
-        }
-      }
-      ctx.restore();
-    }    
-*/
   }
   
   
@@ -263,52 +196,16 @@ class Frog extends Turtle implements Touchable {
     num iw = width;
     num ih = height;
     ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
-    
-      
-    //---------------------------------------------
-    // draw the help message
-    //---------------------------------------------
-    if (help_alpha > 0.0 && this["moved"] == false) {
-      ctx.globalAlpha = help_alpha;
-      ctx.drawImage(help, -650, -480);
-      ctx.globalAlpha = 1.0;
-    }
   }
 
-  double _lastX = 0.0, _lastY = 0.0;
-  bool _refresh = false;
-
   
-  bool containsTouch(Contact c) {
-    return overlapsPoint(c.touchX, c.touchY);
-  }
-  
-  
-  bool down = false;
+  bool containsTouch(Contact c) { return overlapsPoint(c.touchX, c.touchY); }
+  void touchUp(Contact c) { }
+  void touchDrag(Contact c) { }
+  void touchSlide(Contact c) { }
   
   bool touchDown(Contact c) {
-    _lastX = c.touchX;
-    _lastY = c.touchY;
-    down = true;
+    pond.showHelpMessage(this);
     return true;
   }
-
-  
-  void touchUp(Contact c) {
-    down = false;
-    //pond.census();
-  }
-  
-  
-  void touchDrag(Contact c) {
-    /*
-    move(c.touchX - _lastX, c.touchY - _lastY);
-    _lastX = c.touchX;
-    _lastY = c.touchY;
-    _refresh = true;
-    */
-  }
-  
-    
-  void touchSlide(Contact c) { }
 }
