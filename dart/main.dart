@@ -28,6 +28,7 @@ import 'dart:math';
 import 'dart:async';
 import 'dart:web_audio';
 
+part 'aset.dart';
 part 'beetle.dart';
 part 'fly.dart';
 part 'frog.dart';
@@ -50,7 +51,6 @@ part 'fblocks/menu.dart';
 part 'fblocks/parameter.dart';
 part 'fblocks/repeat.dart';
 part 'fblocks/start.dart';
-part 'fblocks/status.dart';
 part 'fblocks/toolbar.dart';
 part 'fblocks/wait.dart';
 part 'fblocks/workspace.dart';
