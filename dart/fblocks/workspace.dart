@@ -40,9 +40,6 @@ class CodeWorkspace extends TouchLayer {
   /* button toolbar */
   Toolbar toolbar;
   
-  /* status display (frog color, number of gems, number of flies) */
-  StatusInfo status;
-  
   /* fixed start block */
   StartBlock start;
   
@@ -77,11 +74,6 @@ class CodeWorkspace extends TouchLayer {
     // menu bar
     menu = new Menu(this, 220, height - BLOCK_HEIGHT * 1.85, width - 220, BLOCK_HEIGHT * 1.85);
     _initMenu();
-    
-    // status area
-    if (SHOW_STATUS) {
-      status = new StatusInfo(this, width - 150, height - 100, 150, 100);
-    }
     
     // help message
     help = new Help(this);
@@ -131,15 +123,7 @@ class CodeWorkspace extends TouchLayer {
     pond.restartProgram(this);
     bug.reset();
   }
-  
-  
-/**
- * Speeds up program execution
- */
-  void fastForwardProgram() {
-    pond.fastForwardProgram(this);
-  }
-  
+
   
 /**
  * Erase a program
@@ -317,8 +301,6 @@ class CodeWorkspace extends TouchLayer {
       if (block.animate()) refresh = true;
     }
     
-    if (status != null && status.animate()) refresh = true;
-    
     return refresh;
   }
   
@@ -353,17 +335,8 @@ class CodeWorkspace extends TouchLayer {
   }
   
   
-  void captureGem(Gem g) {
-    if (status != null) status.captureGem(g);
-  }
-  
-  
-  void captureFly(Fly fly) {
-    menu.captureFly(fly);
-    if (status != null) {
-      status.fly_count++;
-      draw();
-    }
+  void captureBug(Beetle bug) {
+    menu.captureBug(bug);
   }  
   
   
@@ -377,9 +350,6 @@ class CodeWorkspace extends TouchLayer {
       // erase the background
       ctx.clearRect(0, 0, width, height);
       
-      // draw the status bar
-      if (status != null) status.draw(ctx);
-  
       // draw blocks themselves
       for (Block block in blocks) {
         block.draw(ctx);

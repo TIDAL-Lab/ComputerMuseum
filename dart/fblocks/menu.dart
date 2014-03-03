@@ -67,11 +67,9 @@ class Menu {
     return (block.centerY >= y);
   }
   
-  void captureFly(Fly fly) {
-    if (fly is Beetle) {
-      beetles[fly.color].shadowed = false;
-      beetles[fly.color].pulse();
-    }
+  void captureBug(Beetle bug) {
+    beetles[bug.color].shadowed = false;
+    beetles[bug.color].pulse();
   }
   
   
