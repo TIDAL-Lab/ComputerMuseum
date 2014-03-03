@@ -1,6 +1,6 @@
 /*
  * Computer History Museum Frog Pond
- * Copyright (c) 2013 Michael S. Horn
+ * Copyright (c) 2014 Michael S. Horn
  * 
  *           Michael S. Horn (michael-horn@northwestern.edu)
  *           Northwestern University
@@ -53,36 +53,6 @@ class Program {
     curr = other.curr;
     running = other.running;
   }
-  
-  
-  void step() {
-    if (isRunning) {
-      curr = curr.step(this);
-      if (curr != null) curr.eval(this);
-    }
-  }
-  
-  
-  void skip() {
-    if (isRunning) {
-      curr = curr.step(this);
-      doPause();
-    }
-  }
-  
-  
-  bool animate() {
-    if (tween.isTweening()) {
-      tween.animate();
-      return true;
-    } else if (isRunning) {
-      step();
-      return true;
-    } else {
-      running = false;
-      return false;
-    }
-  }
 
   
   dynamic operator[] (String key) {
@@ -109,6 +79,14 @@ class Program {
     variables.clear();
   }
   
+  
+  void step() {
+    if (isRunning) {
+      curr = curr.step(this);
+      if (curr != null) curr.eval(this);
+    }
+  }
+
   
   void restart() {
     curr = start;
@@ -142,6 +120,20 @@ class Program {
   }
   
   
+  bool animate() {
+    if (tween.isTweening()) {
+      tween.animate();
+      return true;
+    } else if (isRunning) {
+      step();
+      return true;
+    } else {
+      running = false;
+      return false;
+    }
+  }
+  
+  
   String compile() {
     String s = "void main() {\n";
     Block b = start.next;
@@ -160,9 +152,7 @@ class Program {
   
   
   bool getSensorValue(String sensor) {
-    if (sensor == "fly") {
-      return frog.nearFly();
-    } else if (sensor == "near-water?") {
+    if (sensor == "near-water?") {
       return frog.nearWater();
     } else if (sensor == "see-bug?") {
       return frog.seeBug();
@@ -201,22 +191,17 @@ class Program {
 
   
   void doPause() {
-    
     // is the frog in the water? 
     if (frog.inWater()) {
       Sounds.playSound("splash");
       frog.die();
-      return;
+    } else {
+      tween = new Tween();
+      tween.delay = 0;
+      tween.duration = 20;
+      tween.onstart = (() { });
+      tween.onend = (() { frog.reset(); });
     }
-    
-    // did we capture a gem?
-    frog.captureGem();
-    
-    tween = new Tween();
-    tween.delay = 0;
-    tween.duration = 20;
-    tween.onstart = (() { });
-    tween.onend = (() { frog.reset(); });
   }
   
 
@@ -225,7 +210,6 @@ class Program {
  */
   void doMove(String cmd, var param) {
     Frog target = frog;
-    target["moved"] = true;
     double length = frog.radius * 4.0;
     if (param is num) length *= param;
     bool bounce = frog.pathBlocked() && FROGS_BLOCK;
@@ -245,7 +229,7 @@ class Program {
     }
     tween.ondelta = ((value) {
       target.forward(value);
-      Beetle beetle = target.pond.getTurtleHere(target, Beetle);
+      Beetle beetle = target.pond.bugs.getTurtleHere(target);
       if (beetle != null) beetle.spook();
       if (FROGS_PUSH) target.push(value);
     });
@@ -266,7 +250,6 @@ class Program {
       angle *= -1;
     }
     Frog target = frog;
-    target["moved"] = true;
     String s = "$cmd";
     if (param != null) s = "$cmd $param";
     tween = new Tween();
@@ -339,13 +322,13 @@ class Program {
     tween.duration = 20;
     tween.ondelta = ((value) {
       frog._tongue += value;
-      frog.eatFly();
+      frog.eatBug();
       if (frog._tongue == 1.0) Sounds.playSound("swoosh");
     });
     tween.onend = (() {
       if (frog.prey != null) {
         Sounds.playSound("gulp");
-        frog.pond.captureFly(frog, frog.prey);
+        frog.pond.captureBug(frog, frog.prey);
         frog.prey = null;
       }
       doPause();
@@ -403,7 +386,7 @@ class Program {
        baby = frog.hatch();
     }
     if (baby == null) return;
-    frog.pond.addFrog(baby);
+    frog.pond.frogs.add(baby);
     baby.program.pause();
     baby.size = 0.05;
     baby.heading = frog.heading;
