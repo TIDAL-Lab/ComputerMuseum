@@ -54,18 +54,11 @@ class LilyPad extends Turtle implements Touchable {
   }
   
   
-  void move(num dx, num dy) {
-    x += dx;
-    y += dy;
-    Set<Frog> frogs = pond.getFrogsHere(this);
-    frogs.forEach((frog) => frog.move(dx, dy));
-  }
-  
-
   bool containsTouch(Contact c) {
     num dist = distance(c.touchX, c.touchY, x, y);
     return dist < radius;
   }
+
   
   bool touchDown(Contact c) {
     _lastX = c.touchX;
