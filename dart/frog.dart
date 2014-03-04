@@ -27,6 +27,9 @@ class Frog extends Turtle implements Touchable {
   
   /* pond that contains this frog */
   FrogPond pond;
+  
+  /* the workspace that controls this frog */
+  CodeWorkspace workspace;
 
   /* size of the sound wave emanating from the frog */
   double _sound = -1.0;
@@ -44,16 +47,21 @@ class Frog extends Turtle implements Touchable {
   Beetle prey = null;
   
   
-  Frog(this.pond) : super() {
+  Frog(this.pond, this.workspace) : super() {
     img.src = "images/bluefrog.png";
   }
   
   
   Frog hatch() {
-    Frog clone = new Frog(pond);
-    clone.copy(this);
-    clone.program = new Program.copy(program, clone);
-    return clone;
+    if (workspace.frogs.length < MAX_FROGS) {
+      Frog clone = new Frog(pond, workspace);
+      clone.copy(this);
+      clone.program = new Program.copy(program, clone);
+      workspace.frogs.add(clone);
+      return clone;
+    } else {
+      return null;
+    }
   }
   
   
@@ -82,32 +90,10 @@ class Frog extends Turtle implements Touchable {
     return refresh;
   }
   
-
-/**
- * Push other frogs out of the way
- */
-  void push(num distance) {
-    for (Frog frog in pond.frogs.getTurtlesHere(this)) {
-      double angle = angleBetween(frog);
-      if (angle.abs() < 90.0) {
-        angle = angle / -180.0 * PI;
-        angle += heading;
-        double dx = distance * sin(angle);
-        double dy = distance * cos(angle);
-        frog.x += dx;
-        frog.y -= dy;
-        if (pond.inWater(frog.x, frog.y)) {
-          Sounds.playSound("splash");
-          frog.die();
-        }
-      }
-    }
-  }
-  
   
   bool pathBlocked() {
     forward(radius * 4.0);
-    bool blocked = pond.frogs.getTurtlesHere(this).isNotEmpty;
+    bool blocked = pond.isFrogHere(this);
     backward(radius * 4.0);
     return blocked;
   }
@@ -138,9 +124,17 @@ class Frog extends Turtle implements Touchable {
   
   bool isBlocked() {
     forward(radius * 4.0);
-    bool blocked = pond.frogs.getTurtleHere(this) != null;
+    bool blocked = pond.isFrogHere(this);
     backward(radius * 4.0);
     return blocked;
+  }
+  
+  
+  void spookBugs() {
+    Set<Beetle> bugs = pond.bugs.getTurtlesHere(this);
+    for (Beetle bug in bugs) {
+      bug.spook();
+    }
   }
   
   
