@@ -91,8 +91,8 @@ class Menu {
       //---------------------------------------------
       // programming blocks
       //---------------------------------------------
-      int ix = x + 25;
-      int iy = y + h/2;
+      num ix = x + 25;
+      num iy = y + h/2;
       
       for (Slot slot in slots) {
         slot.x = ix;
@@ -134,8 +134,8 @@ class Slot implements Touchable {
   }
   
   
-  set x(num value) => block.x = value;
-  set y(num value) => block.y = value;
+  set x(num value) => block.x = value.toDouble();
+  set y(num value) => block.y = value.toDouble();
   num get width => block.width;
   num get height => block.height;
   

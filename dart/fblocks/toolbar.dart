@@ -45,8 +45,8 @@ class Toolbar {
   Toolbar(this.workspace, this.x, this.y, this.w, this.h) {
     frog.src = "images/${workspace.color}frog.png";
     
-    int bx = x + 85;
-    int by = y + h/2 - 15;
+    num bx = x + 85;
+    num by = y + h/2 - 15;
     int bspace = 35;
     
     buttons.add(new Button(bx, by, workspace, "images/toolbar/play.png", () {
@@ -105,10 +105,10 @@ class Toolbar {
       //---------------------------------------------
       // representative frog
       //---------------------------------------------      
-      int iw = (frog.width * 0.7).toInt();
-      int ih = (frog.height * 0.7).toInt();
-      int ix = x + 10;
-      int iy = y + 2;
+      num iw = frog.width * 0.7;
+      num ih = frog.height * 0.7;
+      num ix = x + 10;
+      num iy = y + 2;
       ctx.drawImageScaled(frog, ix, iy, iw, ih);
       
       //---------------------------------------------
@@ -178,8 +178,8 @@ class Button extends Touchable {
   
   void draw(CanvasRenderingContext2D ctx) {
     if (visible) {
-      int ix = (down && over) ? x + 2 : x;
-      int iy = (down && over) ? y + 2 : y;
+      num ix = (down && over) ? x + 2 : x;
+      num iy = (down && over) ? y + 2 : y;
       ctx.globalAlpha = _pulse;
       ctx.drawImage(img, ix, iy);
       ctx.globalAlpha = 1.0;

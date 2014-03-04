@@ -39,7 +39,7 @@ class StartBlock extends BeginBlock {
     _addClause(end);
     workspace.addBlock(end);
     inserted = true;
-    _width = BLOCK_WIDTH + BLOCK_MARGIN;
+    _width = (BLOCK_WIDTH + BLOCK_MARGIN).toDouble();
     _play = new Button(x + 65, y + height / 2 - 15, workspace, "images/toolbar/play.png", () {
       workspace.playProgram(); });
     _pause = new Button(x + 65, y + height / 2 - 15, workspace, "images/toolbar/pause.png", () {
