@@ -30,6 +30,9 @@ class CodeWorkspace extends TouchLayer {
   
   /* size of the canvas */
   int width, height;
+  
+  /* list of frogs controlled by this workspace */
+  AgentSet<Frog> frogs = new AgentSet<Frog>();
 
   /* list of blocks in the workspace */
   List<Block> blocks = new List<Block>();
@@ -58,6 +61,8 @@ class CodeWorkspace extends TouchLayer {
   /* help message */
   Help help;
   
+  CanvasElement canvas;
+  
   CanvasRenderingContext2D ctx;
 
   
@@ -65,9 +70,11 @@ class CodeWorkspace extends TouchLayer {
   
   CodeWorkspace(this.pond, this.width, this.height, this.name, this.color) {
     
-    CanvasElement canvas = querySelector("#${name}");
+    canvas = querySelector("#${name}");
     ctx = canvas.getContext('2d');
 
+    frogs.tlayer = pond;
+    
     // toolbar
     toolbar = new Toolbar(this, 0, height - BLOCK_HEIGHT * 1.85, 220, BLOCK_HEIGHT * 1.85);
     
@@ -93,10 +100,39 @@ class CodeWorkspace extends TouchLayer {
   
   
 /**
+ * Adds a new frog for the given workspace
+ */
+  Frog addHomeFrog() {
+    Frog frog = new Frog(pond, this);
+    frog["workspace"] = name;
+    double fx = width / 2;
+    double fy = height - 290.0;
+    frog.x = objectToWorldX(fx, fy);
+    frog.y = objectToWorldY(fx, fy);
+    frog.heading = objectToWorldTheta(0);
+    frog.program = new Program(start, frog);
+    frog.img.src = "images/${color}frog.png";
+    frogs.add(frog);
+    return frog;
+  }
+  
+  
+/**
+ * Frog to trace program execution
+ */
+  Frog getFocalFrog() {
+    return frogs.first;
+  }
+  
+  
+/**
  * Resume the program for all frogs
  */
   void playProgram() {
-    pond.playProgram(this);
+    if (frogs.length == 0) addHomeFrog();
+    for (Frog frog in frogs.agents) {
+      frog.program.play();
+    }
   }
 
   
@@ -104,7 +140,9 @@ class CodeWorkspace extends TouchLayer {
  * Pause a running program for all frogs
  */
   void pauseProgram() {
-    pond.pauseProgram(this);
+    for (Frog frog in frogs.agents) {
+      frog.program.pause();
+    }
   }
   
   
@@ -112,7 +150,9 @@ class CodeWorkspace extends TouchLayer {
  * Halts all frogs and restarts their programs
  */
   void stopProgram() {
-    pond.stopProgram(this);
+    for (Frog frog in frogs.agents) {
+      frog.program.restart();
+    }
   }
 
   
@@ -120,10 +160,49 @@ class CodeWorkspace extends TouchLayer {
  * Restart to single frog on home lilypad
  */
   void restartProgram() {
-    pond.restartProgram(this);
+    for (Frog frog in frogs.agents) {
+      frog.die();
+    }
+    addHomeFrog().pulse();
     bug.reset();
   }
 
+  
+/**
+ * Are all programs paused?
+ */
+/*
+  bool isProgramPaused() {
+    for (Frog frog in frogs.agents) {
+      if (!frog.program.isPaused) return false;
+    }
+    return true;
+  }
+*/  
+  
+/**
+ * Are all programs finished running?
+ */
+/*
+  bool isProgramFinished() {
+    for (Frog frog in frogs.agents) {
+      if (!frog.program.isFinished) return false;
+    }
+    return true;
+  }
+*/  
+  
+/**
+ * Is there a frog still running a program?
+ */
+  bool isProgramRunning() {
+    bool running = false;
+    for (Frog frog in frogs.agents) {
+      if (frog.program.isRunning) running = true;
+    }
+    return running;
+  }
+  
   
 /**
  * Erase a program
@@ -271,11 +350,19 @@ class CodeWorkspace extends TouchLayer {
   bool animate() {
     bool refresh = false;
     
-    if (help.animate()) {
-      refresh = true;
+    frogs.removeDead();
+    
+    if (help.animate()) refresh = true;
+
+    if (frogs.animate()) refresh = true;
+    
+    if (bug.animate()) refresh = true;
+    
+    if (frogs.length == 0) {
+      restartProgram();
     }
 
-    bool r = pond.isProgramRunning(this.name);
+    bool r = isProgramRunning();
     if (r != running) refresh = true;
     running = r;
     
@@ -296,7 +383,6 @@ class CodeWorkspace extends TouchLayer {
       }
     }
       
-    
     for (Block block in blocks) {
       if (block.animate()) refresh = true;
     }
@@ -308,10 +394,9 @@ class CodeWorkspace extends TouchLayer {
 /**
  * Called by pond to trace the execution of the program for the target frog
  */
-  void traceExecution(CanvasRenderingContext2D ctx, Frog frog) {
+  void traceExecution(Frog frog) {
     if (frog.label != null) {
       ctx.save();
-      xform.transformContext(ctx);
       double tx = worldToObjectX(frog.x, frog.y);
       double ty = worldToObjectY(frog.x, frog.y);
       ctx.textBaseline = 'top';
@@ -325,16 +410,6 @@ class CodeWorkspace extends TouchLayer {
   }
   
   
-  void drawBug(CanvasRenderingContext2D ctx) {
-    ctx.save();
-    {
-      xform.transformContext(ctx);
-      bug.draw(ctx);
-    }
-    ctx.restore();
-  }
-  
-  
   void captureBug(Beetle bug) {
     menu.captureBug(bug);
   }  
@@ -344,16 +419,25 @@ class CodeWorkspace extends TouchLayer {
     ctx.save();
     {
       
+      // erase the background
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // draw the frogs
+      frogs.draw(ctx);
+      
       // transform into workspace coordinates
       xform.transformContext(ctx);
       
-      // erase the background
-      ctx.clearRect(0, 0, width, height);
+      Frog target = getFocalFrog();
+      if (target != null) traceExecution(target);
       
       // draw blocks themselves
       for (Block block in blocks) {
         block.draw(ctx);
       }
+      
+      // draw the trace bug
+      if (target != null) bug.draw(ctx);
       
       // draw the help message
       help.draw(ctx);
