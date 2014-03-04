@@ -23,32 +23,44 @@
 part of ComputerHistory;
 
 
-class AgentSet {
+class AgentSet<T> {
   
-  List<Turtle> agents = new List<Turtle>();
+  List<T> agents = new List<T>();
   
-  TouchLayer tlayer;
+  TouchLayer tlayer = null;
   
   
-  AgentSet(this.tlayer) { }
+  AgentSet() { }
   
   
   int get length => agents.length;
   
+  T get first => (agents.isEmpty ? null : agents.first);
   
-  void add(Turtle agent) {
-    agents.add(agent);
-    if (tlayer != null) tlayer.addTouchable(agent as Touchable);
+  
+  void add(T agent) {
+    if (agent is Turtle) {
+      agents.add(agent);
+      if (tlayer != null) tlayer.addTouchable(agent as Touchable);
+    } else {
+      throw "Invalid agent type. Must be subclass of type Turtle";
+    }
+  }
+  
+  
+  void remove(T agent) {
+    agents.remove(agent);
+    if (tlayer != null) tlayer.removeTouchable(agent as Touchable);
   }
   
   
   void erase(CanvasRenderingContext2D ctx) {
-    agents.forEach((t) => t.erase(ctx));
+    agents.forEach((Turtle t) => t.erase(ctx));
   }
   
   
   void draw(CanvasRenderingContext2D ctx) {
-    agents.forEach((t) => t.draw(ctx));
+    agents.forEach((Turtle t) => t.draw(ctx));
   }
   
   
@@ -56,22 +68,16 @@ class AgentSet {
     bool refresh = false;
     // use a backwards for loop to prevent concurrent modification errors (when new turtles get added)
     for (int i = agents.length; i > 0; i--) {
-      if (agents[i-1].animate()) refresh = true;
+      if ((agents[i-1] as Turtle).animate()) refresh = true;
     }
     return refresh;
-  }
-  
-  
-  void remove(Turtle agent) {
-    agents.remove(agent);
-    if (tlayer != null) tlayer.removeTouchable(agent as Touchable);
   }
   
   
   bool removeDead() {
     int count = 0;
     for (int i=agents.length - 1; i >= 0; i--) {
-      if (agents[i].dead) {
+      if ((agents[i] as Turtle).dead) {
         remove(agents[i]);
         count++;
       }
@@ -80,8 +86,8 @@ class AgentSet {
   }
   
   
-  Set<Turtle> getTurtlesHere(Turtle target) {
-    Set<Turtle> aset = new HashSet<Turtle>();
+  Set<T> getTurtlesHere(Turtle target) {
+    Set<T> aset = new HashSet<T>();
     for (Turtle t in agents) {
       if (t != target && t.overlapsTurtle(target)) {
         aset.add(t);
@@ -91,13 +97,13 @@ class AgentSet {
   }
   
   
-  Turtle getTurtleHere(Turtle target) {
-    Set<Turtle> aset = getTurtlesHere(target);
+  T getTurtleHere(Turtle target) {
+    Set<T> aset = getTurtlesHere(target);
     return aset.isEmpty ? null : aset.first;
   }
   
   
-  Turtle getTurtleAtPoint(num px, num py) {
+  T getTurtleAtPoint(num px, num py) {
     for (Turtle t in agents) {
       if (t.overlapsPoint(px, py)) {
         return t;
@@ -107,8 +113,8 @@ class AgentSet {
   }
   
   
-  Set<Turtle> getTurtlesWith(Function criterion) {
-    Set<Turtle> aset = new HashSet<Turtle>();
+  Set<T> getTurtlesWith(Function criterion) {
+    Set<T> aset = new HashSet<T>();
     for (Turtle t in agents) {
       if (criterion(t)) aset.add(t);
     }
@@ -116,8 +122,8 @@ class AgentSet {
   }
   
   
-  Turtle getTurtleWith(Function criterion) {
-    Set<Turtle> aset = getTurtlesWith(criterion);
+  T getTurtleWith(Function criterion) {
+    Set<T> aset = getTurtlesWith(criterion);
     return aset.isEmpty ? null : aset.first;
   }
   
