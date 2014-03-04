@@ -229,9 +229,7 @@ class Program {
     }
     tween.ondelta = ((value) {
       target.forward(value);
-      Beetle beetle = target.pond.bugs.getTurtleHere(target);
-      if (beetle != null) beetle.spook();
-      if (FROGS_PUSH) target.push(value);
+      target.spookBugs();
     });
   }
   
@@ -381,18 +379,12 @@ class Program {
  * Hatch a new frog
  */
   void doHatch(String cmd, var param) {
-    Frog baby;
-    if (frog.pond.getFrogCount(frog["workspace"]) < MAX_FROGS) {
-       baby = frog.hatch();
-    }
+    Frog baby = frog.hatch();
     if (baby == null) return;
-    frog.pond.frogs.add(baby);
     baby.program.pause();
     baby.size = 0.05;
     baby.heading = frog.heading;
     baby.left(60.0 + Turtle.rand.nextInt(5) * 60.0);
-    //baby.left(Turtle.rand.nextInt(360).toDouble());
-    //baby.forward(35.0);
     tween = new Tween();
     tween.function = TWEEN_DECAY;
     tween.delay = 0;
@@ -401,16 +393,9 @@ class Program {
     tween.onend = (() {
       doPause();
       baby.program.play();
-      //baby.program.skip();
     });
-    double newsize = frog.size;
-    if (FROG_SIZE_VARIATION) {
-      newsize += Turtle.rand.nextDouble() * 0.2 - 0.1;
-      newsize = min(2.0, max(0.1, newsize));
-    }
     tween.addControlPoint(0.05, 0);
-    tween.addControlPoint(newsize, 1.0);
+    tween.addControlPoint(frog.size, 1.0);
     tween.ondelta = ((value) => baby.size += value);
   }
 }  
-
