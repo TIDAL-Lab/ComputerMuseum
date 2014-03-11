@@ -43,7 +43,7 @@ class Help implements Touchable {
   }
 
   
-  bool get isVisible => y <= workspace.height - 304;
+  bool get isVisible => y <= workspace.height - 419;
   bool get isHidden => y >= workspace.height;
 
 
@@ -78,7 +78,7 @@ class Help implements Touchable {
       tween.function = TWEEN_SINE2;
       tween.delay = 0;
       tween.duration = 10;
-      tween.addControlPoint(304, 0);
+      tween.addControlPoint(419, 0);
       tween.addControlPoint(0, 1.0);
       tween.ontick = ((value) => y = workspace.height - value );
     }
@@ -93,14 +93,14 @@ class Help implements Touchable {
       tween.delay = 0;
       tween.duration = 10;
       tween.addControlPoint(0, 0);
-      tween.addControlPoint(304, 1.0);
+      tween.addControlPoint(419, 1.0);
       tween.ontick = ((value) => y = workspace.height - value );
     }
   }
   
   
   bool containsTouch(Contact c) {
-    return (isVisible && c.touchY > workspace.height - 600);
+    return (isVisible && c.touchY > workspace.height - 650);
   }
   
   
