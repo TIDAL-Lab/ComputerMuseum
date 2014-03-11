@@ -37,20 +37,28 @@ class Toolbar {
   /* Special buttons */  
   Button play, pause, btarget = null;
   
-  ImageElement frog = new ImageElement();
-  
+  /* Toolbar buttons */  
   List<Button> buttons = new List<Button>();
+  
+  /* Representative frog */
+  FrogButton froggy;
+  
+  /* Animates the show code dialog */
+  Tween tween = new Tween();
+  
+  /* Show code alpha value */
+  double alpha = 0.0;
   
   
   Toolbar(this.workspace, this.x, this.y, this.w, this.h) {
-    frog.src = "images/${workspace.color}frog.png";
+    froggy = new FrogButton(x + 10, y + 2, this);
     
     num bx = x + 85;
     num by = y + h/2 - 15;
-    int bspace = 35;
+    int bspace = 42;
     
     buttons.add(new Button(bx, by, workspace, "images/toolbar/play.png", () {
-      workspace.playProgram(); }));
+      workspace.playProgram(); showCode(); }));
     
     buttons.add(new Button(bx, by, workspace, "images/toolbar/pause.png", () {
       workspace.pauseProgram(); }));
@@ -69,6 +77,7 @@ class Toolbar {
     pause.visible = false;
     
     // add buttons as touchable objects to the workspace
+    workspace.addTouchable(froggy);
     for (Button b in buttons) {
       workspace.addTouchable(b);
     }
@@ -76,7 +85,13 @@ class Toolbar {
   
   
   bool animate() {
-    return play.animate();
+    bool refresh = false;
+    if (tween.isTweening()) {
+      tween.animate();
+      refresh = true;
+    }
+    if (play.animate()) refresh = true;
+    return refresh;
   }
   
   
@@ -96,8 +111,8 @@ class Toolbar {
       ctx.lineWidth = 3;
       
       ctx.beginPath();
-      ctx.moveTo(x + 230, y + h);
-      ctx.bezierCurveTo(x + 250, y - 50, x + 160, y + 10, x - 6, y - 5);
+      ctx.moveTo(x + w - 10, y + h);
+      ctx.bezierCurveTo(x + w, y - 70, x + w/2, y + 20, x - 6, y - 5);
       ctx.lineTo(x - 6, y + h);
       ctx.fill();
       ctx.stroke();
@@ -105,11 +120,7 @@ class Toolbar {
       //---------------------------------------------
       // representative frog
       //---------------------------------------------      
-      num iw = frog.width * 0.7;
-      num ih = frog.height * 0.7;
-      num ix = x + 10;
-      num iy = y + 2;
-      ctx.drawImageScaled(frog, ix, iy, iw, ih);
+      froggy.draw(ctx);
       
       //---------------------------------------------
       // toolbar buttons
@@ -117,9 +128,113 @@ class Toolbar {
       play.visible = !workspace.running;
       pause.visible = workspace.running;
       buttons.forEach((button) => button.draw(ctx));
+      
+      //---------------------------------------------
+      // show code dialog
+      //---------------------------------------------
+      drawShowCode(ctx);
     }
     ctx.restore();
   }
+  
+  
+  void drawShowCode(CanvasRenderingContext2D ctx) {
+    Frog focal = workspace.getFocalFrog();
+    if (focal == null) return;
+      
+    ctx.font = '200 15px Monaco, monospace';
+    ctx.textBaseline = 'top';
+    ctx.textAlign = 'left';
+
+    // figure out text dimensions      
+    var lines = focal.program.compile().split('\n');
+    int margin = 25;
+    int dh = lines.length * 20 + margin * 2;
+    int dx = 20;
+    int dy = y - 25 - dh;
+    int dw = margin * 2;
+
+    // dynamically size width of the dialog      
+    for (int i=0; i<lines.length; i++) {
+      dw = max(dw, ctx.measureText(lines[i]).width + margin * 2);
+    }
+    
+    ctx.fillStyle = "rgba(255, 255, 255, $alpha)";
+    ctx.strokeStyle = "rgba(0, 0, 0, $alpha)";
+    ctx.lineWidth = 2;
+    drawBubble(ctx, dx, dy, dw, dh, margin);
+ 
+    // draw each line     
+    ctx.fillStyle = "rgba(0, 0, 0, $alpha)";
+    for (int i=0; i<lines.length; i++) {
+      ctx.fillText(lines[i], dx + margin, dy + margin * 1.5 + i * 20);
+    }
+  }
+  
+  
+  void showCode() {
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.duration = 5;
+    tween.addControlPoint(0.0, 0.0);
+    tween.addControlPoint(0.9, 1.0);
+    tween.ontick = ((value) => alpha = value);
+  }
+  
+  
+  void hideCode() {
+    tween = new Tween();
+    tween.function = TWEEN_SINE2;
+    tween.duration = 20;
+    tween.addControlPoint(0.9, 0.0);
+    tween.addControlPoint(0.8, 0.5);
+    tween.addControlPoint(0.0, 1.0);
+    tween.ontick = ((value) => alpha = value);
+  }
+}
+
+
+class FrogButton extends Touchable {
+  
+  ImageElement frog = new ImageElement();
+  num x, y, w, h;
+  Toolbar toolbar;
+
+  
+  FrogButton(this.x, this.y, this.toolbar) {
+    frog.src = "images/${toolbar.workspace.color}frog.png";
+    frog.onLoad.listen((e) {
+      w = frog.width * 0.7;
+      h = frog.height * 0.7;
+    });
+  }
+  
+  
+  void draw(CanvasRenderingContext2D ctx) {
+    if (w != null && h != null) {
+      ctx.drawImageScaled(frog, x, y, w, h);
+    }
+  }
+  
+  
+  bool containsTouch(Contact c) {
+    return(c.touchX >= x &&
+           c.touchY >= y &&
+           c.touchX <= x + w &&
+           c.touchY <= y + h);
+  }
+  
+  bool touchDown(Contact c) {
+    toolbar.showCode();
+    return true;
+  }
+  
+  void touchUp(Contact c) {
+    toolbar.hideCode();
+  }
+  
+  void touchDrag(Contact c) { }
+  void touchSlide(Contact c) { }
 }
 
 
