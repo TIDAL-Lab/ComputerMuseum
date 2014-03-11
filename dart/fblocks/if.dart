@@ -77,4 +77,10 @@ class ElseBlock extends ControlBlock {
       return begin.end.next;
     }
   }
+  
+  String compile(int indent) {
+    String tab = "";
+    for (int i=0; i<indent-1; i++) tab += "  ";
+    return "${tab}else {\n";
+  }  
 }
