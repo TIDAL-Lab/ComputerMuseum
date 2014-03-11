@@ -346,4 +346,11 @@ class EndBlock extends ControlBlock {
       return next;
     }
   }
+
+  
+  String compile(int indent) {
+    String tab = "";
+    for (int i=0; i<indent-1; i++) tab += "  ";
+    return tab + "}\n";
+  }
 }
