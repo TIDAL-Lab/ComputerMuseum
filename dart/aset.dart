@@ -35,7 +35,7 @@ class AgentSet<T> {
   
   int get length => agents.length;
   
-  T get first => (agents.isEmpty ? null : agents.first);
+  T get first => (agents.isEmpty ? null : agents.last);
   
   
   void add(T agent) {
@@ -51,6 +51,12 @@ class AgentSet<T> {
   void remove(T agent) {
     agents.remove(agent);
     if (tlayer != null) tlayer.removeTouchable(agent as Touchable);
+  }
+  
+  
+  void moveToTop(T agent) {
+    remove(agent);
+    add(agent);
   }
   
   
