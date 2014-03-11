@@ -43,6 +43,9 @@ class CodeWorkspace extends TouchLayer {
   /* button toolbar */
   Toolbar toolbar;
   
+  /* bug scoreboard */
+  Scoreboard scoreboard;
+  
   /* fixed start block */
   StartBlock start;
   
@@ -76,11 +79,14 @@ class CodeWorkspace extends TouchLayer {
     frogs.tlayer = pond;
     
     // toolbar
-    toolbar = new Toolbar(this, 0, height - BLOCK_HEIGHT * 1.85, 220, BLOCK_HEIGHT * 1.85);
+    toolbar = new Toolbar(this, 0, height - BLOCK_HEIGHT * 1.85, 270, BLOCK_HEIGHT * 1.85);
     
     // menu bar
-    menu = new Menu(this, 220, height - BLOCK_HEIGHT * 1.85, width - 220, BLOCK_HEIGHT * 1.85);
+    menu = new Menu(this, 245, height - BLOCK_HEIGHT * 1.85, width - 245, BLOCK_HEIGHT * 1.85);
     _initMenu();
+    
+    // bug scoreboard
+    scoreboard = new Scoreboard(this, width - 150, height - BLOCK_HEIGHT * 1.85, 150, BLOCK_HEIGHT * 1.85);
     
     // help message
     help = new Help(this);
@@ -169,30 +175,6 @@ class CodeWorkspace extends TouchLayer {
 
   
 /**
- * Are all programs paused?
- */
-/*
-  bool isProgramPaused() {
-    for (Frog frog in frogs.agents) {
-      if (!frog.program.isPaused) return false;
-    }
-    return true;
-  }
-*/  
-  
-/**
- * Are all programs finished running?
- */
-/*
-  bool isProgramFinished() {
-    for (Frog frog in frogs.agents) {
-      if (!frog.program.isFinished) return false;
-    }
-    return true;
-  }
-*/  
-  
-/**
  * Is there a frog still running a program?
  */
   bool isProgramRunning() {
@@ -267,6 +249,9 @@ class CodeWorkspace extends TouchLayer {
   }
   
   
+/**
+ * How many blocks of the given type have been used in the program so far?
+ */
   int getBlockCount(String blockType) {
     int count = 0;
     for (Block block in blocks) {
@@ -367,7 +352,10 @@ class CodeWorkspace extends TouchLayer {
     running = r;
     
     if (menu.animate()) refresh = true;
+    
     if (toolbar.animate()) refresh = true;
+    
+    if (scoreboard.animate()) refresh = true;
 
     //----------------------------------------------
     // for each block being dragged, identify active insertion points 
@@ -411,7 +399,7 @@ class CodeWorkspace extends TouchLayer {
   
   
   void captureBug(Beetle bug) {
-    menu.captureBug(bug);
+    scoreboard.captureBug(bug);
   }  
   
   
@@ -443,8 +431,11 @@ class CodeWorkspace extends TouchLayer {
       help.draw(ctx);
       
       // draw the menu and the toolbar
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+      ctx.fillRect(0, height - BLOCK_HEIGHT * 1.85, width, BLOCK_HEIGHT * 1.85);
       menu.draw(ctx);
       toolbar.draw(ctx);
+      scoreboard.draw(ctx);
     }
     ctx.restore();
   }
