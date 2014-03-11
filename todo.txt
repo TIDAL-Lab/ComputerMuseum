@@ -1,7 +1,11 @@
 TODO:
+
+workspace timeouts on inactivity
+better parameters (is that right? I wasn't sure I heard you correctly)
+
+
+
 March 8-9 test next version at CHM with all of the changes in place
-- show code
-- better parameters (is that right? I wasn't sure I heard you correctly)
 - small bugs fixed
 - intro/help functions
 - scoring
@@ -12,18 +16,11 @@ Interim dates:
 
 
 Fix parameter menus
-bug with the beetles
-show code button
-touch any frog pops up the help dialog but from the menu bar frog
 big play / pause button
 master timeout
-space out buttons
-scoreboard
 credits
 
 
 drag EndBlocks too!
-touch frog to change focal frog
-no way to run programs once they go past the top of the screen.
 CRASH -- possibly related to push?
 make the bug a frog shape instead of an arrow
