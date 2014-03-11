@@ -199,7 +199,8 @@ class Frog extends Turtle implements Touchable {
   void touchSlide(Contact c) { }
   
   bool touchDown(Contact c) {
-    pond.showHelpMessage(this);
+    workspace.frogs.moveToTop(this);
+    workspace.showHideHelp();
     return true;
   }
 }
