@@ -34,28 +34,11 @@ class Menu {
   /* Dimensions of the menu */
   num x, y, w, h;
   
-  /* List of the blocks in the menu bar */
+  /* Slots for programming blocks */
   List<Slot> slots = new List<Slot>();
   
-  /* Beetle scoreboard */
-  Map<String, Beetle> beetles = new Map<String, Beetle>();
   
-  
-  Menu(this.workspace, this.x, this.y, this.w, this.h) {
-    // scoreboard
-    int bx = x + w - 30;
-    for (String color in Beetle.colors) {
-      Beetle b = new Beetle(workspace.pond, color);
-      beetles[color] = b;
-      b.x = bx.toDouble();
-      b.y = y + h/2;
-      b.heading = 0.0;
-      b.perched = true;
-      b.locked = true;
-      b.shadowed = true;
-      bx -= 40;
-    }
-  }
+  Menu(this.workspace, this.x, this.y, this.w, this.h);
   
   
   void addBlock(Block block, int count) {
@@ -67,30 +50,15 @@ class Menu {
     return (block.centerY >= y);
   }
   
-  void captureBug(Beetle bug) {
-    beetles[bug.color].shadowed = false;
-    beetles[bug.color].pulse();
-  }
-  
   
   bool animate() {
-    bool refresh = false;
-    for (Beetle beetle in beetles.values) {
-      if (beetle.animate()) refresh = true;
-    }
-    return refresh;
+    return false;
   }
   
   
   void draw(CanvasRenderingContext2D ctx) {
     ctx.save();
     {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      ctx.fillRect(x, y, w, h);
-
-      //---------------------------------------------
-      // programming blocks
-      //---------------------------------------------
       num ix = x + 25;
       num iy = y + h/2;
       
@@ -100,19 +68,12 @@ class Menu {
         slot.draw(ctx);
         ix += slot.width + 10;
       }
-      
-      //---------------------------------------------
-      // scoreboard
-      //---------------------------------------------
-      for (String color in beetles.keys) {
-        beetles[color].draw(ctx);
-      }
     }
     ctx.restore();
   }
-} 
+}
 
-
+  
 class Slot implements Touchable {
   
   Block block;
