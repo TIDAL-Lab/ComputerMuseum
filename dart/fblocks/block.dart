@@ -127,7 +127,7 @@ class Block implements Touchable {
   
   bool get isInProgram => hasPrev;
   
-  num get width => inMenu ? _width * 0.66 : _width;
+  num get width => inMenu ? _width * 0.63 : _width;
   
   num get height => _height;
   
