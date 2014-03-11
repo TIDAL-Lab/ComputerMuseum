@@ -79,14 +79,13 @@ void drawBubble(CanvasRenderingContext2D ctx, num x, num y, num w, num h, num ra
   num r = x + w;
   num b = y + h;
   ctx.beginPath();
-  ctx.lineWidth = 2;
   ctx.moveTo(x+radius, y);
   ctx.lineTo(r-radius, y);
   ctx.quadraticCurveTo(r, y, r, y+radius);
-  ctx.lineTo(r, y+h-radius);
-  ctx.quadraticCurveTo(r, b, r-radius, b);
+  ctx.lineTo(r, b - radius);
+  ctx.quadraticCurveTo(r, b, r - radius, b);
   ctx.lineTo(x+radius * 2, b);
-  ctx.lineTo(x+radius/2, b+10);
+  ctx.lineTo(x+radius, b + radius);
   ctx.lineTo(x+radius, b);
   ctx.quadraticCurveTo(x, b, x, b-radius);
   ctx.lineTo(x, y+radius);
