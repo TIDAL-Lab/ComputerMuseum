@@ -152,13 +152,6 @@ class FrogPond extends TouchLayer {
   
   
 /**
- * Show a help message when a visitor touches a frog on the screen
- */
-  void showHelpMessage(Frog frog) {
-  }
-  
-  
-/**
  * Animate and draw
  */
   void tick(Timer timer) {
