@@ -50,6 +50,7 @@ part 'fblocks/if.dart';
 part 'fblocks/menu.dart';
 part 'fblocks/parameter.dart';
 part 'fblocks/repeat.dart';
+part 'fblocks/scoreboard.dart';
 part 'fblocks/start.dart';
 part 'fblocks/toolbar.dart';
 part 'fblocks/wait.dart';
