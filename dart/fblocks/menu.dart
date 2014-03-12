@@ -78,6 +78,7 @@ class Slot implements Touchable {
   
   Block block;
   Block target = null;
+  num x, y;
   
   CodeWorkspace workspace;
   
@@ -95,14 +96,23 @@ class Slot implements Touchable {
   }
   
   
-  set x(num value) => block.x = value.toDouble();
-  set y(num value) => block.y = value.toDouble();
   num get width => block.width;
   num get height => block.height;
   
   
   void draw(CanvasRenderingContext2D ctx) {
-    block.draw(ctx, ! isAvailable());
+    int free = count - workspace.getBlockCount(block.type);
+    if (free <= 0) {
+      block.x = x.toDouble() - 4;
+      block.y = y.toDouble() + 4;
+      block.draw(ctx, true);
+    } else {
+      for (int i=0; i<free; i++) {
+        block.x = x.toDouble() + (i - 1) * 4;
+        block.y = y.toDouble() - (i - 1) * 4;
+        block.draw(ctx);
+      }
+    }
   }
   
   
