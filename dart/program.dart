@@ -152,7 +152,7 @@ class Program {
   
   
   bool getSensorValue(String sensor) {
-    if (sensor == "near-water?") {
+    if (sensor == "at-water?") {
       return frog.nearWater();
     } else if (sensor == "see-bug?") {
       return frog.seeBug();
