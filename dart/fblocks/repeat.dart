@@ -28,7 +28,7 @@ class RepeatBlock extends BeginBlock {
   RepeatBlock(CodeWorkspace workspace) : super(workspace, 'repeat') {
     param = new Parameter(this);
     param.centerX = width - 7;
-    param.values = [ 'forever', 2, 3, 4, 5, 'near-water?', 'see-bug?' ];
+    param.values = [ 'forever', 2, 3, 4, 5, 'at-water?', 'see-bug?' ];
     end = new EndBlock(workspace, this);
     _addClause(end);
   }
@@ -47,7 +47,7 @@ class RepeatBlock extends BeginBlock {
   
   
   void parameterChanged(Parameter param) {
-    if (param.value == "near-water?" || param.value == "see-bug?") {
+    if (param.value == "at-water?" || param.value == "see-bug?") {
       text = "repeat\nuntil";
     } else {
       text = "repeat";
@@ -91,7 +91,7 @@ class RepeatBlock extends BeginBlock {
     }
     
     // conditional loops
-    else if (param.value == "near-water?" || param.value == "see-bug?") {
+    else if (param.value == "at-water?" || param.value == "see-bug?") {
       return program.getSensorValue(param.value) ? end.next : next;
     }
     
