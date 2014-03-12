@@ -32,7 +32,6 @@ part 'aset.dart';
 part 'beetle.dart';
 part 'fly.dart';
 part 'frog.dart';
-part 'gem.dart';
 part 'lilypad.dart';
 part 'matrix.dart';
 part 'pond.dart';
