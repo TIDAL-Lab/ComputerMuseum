@@ -310,7 +310,7 @@ class Block implements Touchable {
   void _drawLabel(CanvasRenderingContext2D ctx) {
     var lines = text.split('\n');
     ctx.fillStyle = textColor;
-    ctx.font = '200 11pt sans-serif';
+    ctx.font = '300 12pt sans-serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     double tx = x + 12;
