@@ -61,12 +61,12 @@ class AgentSet<T> {
   
   
   void erase(CanvasRenderingContext2D ctx) {
-    agents.forEach((Turtle t) => t.erase(ctx));
+    agents.forEach((t) => (t as Turtle).erase(ctx));
   }
   
   
   void draw(CanvasRenderingContext2D ctx) {
-    agents.forEach((Turtle t) => t.draw(ctx));
+    agents.forEach((t) => (t as Turtle).draw(ctx));
   }
   
   
@@ -94,8 +94,8 @@ class AgentSet<T> {
   
   Set<T> getTurtlesHere(Turtle target) {
     Set<T> aset = new HashSet<T>();
-    for (Turtle t in agents) {
-      if (t != target && t.overlapsTurtle(target)) {
+    for (T t in agents) {
+      if (t != target && (t as Turtle).overlapsTurtle(target)) {
         aset.add(t);
       }
     }
@@ -110,8 +110,8 @@ class AgentSet<T> {
   
   
   T getTurtleAtPoint(num px, num py) {
-    for (Turtle t in agents) {
-      if (t.overlapsPoint(px, py)) {
+    for (T t in agents) {
+      if ((t as Turtle).overlapsPoint(px, py)) {
         return t;
       }
     }
@@ -121,7 +121,7 @@ class AgentSet<T> {
   
   Set<T> getTurtlesWith(Function criterion) {
     Set<T> aset = new HashSet<T>();
-    for (Turtle t in agents) {
+    for (T t in agents) {
       if (criterion(t)) aset.add(t);
     }
     return aset;
