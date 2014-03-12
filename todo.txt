@@ -1,8 +1,11 @@
 TODO:
 
 workspace timeouts on inactivity
-better parameters (is that right? I wasn't sure I heard you correctly)
-
+label buttons
+restart button has menu
+  * clear scoreboard
+  * clear program
+  * restart frogs
 
 
 March 8-9 test next version at CHM with all of the changes in place

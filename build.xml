@@ -10,7 +10,7 @@
    <property name="project.name" value="ComputerMuseum" />
    <property name="deploy.user" value="litl" />
    <property name="deploy.host" value="tidal.sesp.northwestern.edu" />
-   <property name="deploy.dir" value="/home/litl/public_html/chm_11042013" />
+   <property name="deploy.dir" value="/home/litl/public_html/chm_03112014" />
 </target>
 
 
