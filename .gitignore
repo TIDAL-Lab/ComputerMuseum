@@ -3,3 +3,4 @@ old
 concept
 *.dart.js.*
 *.precompiled*
+main.dart.js
