@@ -58,7 +58,7 @@ class Toolbar {
     int bspace = 42;
     
     buttons.add(new Button(bx, by, workspace, "images/toolbar/play.png", () {
-      workspace.playProgram(); showCode(); }));
+      workspace.playProgram(); }));
     
     buttons.add(new Button(bx, by, workspace, "images/toolbar/pause.png", () {
       workspace.pauseProgram(); }));
