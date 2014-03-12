@@ -201,8 +201,6 @@ class CodeWorkspace extends TouchLayer {
     }
     start.next = start.end;
     start.end.prev = start;
-    
-    buildDefaultProgram();    
   }
   
     
