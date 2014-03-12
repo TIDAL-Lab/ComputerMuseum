@@ -225,6 +225,7 @@ class Parameter implements Touchable {
     lastY = c.touchY;
     downIndex = index;
     dragging = true;
+    block.workspace.moveToTop(block);
     block.workspace.draw();
     return true;
   }
