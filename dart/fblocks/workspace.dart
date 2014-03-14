@@ -102,6 +102,25 @@ class CodeWorkspace extends TouchLayer {
     draw();
     
     help.show();
+    
+    // master timeout
+    new Timer.periodic(const Duration(seconds : 5), doTimeout);
+  }
+  
+  
+/**
+ * Master timeout function
+ */
+  void doTimeout(Timer t) {
+    int time = getTimeSinceLastTouchEvent();
+    if (time > 90) {
+      resetTouchTimer();
+      restartProgram();
+      removeAllBlocks();
+      buildDefaultProgram();
+      scoreboard.reset();
+      help.show();
+    }
   }
   
   

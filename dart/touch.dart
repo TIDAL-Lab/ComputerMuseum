@@ -62,7 +62,10 @@ class TouchManager {
   TouchBinding findTouchTarget(Contact tp) {
     for (int i=layers.length - 1; i >= 0; i--) {
       Touchable t = layers[i].findTouchTarget(tp);
-      if (t != null) return new TouchBinding(layers[i], t);
+      if (t != null) {
+        layers[i].resetTouchTimer();
+        return new TouchBinding(layers[i], t);
+      }
     }
     return null;
   }
@@ -195,10 +198,14 @@ class TouchLayer {
   Matrix2D xform = new Matrix2D();
   Matrix2D iform = new Matrix2D();
 
-   
-  TouchLayer();
-   
+  /* Last touch event timestamp */
+  DateTime last_touch;
+  
+  TouchLayer() {
+    last_touch = new DateTime.now();   
+  }
 
+  
   void transform(num m11, num m12, num m21, num m22, num dx, num dy) {
     xform.setTransform(m11, m12, m21, m22, dx, dy);
     iform = xform.invert();
@@ -233,6 +240,22 @@ class TouchLayer {
       }
     }
     return null;
+  }
+  
+  
+/*
+ * Reset the touch timer so that it's easy to see when a layer was last touched
+ */
+  void resetTouchTimer() {
+    last_touch = new DateTime.now();    
+  }
+  
+  
+/*
+ * Returns the time in seconds since the last touch event for this layer
+ */
+  int getTimeSinceLastTouchEvent() {
+    return (new DateTime.now().difference(last_touch)).inSeconds;
   }
   
   
