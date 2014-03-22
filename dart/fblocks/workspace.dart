@@ -190,6 +190,7 @@ class CodeWorkspace extends TouchLayer {
     }
     addHomeFrog().pulse();
     bug.reset();
+    scoreboard.reset();
   }
 
   
