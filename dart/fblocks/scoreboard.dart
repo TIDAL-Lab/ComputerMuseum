@@ -67,7 +67,9 @@ class Scoreboard {
   void captureBug(Beetle bug) {
     beetles[bug.color].shadowed = false;
     beetles[bug.color].pulse();
-    scores[bug.color]++;
+    if (scores[bug.color] < 9) {
+      scores[bug.color]++;
+    }
   }
   
   
@@ -75,6 +77,7 @@ class Scoreboard {
     for (Beetle beetle in beetles.values) {
       if (beetle.animate()) return true;
     }
+    return false;
   }
   
   
