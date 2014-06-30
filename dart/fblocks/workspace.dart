@@ -505,7 +505,11 @@ class CodeWorkspace extends TouchLayer {
     }
     
     // IF block
-    menu.addBlock(new IfBlock(this), 2);
+    IfBlock ifblock = new IfBlock(this);
+    ifblock.param = new Parameter(ifblock);
+    ifblock.param.centerX = ifblock.width - 35;
+    ifblock.param.values = [ 'see-bug?', 'at-water?', 'blocked?' ];
+    menu.addBlock(ifblock, 2);
     
     // REPEAT block
     menu.addBlock(new RepeatBlock(this), 2);
