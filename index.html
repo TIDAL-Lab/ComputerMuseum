@@ -6,6 +6,7 @@
    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">   
    <link rel="stylesheet" href="css/main.css">
+   <script src="js/parse-1.2.18.min.js"></script>
 </head>
 <body>
 <!--   
@@ -30,14 +31,62 @@
 
 <!--   <iframe src="histogram.html?width=300&amp;height=200" width="310" height="210" id="plot"></iframe> -->
    
-   <script src="dart/main.dart" type="application/dart"></script>
-   <script src="dart.js"></script>
-   <script type="text/javascript">
-      window.oncontextmenu = function(event) {
-         event.preventDefault();
-         event.stopPropagation();
-         return false;
-      };
-   </script>
+  <script src="dart/main.dart" type="application/dart"></script>
+  <script src="dart.js"></script>
+  <script type="text/javascript">
+    window.oncontextmenu = function(event) {
+       event.preventDefault();
+       event.stopPropagation();
+       return false;
+    };
+  </script>
+   
+
+  <script type="text/javascript">
+    
+    Parse.initialize("Vph488fVBhnp7CJVkSzwPvuTy27kD7eHLTRh9rRM",
+                     "Lxp9aBeaGzXIFJtBkDsFCsEOPXO5MMYzHvBpChz2");
+    
+    window.addEventListener("message", receiveMessage, false);
+
+    function sendMessage(message) {
+      var origin = window.location.protocol + "//" + window.location.host;
+      window.postMessage(message, origin);
+    }
+    
+    function receiveMessage(event) {
+      if (event.data.lastIndexOf("upload-logs", 0) === 0) {
+        uploadLogs();
+      }
+    }
+
+    
+    function uploadLogs() {
+      for (var i=0; i<localStorage.length; i++) {
+        if (localStorage.key(i).substring(0, 8) === "log-item") {
+          var key = localStorage.key(i);
+          var obj = JSON.parse(localStorage.getItem(key));
+          uploadLog(obj, key);
+        }
+      }
+    }
+    
+    function uploadLog(obj, key) {
+      var CHMLogs = Parse.Object.extend("CHMLogs");
+      var logs = new CHMLogs();
+      logs.set("timestamp", obj["timestamp"]);
+      logs.set("event", obj["event"]);
+      logs.set("data", obj["data"]);
+      logs.save(null, {
+        success: function(logs) {
+          console.log(obj);
+          localStorage.removeItem(key);
+        },
+        error: function(logs, error) {
+          console.log("error: " + key);
+        }
+      });
+    }
+  </script>   
 </body>
 </html>
