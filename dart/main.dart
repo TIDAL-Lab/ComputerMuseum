@@ -27,6 +27,7 @@ import 'dart:html';
 import 'dart:math';
 import 'dart:async';
 import 'dart:web_audio';
+import 'ntango/ntango.dart';
 
 part 'aset.dart';
 part 'beetle.dart';
@@ -77,6 +78,7 @@ int MAX_GEMS = 0;
 
 void main() {
 
+  Logging.init();
   Sounds.loadSound("hop");
   Sounds.loadSound("skip");
   Sounds.loadSound("jump");
