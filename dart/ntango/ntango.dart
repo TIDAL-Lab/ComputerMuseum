@@ -27,24 +27,23 @@ import 'dart:convert';
 import 'dart:html';
 import 'dart:math';
 //import 'dart:async';
-//import 'dart:web_audio';
+import 'dart:web_audio';
 
 
-//part 'block.dart';
+part 'block.dart';
 part 'bug.dart';
-//part 'control.dart';
-//part 'if.dart';
+part 'control.dart';
+part 'if.dart';
 part 'logging.dart';
-//part 'matrix.dart';
+part 'matrix.dart';
 //part 'menu.dart';
-//part 'parameter.dart';
+part 'parameter.dart';
 //part 'program.dart';
-//part 'repeat.dart';
-//part 'sounds.dart';
-//part 'start.dart';
-//part 'touch.dart';
+part 'repeat.dart';
+part 'sounds.dart';
+part 'start.dart';
+part 'touch.dart';
 part 'utils.dart';
-//part 'wait.dart';
 //part 'workspace.dart';
 
 

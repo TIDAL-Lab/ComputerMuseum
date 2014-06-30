@@ -1,5 +1,5 @@
 /*
- * Frog Pond Evolution
+ * Computer History Museum Frog Pond
  * Copyright (c) 2014 Michael S. Horn
  * 
  *           Michael S. Horn (michael-horn@northwestern.edu)
@@ -48,7 +48,7 @@ class StartBlock extends BeginBlock {
   
   
   double getStartX() {
-    return 45.0;
+    return workspace.width / 2 - 300.0;
   }
   
   

@@ -1,5 +1,5 @@
 /*
- * Frog Pond Evolution
+ * Computer History Museum Frog Pond
  * Copyright (c) 2014 Michael S. Horn
  * 
  *           Michael S. Horn (michael-horn@northwestern.edu)
@@ -32,39 +32,42 @@ class Sounds {
 
 
   static void loadSound(String name) {
+    /*
     AudioElement audio = new AudioElement();
     audio.src = "sounds/$name.wav";
     sounds[name] = audio;
-    /*
+    */
     HttpRequest http = new HttpRequest();
+    http.open("GET", "sounds/${name}.wav", async: true);
     http.responseType = "arraybuffer";
     http.onLoad.listen((e) {
-      audio.decodeAudioData(
-          http.response,
-          (buffer) { sounds[name] = buffer; },
-          (err) => print(err));
+      audio.decodeAudioData(http.response).then((AudioBuffer buffer) {
+        if (buffer != null) {
+          sounds[name] = buffer;
+        }
+      });
     });
-    http.open('GET', "sounds/$name.wav");
+    http.onError.listen((e) => print("BufferLoader: XHR error"));
     http.send();
-    */
   }
 
 
   static void playSound(String name) {
+    /*
     if (sounds[name] != null && !mute) {
       sounds[name].volume = 0.2;
       sounds[name].play();
     }
-    /*
+    */
     if (sounds[name] == null) return;
     AudioBufferSourceNode source = audio.createBufferSource();
-    source.connect(audio.destination, 0, 0);
     source.buffer = sounds[name];
-    source.loop = false;
-    source.gain.value = 0.2;
-    source.playbackRate.value = 1;
+    source.connectNode(audio.destination, 0, 0);
+    GainNode gain = audio.createGain();
+    gain.gain.value = 0.2;
+    gain.connectNode(audio.destination, 0, 0);
     source.start(0);
-    */
+    source.loop = false;
   }
 
 }

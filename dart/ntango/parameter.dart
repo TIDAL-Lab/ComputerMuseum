@@ -1,5 +1,5 @@
 /*
- * Frog Pond Evolution
+ * Computer History Museum Frog Pond
  * Copyright (c) 2014 Michael S. Horn
  * 
  *           Michael S. Horn (michael-horn@northwestern.edu)
@@ -22,7 +22,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 part of NetTango;
-
 
   
 class Parameter implements Touchable {
