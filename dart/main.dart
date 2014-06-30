@@ -34,24 +34,14 @@ part 'beetle.dart';
 part 'fly.dart';
 part 'frog.dart';
 part 'lilypad.dart';
-part 'matrix.dart';
 part 'pond.dart';
-part 'sounds.dart';
-part 'touch.dart';
 part 'turtle.dart';
 part 'tween.dart';
 part 'program.dart';
-part 'fblocks/block.dart';
-part 'fblocks/control.dart';
 part 'fblocks/help.dart';
-part 'fblocks/if.dart';
 part 'fblocks/menu.dart';
-part 'fblocks/parameter.dart';
-part 'fblocks/repeat.dart';
 part 'fblocks/scoreboard.dart';
-part 'fblocks/start.dart';
 part 'fblocks/toolbar.dart';
-part 'fblocks/wait.dart';
 part 'fblocks/workspace.dart';
 
 
