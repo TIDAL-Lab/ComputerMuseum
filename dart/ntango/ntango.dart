@@ -31,7 +31,7 @@ import 'dart:math';
 
 
 //part 'block.dart';
-//part 'bug.dart';
+part 'bug.dart';
 //part 'control.dart';
 //part 'if.dart';
 part 'logging.dart';
@@ -43,7 +43,7 @@ part 'logging.dart';
 //part 'sounds.dart';
 //part 'start.dart';
 //part 'touch.dart';
-//part 'utils.dart';
+part 'utils.dart';
 //part 'wait.dart';
 //part 'workspace.dart';
 
