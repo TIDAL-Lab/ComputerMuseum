@@ -32,11 +32,10 @@ class Sounds {
 
 
   static void loadSound(String name) {
-    /*
     AudioElement audio = new AudioElement();
     audio.src = "sounds/$name.wav";
     sounds[name] = audio;
-    */
+    /*
     HttpRequest http = new HttpRequest();
     http.open("GET", "sounds/${name}.wav", async: true);
     http.responseType = "arraybuffer";
@@ -49,16 +48,16 @@ class Sounds {
     });
     http.onError.listen((e) => print("BufferLoader: XHR error"));
     http.send();
+    */
   }
 
 
   static void playSound(String name) {
-    /*
     if (sounds[name] != null && !mute) {
       sounds[name].volume = 0.2;
       sounds[name].play();
     }
-    */
+    /*
     if (sounds[name] == null) return;
     AudioBufferSourceNode source = audio.createBufferSource();
     source.buffer = sounds[name];
@@ -68,6 +67,7 @@ class Sounds {
     gain.connectNode(audio.destination, 0, 0);
     source.start(0);
     source.loop = false;
+    */
   }
 
 }
