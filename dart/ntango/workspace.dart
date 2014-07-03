@@ -1,5 +1,5 @@
 /*
- * Frog Pond Evolution
+ * Computer History Museum Frog Pond
  * Copyright (c) 2014 Michael S. Horn
  * 
  *           Michael S. Horn (michael-horn@northwestern.edu)
@@ -23,8 +23,6 @@
  */
 part of NetTango;
 
-
-
 abstract class CodeWorkspace extends TouchLayer {
   
   /* list of blocks in the workspace */
@@ -39,31 +37,63 @@ abstract class CodeWorkspace extends TouchLayer {
   /* fixed start block */
   StartBlock start;
   
+  /* name of this workspace */
+  String name;
+  
   /* traces execution of programs as they run */
   TraceBug bug;
   
+  /* button toolbar */
+  Toolbar toolbar;
+  
+  /* help message */
+  Help help;
+  
+  
+  CanvasElement canvas;
   CanvasRenderingContext2D ctx;
 
   
-  CodeWorkspace() {
+  CodeWorkspace(this.width, this.height, this.name) {
     
-    CanvasElement canvas = querySelector("#workspace");
+    canvas = querySelector("#${name}-workspace");
     ctx = canvas.getContext('2d');
-    width = canvas.width;
-    height = canvas.height;
 
+    // toolbar
+    toolbar = new Toolbar(this, 0, height - BLOCK_HEIGHT * 1.85, 270, BLOCK_HEIGHT * 1.85);
+    
     // menu bar
-    menu = new Menu(this, 0, height - BLOCK_HEIGHT * 1.85, width, BLOCK_HEIGHT * 1.85);
+    menu = new Menu(this, 245, height - BLOCK_HEIGHT * 1.85, width - 245, BLOCK_HEIGHT * 1.85);
     
     // start block
     start = new StartBlock(this);
     addBlock(start);
     buildDefaultProgram();
     
+    // help message
+    help = new Help(this);
+    
     // trace bug
     bug = new TraceBug(start);
+    
+    // master timeout
+    new Timer.periodic(const Duration(seconds : 5), doTimeout);
+  }
 
-    new Timer.periodic(const Duration(milliseconds : 20), tick);
+  
+/**
+ * Master timeout function
+ */
+  void doTimeout(Timer t) {
+    int time = getTimeSinceLastTouchEvent();
+    if (time > 90) {
+      resetTouchTimer();
+      restartProgram();
+      removeAllBlocks();
+      buildDefaultProgram();
+      help.show();
+      Logging.logEvent("${name}-timeout");
+    }
   }
   
   
@@ -83,12 +113,15 @@ abstract class CodeWorkspace extends TouchLayer {
  */
   void programChanged();
 
+  void playProgram();
   
-  void tick(Timer t) {
-    if (animate()) draw();
-  }
+  void pauseProgram();
   
+  void restartProgram();
   
+  bool isProgramRunning();
+  
+
 /**
  * Erase a program
  */
@@ -181,7 +214,6 @@ abstract class CodeWorkspace extends TouchLayer {
     Block b = findInsertionPoint(target);
     if (b != null) {
       b.insertBlock(target);
-      Logging.logEvent("program-changed", toString());
       return true;
     } else {
       return false;
@@ -194,7 +226,6 @@ abstract class CodeWorkspace extends TouchLayer {
  */
   void snapToEnd(Block target) {
     start.end.prev.insertBlock(target);
-    Logging.logEvent("program-changed", toString());
   }
   
 
@@ -229,8 +260,12 @@ abstract class CodeWorkspace extends TouchLayer {
     
     if (bug.animate()) refresh = true;
     
+    if (toolbar.animate()) refresh = true;
+    
     if (menu.animate()) refresh = true;
     
+    if (help.animate()) refresh = true;
+
     //----------------------------------------------
     // for each block being dragged, identify active insertion points 
     //----------------------------------------------
@@ -246,7 +281,9 @@ abstract class CodeWorkspace extends TouchLayer {
     }
       
     for (Block block in blocks) {
-      if (block.animate()) refresh = true;
+      if (block.animate()) {
+        refresh = true;
+      }
     }
     
     return refresh;
@@ -256,8 +293,6 @@ abstract class CodeWorkspace extends TouchLayer {
   void draw() {
     ctx.save();
     {
-      ctx.clearRect(0, 0, width, height);
-
       // transform into workspace coordinates
       xform.transformContext(ctx);
       
@@ -267,14 +302,23 @@ abstract class CodeWorkspace extends TouchLayer {
       // draw the trace bug
       bug.draw(ctx);
       
-      // draw the menu 
+      // draw the help message
+      help.draw(ctx);
+      
+      // draw the menu and toolbar
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
       ctx.fillRect(0, height - BLOCK_HEIGHT * 1.85, width, BLOCK_HEIGHT * 1.85);
       menu.draw(ctx);
+      toolbar.draw(ctx);
     }
     ctx.restore();
   }
 
+  
+  void showHideHelp() {
+    help.showHide();
+  }
+  
   
   String toString() {
     String s = "[ START, ";
