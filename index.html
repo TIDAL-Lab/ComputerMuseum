@@ -26,8 +26,8 @@
    <canvas id="pond" width="1920" height="1080"></canvas>
    <canvas id="frogs" width="1920" height="1080"></canvas>
    <canvas id="flies" width="1920" height="1080"></canvas>
-   <canvas id="workspace1" width="1920" height="1080"></canvas>
-   <canvas id="workspace2" width="1920" height="1080"></canvas>
+   <canvas id="blue-workspace" width="1920" height="1080"></canvas>
+   <canvas id="green-workspace" width="1920" height="1080"></canvas>
 
 <!--   <iframe src="histogram.html?width=300&amp;height=200" width="310" height="210" id="plot"></iframe> -->
    
@@ -62,10 +62,10 @@
 
     
     function uploadLogs() {
-      for (var i=0; i<localStorage.length; i++) {
-        if (localStorage.key(i).substring(0, 8) === "log-item") {
-          var key = localStorage.key(i);
-          var obj = JSON.parse(localStorage.getItem(key));
+      for (var i=0; i<sessionStorage.length; i++) {
+        if (sessionStorage.key(i).substring(0, 8) === "log-item") {
+          var key = sessionStorage.key(i);
+          var obj = JSON.parse(sessionStorage.getItem(key));
           uploadLog(obj, key);
         }
       }
@@ -79,11 +79,11 @@
       logs.set("data", obj["data"]);
       logs.save(null, {
         success: function(logs) {
-          console.log(obj);
-          localStorage.removeItem(key);
+          //console.log(obj);
+          sessionStorage.removeItem(key);
         },
         error: function(logs, error) {
-          console.log("error: " + key);
+          //console.log("error: " + key);
         }
       });
     }
