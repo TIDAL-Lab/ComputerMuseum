@@ -35,6 +35,7 @@ class RepeatBlock extends BeginBlock {
     _addClause(end);
   }
   
+  num get width => inMenu ? BLOCK_WIDTH * 0.7 : _width;
   
   Block clone() {
     RepeatBlock block = new RepeatBlock(workspace);
