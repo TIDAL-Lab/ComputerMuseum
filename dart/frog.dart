@@ -29,7 +29,7 @@ class Frog extends Turtle implements Touchable {
   FrogPond pond;
   
   /* the workspace that controls this frog */
-  CodeWorkspace workspace;
+  FrogWorkspace workspace;
 
   /* size of the sound wave emanating from the frog */
   double _sound = -1.0;
@@ -41,7 +41,7 @@ class Frog extends Turtle implements Touchable {
   String label = null;
   
   /* this frog's control program */
-  Program program;
+  FrogProgram program;
   
   /* beetle captured by frog for eating */
   Beetle prey = null;
@@ -49,6 +49,7 @@ class Frog extends Turtle implements Touchable {
   
   Frog(this.pond, this.workspace) : super() {
     img.src = "images/bluefrog.png";
+    program = new FrogProgram(workspace, this);
   }
   
   
@@ -56,7 +57,7 @@ class Frog extends Turtle implements Touchable {
     if (workspace.frogs.length < MAX_FROGS) {
       Frog clone = new Frog(pond, workspace);
       clone.copy(this);
-      clone.program = new Program.copy(program, clone);
+      clone.program.synchronize(program);
       workspace.frogs.add(clone);
       return clone;
     } else {
@@ -133,7 +134,10 @@ class Frog extends Turtle implements Touchable {
   void spookBugs() {
     Set<Beetle> bugs = pond.bugs.getTurtlesHere(this);
     for (Beetle bug in bugs) {
-      bug.spook();
+      if (bug.perched) {
+        bug.spook();
+        Logging.logEvent("${workspace.name}-spook-bug", "${bug.color}-bug");
+      }
     }
   }
   
