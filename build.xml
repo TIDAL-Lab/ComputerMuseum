@@ -9,8 +9,8 @@
    </tstamp>
    <property name="project.name" value="ComputerMuseum" />
    <property name="deploy.user" value="litl" />
-   <property name="deploy.host" value="tidal.sesp.northwestern.edu" />
-   <property name="deploy.dir" value="/home/litl/public_html/chm_03232014" />
+   <property name="deploy.host" value="litl.sesp.northwestern.edu" />
+   <property name="deploy.dir" value="/home/litl/public_html/chm_07022014" />
 </target>
 
 
@@ -25,6 +25,7 @@
          <include name="**/*.js" />
          <include name="**/*.js.map" />
          <include name="index.html" />
+         <include name="logchat.html" />
          <include name="sounds/*.wav" />
          <include name="**/*.png" />
          <include name="**/*.jpg" />
