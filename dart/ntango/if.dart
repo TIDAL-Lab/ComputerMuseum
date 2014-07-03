@@ -68,6 +68,9 @@ class IfElseBlock extends BeginBlock {
     end = new EndBlock(workspace, this);
     _addClause(end);
   }
+
+  
+  String get displayName => inMenu ? text : 'if';
   
   
   Block clone() {
