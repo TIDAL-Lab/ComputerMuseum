@@ -23,103 +23,26 @@
 part of ComputerHistory;
 
 
-class Program {
+class FrogProgram extends Program {
   
   /* Frog that owns this program */
   Frog frog;
-  
-  /* Start block for the program */
-  StartBlock start;
-  
-  /* Currently executing statement in the program */
-  Block curr;
-  
-  /* Is the program running? */
-  bool running = false;
-  
-  /* variable storage */
-  Map<String, dynamic> variables = new Map<String, dynamic>();
   
   /* Used for animating frogs */
   Tween tween = new Tween();
 
   
-  Program(this.start, this.frog);
+  FrogProgram(CodeWorkspace workspace, this.frog) : super(workspace);
   
-  
+/*  
   Program.copy(Program other, Frog owner) {
     frog = owner;
     start = other.start;
     curr = other.curr;
     running = other.running;
   }
+*/
 
-  
-  dynamic operator[] (String key) {
-    return variables[key];
-  }
-  
-  
-  void operator[]=(String key, var value) {
-    variables[key] = value;
-  }
-  
-  
-  bool hasVariable(String name) {
-    return variables.containsKey(name);
-  }
-  
-  
-  void removeVariable(String name) {
-    variables.remove(name);
-  }
-  
-  
-  void clearVariables() {
-    variables.clear();
-  }
-  
-  
-  void step() {
-    if (isRunning) {
-      curr = curr.step(this);
-      if (curr != null) curr.eval(this);
-    }
-  }
-
-  
-  void restart() {
-    curr = start;
-    running = false;
-  }
-  
-  
-  void play() {
-    if (isFinished) restart();
-    running = true;
-  }
-  
-  
-  void pause() {
-    running = false;
-  }
-  
-  
-  bool get isRunning {
-    return (running && curr != null);
-  }
-  
-  
-  bool get isPaused {
-    return (!running && curr != null);
-  }
-  
-  
-  bool get isFinished {
-    return (curr == null);
-  }
-  
-  
   bool animate() {
     if (tween.isTweening()) {
       tween.animate();
@@ -131,23 +54,6 @@ class Program {
       running = false;
       return false;
     }
-  }
-  
-  
-  String compile() {
-    String s = "void main() {\n";
-    Block b = start.next;
-    int indent = 1;
-    while (b != null && !(b is EndProgramBlock)) {
-      s += b.compile(indent);
-      if (b is BeginBlock) {
-        indent++;
-      } else if (b is EndBlock) {
-        indent--;
-      }
-      b = b.next;
-    }
-    return s + "}\n";
   }
   
   
@@ -326,7 +232,7 @@ class Program {
     tween.onend = (() {
       if (frog.prey != null) {
         Sounds.playSound("gulp");
-        frog.pond.captureBug(frog, frog.prey);
+        frog.workspace.captureBug(frog.prey);
         frog.prey = null;
       }
       doPause();
