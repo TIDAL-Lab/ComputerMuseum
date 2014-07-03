@@ -49,13 +49,13 @@ class Logging {
  * TODO: This would be better with a mac address or a GUID
  */
   static String getLogID() {
-    if (!window.localStorage.containsKey("log-id")) {
+    if (!window.sessionStorage.containsKey("log-id")) {
       Random r = new Random();
       String id = "${r.nextInt(1000000)}";
-      window.localStorage["log-id"] = id;
+      window.sessionStorage["log-id"] = id;
     }
     // stash the id number in local storage
-    return window.localStorage["log-id"];
+    return window.sessionStorage["log-id"];
   }
 
 
@@ -63,14 +63,20 @@ class Logging {
  * Send a line to the log
  */
   static void logEvent(String event, [var data = null]) {
-    DateTime date = new DateTime.now();
-    var packet = {
-      "timestamp" : date.millisecondsSinceEpoch,
-      "event" : event,
-      "data" : (data == null) ? "" : data
-    };
-    window.localStorage["log-item-$date"] = JSON.encode(packet);
-    sendMessage("upload-logs");
+    if (isFlagSet("logging")) {
+      DateTime date = new DateTime.now();
+      var packet = {
+        "timestamp" : date.millisecondsSinceEpoch,
+        "event" : event,
+        "data" : (data == null) ? "" : data
+      };
+      window.sessionStorage["log-item-$date"] = JSON.encode(packet);
+      sendMessage("upload-logs");
+    }
+    /*
+    print(event);
+    print(data);
+    */
   }
   
 
