@@ -38,7 +38,7 @@ class Scoreboard {
   Map<String, int> scores = new Map<String, int>();
   
   
-  Scoreboard(CodeWorkspace workspace, this.x, this.y, this.w, this.h) {
+  Scoreboard(FrogWorkspace workspace, this.x, this.y, this.w, this.h) {
     // scoreboard
     int bx = x + w - 30;
     for (String color in Beetle.colors) {
