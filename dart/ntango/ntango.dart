@@ -26,25 +26,28 @@ library NetTango;
 import 'dart:convert';
 import 'dart:html';
 import 'dart:math';
-//import 'dart:async';
+import 'dart:async';
 import 'dart:web_audio';
 
 
 part 'block.dart';
 part 'bug.dart';
 part 'control.dart';
+part 'help.dart';
 part 'if.dart';
 part 'logging.dart';
 part 'matrix.dart';
-//part 'menu.dart';
+part 'menu.dart';
 part 'parameter.dart';
-//part 'program.dart';
+part 'program.dart';
 part 'repeat.dart';
 part 'sounds.dart';
 part 'start.dart';
+part 'toolbar.dart';
 part 'touch.dart';
+part 'tween.dart';
 part 'utils.dart';
-//part 'workspace.dart';
+part 'workspace.dart';
 
 
-bool AUTO_REPEAT = true;
+bool AUTO_REPEAT = false;
