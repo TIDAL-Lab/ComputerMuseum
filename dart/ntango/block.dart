@@ -127,7 +127,9 @@ class Block implements Touchable {
   
   bool get isInProgram => hasPrev;
   
-  num get width => inMenu ? _width * 0.68 : _width;
+  String get displayName => text;
+  
+  num get width => inMenu ? _width * 0.62 : _width;
   
   num get height => _height;
   
@@ -326,7 +328,7 @@ class Block implements Touchable {
     //double ty = centerY;
 
     if (lines.length == 1) {
-      ctx.fillText(text, tx, ty);
+      ctx.fillText(displayName, tx, ty);
     } else {
       ctx.fillText(lines[0], tx, ty - 7);
       ctx.fillText(lines[1], tx, ty + 7);
