@@ -26,7 +26,6 @@ import 'dart:collection';
 import 'dart:html';
 import 'dart:math';
 import 'dart:async';
-import 'dart:web_audio';
 import 'ntango/ntango.dart';
 
 part 'aset.dart';
@@ -36,13 +35,9 @@ part 'frog.dart';
 part 'lilypad.dart';
 part 'pond.dart';
 part 'turtle.dart';
-part 'tween.dart';
 part 'program.dart';
-part 'fblocks/help.dart';
-part 'fblocks/menu.dart';
+part 'workspace.dart';
 part 'fblocks/scoreboard.dart';
-part 'fblocks/toolbar.dart';
-part 'fblocks/workspace.dart';
 
 
 bool SHOW_FASTFORWARD = false;
@@ -60,7 +55,7 @@ bool FROGS_BLOCK = true;
 
 // Maximum number of frogs of a given color
 int MAX_FLIES = 0;
-int MAX_FROGS = 5;
+int MAX_FROGS = 10;
 int MAX_BEETLES = 6;
 int MAX_GEMS = 0;
 
