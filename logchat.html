@@ -125,7 +125,11 @@
           bubble.innerHTML = obj["data"];
           bubble.className = 'chatbubble green';
         } else {
-          bubble.innerHTML = obj["event"];
+          if (obj["data"] != null && obj["data"] != '') {
+            bubble.innerHTML = (obj["event"] + "<br>" + obj["data"]);
+          } else {
+            bubble.innerHTML = obj["event"];
+          }
           bubble.className = 'chatbubble';
         }
         stream.appendChild(bubble);
