@@ -10,7 +10,7 @@
    <property name="project.name" value="ComputerMuseum" />
    <property name="deploy.user" value="litl" />
    <property name="deploy.host" value="litl.sesp.northwestern.edu" />
-   <property name="deploy.dir" value="/home/litl/public_html/chm_07022014" />
+   <property name="deploy.dir" value="/home/litl/public_html/chm_07042014" />
 </target>
 
 
