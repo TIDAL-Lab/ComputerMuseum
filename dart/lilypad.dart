@@ -68,6 +68,7 @@ class LilyPad extends Turtle implements Touchable {
 
   
   void touchUp(Contact c) { }
+  void touchCancel(Contact c) { }
 
   
   void touchDrag(Contact c) {

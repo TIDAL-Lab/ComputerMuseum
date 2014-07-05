@@ -201,6 +201,7 @@ class Frog extends Turtle implements Touchable {
   void touchUp(Contact c) { }
   void touchDrag(Contact c) { }
   void touchSlide(Contact c) { }
+  void touchCancel(Contact c) { }
   
   bool touchDown(Contact c) {
     workspace.frogs.moveToTop(this);
