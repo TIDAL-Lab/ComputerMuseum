@@ -246,6 +246,14 @@ class Parameter implements Touchable {
   }
   
   
+  void touchCancel(Contact c) {
+    if (index != downIndex) changed = true;
+    downIndex = index;
+    dragging = false;
+    block.workspace.draw();
+  }
+  
+  
   bool touchDown(Contact c) {
     lastX = c.touchX;
     lastY = c.touchY;

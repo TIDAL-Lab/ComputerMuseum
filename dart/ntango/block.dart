@@ -410,6 +410,11 @@ class Block implements Touchable {
   }
   
   
+  void touchCancel(Contact c) {
+    touchUp(c);
+  }
+  
+  
   void touchDrag(Contact c) {
     move(c.touchX - _lastX, c.touchY - _lastY);
     _lastX = c.touchX;

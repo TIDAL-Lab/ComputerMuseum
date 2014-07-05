@@ -143,6 +143,14 @@ class Slot implements Touchable {
   }
   
   
+  void touchCancel(Contact c) {
+    if (target != null) {
+      target.touchUp(c);
+    }
+    target = null;
+  }
+  
+  
   void touchDrag(Contact c) {
     if (target != null) {
       target.touchDrag(c);

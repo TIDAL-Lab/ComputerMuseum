@@ -232,7 +232,7 @@ class FrogButton extends Touchable {
   void touchUp(Contact c) {
     //toolbar.hideCode();
   }
-  
+  void touchCancel(Contact c) { }
   void touchDrag(Contact c) { }
   void touchSlide(Contact c) { }
 }
@@ -323,6 +323,12 @@ class Button extends Touchable {
     if (down && over && visible && action != null) {
       Function.apply(action, []);
     }
+    down = false;
+    over = false;
+  }
+  
+  
+  void touchCancel(Contact c) {
     down = false;
     over = false;
   }

@@ -114,6 +114,7 @@ class Help implements Touchable {
   
   void touchUp(Contact c) {}
   void touchDrag(Contact c) { }
+  void touchCancel(Contact c) { }
   void touchSlide(Contact c) { }
   
 }  

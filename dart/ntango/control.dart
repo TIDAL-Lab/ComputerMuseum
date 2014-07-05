@@ -170,6 +170,11 @@ class ControlBlock extends Block {
       workspace.draw();
     }
   }
+  
+  
+  void touchCancel(Contact c) {
+    touchUp(c);
+  }
 
   
   bool touchDown(Contact c) {

@@ -88,6 +88,7 @@ class TouchManager {
     element.onTouchStart.listen((e) => _touchDown(e));
     element.onTouchMove.listen((e) => _touchDrag(e));
     element.onTouchEnd.listen((e) => _touchUp(e));
+    element.onTouchCancel.listen((e) => _touchCancel(e));
       
     // Prevent screen from dragging on ipad
     document.onTouchMove.listen((e) => e.preventDefault());
@@ -161,6 +162,21 @@ class TouchManager {
       TouchBinding target = touch_bindings[t.id];
       if (target != null) {
         target.touchUp(t);
+        touch_bindings[t.id] = null;
+      }
+    }
+    if (tframe.touches.length == 0) {
+      touch_bindings.clear();
+    }
+  }
+   
+   
+  void _touchCancel(var tframe) {
+    for (Touch touch in tframe.changedTouches) {
+      Contact t = new Contact.fromTouch(touch, parent);
+      TouchBinding target = touch_bindings[t.id];
+      if (target != null) {
+        target.touchCancel(t);
         touch_bindings[t.id] = null;
       }
     }
@@ -313,6 +329,11 @@ class TouchBinding {
     touchable.touchUp(c);
   }
   
+  void touchCancel(Contact c) {
+    layer.transformContact(c);
+    touchable.touchCancel(c);
+  }
+  
   void touchDrag(Contact c) {
     layer.transformContact(c);
     touchable.touchDrag(c);
@@ -337,7 +358,11 @@ abstract class Touchable {
   // Return false to ignore the event (e.g. if disabled or if you want slide events)
   bool touchDown(Contact event);
    
+  // end of a touch stream of events 
   void touchUp(Contact event);
+  
+  // touch canceled when a higher-level event is registered by the operating system
+  void touchCancel(Contact event);
    
   // This gets fired only after a touchDown lands on the touchable object
   void touchDrag(Contact event);

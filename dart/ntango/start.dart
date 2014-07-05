@@ -80,6 +80,12 @@ class StartBlock extends BeginBlock {
     dragging = false;
     workspace.draw();
   }
+  
+  
+  void touchCancel(Contact c) {
+    dragging = false;
+    workspace.draw();
+  }
 }
 
 
