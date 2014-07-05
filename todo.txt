@@ -1,29 +1,29 @@
 TODO:
 
-workspace timeouts on inactivity
 label buttons
 restart button has menu
   * clear scoreboard
   * clear program
   * restart frogs
 
+show code button
 
-March 8-9 test next version at CHM with all of the changes in place
-- small bugs fixed
-- intro/help functions
-- scoring
+multiple beetles can perche at the same location
 
-Interim dates: 
-- Show Code (and scoring?) functions by February 7
-- Preliminary version of the rest by March 1
+menu stops working when blocks are moved out of a program
 
-
-Fix parameter menus
-big play / pause button
 master timeout
+
+two stage parameter menus
+
+big play / pause button
+
+blocks still get stuck when you rapidly pull them out of a program
+
+control blocks should drag inside blocks with them?
+
 credits
 
+piano test
 
-drag EndBlocks too!
-CRASH -- possibly related to push?
-make the bug a frog shape instead of an arrow
+fix logging for poor internet connections
