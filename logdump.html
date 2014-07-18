@@ -1,0 +1,39 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+   <title>Computer History Museum</title>
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">   
+</head>
+<body style="background-color: #ddd;" onload="dumpLogs();">
+  <button onclick="eraseLogs();">Erase Logs</button>
+  <pre id="dump" style="width: 800px; padding: 20px; margin: 20px; background-color: white; border: 1px solid #666;"></pre>
+  
+  
+  <script type="text/javascript">
+
+
+  function dumpLogs() {
+    var el = document.getElementById("dump");
+    el.innerHTML = "[\n";
+    
+    for (var i=0; i<localStorage.length; i++) {
+      var key = localStorage.key(i);
+      if (key.substring(0, 8) === "log-item") {
+        var value = localStorage.getItem(key);
+        el.innerHTML = el.innerHTML + "   " + value + ",\n";
+      }
+    }
+    el.innerHTML = el.innerHTML + "]";
+  }
+  
+  
+  function eraseLogs() {
+    if (confirm("Are you sure?")) {
+      localStorage.clear();
+      dumpLogs();
+    }
+  }
+  </script>   
+</body>
+</html>
