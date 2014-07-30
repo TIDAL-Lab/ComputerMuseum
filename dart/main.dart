@@ -59,6 +59,50 @@ int MAX_FROGS = 10;
 int MAX_BEETLES = 6;
 int MAX_GEMS = 0;
 
+WebSocket ws;
+
+outputMsg(String msg) {
+  
+  print(msg);
+
+}
+
+void initWebSocket([int retrySeconds = 2]) {
+  var reconnectScheduled = false;
+
+  outputMsg("Connecting to websocket");
+  ws = new WebSocket('ws://localhost:9018');
+
+  void scheduleReconnect() {
+    if (!reconnectScheduled) {
+      new Timer(new Duration(milliseconds: 1000 * retrySeconds), () => initWebSocket(retrySeconds * 2));
+    }
+    reconnectScheduled = true;
+  }
+
+  ws.onOpen.listen((e) {
+    outputMsg('Connected');
+    ws.send('connected');
+  });
+
+  ws.onClose.listen((e) {
+    outputMsg('Websocket closed, retrying in $retrySeconds seconds');
+    scheduleReconnect();
+  });
+
+  ws.onError.listen((e) {
+    outputMsg("Error connecting to ws");
+    scheduleReconnect();
+  });
+
+  ws.onMessage.listen((MessageEvent e) {
+    outputMsg('Received message: ${e.data}');
+    if(e.data != 'connected'){
+      outputMsg('${e.data}'.split(', ')[0]);
+    }
+  });
+}
+
 void main() {
 
   Logging.init();
@@ -79,4 +123,6 @@ void main() {
   
   // create frog pond
   FrogPond pond = new FrogPond();
+  
+  initWebSocket();
 }

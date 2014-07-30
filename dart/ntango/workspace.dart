@@ -53,6 +53,7 @@ abstract class CodeWorkspace extends TouchLayer {
   CanvasElement canvas;
   CanvasRenderingContext2D ctx;
 
+  bool showBlocks = true;
   
   CodeWorkspace(this.width, this.height, this.name) {
     
@@ -269,20 +270,24 @@ abstract class CodeWorkspace extends TouchLayer {
     //----------------------------------------------
     // for each block being dragged, identify active insertion points 
     //----------------------------------------------
-    for (Block block in blocks) block.candidate = null;
+    
+    if(showBlocks){
       
-    for (Block target in blocks) {
-      if (target.dragging) {
-        Block b = findInsertionPoint(target);
-        if (b != null) {
-          b.candidate = target;
+      for (Block block in blocks) block.candidate = null;
+        
+      for (Block target in blocks) {
+        if (target.dragging) {
+          Block b = findInsertionPoint(target);
+          if (b != null) {
+            b.candidate = target;
+          }
         }
       }
-    }
-      
-    for (Block block in blocks) {
-      if (block.animate()) {
-        refresh = true;
+        
+      for (Block block in blocks) {
+        if (block.animate()) {
+          refresh = true;
+        }
       }
     }
     
@@ -297,10 +302,14 @@ abstract class CodeWorkspace extends TouchLayer {
       xform.transformContext(ctx);
       
       // draw blocks
-      blocks.forEach((block) => block.draw(ctx));
+      if(showBlocks){
+        blocks.forEach((block) => block.draw(ctx));
+        
+        // draw the trace bug
+        bug.draw(ctx);
+      }
       
-      // draw the trace bug
-      bug.draw(ctx);
+
       
       // draw the help message
       help.draw(ctx);

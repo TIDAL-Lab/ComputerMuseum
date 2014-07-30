@@ -42,9 +42,6 @@ class FrogWorkspace extends CodeWorkspace {
     
     frogs.tlayer = pond;
     
-    // menu bar
-    _initMenu();
-    
     // bug scoreboard
     scoreboard = new Scoreboard(this, width - 150, height - BLOCK_HEIGHT * 1.85, 150, BLOCK_HEIGHT * 1.85);
     
@@ -293,4 +290,37 @@ class FrogWorkspace extends CodeWorkspace {
     // REPEAT block
     menu.addBlock(new RepeatBlock(this), 2);
   }
+}
+
+class StandardFrogWorkspace extends FrogWorkspace{
+
+    
+  StandardFrogWorkspace(FrogPond pond, int width, int height, String name) : super(pond, width, height, name){
+    
+    // menu bar
+    _initMenu();
+    
+
+    }
+}
+
+class TangibleFrogWorkspace extends FrogWorkspace{
+
+    
+    TangibleFrogWorkspace(FrogPond pond, int width, int height, String name) : super(pond, width, height, name){
+      showBlocks = false;
+      
+    }
+    
+    void playProgram() {
+      blocks.clear();
+      print("ws-send: hello?");
+      ws.send("hello?");
+      
+      Logging.logEvent("play-${name}-program");
+      if (frogs.length == 0) addHomeFrog();
+      for (Frog frog in frogs.agents) {
+        frog.program.play();
+      }
+    }
 }
