@@ -313,14 +313,77 @@ class TangibleFrogWorkspace extends FrogWorkspace{
     }
     
     void playProgram() {
-      blocks.clear();
+      removeAllBlocks();
+      if(tangibleList != null){
+        tangibleList.clear();
+      }
       print("ws-send: hello?");
       ws.send("hello?");
+      Timer delayRead = new Timer(new Duration(milliseconds: 100), playProgramDelay); 
       
-      Logging.logEvent("play-${name}-program");
-      if (frogs.length == 0) addHomeFrog();
-      for (Frog frog in frogs.agents) {
-        frog.program.play();
+
+    }
+    
+    void playProgramDelay(){
+      if(newList != true){
+        Timer delayRead = new Timer(new Duration(milliseconds: 100), playProgramDelay);
+        return;
       }
+      else{
+        print(tangibleList);
+        addTangibleBlocks(tangibleList);
+        Logging.logEvent("play-${name}-program");
+        if (frogs.length == 0) addHomeFrog();
+        for (Frog frog in frogs.agents) {
+          frog.program.play();
+        }
+        newList = false;
+      }
+    }
+    
+    void addTangibleBlocks(List<String> blocks){
+      List<Block> newProgram = new List<Block>();
+      for(String blockName in blocks){
+        if(blockName == 'hop' || blockName == 'chirp' || blockName == 'eat' || blockName == 'left' || blockName == 'right' || blockName == 'spin'|| blockName == 'hatch'){
+          print("adding block ${blockName}");
+          Block temp = new Block(this, blockName);
+          newProgram.add(temp);
+        }
+        else if(blockName == 'ifseebug'||blockName== 'repeat5'||blockName== 'repeat3'){
+          
+        }
+        else if(blockName == 'repeatForever'){
+//          Block temp = new RepeatBlock(this);
+//          temp.param = 
+        }
+        else if(blockName == 'noType'){
+          
+        }
+        else{
+          constructProgram(newProgram);
+          return;
+        }
+          
+      }
+      constructProgram(newProgram);
+      return;
+    }
+    
+    void constructProgram(List<Block> newProgram){
+      for(int i = 0; i < newProgram.length; i++){
+        if(i == 0){
+          start.next = newProgram[i];
+          newProgram[i].prev = start;
+          
+        }
+        else{
+          newProgram[i].prev = newProgram[i-1];
+        }
+        if(i+1 < newProgram.length){
+          newProgram[i].next = newProgram[i+1];
+        }
+        else return;
+      }
+      return;
     }
 }

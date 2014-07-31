@@ -61,6 +61,9 @@ int MAX_GEMS = 0;
 
 WebSocket ws;
 
+List<String> tangibleList = new List<String>();
+bool newList = false;
+
 outputMsg(String msg) {
   
   print(msg);
@@ -71,7 +74,7 @@ void initWebSocket([int retrySeconds = 2]) {
   var reconnectScheduled = false;
 
   outputMsg("Connecting to websocket");
-  ws = new WebSocket('ws://localhost:9018');
+  ws = new WebSocket('ws://localhost:9019');
 
   void scheduleReconnect() {
     if (!reconnectScheduled) {
@@ -98,7 +101,9 @@ void initWebSocket([int retrySeconds = 2]) {
   ws.onMessage.listen((MessageEvent e) {
     outputMsg('Received message: ${e.data}');
     if(e.data != 'connected'){
-      outputMsg('${e.data}'.split(', ')[0]);
+      //outputMsg('${e.data}'.split(', ')[0]);
+      tangibleList = '${e.data}'.split(', ');
+      newList = true;
     }
   });
 }
