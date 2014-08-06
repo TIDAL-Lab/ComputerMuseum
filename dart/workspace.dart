@@ -345,7 +345,6 @@ class TangibleFrogWorkspace extends FrogWorkspace{
       List<Block> newProgram = new List<Block>();
       for(String blockName in blocks){
         if(blockName == 'hop' || blockName == 'chirp' || blockName == 'eat' || blockName == 'left' || blockName == 'right' || blockName == 'spin'|| blockName == 'hatch'){
-          print("adding block ${blockName}");
           Block temp = new Block(this, blockName);
           newProgram.add(temp);
         }
@@ -353,8 +352,13 @@ class TangibleFrogWorkspace extends FrogWorkspace{
           
         }
         else if(blockName == 'repeatForever'){
-//          Block temp = new RepeatBlock(this);
-//          temp.param = 
+          RepeatBlock temp = new RepeatBlock(this);
+          temp.param.index = 0;
+          newProgram.add(temp);
+        }
+        else if(blockName == 'endRepeat'){
+          Block temp = new Block(this, blockName);
+          newProgram.add(temp);
         }
         else if(blockName == 'noType'){
           
@@ -370,19 +374,23 @@ class TangibleFrogWorkspace extends FrogWorkspace{
     }
     
     void constructProgram(List<Block> newProgram){
+      List<BeginBlock> controlBlocks = new List<BeginBlock>();
+      controlBlocks.add(start);
+      List<Block> currentLoopBlock = new List<Block>();
+      currentLoopBlock.add(start);
+//      currentLoopBlock.add(start);
       for(int i = 0; i < newProgram.length; i++){
-        if(i == 0){
-          start.next = newProgram[i];
-          newProgram[i].prev = start;
-          
+        if(newProgram[i].type != 'endRepeat'){
+          currentLoopBlock.last.insertBlock(newProgram[i]);
+          currentLoopBlock.add(newProgram[i]);
+          if(newProgram[i].type =='repeat'){
+            controlBlocks.add(newProgram[i]);
+          }
         }
-        else{
-          newProgram[i].prev = newProgram[i-1];
+        else if(newProgram[i] == 'endRepeat'){
+//          currentLoopBlock.last.insertBlock(controlBlocks.last.end);
+//          controlBlocks.removeLast();
         }
-        if(i+1 < newProgram.length){
-          newProgram[i].next = newProgram[i+1];
-        }
-        else return;
       }
       return;
     }
