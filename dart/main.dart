@@ -73,8 +73,8 @@ outputMsg(String msg) {
 void initWebSocket([int retrySeconds = 2]) {
   var reconnectScheduled = false;
 
-  outputMsg("Connecting to websocket");
-  ws = new WebSocket('ws://localhost:9019');
+//  outputMsg("Connecting to websocket");
+  ws = new WebSocket('ws://127.0.0.1:9067');
 
   void scheduleReconnect() {
     if (!reconnectScheduled) {
@@ -125,9 +125,9 @@ void main() {
   Sounds.loadSound("turn");
   Sounds.loadSound("swoosh");
   Sounds.loadSound("gulp");
-  
+  print("hello");
+  initWebSocket();
   // create frog pond
   FrogPond pond = new FrogPond();
-  
-  initWebSocket();
+
 }

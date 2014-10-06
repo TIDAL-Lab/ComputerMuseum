@@ -318,7 +318,7 @@ class TangibleFrogWorkspace extends FrogWorkspace{
         tangibleList.clear();
       }
       print("ws-send: hello?");
-      ws.send("hello?");
+      ws.send("fake");
       Timer delayRead = new Timer(new Duration(milliseconds: 100), playProgramDelay); 
       
 
