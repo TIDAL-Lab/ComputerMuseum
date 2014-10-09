@@ -342,11 +342,16 @@ class TangibleFrogWorkspace extends FrogWorkspace{
     }
     
     void addTangibleBlocks(List<String> blocks){
+      Block cur = start;
       List<Block> newProgram = new List<Block>();
+      List<BeginBlock> stack = new List<BeginBlock>();
+      
       for(String blockName in blocks){
         if(blockName == 'hop' || blockName == 'chirp' || blockName == 'eat' || blockName == 'left' || blockName == 'right' || blockName == 'spin'|| blockName == 'hatch'){
           Block temp = new Block(this, blockName);
           newProgram.add(temp);
+          cur.insertBlock(temp);
+          cur = temp;
         }
         else if(blockName == 'ifseebug'||blockName== 'repeat5'||blockName== 'repeat3'){
           
@@ -355,22 +360,29 @@ class TangibleFrogWorkspace extends FrogWorkspace{
           RepeatBlock temp = new RepeatBlock(this);
           temp.param.index = 0;
           newProgram.add(temp);
+          cur.insertBlock(temp);
+          cur = temp;
+          stack.add(cur);
         }
         else if(blockName == 'endRepeat'){
-          Block temp = new Block(this, blockName);
-          newProgram.add(temp);
+          if (stack.isNotEmpty) {
+            BeginBlock begin = stack.removeLast();
+            cur.insertBlock(begin.end);
+            cur = begin.end;
+          }
+          //Block temp = new Block(this, blockName);
+          //newProgram.add(temp);
         }
         else if(blockName == 'noType'){
           
         }
         else{
-          constructProgram(newProgram);
+          //constructProgram(newProgram);
           return;
         }
           
       }
-      constructProgram(newProgram);
-      return;
+      //constructProgram(newProgram);
     }
     
     void constructProgram(List<Block> newProgram){
