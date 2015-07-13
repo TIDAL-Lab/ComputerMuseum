@@ -5,3 +5,6 @@ concept
 *.dart.js.*
 *.precompiled*
 main.dart.js
+pubspec.lock
+build
+package
