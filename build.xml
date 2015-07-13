@@ -10,7 +10,7 @@
    <property name="project.name" value="ComputerMuseum" />
    <property name="deploy.user" value="litl" />
    <property name="deploy.host" value="litl.sesp.northwestern.edu" />
-   <property name="deploy.dir" value="/home/litl/public_html/chm_07042014" />
+   <property name="deploy.dir" value="/home/litl/public_html/chm_07182014" />
 </target>
 
 
@@ -26,6 +26,7 @@
          <include name="**/*.js.map" />
          <include name="index.html" />
          <include name="logchat.html" />
+         <include name="logdump.html" />
          <include name="sounds/*.wav" />
          <include name="**/*.png" />
          <include name="**/*.jpg" />
