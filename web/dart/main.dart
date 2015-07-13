@@ -78,5 +78,5 @@ void main() {
   Sounds.loadSound("gulp");
   
   // create frog pond
-  FrogPond pond = new FrogPond();
+  new FrogPond();
 }
