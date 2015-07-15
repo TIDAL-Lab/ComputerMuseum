@@ -1,0 +1,11 @@
+name: ComputerHistory
+
+transformers:
+- $dart2js:
+    checked: true
+    minify: true
+    verbose: true
+    #analyzeAll: true
+    suppressWarnings: false
+    suppressHints: false
+    terse: false
