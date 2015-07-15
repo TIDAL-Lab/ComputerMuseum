@@ -286,7 +286,7 @@ class FrogWorkspace extends CodeWorkspace {
     // IF block
     IfElseBlock ifblock = new IfElseBlock(this);
     ifblock.param = new Parameter(ifblock);
-    ifblock.param.centerX = ifblock.width - 35;
+    //ifblock.param.centerX = ifblock.width - 35;
     ifblock.param.values = [ 'see-bug?', 'at-water?', 'blocked?' ];
     menu.addBlock(ifblock, 2);
     
