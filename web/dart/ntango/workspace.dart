@@ -123,6 +123,29 @@ abstract class CodeWorkspace extends TouchLayer {
   
 
 /**
+ * Close all open parameter menus
+ */  
+  void closeAllParameterMenus() {
+    for (Block block in blocks) {
+      block.closeParameterMenu();
+    }
+    draw();
+  }
+
+
+/**
+ * On a background touch, close all open parameter menus
+ */
+  bool backgroundTouch(Contact c) {
+    transformContact(c);
+    if (c.touchY > height - 900) {
+      closeAllParameterMenus();
+    }
+    return false;
+  }
+  
+
+/**
  * Erase a program
  */
   void removeAllBlocks() {
@@ -186,7 +209,15 @@ abstract class CodeWorkspace extends TouchLayer {
     }
     return count;
   }
+
   
+/**
+ * Is the program empty? Only a start block...
+ */
+  bool get isEmpty {
+    return blocks.length <= 2;  // start and end blocks together
+  }
+
   
 /**
  * Has a block been dragged off of the screen?

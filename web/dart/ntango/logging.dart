@@ -63,6 +63,7 @@ class Logging {
  * Send a line to the log
  */
   static void logEvent(String event, [var data = null]) {
+/*    
     DateTime date = new DateTime.now();
     var packet = {
       "timestamp" : date.millisecondsSinceEpoch,
@@ -70,6 +71,7 @@ class Logging {
       "data" : (data == null) ? "" : data
     };
     window.localStorage["log-item-$date"] = JSON.encode(packet);
+*/
   }
   
 

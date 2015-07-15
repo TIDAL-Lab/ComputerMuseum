@@ -37,7 +37,7 @@ class Menu {
   
   /* Slots for programming blocks */
   List<Slot> slots = new List<Slot>();
-  
+
   
   Menu(this.workspace, this.x, this.y, this.w, this.h);
   
@@ -54,6 +54,16 @@ class Menu {
   
   bool animate() {
     return false;
+  }
+  
+
+  Block getBlockByName(String name) {
+    for (Slot slot in slots) {
+      if (slot.block.text == name) {
+        return slot.block;
+      }
+    }
+    return null;
   }
   
   

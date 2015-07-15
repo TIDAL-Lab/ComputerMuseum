@@ -23,14 +23,10 @@
  */
 part of NetTango;
 
-const HORIZONTAL = 0;
-const VERTICAL = 1;
-int BLOCK_ORIENTATION = VERTICAL;
-const BLOCK_WIDTH = 95; // 58
-const BLOCK_HEIGHT = 35;
-const LINE_WIDTH = 6.5;
-const BLOCK_SPACE = 0; //11;
-const BLOCK_MARGIN = 10;
+const BLOCK_WIDTH = 95.0;
+const BLOCK_HEIGHT = 35.0;
+const BLOCK_SPACE = 0.0;
+const BLOCK_MARGIN = 10.0;
 
 
 /**
@@ -48,7 +44,7 @@ class Block implements Touchable {
   int id;
   
   /* Block dimensions */
-  double x = 0.0, y = 0.0, _width = 0.0, _height = 0.0;
+  double x = 0.0, y = 0.0, _width = 0.0, _height = 0.0, _minwidth = 0.0;
   
   /* For animating blocks */
   double _targetX = null, _targetY = null;
@@ -64,6 +60,12 @@ class Block implements Touchable {
   
   /** CSS color of the text */
   String textColor = 'white';
+
+  /** CSS size of the font (e.g. "12px") */
+  String textSize = "14px";
+
+  /** CSS outline color of the block */
+  String outlineColor = 'rgba(255, 255, 255, 0.3)';
   
   /* Is the block being dragged */
   bool dragging = false;
@@ -88,11 +90,15 @@ class Block implements Touchable {
   
   /* Has this been added to the program yet? */
   bool inserted = false;
-  
+
+  /* action this block performs */
+  Function action = null;
+
   
   Block(this.workspace, this.text) {
     id = Block.BLOCK_ID++;
     _width = BLOCK_WIDTH.toDouble();
+    _minwidth = BLOCK_WIDTH.toDouble();
     _height = BLOCK_HEIGHT.toDouble();
     type = text;
   }
@@ -109,10 +115,13 @@ class Block implements Touchable {
     other.x = x;
     other.y = y;
     other._width = _width;
+    other._minwidth = _minwidth;
     other._height = _height;
     other.text = text;
     other.color = color;
     other.textColor = textColor;
+    other.outlineColor = outlineColor;
+    other.action = action;
     if (hasParam) {
       other.param = param.clone(other);
     }
@@ -127,9 +136,7 @@ class Block implements Touchable {
   
   bool get isInProgram => hasPrev;
   
-  String get displayName => text;
-  
-  num get width => inMenu ? _width * 0.62 : _width;
+  num get width => inMenu ? _minwidth : _width;
   
   num get height => _height;
   
@@ -144,9 +151,6 @@ class Block implements Touchable {
   num get targetX {
     if (_targetX != null) return _targetX;
     num tx = hasPrev ? prev.connectorX : x;
-    //if (BLOCK_ORIENTATION == VERTICAL && hasPrev && prev.candidate != null) {
-      //if (prev.candidate is BeginBlock)  tx += BLOCK_MARGIN;
-    //}
     return tx;
   }
 
@@ -193,9 +197,9 @@ class Block implements Touchable {
 /**
  * When the program is running, this evaluates this block for a specific frog
  */
-  void eval(Program program) {
+  dynamic eval(Program program) {
     var pval = (param == null) ? null : param.value;
-    program.doCommand(text, pval);
+    return program.doCommand(text, pval);
   }
   
   
@@ -260,7 +264,17 @@ class Block implements Touchable {
     }
   }
   
+
+/**
+ * If the parameter menu is open, close it
+ */  
+  void closeParameterMenu() {
+    if (param != null) {
+      param.menuOpen = false;
+    }
+  } 
   
+
 /**
  * Add target into the chain of blocks after this block
  */
@@ -286,12 +300,27 @@ class Block implements Touchable {
     ctx.globalAlpha = 1.0;
   }
   
-  
-  void _resize(CanvasRenderingContext2D ctx) {
-    if (param != null && inserted) {
-      double cw = param.getDisplayWidth(ctx) + param.centerX - 14;
-      _width = max(cw, BLOCK_WIDTH);
+
+  num getTextWdith(CanvasRenderingContext2D ctx) {
+    num w = 20;
+    ctx.save();
+    {
+      ctx.font = '300 ${textSize} Nunito, sans-serif';
+      w += ctx.measureText(text).width;      
     }
+    ctx.restore();
+    return w;
+  }
+
+
+  void _resize(CanvasRenderingContext2D ctx) {
+    num w = getTextWdith(ctx);
+    _minwidth = max(w + 3, BLOCK_WIDTH / 2.25); // for displaying in the menu
+    if (param != null && inserted) {
+      param.left = w + 10;
+      w += param.getDisplayWidth(ctx) + 15;
+    }
+    _width = max(w, BLOCK_WIDTH);
   }
   
   
@@ -309,8 +338,8 @@ class Block implements Touchable {
     ctx.save();
     {
       ctx.fillStyle = color;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = outlineColor;
+      ctx.lineWidth = 1.5;
       ctx.fill();
       ctx.stroke();
     }
@@ -321,14 +350,14 @@ class Block implements Touchable {
   void _drawLabel(CanvasRenderingContext2D ctx, num tx, num ty) {
     var lines = text.split('\n');
     ctx.fillStyle = textColor;
-    ctx.font = '300 12pt sans-serif';
+    ctx.font = '300 ${textSize} Nunito, sans-serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     //double tx = x + 12;
     //double ty = centerY;
 
     if (lines.length == 1) {
-      ctx.fillText(displayName, tx, ty);
+      ctx.fillText(text, tx, ty);
     } else {
       ctx.fillText(lines[0], tx, ty - 7);
       ctx.fillText(lines[1], tx, ty + 7);

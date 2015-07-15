@@ -26,7 +26,7 @@ part of NetTango;
 
 class IfBlock extends BeginBlock {
   
-  IfBlock(CodeWorkspace workspace) : super(workspace, 'if') {
+  IfBlock(CodeWorkspace workspace) : super(workspace, name) {
     end = new EndBlock(workspace, this);
     _addClause(end);
   }
@@ -44,7 +44,7 @@ class IfBlock extends BeginBlock {
     for (int i=0; i<indent; i++) tab += "  ";
     return "${tab}if (${param.value}) {\n";
   }
-  
+
   
   Block step(Program program) {
     if (program.getSensorValue(param.value)) {
@@ -69,9 +69,6 @@ class IfElseBlock extends BeginBlock {
     _addClause(end);
   }
 
-  
-  String get displayName => inMenu ? text : 'if';
-  
   
   Block clone() {
     IfElseBlock block = new IfElseBlock(workspace);
