@@ -93,10 +93,13 @@ class Beetle extends Fly {
     } else {
       forward(6.0);
       left(_turn);
-      if (pond.onGridPoint(x, y, 8) &&
+      var point = null;
+      if ((point = pond.getGridPoint(x, y, 8)) != null &&
           !pond.isFrogHere(this) &&
           pond.bugs.getTurtlesHere(this).isEmpty) {
         perched = true;
+        x = point[0];
+        y = point[1];
       }
       else if (Turtle.rand.nextInt(100) > 98) {
         _turn = Turtle.rand.nextDouble() * 3.0 - 1.5;
