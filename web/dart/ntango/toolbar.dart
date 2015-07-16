@@ -51,7 +51,7 @@ class Toolbar {
   
   
   Toolbar(this.workspace, this.x, this.y, this.w, this.h) {
-    froggy = new FrogButton(x + 10, y + 2, this);
+    froggy = new FrogButton(x + 10, y - 4, this);
     
     num bx = x + 85;
     num by = y + h/2 - 15;
