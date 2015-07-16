@@ -76,13 +76,13 @@ class FrogPond extends TouchLayer {
     addLilyPad(900.0, height - 130.0, 0.6);
     
 
-    FrogWorkspace workspace = new FrogWorkspace(this, height, width, "blue");
+    FrogWorkspace workspace = new FrogWorkspace(this, height, width, "yellow");
     workspace.transform(cos(PI / -2), sin(PI / -2), -sin(PI / -2), cos(PI / -2), 0, height);
     workspaces.add(workspace);
     tmanager.addTouchLayer(workspace);
     workspace.addHomeFrog();
   
-    workspace = new FrogWorkspace(this, height, width, "green");
+    workspace = new FrogWorkspace(this, height, width, "red");
     workspace.transform(cos(PI/2), sin(PI/2), -sin(PI/2),cos(PI/2), width, 0);
     workspaces.add(workspace);
     tmanager.addTouchLayer(workspace);
