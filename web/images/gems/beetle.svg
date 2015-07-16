@@ -12,7 +12,7 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.48.2 r9819"
+   inkscape:version="0.91 r13725"
    width="292pt"
    height="228pt"
    sodipodi:docname="beetle.svg"
@@ -55,6 +55,73 @@
   </metadata>
   <defs
      id="defs5">
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#pattern5558"
+       id="pattern6074"
+       patternTransform="matrix(-4.9607053e-8,-10.19035,8.4235138,-6.0012157e-8,-2338.7043,926.1016)" />
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#pattern5618"
+       id="pattern6058"
+       patternTransform="matrix(-4.9607053e-8,-10.19035,8.4235138,-6.0012157e-8,-2816.7043,926.1016)" />
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#pattern5558"
+       id="pattern6039"
+       patternTransform="matrix(-4.9607053e-8,-10.19035,8.4235138,-6.0012157e-8,-2338.7043,466.1016)" />
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#pattern5618"
+       id="pattern6023"
+       patternTransform="matrix(-4.9607053e-8,-10.19035,8.4235138,-6.0012157e-8,-2816.7043,466.1016)" />
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#pattern5558"
+       id="pattern6003"
+       patternTransform="matrix(-4.9607053e-8,-10.19035,8.4235138,-6.0012157e-8,-2338.7043,6.1016)" />
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#pattern5618"
+       id="pattern5987"
+       patternTransform="matrix(-4.9607053e-8,-10.19035,8.4235138,-6.0012157e-8,-2816.7043,6.1016)" />
+    <linearGradient
+       id="linearGradient5972">
+      <stop
+         id="stop5974"
+         offset="0"
+         style="stop-color:#e86236;stop-opacity:1" />
+      <stop
+         id="stop5976"
+         offset="1"
+         style="stop-color:#732512;stop-opacity:1" />
+    </linearGradient>
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#pattern5482"
+       id="pattern5618"
+       patternTransform="matrix(-4.9607053e-8,-10.19035,8.4235138,-6.0012157e-8,-2794.7043,-453.8984)" />
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#pattern5482"
+       id="pattern5558"
+       patternTransform="matrix(-4.9607053e-8,-10.19035,8.4235138,-6.0012157e-8,-2254.7043,-453.8984)" />
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#pattern6045"
+       id="pattern5482"
+       patternTransform="matrix(-4.9607053e-8,-10.19035,8.4235138,-6.0012157e-8,-2794.7043,-453.8984)" />
+    <linearGradient
+       id="linearGradient4652">
+      <stop
+         style="stop-color:#59a4f4;stop-opacity:1"
+         offset="0"
+         id="stop4654" />
+      <stop
+         style="stop-color:#31245e;stop-opacity:1"
+         offset="1"
+         id="stop4656" />
+    </linearGradient>
     <linearGradient
        id="linearGradient6143">
       <stop
@@ -615,20 +682,209 @@
        fx="262.36652"
        fy="369.1127"
        r="284.37408" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4652"
+       id="radialGradient4650"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877"
+       gradientTransform="matrix(2.3069064,-0.01632548,0.01894419,2.6769491,3979.4173,-112.22192)"
+       gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4652"
+       id="radialGradient4692"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.61284053,2.2240751,-2.5808311,0.7111441,-1026.5782,6275.1982)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4652"
+       id="radialGradient4724"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.58130209,-2.2325258,2.5906374,0.67454683,-1205.6008,-7336.763)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter4730"
+       x="-0.008739876"
+       width="1.0174798"
+       y="-0.019139281"
+       height="1.0382786">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.63218258"
+         id="feGaussianBlur4732" />
+    </filter>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4652"
+       id="radialGradient5545"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.58130209,-2.2325258,2.5906374,0.67454683,-665.6008,-7336.763)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4652"
+       id="radialGradient5547"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.61284053,2.2240751,-2.5808311,0.7111441,-486.5782,6275.1982)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient5972"
+       id="radialGradient5794"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(2.3069064,-0.01632548,0.01894419,2.6769491,3606.2945,-191.83365)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient5972"
+       id="radialGradient5798"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.61284053,2.2240751,-2.5808311,0.7111441,-1048.5782,6735.1982)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient5972"
+       id="radialGradient5802"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.61284053,2.2240751,-2.5808311,0.7111441,-570.5782,6735.1982)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2233"
+       id="radialGradient5876"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(2.3069064,-0.01632548,0.01894419,2.6769491,3606.2945,268.16635)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2233"
+       id="radialGradient5880"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.61284053,2.2240751,-2.5808311,0.7111441,-1048.5782,7195.1982)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2233"
+       id="radialGradient5882"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.58130209,-2.2325258,2.5906374,0.67454683,-749.6008,-6416.763)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2233"
+       id="radialGradient5884"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.61284053,2.2240751,-2.5808311,0.7111441,-570.5782,7195.1982)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6143"
+       id="radialGradient5958"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(2.3069064,-0.01632548,0.01894419,2.6769491,3606.2945,728.16635)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6143"
+       id="radialGradient5962"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.61284053,2.2240751,-2.5808311,0.7111441,-1048.5782,7655.1982)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6143"
+       id="radialGradient5964"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.58130209,-2.2325258,2.5906374,0.67454683,-749.6008,-5956.763)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6143"
+       id="radialGradient5966"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.61284053,2.2240751,-2.5808311,0.7111441,-570.5782,7655.1982)"
+       cx="-3070.6736"
+       cy="24.591108"
+       fx="-3070.6736"
+       fy="24.591108"
+       r="73.029877" />
   </defs>
   <sodipodi:namedview
-     inkscape:window-height="856"
-     inkscape:window-width="1381"
+     inkscape:window-height="855"
+     inkscape:window-width="1387"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
      bordercolor="#666666"
      pagecolor="#ffffff"
      id="base"
-     inkscape:zoom="0.234993"
-     inkscape:cx="-1473.4874"
-     inkscape:cy="-676.3596"
-     inkscape:window-x="59"
+     inkscape:zoom="0.16616514"
+     inkscape:cx="-2263.7469"
+     inkscape:cy="-320.37083"
+     inkscape:window-x="53"
      inkscape:window-y="0"
      inkscape:current-layer="svg2"
      showgrid="false"
@@ -1798,4 +2054,1038 @@
      d="m -768.67054,1361.8985 c 16.16713,-95.7239 90.35336,-42.4789 97.70086,-52.6212 50.17467,33.135 100.62898,18.9424 93.35266,88.7276 l 0.24011,10.1163 c -127.0826,-30.65 -98.73978,-23.3336 -191.29363,-46.2227 z m 173.93881,27.561 c 0.40013,-0.4822 0.28002,-0.8623 -0.47741,-1.5109 -0.9308,-0.797 -0.949,-0.9362 -0.22829,-1.7326 0.4311,-0.4764 0.78382,-1.2706 0.78381,-1.7651 0,-0.8621 -0.0396,-0.8631 -0.96615,-0.025 -0.60157,0.5445 -1.29797,0.7459 -1.84591,0.5333 -0.83495,-0.3236 -0.8323,-0.3759 0.0515,-1.0264 0.51217,-0.377 1.17669,-0.7788 1.4767,-0.8928 0.32174,-0.1224 0.14169,-0.527 -0.439,-0.9866 -1.23757,-0.9795 -3.87531,-1.0374 -4.65175,-0.1017 -0.32354,0.3899 -1.07056,0.7775 -1.66005,0.8614 -1.44872,0.2063 -1.69751,2.3638 -0.40721,3.5315 3.43945,3.1127 7.2023,4.5138 8.36376,3.1144 z m -29.1871,-1.3336 c 0.91254,-0.3468 1.24356,-0.7632 1.07653,-1.3536 -0.13289,-0.4689 -0.32366,-1.1562 -0.42431,-1.5271 -0.10049,-0.3711 0.48144,-1.0548 1.29366,-1.5197 0.88584,-0.5068 1.47672,-1.249 1.47672,-1.8543 -10e-6,-0.5551 0.385,-1.4364 0.85557,-1.9584 0.47055,-0.522 1.00533,-1.7098 1.18832,-2.6396 0.24331,-1.2361 1.35184,-2.683 4.12391,-5.3824 4.29492,-4.1823 5.91554,-6.9074 4.86247,-8.1763 -0.35892,-0.4325 -2.44887,-1.9816 -4.64433,-3.4425 -3.57622,-2.3797 -4.26411,-2.6562 -6.60845,-2.6561 -2.91204,0 -6.42275,0.8833 -6.42274,1.6161 -4e-5,0.2617 0.62681,0.3504 1.39268,0.1973 1.69477,-0.3389 4.95289,0.7121 5.80043,1.8712 0.7426,1.0156 0.26964,2.5233 -1.53296,4.8866 -0.6765,0.8869 -1.22999,1.8353 -1.22998,2.1076 10e-6,1.0954 -3.10313,4.684 -4.4591,5.1567 -1.16125,0.4048 -1.44781,0.7922 -1.44777,1.9577 1e-5,0.7991 -0.34669,2.1234 -0.77043,2.9429 -0.42377,0.8194 -0.92826,2.4143 -1.12113,3.5442 -0.26783,1.5689 -0.6673,2.206 -1.69076,2.6965 -0.73704,0.3533 -1.34004,0.9442 -1.34005,1.3131 0,0.7177 3.22956,2.0795 5.66075,2.3869 0.81219,0.1027 1.73919,0.22 2.05997,0.2605 0.32079,0.041 1.17627,-0.1517 1.90101,-0.4272 z m -1.99204,-3.9291 c -0.1677,-0.2705 -0.0697,-0.4922 0.2171,-0.4922 0.2867,0 0.52132,0.2214 0.52125,0.4922 3e-5,0.2708 -0.0976,0.4923 -0.2171,0.4923 -0.11939,0 -0.35396,-0.2216 -0.52128,-0.4923 z m -82.45263,-10.2253 c -6.26211,-8.3063 -24.26239,-16.5356 -33.86668,-14.8455 -2.74549,0.5179 -6.16692,4.5594 -7.9047,6.2124 27.17174,8.6841 34.63028,7.8072 41.77138,8.6331 z m 55.84689,-7.6753 c 2.99168,-1.4527 6.27009,-2.9997 7.28533,-3.4378 -26.01861,-1.9712 -64.32277,-73.683 -97.47105,-38.9826 -0.0721,0.065 -0.47671,1.4259 -0.89983,3.0236 5.31856,27.9908 74.02776,46.4398 91.08566,39.3963 z m 15.48739,-36.7924 c -8.28712,-2.7461 -26.01216,-3.4145 -28.37747,3.905 0.77227,14.3021 11.07042,19.3454 20.97895,19.5432 27.78732,2.2951 26.32429,-11.363 7.39852,-23.4482 z"
      id="path6123"
      inkscape:connector-curvature="0" />
+  <g
+     id="g6229">
+    <rect
+       inkscape:export-ydpi="8.5343227"
+       inkscape:export-xdpi="8.5343227"
+       y="-681.44293"
+       x="-3671.9741"
+       height="421.82608"
+       width="465"
+       id="rect4668"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <g
+       transform="translate(-373.12278,-539.61173)"
+       id="g4662">
+      <path
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         d="m -3068.1884,-103.16797 c -26.1742,1e-5 -47.3926,18.524502 -47.3926,41.375001 0,6.4361 -0.703,12.528551 -0.457,17.960938 -8.5016,6.178252 -15.1303,14.287795 -20.2676,23.90625 l -27.4258,-10.990235 -13.5078,-56.214843 c 0,0 -12.5366,54.311934 3.084,72.064453 6.9743,7.9262413 18.343,14.19036962 28.8008,18.7109372 -3.3893,12.6727158 -5.3115,26.7947488 -6.2168,41.8671878 -14.6626,7.661348 -31.422,17.961919 -38.8008,28.158203 -14.4644,19.987427 -14.7109,66.382808 -14.7109,66.382808 l 27.082,-58.67773 25.7734,-12.886719 c -1e-4,0.16666 -0.01,0.329282 -0.01,0.496094 0,22.597581 5.0708,43.660975 13.1347,61.867185 -12.9307,8.72826 -28.0203,21.12531 -31.3808,33.27344 -6.1184,22.11756 21.0644,87.47656 21.0644,87.47656 l -3.8144,-81.01758 24.6523,-20.06445 c 17.1525,26.94151 40.6947,44.09314 60.3887,44.85938 18.8913,0.73499 41.3248,-15.16111 58.2617,-40.63477 l 21.0547,14.51758 -11.6699,79.2539 c 0,0 38.27,-59.89236 30.166,-85.89648 -3.5018,-11.23663 -15.2153,-21.74717 -27.3887,-30.06641 8.1158,-18.23887 13.3168,-39.31405 13.5996,-61.654292 l 19.9883,7.466796 16.3672,58.677736 c 0,0 9.8733,-50.044417 -3.0078,-69.208986 -5.9645,-8.874005 -20.9225,-15.444874 -33.8418,-19.71289 -0.8331,-15.992474 -2.765,-30.966618 -6.3242,-44.3300784 12.4181,-4.49823013 26.5972,-11.1093326 33.5996,-19.5546876 13.9882,-16.870722 4.332,-67.917969 4.332,-67.917969 l -21.0644,59.148438 -23.8536,8.785156 c -5.3868,-11.465512 -12.6626,-21.027653 -22.3691,-28.082031 0.2463,-5.432884 -0.457,-11.526013 -0.457,-17.962891 0,-22.850499 -21.2184,-41.374991 -47.3926,-41.375001 z"
+         id="path4629"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path4641"
+         style="fill:url(#radialGradient4650);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.02290082px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -3062.1952,-9.2337338 c 5.3805,-11.5273222 24.1249,-14.1452282 46.7936,-14.1469212 34.9767,63.669688 23.6962,125.307025 -10.8821,177.380625 l -22.8528,-17.4116 c -7.9594,-79.262301 -10.8178,-115.167045 -13.0587,-145.8221038 z m -8.8856,0.037332 c -5.3805,-11.5273162 -24.1249,-14.1452232 -46.7936,-14.1469272 -34.9767,63.669693 -23.6961,125.307029 10.8821,177.380619 l 22.8528,-17.41157 c 7.9594,-79.26232 10.8179,-115.167073 13.0587,-145.8221218 z"
+         inkscape:connector-curvature="0" />
+      <circle
+         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="path4658"
+         cx="-3090.7729"
+         cy="-76.712906"
+         r="12.894061" />
+      <circle
+         r="12.894061"
+         cy="-76.712906"
+         cx="-3044.7729"
+         id="circle4660"
+         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    </g>
+  </g>
+  <g
+     id="g6212">
+    <rect
+       inkscape:export-ydpi="8.5343227"
+       inkscape:export-xdpi="8.5343227"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect5639"
+       width="465"
+       height="420"
+       x="-3192.9741"
+       y="-678.70398" />
+    <g
+       transform="translate(-22,0)"
+       id="g5624">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4684"
+         d="m -2941.3112,-642.7797 c -26.1742,1e-5 -47.3926,18.5245 -47.3926,41.375 0,6.4361 -0.703,12.52855 -0.457,17.96094 -8.5016,6.17825 -15.1303,14.28779 -20.2676,23.90625 l -27.4258,-10.99024 -13.5078,-56.21484 c 0,0 -12.5366,54.31194 3.084,72.06445 6.9743,7.92625 18.343,14.19037 28.8008,18.71094 -3.3893,12.67272 -5.3115,26.79475 -6.2168,41.86719 -14.6626,7.66135 -31.422,17.96192 -38.8008,28.1582 -14.4644,19.98743 -14.7109,66.38281 -14.7109,66.38281 l 27.082,-58.67773 25.7734,-12.88672 c -10e-5,0.16666 -0.01,0.32928 -0.01,0.4961 0,22.59758 5.0708,43.66097 13.1347,61.86718 -12.9307,8.72826 -28.0203,21.12531 -31.3808,33.27344 -6.1184,22.11756 21.0644,87.47656 21.0644,87.47656 l -3.8144,-81.01758 24.6523,-20.06445 c 17.1525,26.94151 40.6947,44.09314 60.3887,44.85938 18.8913,0.73499 41.3248,-15.16111 58.2617,-40.63477 l 21.0547,14.51758 -11.6699,79.2539 c 0,0 38.27,-59.89236 30.166,-85.89648 -3.5018,-11.23663 -15.2153,-21.74717 -27.3887,-30.06641 8.1158,-18.23887 13.3168,-39.31405 13.5996,-61.65429 l 19.9883,7.46679 16.3672,58.67774 c 0,0 9.8733,-50.04442 -3.0078,-69.20899 -5.9645,-8.874 -20.9225,-15.44487 -33.8418,-19.71289 -0.8331,-15.99247 -2.765,-30.96661 -6.3242,-44.33007 12.4181,-4.49823 26.5972,-11.10934 33.5996,-19.55469 13.9882,-16.87072 4.332,-67.91797 4.332,-67.91797 l -21.0644,59.14844 -23.8536,8.78515 c -5.3868,-11.46551 -12.6626,-21.02765 -22.3691,-28.08203 0.2463,-5.43288 -0.457,-11.52601 -0.457,-17.96289 0,-22.8505 -21.2184,-41.37499 -47.3926,-41.375 z"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <circle
+         r="12.894061"
+         cy="-616.32465"
+         cx="-2963.8958"
+         id="circle4688"
+         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <circle
+         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="circle4690"
+         cx="-2917.8958"
+         cy="-616.32465"
+         r="12.894061" />
+      <path
+         inkscape:export-ydpi="9.966197"
+         inkscape:export-xdpi="9.966197"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+         style="opacity:1;fill:#425b9f;fill-opacity:1;stroke:none"
+         d="m -2860.6681,-469.2188 c 0.3559,67.43219 -37.8255,115.88842 -79.3006,124.60075 -55.8787,-14.6879 -74.787,-58.69395 -74.787,-124.60075 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+         id="path5492"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="zcszz" />
+      <path
+         sodipodi:nodetypes="zcszz"
+         inkscape:connector-curvature="0"
+         id="path5458"
+         d="m -2860.6681,-469.2188 c 0.3559,67.43219 -37.8255,115.88842 -79.3006,124.60075 -55.8787,-14.6879 -74.787,-58.69395 -74.787,-124.60075 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+         style="opacity:0.1896552;fill:url(#pattern5618);fill-opacity:1;stroke:none"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+         inkscape:export-xdpi="9.966197"
+         inkscape:export-ydpi="9.966197" />
+      <g
+         transform="translate(-2167.3763,-388.3307)"
+         id="g5460"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+         inkscape:export-xdpi="9.966197"
+         inkscape:export-ydpi="9.966197">
+        <path
+           sodipodi:nodetypes="cccsc"
+           inkscape:connector-curvature="0"
+           id="path5462"
+           d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+           style="fill:#ffeeaa;fill-opacity:0.76811595;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+           inkscape:export-xdpi="15.083976"
+           inkscape:export-ydpi="15.083976" />
+        <path
+           style="fill:url(#pattern5681);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+           id="path5464"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cccsc"
+           inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+           inkscape:export-xdpi="15.083976"
+           inkscape:export-ydpi="15.083976" />
+      </g>
+      <g
+         transform="translate(-2171.3763,-388.3307)"
+         id="g5470"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+         inkscape:export-xdpi="9.966197"
+         inkscape:export-ydpi="9.966197">
+        <path
+           style="fill:#ffeeaa;fill-opacity:0.81642516;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+           id="path5472"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cccsc"
+           inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+           inkscape:export-xdpi="15.083976"
+           inkscape:export-ydpi="15.083976" />
+        <path
+           sodipodi:nodetypes="cccsc"
+           inkscape:connector-curvature="0"
+           id="path5474"
+           d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+           style="fill:url(#pattern5687);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+           inkscape:export-xdpi="15.083976"
+           inkscape:export-ydpi="15.083976" />
+      </g>
+      <path
+         style="fill:url(#radialGradient4724);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:14;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m -2928.6253,-508.43231 c -9.7418,-8.18068 -7.4193,-26.96391 -1.5538,-48.86064 70.5528,-17.30593 127.1704,9.54309 168.5201,56.42081 l -22.7331,17.56765 c -78.6216,-12.82637 -114.0426,-19.35826 -144.2332,-25.12782 z"
+         id="path4722"
+         inkscape:connector-curvature="0" />
+      <path
+         style="fill:url(#radialGradient4692);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:14;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4730)"
+         d="m -2950.8963,-508.39501 c 9.7419,-8.18069 7.4193,-26.96391 1.5538,-48.86064 -70.5528,-17.30594 -127.1703,9.54319 -168.5201,56.42078 l 22.7331,17.56769 c 78.6216,-12.8264 114.0427,-19.35817 144.2332,-25.12783 z"
+         id="path4686"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g>
+  <g
+     id="g6195">
+    <rect
+       inkscape:export-ydpi="8.5343227"
+       inkscape:export-xdpi="8.5343227"
+       y="-680.52991"
+       x="-2710.9741"
+       height="420"
+       width="465"
+       id="rect5641"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <g
+       transform="translate(-84,0)"
+       id="g5580">
+      <path
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         d="m -2401.3112,-642.7797 c -26.1742,1e-5 -47.3926,18.5245 -47.3926,41.375 0,6.4361 -0.703,12.52855 -0.457,17.96094 -8.5016,6.17825 -15.1303,14.28779 -20.2676,23.90625 l -27.4258,-10.99024 -13.5078,-56.21484 c 0,0 -12.5366,54.31194 3.084,72.06445 6.9743,7.92625 18.343,14.19037 28.8008,18.71094 -3.3893,12.67272 -5.3115,26.79475 -6.2168,41.86719 -14.6626,7.66135 -31.422,17.96192 -38.8008,28.1582 -14.4644,19.98743 -14.7109,66.38281 -14.7109,66.38281 l 27.082,-58.67773 25.7734,-12.88672 c -10e-5,0.16666 -0.01,0.32928 -0.01,0.4961 0,22.59758 5.0708,43.66097 13.1347,61.86718 -12.9307,8.72826 -28.0203,21.12531 -31.3808,33.27344 -6.1184,22.11756 21.0644,87.47656 21.0644,87.47656 l -3.8144,-81.01758 24.6523,-20.06445 c 17.1525,26.94151 40.6947,44.09314 60.3887,44.85938 18.8913,0.73499 41.3248,-15.16111 58.2617,-40.63477 l 21.0547,14.51758 -11.6699,79.2539 c 0,0 38.27,-59.89236 30.166,-85.89648 -3.5018,-11.23663 -15.2153,-21.74717 -27.3887,-30.06641 8.1158,-18.23887 13.3168,-39.31405 13.5996,-61.65429 l 19.9883,7.46679 16.3672,58.67774 c 0,0 9.8733,-50.04442 -3.0078,-69.20899 -5.9645,-8.874 -20.9225,-15.44487 -33.8418,-19.71289 -0.8331,-15.99247 -2.765,-30.96661 -6.3242,-44.33007 12.4181,-4.49823 26.5972,-11.10934 33.5996,-19.55469 13.9882,-16.87072 4.332,-67.91797 4.332,-67.91797 l -21.0644,59.14844 -23.8536,8.78515 c -5.3868,-11.46551 -12.6626,-21.02765 -22.3691,-28.08203 0.2463,-5.43288 -0.457,-11.52601 -0.457,-17.96289 0,-22.8505 -21.2184,-41.37499 -47.3926,-41.375 z"
+         id="path5519"
+         inkscape:connector-curvature="0" />
+      <circle
+         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="circle5521"
+         cx="-2423.8958"
+         cy="-616.32465"
+         r="12.894061" />
+      <circle
+         r="12.894061"
+         cy="-616.32465"
+         cx="-2377.8958"
+         id="circle5523"
+         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="zcszz"
+         inkscape:connector-curvature="0"
+         id="path5525"
+         d="m -2320.6681,-469.2188 c 0.3559,67.43219 -37.8255,115.88842 -79.3006,124.60075 -55.8787,-14.6879 -74.787,-58.69395 -74.787,-124.60075 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+         style="opacity:1;fill:#425b9f;fill-opacity:1;stroke:none"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+         inkscape:export-xdpi="9.966197"
+         inkscape:export-ydpi="9.966197" />
+      <path
+         inkscape:export-ydpi="9.966197"
+         inkscape:export-xdpi="9.966197"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+         style="opacity:0.1896552;fill:url(#pattern5558);fill-opacity:1;stroke:none"
+         d="m -2320.6681,-469.2188 c 0.3559,67.43219 -37.8255,115.88842 -79.3006,124.60075 -55.8787,-14.6879 -74.787,-58.69395 -74.787,-124.60075 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+         id="path5527"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="zcszz" />
+      <g
+         inkscape:export-ydpi="9.966197"
+         inkscape:export-xdpi="9.966197"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+         id="g5529"
+         transform="matrix(0.96592583,-0.25881905,0.25881905,0.96592583,-1630.5809,-610.28071)">
+        <path
+           inkscape:export-ydpi="15.083976"
+           inkscape:export-xdpi="15.083976"
+           inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+           style="fill:#ffeeaa;fill-opacity:0.76811595;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+           id="path5531"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cccsc" />
+        <path
+           inkscape:export-ydpi="15.083976"
+           inkscape:export-xdpi="15.083976"
+           inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+           sodipodi:nodetypes="cccsc"
+           inkscape:connector-curvature="0"
+           id="path5533"
+           d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+           style="fill:url(#pattern5681);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      </g>
+      <g
+         inkscape:export-ydpi="9.966197"
+         inkscape:export-xdpi="9.966197"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+         id="g5535"
+         transform="matrix(0.96592583,0.25881905,-0.25881905,0.96592583,-1680.4252,-213.20144)">
+        <path
+           inkscape:export-ydpi="15.083976"
+           inkscape:export-xdpi="15.083976"
+           inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+           sodipodi:nodetypes="cccsc"
+           inkscape:connector-curvature="0"
+           id="path5537"
+           d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+           style="fill:#ffeeaa;fill-opacity:0.81642516;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+        <path
+           inkscape:export-ydpi="15.083976"
+           inkscape:export-xdpi="15.083976"
+           inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+           style="fill:url(#pattern5687);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+           id="path5539"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cccsc" />
+      </g>
+      <path
+         inkscape:connector-curvature="0"
+         id="path5541"
+         d="m -2388.6253,-508.43231 c -9.7418,-8.18068 -7.4193,-26.96391 -1.5538,-48.86064 70.5528,-17.30593 127.1704,9.54309 168.5201,56.42081 l -22.7331,17.56765 c -78.6216,-12.82637 -114.0426,-19.35826 -144.2332,-25.12782 z"
+         style="fill:url(#radialGradient5545);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:14;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path5543"
+         d="m -2410.8963,-508.39501 c 9.7419,-8.18069 7.4193,-26.96391 1.5538,-48.86064 -70.5528,-17.30594 -127.1703,9.54319 -168.5201,56.42078 l 22.7331,17.56769 c 78.6216,-12.8264 114.0427,-19.35817 144.2332,-25.12783 z"
+         style="fill:url(#radialGradient5547);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:14;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4730)" />
+    </g>
+  </g>
+  <g
+     id="g6080"
+     inkscape:export-xdpi="8.5343227"
+     inkscape:export-ydpi="8.5343227">
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect5721"
+       width="465"
+       height="421.82608"
+       x="-3671.9741"
+       y="-221.44293"
+       inkscape:export-xdpi="8.5343227"
+       inkscape:export-ydpi="8.5343227" />
+    <path
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m -3441.3112,-182.7797 c -26.1742,1e-5 -47.3926,18.5245 -47.3926,41.375 0,6.4361 -0.703,12.52855 -0.457,17.96094 -8.5016,6.17825 -15.1303,14.28779 -20.2676,23.906249 l -27.4258,-10.990239 -13.5078,-56.21484 c 0,0 -12.5366,54.31193 3.084,72.064454 6.9743,7.926241 18.343,14.19037 28.8008,18.710937 -3.3893,12.672716 -5.3115,26.794749 -6.2168,41.867188 -14.6626,7.661348 -31.422,17.961919 -38.8008,28.158203 -14.4644,19.987427 -14.7109,66.382808 -14.7109,66.382808 l 27.082,-58.67773 25.7734,-12.886719 c -10e-5,0.16666 -0.01,0.329282 -0.01,0.496094 0,22.597581 5.0708,43.660975 13.1347,61.867185 -12.9307,8.72826 -28.0203,21.12531 -31.3808,33.27344 -6.1184,22.11756 21.0644,87.47656 21.0644,87.47656 l -3.8144,-81.01758 24.6523,-20.06445 c 17.1525,26.94151 40.6947,44.09314 60.3887,44.85938 18.8913,0.73499 41.3248,-15.16111 58.2617,-40.63477 l 21.0547,14.51758 -11.6699,79.2539 c 0,0 38.27,-59.89236 30.166,-85.89648 -3.5018,-11.23663 -15.2153,-21.74717 -27.3887,-30.06641 8.1158,-18.23887 13.3168,-39.31405 13.5996,-61.654292 l 19.9883,7.466796 16.3672,58.677736 c 0,0 9.8733,-50.044417 -3.0078,-69.208986 -5.9645,-8.874005 -20.9225,-15.444874 -33.8418,-19.71289 -0.8331,-15.992474 -2.765,-30.966618 -6.3242,-44.330078 12.4181,-4.498231 26.5972,-11.109333 33.5996,-19.554688 13.9882,-16.870718 4.332,-67.917968 4.332,-67.917968 l -21.0644,59.14844 -23.8536,8.785153 c -5.3868,-11.465513 -12.6626,-21.027653 -22.3691,-28.082033 0.2463,-5.43288 -0.457,-11.52601 -0.457,-17.96289 0,-22.8505 -21.2184,-41.37499 -47.3926,-41.375 z"
+       id="path5725"
+       inkscape:connector-curvature="0" />
+    <path
+       id="path5727"
+       style="fill:url(#radialGradient5794);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.02290082px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m -3435.318,-88.845464 c 5.3805,-11.527326 24.1249,-14.145226 46.7936,-14.146916 34.9767,63.669683 23.6962,125.30702 -10.8821,177.38062 l -22.8528,-17.4116 c -7.9594,-79.262301 -10.8178,-115.167045 -13.0587,-145.822104 z m -8.8856,0.03733 c -5.3805,-11.527318 -24.1249,-14.145218 -46.7936,-14.146928 -34.9767,63.669694 -23.6961,125.30703 10.8821,177.38062 l 22.8528,-17.41157 c 7.9594,-79.26232 10.8179,-115.167073 13.0587,-145.822122 z"
+       inkscape:connector-curvature="0" />
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="circle5729"
+       cx="-3463.8958"
+       cy="-156.32463"
+       r="12.894061" />
+    <circle
+       r="12.894061"
+       cy="-156.32463"
+       cx="-3417.8958"
+       id="circle5731"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  </g>
+  <g
+     id="g6088"
+     inkscape:export-xdpi="8.5343227"
+     inkscape:export-ydpi="8.5343227">
+    <rect
+       y="-218.70398"
+       x="-3192.9741"
+       height="420"
+       width="465"
+       id="rect5733"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       inkscape:export-xdpi="8.5343227"
+       inkscape:export-ydpi="8.5343227" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path5737"
+       d="m -2963.3112,-182.7797 c -26.1742,1e-5 -47.3926,18.5245 -47.3926,41.375 0,6.4361 -0.703,12.52855 -0.457,17.96094 -8.5016,6.17825 -15.1303,14.28779 -20.2676,23.90625 l -27.4258,-10.99024 -13.5078,-56.21484 c 0,0 -12.5366,54.31194 3.084,72.06445 6.9743,7.92625 18.343,14.19037 28.8008,18.71094 -3.3893,12.67272 -5.3115,26.79475 -6.2168,41.86719 -14.6626,7.66135 -31.422,17.96192 -38.8008,28.1582 -14.4644,19.98743 -14.7109,66.38281 -14.7109,66.38281 l 27.082,-58.67773 25.7734,-12.88672 c -10e-5,0.16666 -0.01,0.32928 -0.01,0.4961 0,22.59758 5.0708,43.66097 13.1347,61.86718 -12.9307,8.72826 -28.0203,21.12531 -31.3808,33.27344 -6.1184,22.11756 21.0644,87.47656 21.0644,87.47656 l -3.8144,-81.01758 24.6523,-20.06445 c 17.1525,26.94151 40.6947,44.09314 60.3887,44.85938 18.8913,0.73499 41.3248,-15.16111 58.2617,-40.63477 l 21.0547,14.51758 -11.6699,79.2539 c 0,0 38.27,-59.89236 30.166,-85.89648 -3.5018,-11.23663 -15.2153,-21.74717 -27.3887,-30.06641 8.1158,-18.23887 13.3168,-39.31405 13.5996,-61.65429 l 19.9883,7.46679 16.3672,58.67774 c 0,0 9.8733,-50.04442 -3.0078,-69.20899 -5.9645,-8.874 -20.9225,-15.44487 -33.8418,-19.71289 -0.8331,-15.99247 -2.765,-30.96661 -6.3242,-44.33007 12.4181,-4.49823 26.5972,-11.10934 33.5996,-19.55469 13.9882,-16.87072 4.332,-67.91797 4.332,-67.91797 l -21.0644,59.14844 -23.8536,8.78515 c -5.3868,-11.46551 -12.6626,-21.02765 -22.3691,-28.08203 0.2463,-5.43288 -0.457,-11.52601 -0.457,-17.96289 0,-22.8505 -21.2184,-41.37499 -47.3926,-41.375 z"
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <circle
+       r="12.894061"
+       cy="-156.32465"
+       cx="-2985.8958"
+       id="circle5739"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="circle5741"
+       cx="-2939.8958"
+       cy="-156.32465"
+       r="12.894061" />
+    <path
+       inkscape:export-ydpi="9.966197"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       style="opacity:1;fill:#d45500;fill-opacity:1;stroke:none"
+       d="m -2882.6681,-9.2188 c 0.3559,67.43219 -37.8255,115.88842 -79.3006,124.60075 -55.8787,-14.6879 -74.787,-58.69395 -74.787,-124.60075 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+       id="path5743"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="zcszz" />
+    <path
+       sodipodi:nodetypes="zcszz"
+       inkscape:connector-curvature="0"
+       id="path5745"
+       d="m -2882.6681,-9.2188 c 0.3559,67.43219 -37.8255,115.88842 -79.3006,124.60075 -55.8787,-14.6879 -74.787,-58.69395 -74.787,-124.60075 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+       style="opacity:0.1896552;fill:url(#pattern5987);fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-ydpi="9.966197" />
+    <g
+       transform="translate(-2189.3763,71.6693)"
+       id="g5747"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-ydpi="9.966197">
+      <path
+         sodipodi:nodetypes="cccsc"
+         inkscape:connector-curvature="0"
+         id="path5749"
+         d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+         style="fill:#ffeeaa;fill-opacity:0.76811595;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-ydpi="15.083976" />
+      <path
+         style="fill:url(#pattern5681);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+         id="path5751"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccsc"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-ydpi="15.083976" />
+    </g>
+    <g
+       transform="translate(-2193.3763,71.6693)"
+       id="g5753"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-ydpi="9.966197">
+      <path
+         style="fill:#ffeeaa;fill-opacity:0.81642516;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+         id="path5755"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccsc"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-ydpi="15.083976" />
+      <path
+         sodipodi:nodetypes="cccsc"
+         inkscape:connector-curvature="0"
+         id="path5757"
+         d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+         style="fill:url(#pattern5687);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-ydpi="15.083976" />
+    </g>
+    <path
+       d="m -2972.8963,-48.39501 c 9.7419,-8.18069 7.4193,-26.96391 1.5538,-48.86064 -70.5528,-17.30594 -127.1703,9.54319 -168.5201,56.42078 l 22.7331,17.56769 c 78.6216,-12.8264 114.0427,-19.35817 144.2332,-25.12783 z m 22.271,-0.0373 c -9.7418,-8.18068 -7.4193,-26.96391 -1.5538,-48.86064 70.5528,-17.30593 127.1704,9.54309 168.5201,56.42081 l -22.7331,17.56765 c -78.6216,-12.82637 -114.0426,-19.35826 -144.2332,-25.12782 z"
+       style="fill:url(#radialGradient5798);fill-opacity:1.0;fill-rule:evenodd;stroke:#000000;stroke-width:14;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4730)"
+       id="path5761" />
+  </g>
+  <g
+     id="g6104"
+     inkscape:export-xdpi="8.5343227"
+     inkscape:export-ydpi="8.5343227">
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect5763"
+       width="465"
+       height="420"
+       x="-2710.9741"
+       y="-220.52991"
+       inkscape:export-xdpi="8.5343227"
+       inkscape:export-ydpi="8.5343227" />
+    <path
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m -2485.3112,-182.7797 c -26.1742,1e-5 -47.3926,18.5245 -47.3926,41.375 0,6.4361 -0.703,12.52855 -0.457,17.96094 -8.5016,6.17825 -15.1303,14.28779 -20.2676,23.90625 l -27.4258,-10.99024 -13.5078,-56.21484 c 0,0 -12.5366,54.31194 3.084,72.06445 6.9743,7.92625 18.343,14.19037 28.8008,18.71094 -3.3893,12.67272 -5.3115,26.79475 -6.2168,41.86719 -14.6626,7.66135 -31.422,17.96192 -38.8008,28.1582 -14.4644,19.98743 -14.7109,66.38281 -14.7109,66.38281 l 27.082,-58.67773 25.7734,-12.88672 c -10e-5,0.16666 -0.01,0.32928 -0.01,0.4961 0,22.59758 5.0708,43.66097 13.1347,61.86718 -12.9307,8.72826 -28.0203,21.12531 -31.3808,33.27344 -6.1184,22.11756 21.0644,87.47656 21.0644,87.47656 l -3.8144,-81.01758 24.6523,-20.06445 c 17.1525,26.94151 40.6947,44.09314 60.3887,44.85938 18.8913,0.73499 41.3248,-15.16111 58.2617,-40.63477 l 21.0547,14.51758 -11.6699,79.2539 c 0,0 38.27,-59.89236 30.166,-85.89648 -3.5018,-11.23663 -15.2153,-21.74717 -27.3887,-30.06641 8.1158,-18.23887 13.3168,-39.31405 13.5996,-61.65429 l 19.9883,7.46679 16.3672,58.67774 c 0,0 9.8733,-50.04442 -3.0078,-69.20899 -5.9645,-8.874 -20.9225,-15.44487 -33.8418,-19.71289 -0.8331,-15.99247 -2.765,-30.96661 -6.3242,-44.33007 12.4181,-4.49823 26.5972,-11.10934 33.5996,-19.55469 13.9882,-16.87072 4.332,-67.91797 4.332,-67.91797 l -21.0644,59.14844 -23.8536,8.78515 c -5.3868,-11.46551 -12.6626,-21.02765 -22.3691,-28.08203 0.2463,-5.43288 -0.457,-11.52601 -0.457,-17.96289 0,-22.8505 -21.2184,-41.37499 -47.3926,-41.375 z"
+       id="path5767"
+       inkscape:connector-curvature="0" />
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="circle5769"
+       cx="-2507.8958"
+       cy="-156.32465"
+       r="12.894061" />
+    <circle
+       r="12.894061"
+       cy="-156.32465"
+       cx="-2461.8958"
+       id="circle5771"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       sodipodi:nodetypes="zcszz"
+       inkscape:connector-curvature="0"
+       id="path5773"
+       d="m -2404.6681,-9.2188 c 0.3559,67.43219 -37.8255,115.88842 -79.3006,124.60075 -55.8787,-14.6879 -74.787,-58.69395 -74.787,-124.60075 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+       style="opacity:1;fill:#d65d0c;fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-ydpi="9.966197" />
+    <path
+       inkscape:export-ydpi="9.966197"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       style="opacity:0.1896552;fill:url(#pattern6003);fill-opacity:1;stroke:none"
+       d="m -2404.6681,-9.2188 c 0.3559,67.43219 -37.8255,115.88842 -79.3006,124.60075 -55.8787,-14.6879 -74.787,-58.69395 -74.787,-124.60075 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+       id="path5775"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="zcszz" />
+    <g
+       inkscape:export-ydpi="9.966197"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       id="g5777"
+       transform="matrix(0.96592583,-0.25881905,0.25881905,0.96592583,-1714.5809,-150.28071)">
+      <path
+         inkscape:export-ydpi="15.083976"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         style="fill:#ffeeaa;fill-opacity:0.76811595;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+         id="path5779"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccsc" />
+      <path
+         inkscape:export-ydpi="15.083976"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         sodipodi:nodetypes="cccsc"
+         inkscape:connector-curvature="0"
+         id="path5781"
+         d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+         style="fill:url(#pattern5681);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       inkscape:export-ydpi="9.966197"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       id="g5783"
+       transform="matrix(0.96592583,0.25881905,-0.25881905,0.96592583,-1764.4252,246.79856)">
+      <path
+         inkscape:export-ydpi="15.083976"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         sodipodi:nodetypes="cccsc"
+         inkscape:connector-curvature="0"
+         id="path5786"
+         d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+         style="fill:#ffeeaa;fill-opacity:0.81642516;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="15.083976"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         style="fill:url(#pattern5687);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+         id="path5788"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccsc" />
+    </g>
+    <path
+       d="m -2494.8963,-48.39501 c 9.7419,-8.18069 7.4193,-26.96391 1.5538,-48.86064 -70.5528,-17.30594 -127.1703,9.54319 -168.5201,56.42078 l 22.7331,17.56769 c 78.6216,-12.8264 114.0427,-19.35817 144.2332,-25.12783 z m 22.271,-0.0373 c -9.7418,-8.18068 -7.4193,-26.96391 -1.5538,-48.86064 70.5528,-17.30593 127.1704,9.54309 168.5201,56.42081 l -22.7331,17.56765 c -78.6216,-12.82637 -114.0426,-19.35826 -144.2332,-25.12782 z"
+       style="fill:url(#radialGradient5802);fill-opacity:1.0;fill-rule:evenodd;stroke:#000000;stroke-width:14;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4730)"
+       id="path5792" />
+  </g>
+  <g
+     id="g6119"
+     inkscape:export-xdpi="8.5343227"
+     inkscape:export-ydpi="8.5343227">
+    <rect
+       inkscape:export-ydpi="8.5343227"
+       inkscape:export-xdpi="8.5343227"
+       y="238.55707"
+       x="-3671.9741"
+       height="421.82608"
+       width="465"
+       id="rect5804"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path5808"
+       d="m -3441.3112,277.2203 c -26.1742,10e-6 -47.3926,18.5245 -47.3926,41.375 0,6.4361 -0.703,12.52855 -0.457,17.96094 -8.5016,6.17825 -15.1303,14.28779 -20.2676,23.90625 l -27.4258,-10.99024 -13.5078,-56.21484 c 0,0 -12.5366,54.31193 3.084,72.06445 6.9743,7.92625 18.343,14.19037 28.8008,18.71094 -3.3893,12.67272 -5.3115,26.79475 -6.2168,41.86719 -14.6626,7.66135 -31.422,17.96192 -38.8008,28.1582 -14.4644,19.98743 -14.7109,66.38281 -14.7109,66.38281 l 27.082,-58.67773 25.7734,-12.88672 c -10e-5,0.16666 -0.01,0.32928 -0.01,0.49609 0,22.59759 5.0708,43.66098 13.1347,61.86719 -12.9307,8.72826 -28.0203,21.12531 -31.3808,33.27344 -6.1184,22.11756 21.0644,87.47656 21.0644,87.47656 l -3.8144,-81.01758 24.6523,-20.06445 c 17.1525,26.94151 40.6947,44.09314 60.3887,44.85938 18.8913,0.73499 41.3248,-15.16111 58.2617,-40.63477 l 21.0547,14.51758 -11.6699,79.2539 c 0,0 38.27,-59.89236 30.166,-85.89648 -3.5018,-11.23663 -15.2153,-21.74717 -27.3887,-30.06641 8.1158,-18.23887 13.3168,-39.31405 13.5996,-61.65429 l 19.9883,7.46679 16.3672,58.67774 c 0,0 9.8733,-50.04442 -3.0078,-69.20899 -5.9645,-8.874 -20.9225,-15.44487 -33.8418,-19.71289 -0.8331,-15.99247 -2.765,-30.96661 -6.3242,-44.33007 12.4181,-4.49823 26.5972,-11.10934 33.5996,-19.55469 13.9882,-16.87072 4.332,-67.91797 4.332,-67.91797 l -21.0644,59.14844 -23.8536,8.78515 c -5.3868,-11.46551 -12.6626,-21.02765 -22.3691,-28.08203 0.2463,-5.43288 -0.457,-11.52601 -0.457,-17.96289 0,-22.8505 -21.2184,-41.37499 -47.3926,-41.375 z"
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       inkscape:connector-curvature="0"
+       d="m -3435.318,371.15454 c 5.3805,-11.52733 24.1249,-14.14523 46.7936,-14.14693 34.9767,63.66969 23.6962,125.30703 -10.8821,177.38063 l -22.8528,-17.4116 c -7.9594,-79.2623 -10.8178,-115.16705 -13.0587,-145.8221 z m -8.8856,0.0373 c -5.3805,-11.52732 -24.1249,-14.14523 -46.7936,-14.14693 -34.9767,63.66969 -23.6961,125.30703 10.8821,177.38062 l 22.8528,-17.41157 c 7.9594,-79.26232 10.8179,-115.16707 13.0587,-145.82212 z"
+       style="fill:url(#radialGradient5876);fill-opacity:1.0;fill-rule:evenodd;stroke:#000000;stroke-width:1.02290082px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="path5810" />
+    <circle
+       r="12.894061"
+       cy="303.67535"
+       cx="-3463.8958"
+       id="circle5812"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="circle5814"
+       cx="-3417.8958"
+       cy="303.67535"
+       r="12.894061" />
+  </g>
+  <g
+     id="g6180"
+     inkscape:export-xdpi="8.5343227"
+     inkscape:export-ydpi="8.5343227">
+    <rect
+       inkscape:export-ydpi="8.5343227"
+       inkscape:export-xdpi="8.5343227"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect5816"
+       width="465"
+       height="420"
+       x="-3192.9741"
+       y="241.29602" />
+    <path
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m -2963.3112,277.2203 c -26.1742,10e-6 -47.3926,18.5245 -47.3926,41.375 0,6.4361 -0.703,12.52855 -0.457,17.96094 -8.5016,6.17825 -15.1303,14.28779 -20.2676,23.90625 l -27.4258,-10.99024 -13.5078,-56.21484 c 0,0 -12.5366,54.31194 3.084,72.06445 6.9743,7.92625 18.343,14.19037 28.8008,18.71094 -3.3893,12.67272 -5.3115,26.79475 -6.2168,41.86719 -14.6626,7.66135 -31.422,17.96192 -38.8008,28.1582 -14.4644,19.98743 -14.7109,66.38281 -14.7109,66.38281 l 27.082,-58.67773 25.7734,-12.88672 c -10e-5,0.16666 -0.01,0.32928 -0.01,0.4961 0,22.59758 5.0708,43.66097 13.1347,61.86718 -12.9307,8.72826 -28.0203,21.12531 -31.3808,33.27344 -6.1184,22.11756 21.0644,87.47656 21.0644,87.47656 l -3.8144,-81.01758 24.6523,-20.06445 c 17.1525,26.94151 40.6947,44.09314 60.3887,44.85938 18.8913,0.73499 41.3248,-15.16111 58.2617,-40.63477 l 21.0547,14.51758 -11.6699,79.2539 c 0,0 38.27,-59.89236 30.166,-85.89648 -3.5018,-11.23663 -15.2153,-21.74717 -27.3887,-30.06641 8.1158,-18.23887 13.3168,-39.31405 13.5996,-61.65429 l 19.9883,7.46679 16.3672,58.67774 c 0,0 9.8733,-50.04442 -3.0078,-69.20899 -5.9645,-8.874 -20.9225,-15.44487 -33.8418,-19.71289 -0.8331,-15.99247 -2.765,-30.96661 -6.3242,-44.33007 12.4181,-4.49823 26.5972,-11.10934 33.5996,-19.55469 13.9882,-16.87072 4.332,-67.91797 4.332,-67.91797 l -21.0644,59.14844 -23.8536,8.78515 c -5.3868,-11.46551 -12.6626,-21.02765 -22.3691,-28.08203 0.2463,-5.43288 -0.457,-11.52601 -0.457,-17.96289 0,-22.8505 -21.2184,-41.37499 -47.3926,-41.375 z"
+       id="path5820"
+       inkscape:connector-curvature="0" />
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="circle5822"
+       cx="-2985.8958"
+       cy="303.67535"
+       r="12.894061" />
+    <circle
+       r="12.894061"
+       cy="303.67535"
+       cx="-2939.8958"
+       id="circle5824"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       sodipodi:nodetypes="zcszz"
+       inkscape:connector-curvature="0"
+       id="path5826"
+       d="m -2882.6681,450.7812 c 0.3559,67.43219 -37.8255,115.88842 -79.3006,124.60075 -55.8787,-14.6879 -74.787,-58.69395 -74.787,-124.60075 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+       style="opacity:1;fill:#438816;fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-ydpi="9.966197" />
+    <path
+       inkscape:export-ydpi="9.966197"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       style="opacity:0.1896552;fill:url(#pattern6023);fill-opacity:1;stroke:none"
+       d="m -2882.6681,450.7812 c 0.3559,67.43219 -37.8255,115.88842 -79.3006,124.60075 -55.8787,-14.6879 -74.787,-58.69395 -74.787,-124.60075 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+       id="path5828"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="zcszz" />
+    <g
+       inkscape:export-ydpi="9.966197"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       id="g5830"
+       transform="translate(-2189.3763,531.6693)">
+      <path
+         inkscape:export-ydpi="15.083976"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         style="fill:#ffeeaa;fill-opacity:0.76811595;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+         id="path5832"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccsc" />
+      <path
+         inkscape:export-ydpi="15.083976"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         sodipodi:nodetypes="cccsc"
+         inkscape:connector-curvature="0"
+         id="path5834"
+         d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+         style="fill:url(#pattern5681);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       inkscape:export-ydpi="9.966197"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       id="g5836"
+       transform="translate(-2193.3763,531.6693)">
+      <path
+         inkscape:export-ydpi="15.083976"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         sodipodi:nodetypes="cccsc"
+         inkscape:connector-curvature="0"
+         id="path5838"
+         d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+         style="fill:#ffeeaa;fill-opacity:0.81642516;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="15.083976"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         style="fill:url(#pattern5687);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+         id="path5840"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccsc" />
+    </g>
+    <path
+       d="m -2972.8963,411.60499 c 9.7419,-8.18069 7.4193,-26.96391 1.5538,-48.86064 -70.5528,-17.30594 -127.1703,9.54319 -168.5201,56.42078 l 22.7331,17.56769 c 78.6216,-12.8264 114.0427,-19.35817 144.2332,-25.12783 z m 22.271,-0.0373 c -9.7418,-8.18068 -7.4193,-26.96391 -1.5538,-48.86064 70.5528,-17.30593 127.1704,9.54309 168.5201,56.42081 l -22.7331,17.56765 c -78.6216,-12.82637 -114.0426,-19.35826 -144.2332,-25.12782 z"
+       style="fill:url(#radialGradient5880);fill-opacity:1.0;fill-rule:evenodd;stroke:#000000;stroke-width:14;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4730)"
+       id="path5844" />
+  </g>
+  <g
+     id="g6164"
+     inkscape:export-xdpi="8.5343227"
+     inkscape:export-ydpi="8.5343227">
+    <rect
+       inkscape:export-ydpi="8.5343227"
+       inkscape:export-xdpi="8.5343227"
+       y="239.47009"
+       x="-2710.9741"
+       height="420"
+       width="465"
+       id="rect5846"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path5850"
+       d="m -2485.3112,277.2203 c -26.1742,10e-6 -47.3926,18.5245 -47.3926,41.375 0,6.4361 -0.703,12.52855 -0.457,17.96094 -8.5016,6.17825 -15.1303,14.28779 -20.2676,23.90625 l -27.4258,-10.99024 -13.5078,-56.21484 c 0,0 -12.5366,54.31194 3.084,72.06445 6.9743,7.92625 18.343,14.19037 28.8008,18.71094 -3.3893,12.67272 -5.3115,26.79475 -6.2168,41.86719 -14.6626,7.66135 -31.422,17.96192 -38.8008,28.1582 -14.4644,19.98743 -14.7109,66.38281 -14.7109,66.38281 l 27.082,-58.67773 25.7734,-12.88672 c -10e-5,0.16666 -0.01,0.32928 -0.01,0.4961 0,22.59758 5.0708,43.66097 13.1347,61.86718 -12.9307,8.72826 -28.0203,21.12531 -31.3808,33.27344 -6.1184,22.11756 21.0644,87.47656 21.0644,87.47656 l -3.8144,-81.01758 24.6523,-20.06445 c 17.1525,26.94151 40.6947,44.09314 60.3887,44.85938 18.8913,0.73499 41.3248,-15.16111 58.2617,-40.63477 l 21.0547,14.51758 -11.6699,79.2539 c 0,0 38.27,-59.89236 30.166,-85.89648 -3.5018,-11.23663 -15.2153,-21.74717 -27.3887,-30.06641 8.1158,-18.23887 13.3168,-39.31405 13.5996,-61.65429 l 19.9883,7.46679 16.3672,58.67774 c 0,0 9.8733,-50.04442 -3.0078,-69.20899 -5.9645,-8.874 -20.9225,-15.44487 -33.8418,-19.71289 -0.8331,-15.99247 -2.765,-30.96661 -6.3242,-44.33007 12.4181,-4.49823 26.5972,-11.10934 33.5996,-19.55469 13.9882,-16.87072 4.332,-67.91797 4.332,-67.91797 l -21.0644,59.14844 -23.8536,8.78515 c -5.3868,-11.46551 -12.6626,-21.02765 -22.3691,-28.08203 0.2463,-5.43288 -0.457,-11.52601 -0.457,-17.96289 0,-22.8505 -21.2184,-41.37499 -47.3926,-41.375 z"
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <circle
+       r="12.894061"
+       cy="303.67535"
+       cx="-2507.8958"
+       id="circle5852"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="circle5854"
+       cx="-2461.8958"
+       cy="303.67535"
+       r="12.894061" />
+    <path
+       inkscape:export-ydpi="9.966197"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       style="opacity:1;fill:#438816;fill-opacity:1;stroke:none"
+       d="m -2404.6681,450.7812 c 0.3559,67.43219 -37.8255,115.88842 -79.3006,124.60075 -55.8787,-14.6879 -74.787,-58.69395 -74.787,-124.60075 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+       id="path5856"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="zcszz" />
+    <path
+       sodipodi:nodetypes="zcszz"
+       inkscape:connector-curvature="0"
+       id="path5858"
+       d="m -2404.6681,450.7812 c 0.3559,67.43219 -37.8255,115.88842 -79.3006,124.60075 -55.8787,-14.6879 -74.787,-58.69395 -74.787,-124.60075 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+       style="opacity:0.1896552;fill:url(#pattern6039);fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-ydpi="9.966197" />
+    <g
+       transform="matrix(0.96592583,-0.25881905,0.25881905,0.96592583,-1714.5809,309.71929)"
+       id="g5860"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-ydpi="9.966197">
+      <path
+         sodipodi:nodetypes="cccsc"
+         inkscape:connector-curvature="0"
+         id="path5862"
+         d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+         style="fill:#ffeeaa;fill-opacity:0.76811595;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-ydpi="15.083976" />
+      <path
+         style="fill:url(#pattern5681);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+         id="path5864"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccsc"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-ydpi="15.083976" />
+    </g>
+    <g
+       transform="matrix(0.96592583,0.25881905,-0.25881905,0.96592583,-1764.4252,706.79856)"
+       id="g5866"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-ydpi="9.966197">
+      <path
+         style="fill:#ffeeaa;fill-opacity:0.81642516;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+         id="path5868"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccsc"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-ydpi="15.083976" />
+      <path
+         sodipodi:nodetypes="cccsc"
+         inkscape:connector-curvature="0"
+         id="path5870"
+         d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+         style="fill:url(#pattern5687);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-ydpi="15.083976" />
+    </g>
+    <path
+       style="fill:url(#radialGradient5882);fill-opacity:1.0;fill-rule:evenodd;stroke:#000000;stroke-width:14;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m -2472.6253,411.56769 c -9.7418,-8.18068 -7.4193,-26.96391 -1.5538,-48.86064 70.5528,-17.30593 127.1704,9.54309 168.5201,56.42081 l -22.7331,17.56765 c -78.6216,-12.82637 -114.0426,-19.35826 -144.2332,-25.12782 z"
+       id="path5872"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:url(#radialGradient5884);fill-opacity:1.0;fill-rule:evenodd;stroke:#000000;stroke-width:14;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4730)"
+       d="m -2494.8963,411.60499 c 9.7419,-8.18069 7.4193,-26.96391 1.5538,-48.86064 -70.5528,-17.30594 -127.1703,9.54319 -168.5201,56.42078 l 22.7331,17.56769 c 78.6216,-12.8264 114.0427,-19.35817 144.2332,-25.12783 z"
+       id="path5874"
+       inkscape:connector-curvature="0" />
+  </g>
+  <g
+     id="g6126"
+     inkscape:export-xdpi="8.5343227"
+     inkscape:export-ydpi="8.5343227">
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect5886"
+       width="465"
+       height="421.82608"
+       x="-3671.9741"
+       y="698.55707"
+       inkscape:export-xdpi="8.5343227"
+       inkscape:export-ydpi="8.5343227" />
+    <path
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m -3441.3112,737.2203 c -26.1742,1e-5 -47.3926,18.5245 -47.3926,41.375 0,6.4361 -0.703,12.52855 -0.457,17.96094 -8.5016,6.17825 -15.1303,14.28779 -20.2676,23.90625 l -27.4258,-10.99024 -13.5078,-56.21484 c 0,0 -12.5366,54.31193 3.084,72.06445 6.9743,7.92625 18.343,14.19037 28.8008,18.71094 -3.3893,12.67272 -5.3115,26.79475 -6.2168,41.86719 -14.6626,7.66135 -31.422,17.96192 -38.8008,28.1582 -14.4644,19.98743 -14.7109,66.38281 -14.7109,66.38281 l 27.082,-58.67773 25.7734,-12.88672 c -10e-5,0.16666 -0.01,0.32928 -0.01,0.4961 0,22.59758 5.0708,43.66097 13.1347,61.86718 -12.9307,8.72826 -28.0203,21.12531 -31.3808,33.27347 -6.1184,22.1175 21.0644,87.4765 21.0644,87.4765 l -3.8144,-81.0175 24.6523,-20.0645 c 17.1525,26.9415 40.6947,44.0931 60.3887,44.8594 18.8913,0.735 41.3248,-15.1611 58.2617,-40.63479 l 21.0547,14.51759 -11.6699,79.2539 c 0,0 38.27,-59.8924 30.166,-85.8965 -3.5018,-11.23662 -15.2153,-21.74716 -27.3887,-30.0664 8.1158,-18.23887 13.3168,-39.31405 13.5996,-61.65429 l 19.9883,7.46679 16.3672,58.67774 c 0,0 9.8733,-50.04442 -3.0078,-69.20899 -5.9645,-8.874 -20.9225,-15.44487 -33.8418,-19.71289 -0.8331,-15.99247 -2.765,-30.96661 -6.3242,-44.33007 12.4181,-4.49823 26.5972,-11.10934 33.5996,-19.55469 13.9882,-16.87072 4.332,-67.91797 4.332,-67.91797 l -21.0644,59.14844 -23.8536,8.78515 c -5.3868,-11.46551 -12.6626,-21.02765 -22.3691,-28.08203 0.2463,-5.43288 -0.457,-11.52601 -0.457,-17.96289 0,-22.8505 -21.2184,-41.37499 -47.3926,-41.375 z"
+       id="path5890"
+       inkscape:connector-curvature="0" />
+    <path
+       id="path5892"
+       style="fill:url(#radialGradient5958);fill-opacity:1.0;fill-rule:evenodd;stroke:#000000;stroke-width:1.02290082px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m -3435.318,831.15454 c 5.3805,-11.52733 24.1249,-14.14523 46.7936,-14.14693 34.9767,63.66969 23.6962,125.30703 -10.8821,177.38063 l -22.8528,-17.4116 c -7.9594,-79.2623 -10.8178,-115.16704 -13.0587,-145.8221 z m -8.8856,0.0373 c -5.3805,-11.52732 -24.1249,-14.14523 -46.7936,-14.14693 -34.9767,63.66969 -23.6961,125.30703 10.8821,177.38062 l 22.8528,-17.41157 c 7.9594,-79.26232 10.8179,-115.16707 13.0587,-145.82212 z"
+       inkscape:connector-curvature="0" />
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="circle5894"
+       cx="-3463.8958"
+       cy="763.67535"
+       r="12.894061" />
+    <circle
+       r="12.894061"
+       cy="763.67535"
+       cx="-3417.8958"
+       id="circle5896"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  </g>
+  <g
+     id="g6133"
+     inkscape:export-xdpi="8.5343227"
+     inkscape:export-ydpi="8.5343227">
+    <rect
+       y="701.29602"
+       x="-3192.9741"
+       height="420"
+       width="465"
+       id="rect5898"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       inkscape:export-xdpi="8.5343227"
+       inkscape:export-ydpi="8.5343227" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path5902"
+       d="m -2963.3112,737.2203 c -26.1742,1e-5 -47.3926,18.5245 -47.3926,41.375 0,6.4361 -0.703,12.52855 -0.457,17.96094 -8.5016,6.17825 -15.1303,14.28779 -20.2676,23.90625 l -27.4258,-10.99024 -13.5078,-56.21484 c 0,0 -12.5366,54.31194 3.084,72.06445 6.9743,7.92625 18.343,14.19037 28.8008,18.71094 -3.3893,12.67272 -5.3115,26.79475 -6.2168,41.86719 -14.6626,7.66135 -31.422,17.96192 -38.8008,28.1582 -14.4644,19.98743 -14.7109,66.38281 -14.7109,66.38281 l 27.082,-58.67773 25.7734,-12.88672 c -10e-5,0.16666 -0.01,0.32928 -0.01,0.4961 0,22.59758 5.0708,43.66097 13.1347,61.86718 -12.9307,8.72826 -28.0203,21.12531 -31.3808,33.27347 -6.1184,22.1175 21.0644,87.4765 21.0644,87.4765 l -3.8144,-81.0175 24.6523,-20.0645 c 17.1525,26.9415 40.6947,44.0931 60.3887,44.8594 18.8913,0.735 41.3248,-15.1611 58.2617,-40.63479 l 21.0547,14.51759 -11.6699,79.2539 c 0,0 38.27,-59.8924 30.166,-85.8965 -3.5018,-11.23662 -15.2153,-21.74716 -27.3887,-30.0664 8.1158,-18.23887 13.3168,-39.31405 13.5996,-61.65429 l 19.9883,7.46679 16.3672,58.67774 c 0,0 9.8733,-50.04442 -3.0078,-69.20899 -5.9645,-8.874 -20.9225,-15.44487 -33.8418,-19.71289 -0.8331,-15.99247 -2.765,-30.96661 -6.3242,-44.33007 12.4181,-4.49823 26.5972,-11.10934 33.5996,-19.55469 13.9882,-16.87072 4.332,-67.91797 4.332,-67.91797 l -21.0644,59.14844 -23.8536,8.78515 c -5.3868,-11.46551 -12.6626,-21.02765 -22.3691,-28.08203 0.2463,-5.43288 -0.457,-11.52601 -0.457,-17.96289 0,-22.8505 -21.2184,-41.37499 -47.3926,-41.375 z"
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <circle
+       r="12.894061"
+       cy="763.67535"
+       cx="-2985.8958"
+       id="circle5904"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="circle5906"
+       cx="-2939.8958"
+       cy="763.67535"
+       r="12.894061" />
+    <path
+       inkscape:export-ydpi="9.966197"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       style="opacity:1;fill:#bb871e;fill-opacity:1;stroke:none"
+       d="m -2882.6681,910.7812 c 0.3559,67.43219 -37.8255,115.8884 -79.3006,124.6008 -55.8787,-14.6879 -74.787,-58.694 -74.787,-124.6008 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+       id="path5908"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="zcszz" />
+    <path
+       sodipodi:nodetypes="zcszz"
+       inkscape:connector-curvature="0"
+       id="path5910"
+       d="m -2882.6681,910.7812 c 0.3559,67.4322 -37.8255,115.8884 -79.3006,124.6008 -55.8787,-14.6879 -74.787,-58.694 -74.787,-124.6008 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+       style="opacity:0.1896552;fill:url(#pattern6058);fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-ydpi="9.966197" />
+    <g
+       transform="translate(-2189.3763,991.6693)"
+       id="g5912"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-ydpi="9.966197">
+      <path
+         sodipodi:nodetypes="cccsc"
+         inkscape:connector-curvature="0"
+         id="path5914"
+         d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+         style="fill:#ffeeaa;fill-opacity:0.76811595;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-ydpi="15.083976" />
+      <path
+         style="fill:url(#pattern5681);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+         id="path5916"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccsc"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-ydpi="15.083976" />
+    </g>
+    <g
+       transform="translate(-2193.3763,991.6693)"
+       id="g5918"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-ydpi="9.966197">
+      <path
+         style="fill:#ffeeaa;fill-opacity:0.81642516;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+         id="path5920"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccsc"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-ydpi="15.083976" />
+      <path
+         sodipodi:nodetypes="cccsc"
+         inkscape:connector-curvature="0"
+         id="path5922"
+         d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+         style="fill:url(#pattern5687);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-ydpi="15.083976" />
+    </g>
+    <path
+       d="m -2972.8963,871.60499 c 9.7419,-8.18069 7.4193,-26.96391 1.5538,-48.86064 -70.5528,-17.30594 -127.1703,9.54319 -168.5201,56.42078 l 22.7331,17.56769 c 78.6216,-12.8264 114.0427,-19.35817 144.2332,-25.12783 z m 22.271,-0.0373 c -9.7418,-8.18068 -7.4193,-26.96391 -1.5538,-48.86064 70.5528,-17.30593 127.1704,9.54309 168.5201,56.42081 l -22.7331,17.56765 c -78.6216,-12.82637 -114.0426,-19.35826 -144.2332,-25.12782 z"
+       style="fill:url(#radialGradient5962);fill-opacity:1.0;fill-rule:evenodd;stroke:#000000;stroke-width:14;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4730)"
+       id="path5926" />
+  </g>
+  <g
+     id="g6148"
+     inkscape:export-xdpi="8.5343227"
+     inkscape:export-ydpi="8.5343227">
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect5928"
+       width="465"
+       height="420"
+       x="-2710.9741"
+       y="699.47009"
+       inkscape:export-xdpi="8.5343227"
+       inkscape:export-ydpi="8.5343227" />
+    <path
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m -2485.3112,737.2203 c -26.1742,1e-5 -47.3926,18.5245 -47.3926,41.375 0,6.4361 -0.703,12.52855 -0.457,17.96094 -8.5016,6.17825 -15.1303,14.28779 -20.2676,23.90625 l -27.4258,-10.99024 -13.5078,-56.21484 c 0,0 -12.5366,54.31194 3.084,72.06445 6.9743,7.92625 18.343,14.19037 28.8008,18.71094 -3.3893,12.67272 -5.3115,26.79475 -6.2168,41.86719 -14.6626,7.66135 -31.422,17.96192 -38.8008,28.1582 -14.4644,19.98743 -14.7109,66.38281 -14.7109,66.38281 l 27.082,-58.67773 25.7734,-12.88672 c -10e-5,0.16666 -0.01,0.32928 -0.01,0.4961 0,22.59758 5.0708,43.66097 13.1347,61.86718 -12.9307,8.72826 -28.0203,21.12531 -31.3808,33.27347 -6.1184,22.1175 21.0644,87.4765 21.0644,87.4765 l -3.8144,-81.0175 24.6523,-20.0645 c 17.1525,26.9415 40.6947,44.0931 60.3887,44.8594 18.8913,0.735 41.3248,-15.1611 58.2617,-40.63479 l 21.0547,14.51759 -11.6699,79.2539 c 0,0 38.27,-59.8924 30.166,-85.8965 -3.5018,-11.23662 -15.2153,-21.74716 -27.3887,-30.0664 8.1158,-18.23887 13.3168,-39.31405 13.5996,-61.65429 l 19.9883,7.46679 16.3672,58.67774 c 0,0 9.8733,-50.04442 -3.0078,-69.20899 -5.9645,-8.874 -20.9225,-15.44487 -33.8418,-19.71289 -0.8331,-15.99247 -2.765,-30.96661 -6.3242,-44.33007 12.4181,-4.49823 26.5972,-11.10934 33.5996,-19.55469 13.9882,-16.87072 4.332,-67.91797 4.332,-67.91797 l -21.0644,59.14844 -23.8536,8.78515 c -5.3868,-11.46551 -12.6626,-21.02765 -22.3691,-28.08203 0.2463,-5.43288 -0.457,-11.52601 -0.457,-17.96289 0,-22.8505 -21.2184,-41.37499 -47.3926,-41.375 z"
+       id="path5932"
+       inkscape:connector-curvature="0" />
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="circle5934"
+       cx="-2507.8958"
+       cy="763.67535"
+       r="12.894061" />
+    <circle
+       r="12.894061"
+       cy="763.67535"
+       cx="-2461.8958"
+       id="circle5936"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       sodipodi:nodetypes="zcszz"
+       inkscape:connector-curvature="0"
+       id="path5938"
+       d="m -2404.6681,910.7812 c 0.3559,67.43219 -37.8255,115.8884 -79.3006,124.6008 -55.8787,-14.6879 -74.787,-58.694 -74.787,-124.6008 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+       style="opacity:1;fill:#bb871e;fill-opacity:1;stroke:none"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-ydpi="9.966197" />
+    <path
+       inkscape:export-ydpi="9.966197"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       style="opacity:0.1896552;fill:url(#pattern6074);fill-opacity:1;stroke:none"
+       d="m -2404.6681,910.7812 c 0.3559,67.4322 -37.8255,115.8884 -79.3006,124.6008 -55.8787,-14.6879 -74.787,-58.694 -74.787,-124.6008 0,-65.9068 39.797,-56.82469 74.6109,-57.0371 34.8139,-0.21241 79.1208,-10.39509 79.4767,57.0371 z"
+       id="path5940"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="zcszz" />
+    <g
+       inkscape:export-ydpi="9.966197"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       id="g5942"
+       transform="matrix(0.96592583,-0.25881905,0.25881905,0.96592583,-1714.5809,769.71929)">
+      <path
+         inkscape:export-ydpi="15.083976"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         style="fill:#ffeeaa;fill-opacity:0.76811595;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+         id="path5944"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccsc" />
+      <path
+         inkscape:export-ydpi="15.083976"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         sodipodi:nodetypes="cccsc"
+         inkscape:connector-curvature="0"
+         id="path5946"
+         d="m -773.57043,-150.68733 c -183.04438,103.33164 -173.07094,54.61813 -225.28956,120.39477 158.84072,-18.73384 173.75463,3.14734 173.75463,3.14734 0,0 7.22058,-50.21976 20.55161,-80.25569 7.50975,-16.92093 47.35748,-31.61948 30.98332,-43.28642 z"
+         style="fill:url(#pattern5681);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       inkscape:export-ydpi="9.966197"
+       inkscape:export-xdpi="9.966197"
+       inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_blue2.png"
+       id="g5948"
+       transform="matrix(0.96592583,0.25881905,-0.25881905,0.96592583,-1764.4252,1166.7986)">
+      <path
+         inkscape:export-ydpi="15.083976"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         sodipodi:nodetypes="cccsc"
+         inkscape:connector-curvature="0"
+         id="path5950"
+         d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+         style="fill:#ffeeaa;fill-opacity:0.81642516;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="15.083976"
+         inkscape:export-xdpi="15.083976"
+         inkscape:export-filename="/Users/msh801/github/ComputerMuseum/images/gems/beetle_red1.png"
+         style="fill:url(#pattern5687);fill-opacity:1;stroke:#000000;stroke-width:0.80586845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -772.17795,-150.66392 c 183.04438,103.33163 180.51797,56.74586 232.73653,122.5225 -158.84067,-18.73385 -173.75457,3.14734 -173.75457,3.14734 0,0 -7.22059,-50.21977 -20.55161,-80.25569 -7.50976,-16.92093 -54.80451,-33.74721 -38.43035,-45.41415 z"
+         id="path5952"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccsc" />
+    </g>
+    <path
+       inkscape:connector-curvature="0"
+       id="path5954"
+       d="m -2472.6253,871.56769 c -9.7418,-8.18068 -7.4193,-26.96391 -1.5538,-48.86064 70.5528,-17.30593 127.1704,9.54309 168.5201,56.42081 l -22.7331,17.56765 c -78.6216,-12.82637 -114.0426,-19.35826 -144.2332,-25.12782 z"
+       style="fill:url(#radialGradient5964);fill-opacity:1.0;fill-rule:evenodd;stroke:#000000;stroke-width:14;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path5956"
+       d="m -2494.8963,871.60499 c 9.7419,-8.18069 7.4193,-26.96391 1.5538,-48.86064 -70.5528,-17.30594 -127.1703,9.54319 -168.5201,56.42078 l 22.7331,17.56769 c 78.6216,-12.8264 114.0427,-19.35817 144.2332,-25.12783 z"
+       style="fill:url(#radialGradient5966);fill-opacity:1.0;fill-rule:evenodd;stroke:#000000;stroke-width:14;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4730)" />
+  </g>
+  <g
+     id="g6268"
+     inkscape:export-xdpi="8.5343227"
+     inkscape:export-ydpi="8.5343227">
+    <rect
+       inkscape:export-ydpi="8.5343227"
+       inkscape:export-xdpi="8.5343227"
+       y="698.55707"
+       x="-4131.9741"
+       height="421.82608"
+       width="465"
+       id="rect6239"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path6241"
+       d="m -3901.3112,737.2203 c -26.1742,1e-5 -47.3926,18.5245 -47.3926,41.375 0,6.4361 -0.703,12.52855 -0.457,17.96094 -8.5016,6.17825 -15.1303,14.28779 -20.2676,23.90625 l -27.4258,-10.99024 -13.5078,-56.21484 c 0,0 -12.5366,54.31193 3.084,72.06445 6.9743,7.92625 18.343,14.19037 28.8008,18.71094 -3.3893,12.67272 -5.3115,26.79475 -6.2168,41.86719 -14.6626,7.66135 -31.422,17.96192 -38.8008,28.1582 -14.4644,19.98743 -14.7109,66.38281 -14.7109,66.38281 l 27.082,-58.67773 25.7734,-12.88672 c -10e-5,0.16666 -0.01,0.32928 -0.01,0.4961 0,22.59758 5.0708,43.66097 13.1347,61.86718 -12.9307,8.72826 -28.0203,21.12531 -31.3808,33.27347 -6.1184,22.1175 21.0644,87.4765 21.0644,87.4765 l -3.8144,-81.0175 24.6523,-20.0645 c 17.1525,26.9415 40.6947,44.0931 60.3887,44.8594 18.8913,0.735 41.3248,-15.1611 58.2617,-40.63479 l 21.0547,14.51759 -11.6699,79.2539 c 0,0 38.27,-59.8924 30.166,-85.8965 -3.5018,-11.23662 -15.2153,-21.74716 -27.3887,-30.0664 8.1158,-18.23887 13.3168,-39.31405 13.5996,-61.65429 l 19.9883,7.46679 16.3672,58.67774 c 0,0 9.8733,-50.04442 -3.0078,-69.20899 -5.9645,-8.874 -20.9225,-15.44487 -33.8418,-19.71289 -0.8331,-15.99247 -2.765,-30.96661 -6.3242,-44.33007 12.4181,-4.49823 26.5972,-11.10934 33.5996,-19.55469 13.9882,-16.87072 4.332,-67.91797 4.332,-67.91797 l -21.0644,59.14844 -23.8536,8.78515 c -5.3868,-11.46551 -12.6626,-21.02765 -22.3691,-28.08203 0.2463,-5.43288 -0.457,-11.52601 -0.457,-17.96289 0,-22.8505 -21.2184,-41.37499 -47.3926,-41.375 z"
+       style="opacity:1;fill:#000000;fill-opacity:0.80346823;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       inkscape:connector-curvature="0"
+       d="m -3895.318,831.15454 c 5.3805,-11.52733 24.1249,-14.14523 46.7936,-14.14693 34.9767,63.66969 23.6962,125.30703 -10.8821,177.38063 l -22.8528,-17.4116 c -7.9594,-79.2623 -10.8178,-115.16704 -13.0587,-145.8221 z m -8.8856,0.0373 c -5.3805,-11.52732 -24.1249,-14.14523 -46.7936,-14.14693 -34.9767,63.66969 -23.6961,125.30703 10.8821,177.38062 l 22.8528,-17.41157 c 7.9594,-79.26232 10.8179,-115.16707 13.0587,-145.82212 z"
+       style="fill:#3b3b3b;fill-opacity:0.5780347;fill-rule:evenodd;stroke:#000000;stroke-width:1.02290082px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="path6243" />
+    <circle
+       r="12.894061"
+       cy="763.67535"
+       cx="-3923.8958"
+       id="circle6245"
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <circle
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="circle6247"
+       cx="-3877.8958"
+       cy="763.67535"
+       r="12.894061" />
+  </g>
 </svg>
