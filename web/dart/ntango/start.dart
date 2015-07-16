@@ -35,6 +35,7 @@ class StartBlock extends BeginBlock {
   StartBlock(CodeWorkspace workspace) : super(workspace, 'start') {
     x = getStartX();
     y = getStartY();
+    _height = BLOCK_HEIGHT * 1.25;
     color = 'green';
     end = new EndProgramBlock(workspace, this);
     end.y = y + height + BLOCK_MARGIN + 20;
@@ -42,9 +43,9 @@ class StartBlock extends BeginBlock {
     workspace.addBlock(end);
     inserted = true;
     _width = (BLOCK_WIDTH + BLOCK_MARGIN).toDouble();
-    _play = new Button(x + 65, y + height / 2 - 15, workspace, "images/toolbar/play.png", () {
+    _play = new Button(x + 55, y + height / 2 - 15, workspace, "images/toolbar/play.png", () {
       workspace.playProgram(); });
-    _pause = new Button(x + 65, y + height / 2 - 15, workspace, "images/toolbar/pause.png", () {
+    _pause = new Button(x + 55, y + height / 2 - 15, workspace, "images/toolbar/pause.png", () {
       workspace.pauseProgram(); });
     _pause.visible = false;
   }
@@ -73,9 +74,9 @@ class StartBlock extends BeginBlock {
    */
   void draw(CanvasRenderingContext2D ctx, [ bool disabled = false ]) {
     super.draw(ctx);
-    _play.x = x + 65;
+    _play.x = x + 55;
     _play.y = y + height/2 - 15;
-    _pause.x = x + 65;
+    _pause.x = x + 55;
     _pause.y = y + height/2 - 15;
     _play.visible = !workspace.isProgramRunning();
     _pause.visible = workspace.isProgramRunning();
