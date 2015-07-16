@@ -28,7 +28,10 @@ part of NetTango;
  * Start block
  */
 class StartBlock extends BeginBlock {
+
+  Button _play, _pause, _target = null;
   
+
   StartBlock(CodeWorkspace workspace) : super(workspace, 'start') {
     x = getStartX();
     y = getStartY();
@@ -39,6 +42,11 @@ class StartBlock extends BeginBlock {
     workspace.addBlock(end);
     inserted = true;
     _width = (BLOCK_WIDTH + BLOCK_MARGIN).toDouble();
+    _play = new Button(x + 65, y + height / 2 - 15, workspace, "images/toolbar/play.png", () {
+      workspace.playProgram(); });
+    _pause = new Button(x + 65, y + height / 2 - 15, workspace, "images/toolbar/pause.png", () {
+      workspace.pauseProgram(); });
+    _pause.visible = false;
   }
   
   
@@ -59,9 +67,45 @@ class StartBlock extends BeginBlock {
   
   bool get isInProgram => true;
 
+
+  /**
+   * Draw the block
+   */
+  void draw(CanvasRenderingContext2D ctx, [ bool disabled = false ]) {
+    super.draw(ctx);
+    _play.x = x + 65;
+    _play.y = y + height/2 - 15;
+    _pause.x = x + 65;
+    _pause.y = y + height/2 - 15;
+    _play.visible = !workspace.isProgramRunning();
+    _pause.visible = workspace.isProgramRunning();
+    _play.draw(ctx);
+    _pause.draw(ctx);
+  }
+
   
+  bool animate() {
+    bool refresh = super.animate();
+    if (_play.animate()) return true;
+    if (_pause.animate()) return true;
+    return refresh;
+  }
+  
+  void pulse() {
+    _play.pulse();
+  }
+
+
   bool touchDown(Contact c) {
     dragging = false;
+    _target = null;
+    if (_play.containsTouch(c)) {
+      _target = _play;
+      _play.touchDown(c);
+    } else if (_pause.containsTouch(c)) {
+      _target = _pause;
+      _pause.touchDown(c);
+    }
     _lastX = c.touchX;
     _lastY = c.touchY;
     workspace.draw();
@@ -70,6 +114,11 @@ class StartBlock extends BeginBlock {
   
   
   void touchDrag(Contact c) {
+    if (_target == null) {
+      moveChain(c.touchX - _lastX, c.touchY - _lastY);
+    } else {
+      _target.touchDrag(c);
+    }
     _lastX = c.touchX;
     _lastY = c.touchY;
     workspace.draw();
@@ -78,13 +127,16 @@ class StartBlock extends BeginBlock {
   
   void touchUp(Contact c) {
     dragging = false;
+    if (_target != null) {
+      _target.touchUp(c);
+    }
+    _target = null;
     workspace.draw();
   }
   
   
   void touchCancel(Contact c) {
-    dragging = false;
-    workspace.draw();
+    touchUp(c);
   }
 }
 
