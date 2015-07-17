@@ -133,7 +133,7 @@ class Toolbar {
       //---------------------------------------------
       // show code dialog
       //---------------------------------------------
-      //drawShowCode(ctx);
+      drawShowCode(ctx);
     }
     ctx.restore();
   }
@@ -142,7 +142,7 @@ class Toolbar {
     Frog focal = workspace.getFocalFrog();
     if (focal == null) return;
       
-    ctx.font = '200 15px Monaco, monospace';
+    ctx.font = '600 15px Monaco, monospace';
     ctx.textBaseline = 'top';
     ctx.textAlign = 'left';
 
@@ -171,6 +171,7 @@ class Toolbar {
     }
   }
   
+
   void showCode() {
     tween = new Tween();
     tween.function = TWEEN_SINE2;
@@ -223,7 +224,6 @@ class FrogButton extends Touchable {
   }
   
   bool touchDown(Contact c) {
-    print("touch froggy");
     toolbar.showCode();
     return true;
   }
