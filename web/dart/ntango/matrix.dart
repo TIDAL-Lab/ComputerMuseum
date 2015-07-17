@@ -117,4 +117,8 @@ class Matrix2D {
   void transformContext(CanvasRenderingContext2D ctx) {
     ctx.transform(xform[0], xform[3], xform[1], xform[4], xform[2], xform[5]);
   }
+
+  String toString() {
+    return xform.toString();
+  }
 }
