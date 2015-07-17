@@ -1,8 +1,8 @@
 TODO:
 
-Right programming space isn't getting touch events
+add lotus
 
-credits
+master restart should just pause frogs?? maybe if there's a long long pause it will restart frogs. 
 
 restart button has menu
   * clear scoreboard
