@@ -326,6 +326,12 @@ abstract class CodeWorkspace extends TouchLayer {
     {
       // transform into workspace coordinates
       xform.transformContext(ctx);
+
+      // draw the menu and toolbar
+      ctx.fillStyle = '#0F3745'; //'rgba(0, 0, 0, 0.3)';
+      ctx.fillRect(0, height - BLOCK_HEIGHT * 2, width, BLOCK_HEIGHT * 2);
+      menu.draw(ctx);
+      toolbar.draw(ctx);
       
       // draw blocks
       blocks.forEach((block) => block.draw(ctx));
@@ -334,13 +340,14 @@ abstract class CodeWorkspace extends TouchLayer {
       bug.draw(ctx);
       
       // draw the help message
-      help.draw(ctx);
+      ctx.save();
+      {
+        ctx.rect(0, height - 500, width, 500 - BLOCK_HEIGHT * 2);
+        ctx.clip();
+        help.draw(ctx);
+      }
+      ctx.restore();
       
-      // draw the menu and toolbar
-      ctx.fillStyle = '#0F3745'; //'rgba(0, 0, 0, 0.3)';
-      ctx.fillRect(0, height - BLOCK_HEIGHT * 2, width, BLOCK_HEIGHT * 2);
-      menu.draw(ctx);
-      toolbar.draw(ctx);
     }
     ctx.restore();
   }
