@@ -33,18 +33,22 @@ class Help implements Touchable {
   
   /* vertical location of the help message */
   num y;
+
+  /* height of help message */
+  num h = 410;
   
   ImageElement help = new ImageElement();
 
 
-  Help(this.workspace) {  
-    help.src = "images/help/help.png";
+  Help(this.workspace, [String img = "images/help/help.png"]) {  
+    help.src = img;
     y = workspace.height;
+    help.onLoad.listen((event) { h = help.height; } );
   }
 
   
-  bool get isVisible => y <= workspace.height - 410;
-  bool get isHidden => y >= workspace.height;
+  bool get isVisible => y <= workspace.height - (h + BLOCK_HEIGHT * 2);
+  bool get isHidden => y >= workspace.height - BLOCK_HEIGHT * 2;
 
 
   bool animate() {
@@ -80,9 +84,9 @@ class Help implements Touchable {
       tween.function = TWEEN_SINE2;
       tween.delay = 0;
       tween.duration = 10;
-      tween.addControlPoint(420, 0);
+      tween.addControlPoint(h + BLOCK_HEIGHT * 2, 0);
       tween.addControlPoint(0, 1.0);
-      tween.ontick = ((value) => y = workspace.height - value );
+      tween.ontick = ((value) => y = workspace.height - value);
     }
   }
   
@@ -96,8 +100,8 @@ class Help implements Touchable {
       tween.delay = 0;
       tween.duration = 10;
       tween.addControlPoint(0, 0);
-      tween.addControlPoint(420, 1.0);
-      tween.ontick = ((value) => y = workspace.height - value );
+      tween.addControlPoint(h + BLOCK_HEIGHT * 2, 1.0);
+      tween.ontick = ((value) => y = workspace.height - value);
     }
   }
   
