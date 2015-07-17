@@ -337,6 +337,12 @@ class Block implements Touchable {
     _outline(ctx, x, y, width, height);
     ctx.save();
     {
+      /*
+      ctx.shadowColor = "#333";
+      ctx.shadowBlur = 3;
+      ctx.shadowOffsetX = 3;
+      ctx.shadowOffsetY = 3;
+      */
       ctx.fillStyle = color;
       ctx.strokeStyle = outlineColor;
       ctx.lineWidth = 1.5;
