@@ -38,7 +38,7 @@ class Help implements Touchable {
 
 
   Help(this.workspace) {  
-    help.src = "images/help/help2.png";
+    help.src = "images/help/help.png";
     y = workspace.height;
   }
 
@@ -58,7 +58,8 @@ class Help implements Touchable {
 
   
   void draw(CanvasRenderingContext2D ctx) {
-    ctx.drawImage(help, 50, y);
+    int w = help.width;
+    ctx.drawImage(help, workspace.width / 2 - w/2, y);
   }
   
   
@@ -79,7 +80,7 @@ class Help implements Touchable {
       tween.function = TWEEN_SINE2;
       tween.delay = 0;
       tween.duration = 10;
-      tween.addControlPoint(410, 0);
+      tween.addControlPoint(420, 0);
       tween.addControlPoint(0, 1.0);
       tween.ontick = ((value) => y = workspace.height - value );
     }
@@ -95,7 +96,7 @@ class Help implements Touchable {
       tween.delay = 0;
       tween.duration = 10;
       tween.addControlPoint(0, 0);
-      tween.addControlPoint(410, 1.0);
+      tween.addControlPoint(420, 1.0);
       tween.ontick = ((value) => y = workspace.height - value );
     }
   }
