@@ -43,9 +43,9 @@ class StartBlock extends BeginBlock {
     workspace.addBlock(end);
     inserted = true;
     _width = (BLOCK_WIDTH + BLOCK_MARGIN).toDouble();
-    _play = new Button(x + 55, y + height / 2 - 15, workspace, "images/toolbar/play.png", () {
+    _play = new Button(x + 55, y + height / 2 - 12, workspace, "images/toolbar/play-small.png", () {
       workspace.playProgram(); });
-    _pause = new Button(x + 55, y + height / 2 - 15, workspace, "images/toolbar/pause.png", () {
+    _pause = new Button(x + 55, y + height / 2 - 12, workspace, "images/toolbar/pause-small.png", () {
       workspace.pauseProgram(); });
     _pause.visible = false;
   }
@@ -75,9 +75,9 @@ class StartBlock extends BeginBlock {
   void draw(CanvasRenderingContext2D ctx, [ bool disabled = false ]) {
     super.draw(ctx);
     _play.x = x + 55;
-    _play.y = y + height/2 - 15;
+    _play.y = y + height/2 - 12;
     _pause.x = x + 55;
-    _pause.y = y + height/2 - 15;
+    _pause.y = y + height/2 - 12;
     _play.visible = !workspace.isProgramRunning();
     _pause.visible = workspace.isProgramRunning();
     _play.draw(ctx);
