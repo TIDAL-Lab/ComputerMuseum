@@ -64,16 +64,17 @@ class FrogPond extends TouchLayer {
     for (int i=0; i<MAX_BEETLES; i++) bugs.add(new Beetle(this));
     
     addLilyPad(300.0, height/2, 0.65);
-    addLilyPad(370.0, 100.0, 0.6);
-    addLilyPad(1620.0, height/2, 0.6);
-    addLilyPad(550.0, 790.0, 0.8);
-    addLilyPad(630.0, 370.0, 0.9);
-    addLilyPad(940.0, 650.0, 0.8);
-    addLilyPad(1000.0, 250.0, 0.8);
-    addLilyPad(1300.0, height/2, 0.8);
-    addLilyPad(1400.0, 130.0, 0.58);
-    addLilyPad(1280.0, height - 130.0, 0.73);
-    addLilyPad(900.0, height - 130.0, 0.6);
+    addLilyPad(370.0, 110.0, 0.52);
+    addLilyPad(545.0, 775.0, 0.8);
+    addLilyPad(625.0, 345.0, 0.9);
+    addLilyPad(910.0, height - 170.0, 0.65);
+    addLilyPad(900.0, 630.0, 0.7);
+    addLilyPad(1015.0, 240.0, 0.83);
+    addLilyPad(1280.0, height - 130.0, 0.7);
+    addLilyPad(1285.0, height/2 + 5, 0.8);
+    addLilyPad(1370.0, 154.0, 0.6);
+    addLilyPad(1595.0, height - 200, 0.52);
+    addLilyPad(1620.0, height/2, 0.7);
     
 
     FrogWorkspace workspace = new FrogWorkspace(this, height, width, "yellow");
