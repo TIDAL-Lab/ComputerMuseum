@@ -30,22 +30,7 @@ canvas {
    background-position: cover;
 }
 
-#background { z-index: 1; }
-
-#foreground { z-index: 2; }
-
-#workspace1 { z-index: 3; }
-
-#workspace2 { z-index: 4; }
-
-#plot {
-   z-index: 5;
-   margin: 0;
-   padding: 0;
-   position: absolute;
-   top: 20px;
-   right: 20px;
-   background-color: white;
-   outline: none;
-   border: 1px solid black;
+#flies {
+   z-index: 1;
 }
+
