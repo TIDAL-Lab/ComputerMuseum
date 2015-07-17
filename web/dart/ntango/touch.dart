@@ -62,12 +62,15 @@ class TouchManager {
  */
   TouchBinding findTouchTarget(Contact tp) {
     for (int i=layers.length - 1; i >= 0; i--) {
-      Touchable t = layers[i].findTouchTarget(tp);
+      Contact c = new Contact.copy(tp);
+      layers[i].iform.transformContact(c);
+      Touchable t = layers[i].findTouchTarget(c);
+
       if (t != null) {
         layers[i].resetTouchTimer();
         return new TouchBinding(layers[i], t);
       } else {
-        if (layers[i].backgroundTouch(tp)) {
+        if (layers[i].backgroundTouch(c)) {
           return null;
         }
       }
@@ -262,10 +265,8 @@ class TouchLayer {
  * Find a touchable object that intersects with the given touch event
  */
   Touchable findTouchTarget(Contact tp) {
-    Contact c = new Contact.copy(tp);
-    iform.transformContact(c);
     for (int i=touchables.length - 1; i >= 0; i--) {
-      if (touchables[i].containsTouch(c)) {
+      if (touchables[i].containsTouch(tp)) {
         return touchables[i];
       }
     }
@@ -432,5 +433,10 @@ class Contact {
     down = c.down;
     drag = c.drag;
     finger = c.finger;
+  }
+
+
+  String toString() {
+    return "touch [$touchX, $touchY]";
   }
 }
