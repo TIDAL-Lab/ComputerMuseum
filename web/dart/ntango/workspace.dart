@@ -48,6 +48,9 @@ abstract class CodeWorkspace extends TouchLayer {
   
   /* help message */
   Help help;
+
+  /* credits message */
+  Help credits;
   
   
   CanvasElement canvas;
@@ -70,8 +73,9 @@ abstract class CodeWorkspace extends TouchLayer {
     addBlock(start);
     buildDefaultProgram();
     
-    // help message
+    // help messages
     help = new Help(this);
+    credits = new Help(this, "images/help/credits.png");
     
     // trace bug
     bug = new TraceBug(start);
@@ -92,6 +96,7 @@ abstract class CodeWorkspace extends TouchLayer {
       removeAllBlocks();
       buildDefaultProgram();
       help.show();
+      credits.hide();
       Logging.logEvent("${name}-timeout");
     }
   }
@@ -296,6 +301,8 @@ abstract class CodeWorkspace extends TouchLayer {
     
     if (help.animate()) refresh = true;
 
+    if (credits.animate()) refresh = true;
+
     //----------------------------------------------
     // for each block being dragged, identify active insertion points 
     //----------------------------------------------
@@ -338,12 +345,13 @@ abstract class CodeWorkspace extends TouchLayer {
       // draw the trace bug
       bug.draw(ctx);
       
-      // draw the help message
+      // draw the help messages
       ctx.save();
       {
-        ctx.rect(0, height - 500, width, 500 - BLOCK_HEIGHT * 2);
+        ctx.rect(0, height - 600, width, 600 - BLOCK_HEIGHT * 2);
         ctx.clip();
         help.draw(ctx);
+        credits.draw(ctx);
       }
       ctx.restore();
       
@@ -354,6 +362,11 @@ abstract class CodeWorkspace extends TouchLayer {
   
   void showHideHelp() {
     help.showHide();
+  }
+
+
+  void showHideCredits() {
+    credits.showHide();
   }
   
   
