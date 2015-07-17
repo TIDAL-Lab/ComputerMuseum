@@ -53,9 +53,9 @@ class Toolbar {
   Toolbar(this.workspace, this.x, this.y, this.w, this.h) {
     froggy = new FrogButton(x + 10, y - 4, this);
     
-    num bx = x + 85;
+    num bx = x + 98;
     num by = y + h/2 - 15;
-    int bspace = 42;
+    int bspace = 48;
     
     buttons.add(new Button(bx, by, workspace, "images/toolbar/play.png", () {
       workspace.playProgram(); }));
@@ -65,11 +65,11 @@ class Toolbar {
     
     buttons.add(new Button(bx + bspace, by, workspace, "images/toolbar/restart.png", () {
       workspace.restartProgram(); }));
-    
+    /*
     buttons.add(new Button(bx + bspace * 2, by, workspace, "images/toolbar/trash.png", () {
       workspace.removeAllBlocks(); }));
-    
-    buttons.add(new Button(bx + bspace * 3, by, workspace, "images/toolbar/help.png", () {
+    */
+    buttons.add(new Button(bx + bspace * 2, by, workspace, "images/toolbar/help.png", () {
       workspace.showHideHelp(); }));
     
     play = buttons[0];
@@ -106,6 +106,7 @@ class Toolbar {
       //---------------------------------------------
       // toolbar outline
       //---------------------------------------------
+      /*
       ctx.fillStyle = '#3e5d64';
       ctx.strokeStyle = '#223333';
       ctx.lineWidth = 3;
@@ -116,7 +117,7 @@ class Toolbar {
       ctx.lineTo(x - 6, y + h);
       ctx.fill();
       ctx.stroke();
-      
+      */
       //---------------------------------------------
       // representative frog
       //---------------------------------------------      
@@ -137,7 +138,6 @@ class Toolbar {
     ctx.restore();
   }
   
-/*  
   void drawShowCode(CanvasRenderingContext2D ctx) {
     Frog focal = workspace.getFocalFrog();
     if (focal == null) return;
@@ -170,7 +170,6 @@ class Toolbar {
       ctx.fillText(lines[i], dx + margin, dy + margin * 1.5 + i * 20);
     }
   }
-
   
   void showCode() {
     tween = new Tween();
@@ -191,7 +190,6 @@ class Toolbar {
     tween.addControlPoint(0.0, 1.0);
     tween.ontick = ((value) => alpha = value);
   }
-*/
 }
 
 class FrogButton extends Touchable {
@@ -225,12 +223,13 @@ class FrogButton extends Touchable {
   }
   
   bool touchDown(Contact c) {
-    //toolbar.showCode();
+    print("touch froggy");
+    toolbar.showCode();
     return true;
   }
   
   void touchUp(Contact c) {
-    //toolbar.hideCode();
+    toolbar.hideCode();
   }
   void touchCancel(Contact c) { }
   void touchDrag(Contact c) { }
