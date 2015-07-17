@@ -328,7 +328,7 @@ abstract class CodeWorkspace extends TouchLayer {
       xform.transformContext(ctx);
 
       // draw the menu and toolbar
-      ctx.fillStyle = '#0F3745'; //'rgba(0, 0, 0, 0.3)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)'; // '#0F3745'; 
       ctx.fillRect(0, height - BLOCK_HEIGHT * 2, width, BLOCK_HEIGHT * 2);
       menu.draw(ctx);
       toolbar.draw(ctx);
