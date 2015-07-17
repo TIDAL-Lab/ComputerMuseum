@@ -47,8 +47,8 @@ class FrogWorkspace extends CodeWorkspace {
     
     // bug scoreboard
     scoreboard = new Scoreboard(this, width - 150, height - BLOCK_HEIGHT * 1.85, 150, BLOCK_HEIGHT * 1.85);
-    
-    help.show();
+
+    help.help.onLoad.listen((e) => help.show());    
   }
   
   
