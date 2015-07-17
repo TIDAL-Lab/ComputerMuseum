@@ -57,7 +57,7 @@ class StartBlock extends BeginBlock {
   
   
   double getStartX() {
-    return workspace.width / 2 - 380.0;
+    return workspace.width / 2 - 280.0;
   }
   
   
