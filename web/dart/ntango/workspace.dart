@@ -66,7 +66,7 @@ abstract class CodeWorkspace extends TouchLayer {
     toolbar = new Toolbar(this, 0, height - BLOCK_HEIGHT * 1.85, 270, BLOCK_HEIGHT * 1.85);
     
     // menu bar
-    menu = new Menu(this, 245, height - BLOCK_HEIGHT * 1.85, width - 245, BLOCK_HEIGHT * 1.85);
+    menu = new Menu(this, 290, height - BLOCK_HEIGHT * 1.85, width - 290, BLOCK_HEIGHT * 1.85);
     
     // start block
     start = new StartBlock(this);
@@ -361,11 +361,13 @@ abstract class CodeWorkspace extends TouchLayer {
 
   
   void showHideHelp() {
+    //credits.hide();
     help.showHide();
   }
 
 
   void showHideCredits() {
+    //help.hide();
     credits.showHide();
   }
   
