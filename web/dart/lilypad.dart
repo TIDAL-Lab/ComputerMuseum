@@ -44,13 +44,15 @@ class LilyPad extends Turtle implements Touchable {
 
   
   void _drawLocal(CanvasRenderingContext2D ctx) {  
-    num iw = width;
-    num ih = height;
-    ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
-    //ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
-    //ctx.beginPath();
-    //ctx.arc(0, 0, radius, 0, PI * 2, true);
-    //ctx.fill();
+    /*
+    ctx.beginPath();
+    ctx.strokeStyle = "white";
+    ctx.arc(0, 0, iw/2, 0, PI * 2, true);
+    ctx.stroke();
+    */
+    //num iw = width;
+    //num ih = height;
+    //ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
   }
   
   
