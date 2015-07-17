@@ -55,7 +55,7 @@ class Toolbar {
     
     num bx = x + 98;
     num by = y + h/2 - 18;
-    int bspace = 58;
+    int bspace = 50;
     
     buttons.add(new Button(bx, by, workspace, "images/toolbar/play.png", () {
       workspace.playProgram(); }));
@@ -72,7 +72,7 @@ class Toolbar {
     buttons.add(new Button(bx + bspace * 2, by, workspace, "images/toolbar/help.png", () {
       workspace.showHideHelp(); }));
     
-    buttons.add(new Button(workspace.width - 210, by, workspace, "images/toolbar/info.png", () {
+    buttons.add(new Button(bx + bspace * 3, by, workspace, "images/toolbar/info.png", () {
       workspace.showHideCredits(); }));
     
     play = buttons[0];
