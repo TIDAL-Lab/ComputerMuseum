@@ -337,8 +337,8 @@ abstract class CodeWorkspace extends TouchLayer {
       help.draw(ctx);
       
       // draw the menu and toolbar
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      ctx.fillRect(0, height - BLOCK_HEIGHT * 1.85, width, BLOCK_HEIGHT * 1.85);
+      ctx.fillStyle = '#0F3745'; //'rgba(0, 0, 0, 0.3)';
+      ctx.fillRect(0, height - BLOCK_HEIGHT * 2, width, BLOCK_HEIGHT * 2);
       menu.draw(ctx);
       toolbar.draw(ctx);
     }
