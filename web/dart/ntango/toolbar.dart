@@ -72,6 +72,9 @@ class Toolbar {
     buttons.add(new Button(bx + bspace * 2, by, workspace, "images/toolbar/help.png", () {
       workspace.showHideHelp(); }));
     
+    buttons.add(new Button(workspace.width - 210, by, workspace, "images/toolbar/info.png", () {
+      workspace.showHideCredits(); }));
+    
     play = buttons[0];
     pause = buttons[1];
     pause.visible = false;
