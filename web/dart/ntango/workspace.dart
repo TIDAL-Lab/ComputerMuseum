@@ -137,7 +137,6 @@ abstract class CodeWorkspace extends TouchLayer {
  * On a background touch, close all open parameter menus
  */
   bool backgroundTouch(Contact c) {
-    transformContact(c);
     if (c.touchY > height - 900) {
       closeAllParameterMenus();
     }
