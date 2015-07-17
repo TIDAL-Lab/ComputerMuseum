@@ -1,29 +1,22 @@
 TODO:
 
-label buttons
+Right programming space isn't getting touch events
+
+credits
+
 restart button has menu
   * clear scoreboard
   * clear program
   * restart frogs
 
-show code button
 
-multiple beetles can perche at the same location
+
+TEST TEST TEST!
 
 menu stops working when blocks are moved out of a program
 
-master timeout
-
-two stage parameter menus
-
-big play / pause button
-
 blocks still get stuck when you rapidly pull them out of a program
-
-control blocks should drag inside blocks with them?
-
-credits
 
 piano test
 
-fix logging for poor internet connections
+logging?
