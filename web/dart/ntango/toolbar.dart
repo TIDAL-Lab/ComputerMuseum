@@ -54,8 +54,8 @@ class Toolbar {
     froggy = new FrogButton(x + 10, y - 4, this);
     
     num bx = x + 98;
-    num by = y + h/2 - 15;
-    int bspace = 48;
+    num by = y + h/2 - 18;
+    int bspace = 58;
     
     buttons.add(new Button(bx, by, workspace, "images/toolbar/play.png", () {
       workspace.playProgram(); }));
