@@ -23,9 +23,11 @@ canvas {
 
 #pond {
    z-index: 0;
-   background-image: url('../images/texture2.png');
-   background-repeat: repeat;
-   background-position: 0 0;
+   /* background-image: url('../images/texture2.png'); 
+   background-repeat: repeat; 
+   background-position: 0 0; */
+   background-image: url('../images/pond.png');
+   background-position: cover;
 }
 
 #background { z-index: 1; }
