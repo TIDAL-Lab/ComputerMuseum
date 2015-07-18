@@ -98,7 +98,10 @@ class FrogPond extends TouchLayer {
       workspaces.forEach((workspace) => workspace.draw());
     });
     
+    //-----------------------------------------------------------------------------
     // master timeout
+    //-----------------------------------------------------------------------------
+    /*
     if (isFlagSet("timeout")) {
       print("initiating master restart timer");
       new Timer.periodic(const Duration(seconds : 10), (timer) {
@@ -108,6 +111,7 @@ class FrogPond extends TouchLayer {
       document.documentElement.onMouseDown.listen((e) => _countdown = 0);
       document.documentElement.onTouchStart.listen((e) => _countdown = 0);
     }
+    */
   }
   
   
@@ -157,6 +161,17 @@ class FrogPond extends TouchLayer {
     // animate code workspaces
     for (FrogWorkspace workspace in workspaces) {
       if (workspace.animate()) workspace.draw();
+    }
+  }
+
+
+/**
+ * Spook all the bugs
+ */  
+  void spookBugs() {
+    for (Beetle bug in bugs.agents) { 
+      bug.spook(); 
+      bug.forward(6);
     }
   }
 
