@@ -110,13 +110,13 @@ class StartBlock extends BeginBlock {
     _lastX = c.touchX;
     _lastY = c.touchY;
     workspace.draw();
-    return false;
+    return true;
   }
   
   
   void touchDrag(Contact c) {
     if (_target == null) {
-      moveChain(c.touchX - _lastX, c.touchY - _lastY);
+      //moveChain(c.touchX - _lastX, c.touchY - _lastY);
     } else {
       _target.touchDrag(c);
     }
