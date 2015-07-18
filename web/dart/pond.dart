@@ -184,7 +184,7 @@ class FrogPond extends TouchLayer {
   }
   
   
-  num getGridPoint(num x, num y, num r) {
+  List getGridPoint(num x, num y, num r) {
     for (var point in lattice) {
       if (distance(x, y, point[0], point[1]) <= r) return point;
     }
