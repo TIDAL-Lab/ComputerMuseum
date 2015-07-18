@@ -1,22 +1,8 @@
 TODO:
 
-add lotus
-
-master restart should just pause frogs?? maybe if there's a long long pause it will restart frogs. 
-
 restart button has menu
   * clear scoreboard
   * clear program
   * restart frogs
-
-
-
-TEST TEST TEST!
-
-menu stops working when blocks are moved out of a program
-
-blocks still get stuck when you rapidly pull them out of a program
-
-piano test
 
 logging?
