@@ -49,9 +49,34 @@ class FrogWorkspace extends CodeWorkspace {
     scoreboard = new Scoreboard(this, width - 150, height - BLOCK_HEIGHT * 1.85, 150, BLOCK_HEIGHT * 1.85);
 
     help.help.onLoad.listen((e) => help.show());    
+
+    // master timeout
+    new Timer.periodic(const Duration(seconds : 5), doTimeout);
+  }
+
+
+/**
+ * Master timeout function
+ */
+  void doTimeout(Timer t) {
+    int time = getTimeSinceLastTouchEvent();
+    print(time);
+    if (time > 180) {
+      pauseProgram();
+      restartProgram();
+      removeAllBlocks();
+      buildDefaultProgram();
+      help.show();
+      credits.hide();
+      resetTouchTimer();
+      pond.spookBugs();
+    }
+    else if (time > 90) {
+      pauseProgram();
+    }
   }
   
-  
+
 /**
  * Adds a new frog for the given workspace
  */
