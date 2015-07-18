@@ -30,7 +30,7 @@ canvas {
    background-position: cover;
 }
 
-#flies {
-   z-index: 1;
-}
+#flies { z-index: 1; }
+#red-workspace { z-index: 2; }
+#yellow-workspace { z-index: 3; }
 
