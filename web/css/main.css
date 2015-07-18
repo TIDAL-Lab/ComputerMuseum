@@ -22,7 +22,7 @@ canvas {
 }
 
 #pond {
-   z-index: 0;
+   z-index: 1;
    /* background-image: url('../images/texture2.png'); 
    background-repeat: repeat; 
    background-position: 0 0; */
@@ -30,7 +30,7 @@ canvas {
    background-position: cover;
 }
 
-#flies { z-index: 1; }
 #red-workspace { z-index: 2; }
 #yellow-workspace { z-index: 3; }
+#flies { z-index: 4; }
 
