@@ -171,7 +171,7 @@ class FrogPond extends TouchLayer {
   void spookBugs() {
     for (Beetle bug in bugs.agents) { 
       bug.spook(); 
-      bug.forward(6);
+      bug.forward(6.0);
     }
   }
 
