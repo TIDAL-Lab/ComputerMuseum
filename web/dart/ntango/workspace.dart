@@ -79,28 +79,8 @@ abstract class CodeWorkspace extends TouchLayer {
     
     // trace bug
     bug = new TraceBug(start);
-    
-    // master timeout
-    new Timer.periodic(const Duration(seconds : 5), doTimeout);
   }
 
-  
-/**
- * Master timeout function
- */
-  void doTimeout(Timer t) {
-    int time = getTimeSinceLastTouchEvent();
-    if (time > 90) {
-      resetTouchTimer();
-      restartProgram();
-      removeAllBlocks();
-      buildDefaultProgram();
-      help.show();
-      credits.hide();
-      Logging.logEvent("${name}-timeout");
-    }
-  }
-  
   
   void traceProgram(Program program) {
     bug.target = program.curr;
