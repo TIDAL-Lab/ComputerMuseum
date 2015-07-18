@@ -45,11 +45,20 @@ class Frog extends Turtle implements Touchable {
   
   /* beetle captured by frog for eating */
   Beetle prey = null;
-  
-  
+
+  /* Show code alpha value */
+  double alpha = 0.0;
+
+  /* Tap help message */
+  ImageElement help = new ImageElement();
+
+  bool _down = false;
+
+
   Frog(this.pond, this.workspace) : super() {
     img.src = "images/bluefrog.png";
     program = new FrogProgram(workspace, this);
+    help.src = "images/help/help3.png";
   }
   
   
@@ -83,6 +92,13 @@ class Frog extends Turtle implements Touchable {
   
   bool animate() {
     bool refresh = false;
+    if (_down) {
+      refresh = true;
+      alpha = min(1.0, alpha + 0.1);
+    } else if (alpha > 0) {
+      refresh = true;
+      alpha = max(0.0, alpha - 0.1);
+    }
     if (tween.isTweening()) {
       tween.animate();
       refresh = true;
@@ -194,18 +210,40 @@ class Frog extends Turtle implements Touchable {
     num iw = width;
     num ih = height;
     ctx.drawImageScaled(img, -iw/2, -ih/2, iw, ih);
+
+    //---------------------------------------------
+    // help message
+    //---------------------------------------------
+    if (alpha > 0) {
+      iw = help.width + 40;
+      ih = help.height + 40;
+      ctx.save();
+      {
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        drawBubble(ctx, -40, -ih - 90, iw, ih, 40);
+        ctx.drawImage(help, -20, -ih - 70);
+      }
+      ctx.restore();
+    }
   }
 
   
   bool containsTouch(Contact c) { return overlapsPoint(c.touchX, c.touchY); }
-  void touchUp(Contact c) { }
+  void touchUp(Contact c) { 
+    _down = false;
+  }
   void touchDrag(Contact c) { }
   void touchSlide(Contact c) { }
-  void touchCancel(Contact c) { }
+  void touchCancel(Contact c) { 
+    _down = false;
+  }
   
   bool touchDown(Contact c) {
     workspace.frogs.moveToTop(this);
-    workspace.showHideHelp();
+    _down = true;
     return true;
   }
 }
