@@ -110,7 +110,7 @@ class StartBlock extends BeginBlock {
     _lastX = c.touchX;
     _lastY = c.touchY;
     workspace.draw();
-    return true;
+    return false;
   }
   
   
