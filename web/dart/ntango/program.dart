@@ -24,7 +24,7 @@
 part of NetTango;
 
 
-abstract class Program {
+class Program {
   
   /* Start block for the program */
   StartBlock start;
@@ -49,10 +49,14 @@ abstract class Program {
   }
   
   
-  bool getSensorValue(String sensor);
+  bool getSensorValue(String sensor) {
+    return false;
+  }
 
   
-  void doCommand(String cmd, var param);
+  void doCommand(String cmd, var param) {
+
+  }
   
   
   dynamic operator[] (String key) {
