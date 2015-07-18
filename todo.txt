@@ -1,5 +1,11 @@
 TODO:
 
+brogs grow bigger.
+
+bugs on top of menu bar and help messages
+
+Chrome runtime bug
+
 restart button has menu
   * clear scoreboard
   * clear program
