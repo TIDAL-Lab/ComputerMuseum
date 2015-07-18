@@ -142,15 +142,14 @@ class Toolbar {
   }
   
   void drawShowCode(CanvasRenderingContext2D ctx) {
-    Frog focal = workspace.getFocalFrog();
-    if (focal == null) return;
+    Program program = new Program(workspace);
       
     ctx.font = '600 15px Monaco, monospace';
     ctx.textBaseline = 'top';
     ctx.textAlign = 'left';
 
     // figure out text dimensions      
-    var lines = focal.program.compile().split('\n');
+    var lines = program.compile().split('\n');
     int margin = 25;
     int dh = lines.length * 20 + margin * 2;
     int dx = 20;
