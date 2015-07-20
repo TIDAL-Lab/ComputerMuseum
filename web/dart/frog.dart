@@ -59,6 +59,7 @@ class Frog extends Turtle implements Touchable {
     img.src = "images/bluefrog.png";
     program = new FrogProgram(workspace, this);
     help.src = "images/help/help3.png";
+    size = 0.8;
   }
   
   
@@ -164,6 +165,7 @@ class Frog extends Turtle implements Touchable {
       if (bug != null && !bug.dead) {
         prey = bug.hatch();
         bug.die();
+        size = min(size + 0.1, 1.5); //min(1.2, 0;
       }
     } else {
       prey.x = tongueX;

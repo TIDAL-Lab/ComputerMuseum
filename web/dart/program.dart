@@ -116,7 +116,7 @@ class FrogProgram extends Program {
  */
   void doMove(String cmd, var param) {
     Frog target = frog;
-    double length = frog.radius * 4.0;
+    double length = 150.0; //frog.radius * 4.0;
     if (param is num) length *= param;
     bool bounce = frog.pathBlocked() && FROGS_BLOCK;
     String s = "$cmd";
