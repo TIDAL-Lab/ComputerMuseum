@@ -1,10 +1,6 @@
 TODO:
 
-timer should be centralized, not on a per-workspace basis
-
 frogs grow bigger.
-
-Chrome runtime bug
 
 restart button has menu
   * clear scoreboard
