@@ -36,7 +36,10 @@ class FrogWorkspace extends CodeWorkspace {
   
   /* is the program currently running? */
   bool running = false;
-  
+
+  /* frog drawing context */
+  CanvasRenderingContext2D frog_layer;
+ 
   
   FrogWorkspace(this.pond, int width, int height, String name) : super(width, height, name) {
     
@@ -50,6 +53,10 @@ class FrogWorkspace extends CodeWorkspace {
 
     help.help.onLoad.listen((e) => help.show());    
 
+    // get drawing layer for frogs
+    CanvasElement canvas = querySelector("#frogs");
+    frog_layer = canvas.getContext('2d');
+
     // master timeout
     new Timer.periodic(const Duration(seconds : 5), doTimeout);
   }
@@ -60,7 +67,6 @@ class FrogWorkspace extends CodeWorkspace {
  */
   void doTimeout(Timer t) {
     int time = getTimeSinceLastTouchEvent();
-    print(time);
     if (time > 180) {
       pauseProgram();
       restartProgram();
@@ -195,19 +201,38 @@ class FrogWorkspace extends CodeWorkspace {
     snapTogether(block);
     block.inserted = true;
   }
+
+/**
+ * Animate frogs
+ */  
+  bool animateFrogs() {
+    frogs.removeDead();
+    return frogs.animate();
+  }
+
+
+/**
+ * Draw frogs
+ */  
+  void drawFrogs(CanvasRenderingContext2D ctx) {
+    frogs.draw(ctx);
+    ctx.save();
+    {
+      xform.transformContext(ctx);
+      Frog target = getFocalFrog();
+      if (target != null) traceExecution(target, ctx);
+    }
+    ctx.restore();
+  }
   
-  
+
 /**
  * Animate the blocks and return true if any of the blocks changed
  */
   bool animate() {
     bool refresh = false;
     
-    frogs.removeDead();
-    
     if (super.animate()) refresh = true;
-    
-    if (frogs.animate()) refresh = true;
     
     if (frogs.length == 0) {
       restartProgram();
@@ -226,7 +251,7 @@ class FrogWorkspace extends CodeWorkspace {
 /**
  * Called by pond to trace the execution of the program for the target frog
  */
-  void traceExecution(Frog frog) {
+  void traceExecution(Frog frog, CanvasRenderingContext2D ctx) {
     if (frog.label != null) {
       ctx.save();
       double tx = worldToObjectX(frog.x, frog.y);
@@ -253,15 +278,9 @@ class FrogWorkspace extends CodeWorkspace {
     {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      frogs.draw(ctx);
-      
       super.draw();
       
       xform.transformContext(ctx);
-      
-      Frog target = getFocalFrog();
-      if (target != null) traceExecution(target);
-      
       scoreboard.draw(ctx);
     }
     ctx.restore();
