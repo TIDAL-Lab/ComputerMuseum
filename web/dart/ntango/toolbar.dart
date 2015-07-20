@@ -125,7 +125,7 @@ class Toolbar {
       // representative frog
       //---------------------------------------------      
       froggy.draw(ctx);
-      
+
       //---------------------------------------------
       // toolbar buttons
       //---------------------------------------------
@@ -140,6 +140,7 @@ class Toolbar {
     }
     ctx.restore();
   }
+
   
   void drawShowCode(CanvasRenderingContext2D ctx) {
     Program program = new Program(workspace);
@@ -150,11 +151,11 @@ class Toolbar {
 
     // figure out text dimensions      
     var lines = program.compile().split('\n');
-    int margin = 25;
-    int dh = lines.length * 20 + margin * 2;
-    int dx = 20;
-    int dy = y - 25 - dh;
-    int dw = margin * 2;
+    num margin = 25;
+    num dh = lines.length * 20 + margin * 2;
+    num dx = 20;
+    num dy = y - 25 - dh;
+    num dw = margin * 2;
 
     // dynamically size width of the dialog      
     for (int i=0; i<lines.length; i++) {
