@@ -69,7 +69,7 @@ class FrogPond extends TouchLayer {
     addLilyPad(625.0, 345.0, 0.9);
     addLilyPad(910.0, height - 170.0, 0.65);
     addLilyPad(900.0, 630.0, 0.7);
-    addLilyPad(1015.0, 240.0, 0.83);
+    addLilyPad(1015.0, 240.0, 0.9);
     addLilyPad(1280.0, height - 130.0, 0.7);
     addLilyPad(1285.0, height/2 + 5, 0.8);
     addLilyPad(1370.0, 154.0, 0.6);
