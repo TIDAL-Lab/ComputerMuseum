@@ -56,32 +56,18 @@ class FrogWorkspace extends CodeWorkspace {
     // get drawing layer for frogs
     CanvasElement canvas = querySelector("#frogs");
     frog_layer = canvas.getContext('2d');
-
-    // master timeout
-    new Timer.periodic(const Duration(seconds : 5), doTimeout);
   }
 
 
-/**
- * Master timeout function
- */
-  void doTimeout(Timer t) {
-    int time = getTimeSinceLastTouchEvent();
-    if (time > 180) {
-      pauseProgram();
-      restartProgram();
-      removeAllBlocks();
-      buildDefaultProgram();
-      help.show();
-      credits.hide();
-      resetTouchTimer();
-      pond.spookBugs();
-    }
-    else if (time > 90) {
-      pauseProgram();
-    }
+  void doTimeout() {
+    pauseProgram();
+    restartProgram();
+    removeAllBlocks();
+    buildDefaultProgram();
+    help.show();
+    credits.hide();
   }
-  
+
 
 /**
  * Adds a new frog for the given workspace
