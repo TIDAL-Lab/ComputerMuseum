@@ -26,8 +26,8 @@ part of ComputerHistory;
 class FrogPond extends TouchLayer {
   
   CanvasElement canvas;
-  CanvasRenderingContext2D layer0;  // lily pads
-  CanvasRenderingContext2D layer2;  // bugs
+  CanvasRenderingContext2D layer_frogs;
+  CanvasRenderingContext2D layer_flies;  
   
   TouchManager tmanager = new TouchManager();
   
@@ -49,11 +49,11 @@ class FrogPond extends TouchLayer {
 
   
   FrogPond() {
-    canvas = querySelector("#pond");
-    layer0 = canvas.getContext('2d');
+    canvas = querySelector("#frogs");
+    layer_frogs = canvas.getContext('2d');
     
     canvas = querySelector("#flies");
-    layer2 = canvas.getContext('2d');
+    layer_flies = canvas.getContext('2d');
     
     width = canvas.width;
     height = canvas.height;
@@ -94,7 +94,6 @@ class FrogPond extends TouchLayer {
     ImageElement lilypad = new ImageElement();
     lilypad.src = "images/lilypad.png";
     lilypad.onLoad.listen((e) {
-      drawPond();
       workspaces.forEach((workspace) => workspace.draw());
     });
     
@@ -146,19 +145,39 @@ class FrogPond extends TouchLayer {
  * Animate and draw
  */
   void tick(Timer timer) {
+
+    //---------------------------------------------------
+    // animate and draw frogs
+    //---------------------------------------------------
+    bool refresh = false;
+    for (FrogWorkspace workspace in workspaces) {
+      if (workspace.animateFrogs()) refresh = true;
+    }
+
+    if (refresh) {
+      layer_frogs.clearRect(0, 0, width, height);
+      drawGrid(layer_frogs);
+      for (FrogWorkspace workspace in workspaces) {
+        workspace.drawFrogs(layer_frogs);
+      }
+    }
     
-    // animate bugs
-    bugs.erase(layer2);
+    //---------------------------------------------------
+    // animate and draw bugs
+    //---------------------------------------------------
+    bugs.erase(layer_flies);
     bugs.removeDead();
     bugs.animate();
-    bugs.draw(layer2);
+    bugs.draw(layer_flies);
     
     // add a new bug if less than max
     if (bugs.length < MAX_BEETLES) {
       bugs.add(new Beetle(this));
     }
     
+    //---------------------------------------------------
     // animate code workspaces
+    //---------------------------------------------------
     for (FrogWorkspace workspace in workspaces) {
       if (workspace.animate()) workspace.draw();
     }
@@ -192,13 +211,6 @@ class FrogPond extends TouchLayer {
   }
   
 
-  void drawPond() {
-    layer0.clearRect(0, 0, width, height);
-    pads.draw(layer0);
-    drawGrid(layer0);
-  }
-  
-  
   void drawGrid(CanvasRenderingContext2D ctx) {
     lattice.clear();
     double HSPACE = 150.0;
