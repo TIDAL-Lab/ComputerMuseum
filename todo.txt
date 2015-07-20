@@ -1,8 +1,8 @@
 TODO:
 
-brogs grow bigger.
+timer should be centralized, not on a per-workspace basis
 
-bugs on top of menu bar and help messages
+frogs grow bigger.
 
 Chrome runtime bug
 
