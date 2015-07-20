@@ -95,6 +95,7 @@ class FrogPond extends TouchLayer {
     lilypad.src = "images/lilypad.png";
     lilypad.onLoad.listen((e) {
       workspaces.forEach((workspace) => workspace.draw());
+      workspaces.forEach((workspace) => workspace.drawFrogs(layer_frogs));
     });
     
     //-----------------------------------------------------------------------------
