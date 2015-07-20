@@ -1,7 +1,5 @@
 TODO:
 
-frogs grow bigger.
-
 restart button has menu
   * clear scoreboard
   * clear program
