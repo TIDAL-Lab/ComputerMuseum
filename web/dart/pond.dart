@@ -101,6 +101,8 @@ class FrogPond extends TouchLayer {
     //-----------------------------------------------------------------------------
     // master timeout
     //-----------------------------------------------------------------------------
+    new Timer.periodic(const Duration(seconds : 5), doTimeout);
+
     /*
     if (isFlagSet("timeout")) {
       print("initiating master restart timer");
@@ -112,6 +114,25 @@ class FrogPond extends TouchLayer {
       document.documentElement.onTouchStart.listen((e) => _countdown = 0);
     }
     */
+  }
+
+
+/**
+ * Master timeout function
+ */
+  void doTimeout(Timer t) {
+    int time = tmanager.getTimeSinceLastTouchEvent();
+    if (time > 270) {
+      window.location.reload();
+    } 
+    else if (time > 180) {
+      workspaces.forEach((workspace) => workspace.doTimeout());
+      spookBugs();
+      //resetTouchTimer();
+    }
+    else if (time > 90) {
+      workspaces.forEach((workspace) => workspace.pauseProgram());
+    }
   }
   
   
