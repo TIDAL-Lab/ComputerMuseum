@@ -77,6 +77,21 @@ class TouchManager {
     }
     return null;
   }
+
+
+/*
+ * Returns the time in seconds since the last touch event for all layers
+ */
+  int getTimeSinceLastTouchEvent() {
+    int m = -1;
+    for (TouchLayer layer in layers) {
+      int t = layer.getTimeSinceLastTouchEvent();
+      if (t < m || m == -1) m = t;
+    }
+    return m;
+  }
+  
+
   
   
 /*
