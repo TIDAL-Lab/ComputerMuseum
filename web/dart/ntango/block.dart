@@ -430,7 +430,7 @@ class Block implements Touchable {
   
   
   void touchUp(Contact c) {
-    if (workspace.snapTogether(this)) {
+    if (!inserted && workspace.snapTogether(this)) {
       Sounds.playSound("click");
       inserted = true;
     } else if (!inserted && workspace.isOverMenu(this)) {
@@ -438,8 +438,13 @@ class Block implements Touchable {
       Sounds.playSound("click");
       inserted = true;
     } else if (workspace.isOffscreen(this) || workspace.isOverMenu(this) || inserted) {
-      workspace.removeBlock(this);
-      Sounds.playSound("crunch");
+
+      // there's a weird bug where simultaneous touch down events will capture the same block causing it to get 
+      // two consecutive touch up events
+      if (!isInProgram) {
+        workspace.removeBlock(this);
+        Sounds.playSound("crunch");
+      }
     }
     dragging = false;
   }
