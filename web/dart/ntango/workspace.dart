@@ -124,6 +124,7 @@ abstract class CodeWorkspace extends TouchLayer {
   bool backgroundTouch(Contact c) {
     if (c.touchY > height - 900) {
       closeAllParameterMenus();
+      toolbar.closeAllMenus();
     }
     return false;
   }
@@ -145,6 +146,12 @@ abstract class CodeWorkspace extends TouchLayer {
     start.next = start.end;
     start.end.prev = start;
   }
+
+/**
+ * Clear the scoreboard
+ */
+  void clearScoreboard();
+
   
     
 /**
@@ -313,15 +320,17 @@ abstract class CodeWorkspace extends TouchLayer {
       // transform into workspace coordinates
       xform.transformContext(ctx);
 
-      // draw the menu and toolbar
+      // draw the menu
       ctx.fillStyle = 'rgba(0, 0, 0, 0.4)'; // '#0F3745'; 
       ctx.fillRect(0, height - BLOCK_HEIGHT * 2, width, BLOCK_HEIGHT * 2);
       menu.draw(ctx);
-      toolbar.draw(ctx);
       
       // draw blocks
       blocks.forEach((block) => block.draw(ctx));
-      
+
+      // draw the toolbar       
+      toolbar.draw(ctx);
+
       // draw the trace bug
       bug.draw(ctx);
       
