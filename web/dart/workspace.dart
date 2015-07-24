@@ -156,6 +156,15 @@ class FrogWorkspace extends CodeWorkspace {
     bug.reset();
     scoreboard.reset();
   }
+
+
+/**
+ * Clear the scoreboard
+ */  
+  void clearScoreboard() {
+    scoreboard.reset();
+    draw();
+  }
   
   
   void removeAllBlocks() {
