@@ -430,7 +430,7 @@ class Block implements Touchable {
   
   
   void touchUp(Contact c) {
-    if (!inserted && workspace.snapTogether(this)) {
+    if (dragging && workspace.snapTogether(this)) {
       Sounds.playSound("click");
       inserted = true;
     } else if (!inserted && workspace.isOverMenu(this)) {
