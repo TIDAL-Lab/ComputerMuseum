@@ -318,7 +318,7 @@ class TangibleFrogWorkspace extends FrogWorkspace{
         tangibleList.clear();
       }
       print("ws-send: hello?");
-      ws.send("hello?");
+      ws.send("fake");
       Timer delayRead = new Timer(new Duration(milliseconds: 100), playProgramDelay); 
       
 
@@ -342,47 +342,67 @@ class TangibleFrogWorkspace extends FrogWorkspace{
     }
     
     void addTangibleBlocks(List<String> blocks){
+      Block cur = start;
       List<Block> newProgram = new List<Block>();
+      List<BeginBlock> stack = new List<BeginBlock>();
+      
       for(String blockName in blocks){
         if(blockName == 'hop' || blockName == 'chirp' || blockName == 'eat' || blockName == 'left' || blockName == 'right' || blockName == 'spin'|| blockName == 'hatch'){
-          print("adding block ${blockName}");
           Block temp = new Block(this, blockName);
           newProgram.add(temp);
+          cur.insertBlock(temp);
+          cur = temp;
         }
         else if(blockName == 'ifseebug'||blockName== 'repeat5'||blockName== 'repeat3'){
           
         }
         else if(blockName == 'repeatForever'){
-//          Block temp = new RepeatBlock(this);
-//          temp.param = 
+          RepeatBlock temp = new RepeatBlock(this);
+          temp.param.index = 0;
+          newProgram.add(temp);
+          cur.insertBlock(temp);
+          cur = temp;
+          stack.add(cur);
+        }
+        else if(blockName == 'endRepeat'){
+          if (stack.isNotEmpty) {
+            BeginBlock begin = stack.removeLast();
+            cur.insertBlock(begin.end);
+            cur = begin.end;
+          }
+          //Block temp = new Block(this, blockName);
+          //newProgram.add(temp);
         }
         else if(blockName == 'noType'){
           
         }
         else{
-          constructProgram(newProgram);
+          //constructProgram(newProgram);
           return;
         }
           
       }
-      constructProgram(newProgram);
-      return;
+      //constructProgram(newProgram);
     }
     
     void constructProgram(List<Block> newProgram){
+      List<BeginBlock> controlBlocks = new List<BeginBlock>();
+      controlBlocks.add(start);
+      List<Block> currentLoopBlock = new List<Block>();
+      currentLoopBlock.add(start);
+//      currentLoopBlock.add(start);
       for(int i = 0; i < newProgram.length; i++){
-        if(i == 0){
-          start.next = newProgram[i];
-          newProgram[i].prev = start;
-          
+        if(newProgram[i].type != 'endRepeat'){
+          currentLoopBlock.last.insertBlock(newProgram[i]);
+          currentLoopBlock.add(newProgram[i]);
+          if(newProgram[i].type =='repeat'){
+            controlBlocks.add(newProgram[i]);
+          }
         }
-        else{
-          newProgram[i].prev = newProgram[i-1];
+        else if(newProgram[i] == 'endRepeat'){
+//          currentLoopBlock.last.insertBlock(controlBlocks.last.end);
+//          controlBlocks.removeLast();
         }
-        if(i+1 < newProgram.length){
-          newProgram[i].next = newProgram[i+1];
-        }
-        else return;
       }
       return;
     }
