@@ -1,8 +1,7 @@
 TODO:
 
-restart button has menu
-  * clear scoreboard
-  * clear program
-  * restart frogs
-
 logging?
+
+make beetles and frogs more anatomically correct?
+
+show code button
