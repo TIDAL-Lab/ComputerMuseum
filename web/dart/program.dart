@@ -301,7 +301,7 @@ class FrogProgram extends Program {
       baby.program.play();
     });
     tween.addControlPoint(0.05, 0);
-    tween.addControlPoint(frog.size, 1.0);
+    tween.addControlPoint(0.8, 1.0);
     tween.ondelta = ((value) => baby.size += value);
   }
 }  
