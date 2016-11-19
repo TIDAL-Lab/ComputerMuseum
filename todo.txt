@@ -1,6 +1,20 @@
 TODO:
 
-logging?
+logging!
+
+Turn off visual feedback for windows 10. it's annoying
+
+Green Bug weirdness with the scoreboard.
+
+Introduce bugs so that there's one of each color on the table at any given time. 
+
+Text about the history of ideas that went into frog pond (label copy)
+
+Demystify how software is made. Provide some under-the-hood details on how frog pond was made.
+
+
+
+
 
 make beetles and frogs more anatomically correct?
 
