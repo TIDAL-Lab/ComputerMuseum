@@ -8,3 +8,5 @@ main.dart.js
 pubspec.lock
 build
 package
+**/packages
+.packages
