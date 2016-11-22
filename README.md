@@ -6,8 +6,12 @@ Programming exhibit for the Computer History Museum
 
 1. Install DART (https://www.dartlang.org/install/windows)
 
-  * I recommend using Chocolatey and powershell
-  * Make sure to install the optional packages (dart-sdk and dartium)
+  * Install Chocolatey and powershell
+  * Use Powershell to run these commands
+```
+  choco install dart-sdk
+  choco install dartium
+```
 
 2. Install Google Chrome
 
@@ -19,11 +23,15 @@ Programming exhibit for the Computer History Museum
 
 6. Clone the github repo (https://github.com/TIDAL-Lab/ComputerMuseum/tree/v2)
 
+```
+  git clone https://github.com/TIDAL-Lab/ComputerMuseum --branch v2
+```
+
 7. Go to your install directory in powershell and type:
 ```
-cd <install directory>
-pub get
-pub build
+  cd <install directory>
+  pub get
+  pub build
 ```
   If that works, it should create a directory called `build` in the root of your install directory. 
 
@@ -32,3 +40,6 @@ pub build
   `file:///<GITHUB_ROOT>/ComputerMuseum/build/web/index.html`
 
 9. Now you can configure the Chrome kiosk app to point to this URL. 
+  * Select serve local content
+  * Change directory to <GITHUB_ROOT>/ComputerMuseum/build/web
+
